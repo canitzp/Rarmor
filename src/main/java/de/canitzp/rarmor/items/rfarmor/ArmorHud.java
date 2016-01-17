@@ -58,7 +58,7 @@ public class ArmorHud {
 
     public static void displayStaticBlocks(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, Block block, IBlockState state, int colorCode){
         if (player.getEntityWorld().isRemote) {
-            Item item = Item.getItemFromBlock(block);
+            Item item = Item.getItemFromBlock(berhlock);
             if(item != null){
                 String text = item.getItemStackDisplayName(new ItemStack(block, 1, block.getMetaFromState(state)));
                 if(text != null){
