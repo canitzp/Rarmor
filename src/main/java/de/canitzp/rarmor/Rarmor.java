@@ -1,0 +1,51 @@
+package de.canitzp.rarmor;
+
+import de.canitzp.rarmor.inventory.GuiHandler;
+import de.canitzp.rarmor.items.ItemRegistry;
+import de.canitzp.rarmor.network.CommonProxy;
+import de.canitzp.rarmor.network.NetworkHandler;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * @author canitzp
+ */
+@Mod(modid = Rarmor.MODID, name = Rarmor.NAME, version = Rarmor.VERSION)
+public class Rarmor {
+    public static final String MODID = "rarmor", NAME = "Rarmor", VERSION = "@VERSION";
+    public static final Logger logger = LogManager.getLogger(NAME);
+    public static CreativeTabs rarmorTab;
+    public static final String CLIENTPROXY = "de.canitzp.rarmor.network.ClientProxy";
+    public static final String SERVERPROXY = "de.canitzp.rarmor.network.CommonProxy";
+
+    @Mod.Instance(MODID)
+    public static Rarmor instance;
+    @SidedProxy(clientSide = Rarmor.CLIENTPROXY, serverSide = Rarmor.SERVERPROXY)
+    public static CommonProxy proxy;
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event){
+        logger.info("Starting " + NAME + " " + VERSION + " with ModID: " + MODID + ". Thanks for using this Mod :)");
+        rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
+        ItemRegistry.preInit();
+        logger.info("Finished PreInitialization");
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event){
+        logger.info("Starting Initialization");
+        NetworkHandler.init();
+        proxy.registerRenderer();
+        proxy.init();
+        NetworkRegistry.INSTANCE.registerGuiHandler(MODID, new GuiHandler());
+        RecipeManager.init();
+        logger.info("Finished Initialization");
+    }
+}

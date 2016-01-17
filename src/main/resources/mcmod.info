@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rarmor",
+  "name": "Rarmor",
+  "description": "This Mod add a good Armor with Modules a cool stuff.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["canitzp"],
+  "credits": "canitzp, Ellpeck, xdqmhose",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
