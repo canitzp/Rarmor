@@ -10,8 +10,8 @@
 
 package de.ellpeck.actuallyadditions.api.tile;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Extending this will cause a block to show "getEnergy()/maxEnergy() RF" when hovering over it in-world

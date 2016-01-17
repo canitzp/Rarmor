@@ -1,15 +1,22 @@
 package de.canitzp.rarmor.inventory.container;
 
-import de.canitzp.util.inventory.InventoryBase;
-import de.canitzp.util.util.ContainerUtil;
-import de.canitzp.util.util.NBTUtil;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.canitzp.api.inventory.InventoryBase;
+import de.canitzp.api.util.ContainerUtil;
+import de.canitzp.api.util.PacketUtil;
 import de.canitzp.rarmor.inventory.container.Slots.*;
-import de.canitzp.rarmor.inventory.container.Slots.SlotFurnaceOutput;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.api.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.network.play.server.S2FPacketSetSlot;
+import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -24,19 +31,24 @@ public class ContainerRFArmor extends Container {
     public EntityPlayer player;
     public SlotArmorInventory generatorSlot;
     public ItemRFArmorBody body;
+    private ItemStack foot, leg, head;
     public ItemStack armor;
+    public int currentEnergy, currentEFoot, currentELeg, currentEHead, currentBurnTime, currentItemBurnTime, currentGenBurnTime;
 
     public ContainerRFArmor(EntityPlayer player){
         this.armor = player.getCurrentArmor(2);
+        this.foot = player.getCurrentArmor(0);
+        this.leg = player.getCurrentArmor(1);
+       // this.head = player.getCurrentArmor(3);
         this.body = (ItemRFArmorBody) armor.getItem();
-        this.inventory = NBTUtil.readSlots(this.armor, this.body.slotAmount);
+        this.inventory = NBTUtil.readSlots(this.armor, this.body.slotAmount);//this.body.getArmorInventoryNBT(player);
         this.player = player;
-        armor.getTagCompound().setBoolean("click", false);
+        armor.stackTagCompound.setBoolean("click", false);
 
         //Armor Inventory:
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new SlotArmorInventory(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
+                this.addSlotToContainer(new SlotArmorInventory(this.inventory, j + i * 9, 44 + j * 18, 89 + i * 18, player));
             }
         }
         //Player Inventory:
@@ -53,7 +65,7 @@ public class ContainerRFArmor extends Container {
         this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
         for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 3; ++i1) {
-                this.addSlotToContainer(new SlotCraftingInput(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
+                this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
             }
         }
         //Armor Furnace Input:
@@ -76,6 +88,12 @@ public class ContainerRFArmor extends Container {
                 public int getSlotStackLimit(){
                     return 1;
                 }
+
+                @Override
+                @SideOnly(Side.CLIENT)
+                public IIcon getBackgroundIconIndex(){
+                    return ItemArmor.func_94602_b(finalI);
+                }
             });
         }
 
@@ -92,12 +110,26 @@ public class ContainerRFArmor extends Container {
             }
         }
         this.inventory.slots = inv.slots;
+
+
         super.detectAndSendChanges();
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        return this.inventory.isUseableByPlayer(player);
+    public void addCraftingToCrafters(ICrafting listener){
+        super.addCraftingToCrafters(listener);
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data){
+
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer p_75145_1_) {
+        return this.inventory.isUseableByPlayer(p_75145_1_);
     }
 
     @Override
@@ -109,7 +141,7 @@ public class ContainerRFArmor extends Container {
     private void dropCraftMatrix(EntityPlayer player) {
         if (!player.worldObj.isRemote) {
             for (int i = 0; i < 9; ++i) {
-                ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
+                ItemStack itemstack = this.craftMatrix.getStackInSlotOnClosing(i);
                 if (itemstack != null) {
                     player.dropPlayerItemWithRandomChoice(itemstack, false);
                 }
@@ -124,7 +156,7 @@ public class ContainerRFArmor extends Container {
 
     @Override
     public void onCraftMatrixChanged(IInventory p_75130_1_) {
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.worldObj));
+        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.getEntityWorld()));
     }
 
 }

@@ -2,7 +2,7 @@ package cofh.api.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Reference implementation of {@link IEnergyHandler}. Use/extend this or implement your own.
@@ -30,34 +30,34 @@ public class TileEnergyHandler extends TileEntity implements IEnergyHandler {
 
 	/* IEnergyConnection */
 	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
+	public boolean canConnectEnergy(ForgeDirection from) {
 
 		return true;
 	}
 
 	/* IEnergyReceiver */
 	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
 
 		return storage.receiveEnergy(maxReceive, simulate);
 	}
 
 	/* IEnergyProvider */
 	@Override
-	public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
 
 		return storage.extractEnergy(maxExtract, simulate);
 	}
 
 	/* IEnergyReceiver and IEnergyProvider */
 	@Override
-	public int getEnergyStored(EnumFacing from) {
+	public int getEnergyStored(ForgeDirection from) {
 
 		return storage.getEnergyStored();
 	}
 
 	@Override
-	public int getMaxEnergyStored(EnumFacing from) {
+	public int getMaxEnergyStored(ForgeDirection from) {
 
 		return storage.getMaxEnergyStored();
 	}

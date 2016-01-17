@@ -1,10 +1,10 @@
 package de.canitzp.rarmor.inventory.container.Slots;
 
-import de.canitzp.util.inventory.InventoryBase;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.api.inventory.InventoryBase;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemModuleGenerator;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
+import de.canitzp.api.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -42,7 +42,7 @@ public class SlotInputModule extends SlotArmorInventory {
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
         ItemStack armor = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId()+1);
         NBTUtil.setBoolean(stack, "ModuleGenerator", false);
-        dropSlot(this.inventory.getStackInSlot(30), player, armor);
+        dropSlot(this.inventory.getStackInSlotOnClosing(30), player, armor);
         NBTUtil.setInteger(armor, "GenBurnTime", 0);
         super.onPickupFromSlot(player, stack);
     }

@@ -2,12 +2,15 @@ package de.canitzp.rarmor.items;
 
 import cofh.api.energy.ItemEnergyContainer;
 import com.google.common.collect.Multimap;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.Util;
+import de.canitzp.rarmor.inventory.GuiHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,15 +20,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author canitzp
@@ -41,10 +41,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
         this.setMaxStackSize(1);
         this.rfPerUse = rfPerUse;
         this.setUnlocalizedName(Rarmor.MODID + "." + name);
-        this.setCreativeTab(Rarmor.rarmorTab);
-        //this.setTextureName(Rarmor.MODID + ":" + name);
-        this.setHarvestLevel("axe", 3);
-        Rarmor.proxy.addRenderer(new ItemStack(this), name);
+        this.setTextureName(Rarmor.MODID + ":" + name);
         GameRegistry.registerItem(this, name);
     }
 
@@ -65,22 +62,20 @@ public class ItemChainSaw extends ItemEnergyContainer {
     @Override
     public Multimap getAttributeModifiers(ItemStack stack){
         Multimap map = super.getAttributeModifiers(stack);
-        map.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "ChainSaw Modifier", this.getEnergyStored(stack) >= rfPerUse ? 8.0F : 0.0F, 0));
+        map.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "ChainSaw Modifier", this.getEnergyStored(stack) >= rfPerUse ? 8.0F : 0.0F, 0));
         return map;
     }
 
     @Override
-    public boolean onBlockStartBreak (ItemStack stack, BlockPos pos, EntityPlayer player) {
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
+    public boolean onBlockStartBreak (ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
-        final Block wood = world.getBlockState(pos).getBlock();
-        if(!player.isSneaking() && !(player.worldObj.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world, pos) || wood == Blocks.brown_mushroom || wood == Blocks.red_mushroom_block) && Util.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
-            boolean b = Util.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
-            return b || super.onBlockStartBreak(stack, pos, player);
+        final Block wood = world.getBlock(x, y, z);
+        if(!player.isSneaking() && !(player.worldObj.getBlock(x, y, z) == null) && (wood.isWood(world, x, y, z) || wood.isLeaves(world, x, y, z) || wood == Blocks.brown_mushroom || wood == Blocks.red_mushroom_block) && Util.detectTree(world, x,y,z, wood) && this.getEnergyStored(stack) >= rfPerUse){
+            int meta = world.getBlockMetadata(x, y, z);
+            boolean b = Util.breakTree(world, x, y, z, x, y, z, stack, stack.stackTagCompound, wood, meta, player, rfPerUse);
+            return b || super.onBlockStartBreak(stack, x, y, z, player);
         }
-        return super.onBlockStartBreak(stack, pos, player);
+        return super.onBlockStartBreak(stack, x, y, z, player);
     }
 
     @Override
@@ -89,8 +84,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
     }
 
     @Override
-    public float getDigSpeed(ItemStack stack, IBlockState state){
-        Block block = state.getBlock();
+    public float getDigSpeed(ItemStack stack, Block block, int meta){
         return this.getEnergyStored(stack) >= rfPerUse ? ((block instanceof BlockLog || block.getMaterial() == Material.wood || block.getMaterial() == Material.leaves)? 5F : 1.0F) : 1.0F;
     }
 

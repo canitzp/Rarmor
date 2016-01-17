@@ -1,10 +1,11 @@
 package de.canitzp.rarmor.inventory.container.Slots;
 
-import de.canitzp.util.inventory.InventoryBase;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.api.inventory.InventoryBase;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.api.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 

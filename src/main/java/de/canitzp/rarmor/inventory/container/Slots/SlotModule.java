@@ -1,7 +1,9 @@
 package de.canitzp.rarmor.inventory.container.Slots;
 
-import de.canitzp.util.inventory.InventoryBase;
+import de.canitzp.api.inventory.InventoryBase;
+import de.canitzp.rarmor.inventory.ArmorInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
 

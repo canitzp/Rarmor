@@ -2,13 +2,13 @@
 {
   "modid": "rarmor",
   "name": "Rarmor",
-  "description": "This Mod add a good Armor with Modules a cool stuff.",
+  "description": "Example placeholder mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
   "authorList": ["canitzp"],
-  "credits": "canitzp, Ellpeck, xdqmhose",
+  "credits": "",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

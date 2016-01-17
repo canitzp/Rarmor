@@ -1,8 +1,10 @@
 package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
-import de.canitzp.util.util.NBTUtil;
+import cpw.mods.fml.common.registry.GameRegistry;
+import de.canitzp.api.util.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +16,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[] { 3, 8, 6, 3 }, 0);
+    public static final ItemArmor.ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", 100, new int[] { 3, 8, 6, 3 }, 0);
 
     public int maxEnergy;
     public int maxTransfer;
@@ -36,8 +37,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         super(material, 0, type.getId());
         setEnergyParams(maxEnergy, maxTransfer);
         setUnlocalizedName(Rarmor.MODID + "." + name);
-        //setTextureName(Rarmor.MODID + ":" + name);
-        Rarmor.proxy.addRenderer(new ItemStack(this), name);
+        setTextureName(Rarmor.MODID + ":" + name);
         setMaxDamage(maxEnergy);
         GameRegistry.registerItem(this, name);
     }
@@ -159,40 +159,40 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     /* IEnergyContainerItem */
     @Override
     public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-        if (container.getTagCompound() == null) {
-            container.setTagCompound(new NBTTagCompound());
+        if (container.stackTagCompound == null) {
+            container.stackTagCompound = new NBTTagCompound();
         }
-        int energy = container.getTagCompound().getInteger("Energy");
+        int energy = container.stackTagCompound.getInteger("Energy");
         int energyReceived = Math.min(maxEnergy - energy, Math.min(this.maxTransfer, maxReceive));
 
         if (!simulate) {
             energy += energyReceived;
-            container.getTagCompound().setInteger("Energy", energy);
+            container.stackTagCompound.setInteger("Energy", energy);
         }
         return energyReceived;
     }
 
     @Override
     public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
+        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Energy")) {
             return 0;
         }
-        int energy = container.getTagCompound().getInteger("Energy");
+        int energy = container.stackTagCompound.getInteger("Energy");
         int energyExtracted = Math.min(energy, Math.min(this.maxTransfer, maxExtract));
 
         if (!simulate) {
             energy -= energyExtracted;
-            container.getTagCompound().setInteger("Energy", energy);
+            container.stackTagCompound.setInteger("Energy", energy);
         }
         return energyExtracted;
     }
 
     @Override
     public int getEnergyStored(ItemStack container) {
-        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
+        if (container.stackTagCompound == null || !container.stackTagCompound.hasKey("Energy")) {
             return 0;
         }
-        return container.getTagCompound().getInteger("Energy");
+        return container.stackTagCompound.getInteger("Energy");
     }
 
     @Override
@@ -203,7 +203,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public boolean showDurabilityBar(ItemStack stack){
-        return stack.getTagCompound() == null || !stack.getTagCompound().getBoolean("CreativeTab");
+        return stack.stackTagCompound == null || !stack.stackTagCompound.getBoolean("CreativeTab");
     }
 
     public enum ArmorType{
