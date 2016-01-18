@@ -1,5 +1,7 @@
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
 import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.ContainerUtil;
 import de.canitzp.util.util.NBTUtil;
@@ -7,6 +9,7 @@ import de.canitzp.rarmor.inventory.container.Slots.*;
 import de.canitzp.rarmor.inventory.container.Slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -27,8 +30,10 @@ public class ContainerRFArmor extends Container {
     public ItemStack armor;
 
     public ContainerRFArmor(EntityPlayer player){
+        NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = player.getCurrentArmor(2);
         this.body = (ItemRFArmorBody) armor.getItem();
+        InventoryPlayer inventoryPlayer = player.inventory;
         this.inventory = NBTUtil.readSlots(this.armor, this.body.slotAmount);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
@@ -42,12 +47,12 @@ public class ContainerRFArmor extends Container {
         //Player Inventory:
         for (int j = 0; j < 3; ++j) {
             for (int k = 0; k < 9; ++k) {
-                this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
         //Player Hotbar:
         for (int j = 0; j < 9; ++j) {
-            this.addSlotToContainer(new Slot(player.inventory, j, 44 + j * 18, 202));
+            this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
         }
         //Armor Crafting Grid:
         this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
@@ -81,6 +86,8 @@ public class ContainerRFArmor extends Container {
 
         this.generatorSlot = new SlotModule(this.inventory, 30, 140, 18, player);
         this.addSlotToContainer(this.generatorSlot);
+
+        this.onCraftMatrixChanged(this.craftMatrix);
     }
 
     @Override
@@ -92,6 +99,8 @@ public class ContainerRFArmor extends Container {
             }
         }
         this.inventory.slots = inv.slots;
+
+
         super.detectAndSendChanges();
     }
 
@@ -125,6 +134,15 @@ public class ContainerRFArmor extends Container {
     @Override
     public void onCraftMatrixChanged(IInventory p_75130_1_) {
         this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.worldObj));
+        super.onCraftMatrixChanged(p_75130_1_);
+    }
+
+    @Override
+    public boolean canMergeSlot(ItemStack stack, Slot slot) {
+        if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
+            return slot.inventory != this.craftResult && super.canMergeSlot(stack, slot);
+        }
+        return super.canMergeSlot(stack, slot);
     }
 
 }

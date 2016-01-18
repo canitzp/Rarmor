@@ -16,6 +16,8 @@ public class NetworkHandler {
     public static void init(){
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Rarmor.MODID);
         wrapper.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);
+        wrapper.registerMessage(PacketSendNBTBoolean.PacketHandler.class, PacketSendNBTBoolean.class, 1, Side.SERVER);
+        wrapper.registerMessage(PacketSyncPlayerHotbar.Handler.class, PacketSyncPlayerHotbar.class, 2, Side.SERVER);
     }
 
 }

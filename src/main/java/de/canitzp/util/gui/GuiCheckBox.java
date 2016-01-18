@@ -35,6 +35,7 @@ public class GuiCheckBox extends Gui{
     }
 
     public void drawCheckBox(int guiLeft, int guiTop){
+        System.out.println(isActivated);
         Minecraft minecraft = Minecraft.getMinecraft();
         minecraft.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, ColorUtil.BLACK);
         minecraft.getTextureManager().bindTexture(iconLocation);

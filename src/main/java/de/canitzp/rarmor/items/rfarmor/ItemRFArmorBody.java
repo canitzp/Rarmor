@@ -4,12 +4,17 @@ import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.ItemStackUtil;
 import de.canitzp.util.util.NBTUtil;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author canitzp
@@ -27,6 +32,20 @@ public class ItemRFArmorBody extends ItemRFArmor {
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
         this.setEnergy(stack, 0);
+        NBTUtil.setBoolean(stack, "isFirstOpened", false);
+    }
+
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List list) {
+        ItemStack stackFull = new ItemStack(this);
+        this.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
+        NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
+        list.add(stackFull);
+
+        ItemStack stackEmpty = new ItemStack(this);
+        this.setEnergy(stackEmpty, 0);
+        NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
+        list.add(stackEmpty);
     }
 
     @Override
@@ -38,17 +57,19 @@ public class ItemRFArmorBody extends ItemRFArmor {
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor) {
-        ItemStack foot = player.getCurrentArmor(0);
-        ItemStack leggins = player.getCurrentArmor(1);
-        ItemStack head = player.getCurrentArmor(3);
-        if (this.isArmor(foot, leggins, armor, head)) {
-            if (isBurnable(armor)) {
-                burn(armor);
-            } else NBTUtil.setInteger(armor, "BurnTime", 0);
-            this.handleModules(armor);
-            EnergyUtil.balanceEnergy(new ItemStack[]{foot, leggins, armor, head});
+        System.out.println(Arrays.toString(player.inventory.mainInventory));
+        if(NBTUtil.getBoolean(armor, "isFirstOpened")){
+            ItemStack foot = player.getCurrentArmor(0);
+            ItemStack leggins = player.getCurrentArmor(1);
+            ItemStack head = player.getCurrentArmor(3);
+            if (this.isArmor(foot, leggins, armor, head)) {
+                if (isBurnable(armor)) {
+                    burn(armor);
+                } else NBTUtil.setInteger(armor, "BurnTime", 0);
+                this.handleModules(armor);
+                EnergyUtil.balanceEnergy(new ItemStack[]{foot, leggins, armor, head});
+            }
         }
-
     }
 
     private void handleModules(ItemStack armor){

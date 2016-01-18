@@ -15,11 +15,6 @@ public class ItemRFArmorGeneric extends ItemRFArmor {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player){
-        this.setEnergy(stack, 0);
-    }
-
-    @Override
     public double getDurabilityForDisplay(ItemStack stack){
         double energyDif = getMaxEnergyStored(stack)-getEnergyStored(stack);
         double maxAmount = getMaxEnergyStored(stack);

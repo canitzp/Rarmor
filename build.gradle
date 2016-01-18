@@ -21,7 +21,7 @@ plugins {
 }
 */
 
-version="0.1.0"
+version="0.1.1"
 group= "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "rarmor"
 

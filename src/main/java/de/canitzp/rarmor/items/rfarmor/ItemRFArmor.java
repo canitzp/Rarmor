@@ -5,6 +5,7 @@ import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -23,7 +25,7 @@ import java.util.List;
  */
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[] { 3, 8, 6, 3 }, 0);
+    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[] { 9, 24, 28, 9 }, 0);
 
     public int maxEnergy;
     public int maxTransfer;
@@ -36,10 +38,25 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         super(material, 0, type.getId());
         setEnergyParams(maxEnergy, maxTransfer);
         setUnlocalizedName(Rarmor.MODID + "." + name);
-        //setTextureName(Rarmor.MODID + ":" + name);
         Rarmor.proxy.addRenderer(new ItemStack(this), name);
         setMaxDamage(maxEnergy);
         GameRegistry.registerItem(this, name);
+    }
+
+    @Override
+    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+        int i = EntityLiving.getArmorPosition(itemStackIn) - 1;
+        ItemStack itemstack = playerIn.getCurrentArmor(i);
+        if (itemstack == null) {
+            playerIn.setCurrentItemOrArmor(i + 1, itemStackIn.copy());
+            itemStackIn.stackSize = 0;
+        }
+        return itemStackIn;
+    }
+
+    @Override
+    public void onCreated(ItemStack stack, World world, EntityPlayer player){
+        this.setEnergy(stack, 0);
     }
 
     @Override
@@ -75,7 +92,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public boolean isDamaged(ItemStack stack) {
-        return true;
+        return !(this.getEnergyStored(stack) == this.getMaxDamage(stack));
     }
 
     @Override
@@ -95,12 +112,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     public void setEnergy(ItemStack stack, int energy){
-        NBTTagCompound compound = stack.getTagCompound();
-        if(compound == null){
-            compound = new NBTTagCompound();
-        }
-        compound.setInteger("Energy", energy);
-        stack.setTagCompound(compound);
+        NBTUtil.setInteger(stack, "Energy", energy);
     }
 
     protected int getBaseAbsorption() {
@@ -132,7 +144,8 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     /* ISpecialArmor */
     @Override
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-        int absorbMax = getEnergyPerDamage(armor) > 0 ? 25 * getEnergyStored(armor) / getEnergyPerDamage(armor) : 0;
+        //int absorbMax = getEnergyPerDamage(armor) > 0 ? 25 * getEnergyStored(armor) / getEnergyPerDamage(armor) : 0;
+        int absorbMax = getEnergyPerDamage(armor) * getEnergyStored(armor);
         return new ArmorProperties(0, absorbRatio * getArmorMaterial().getDamageReductionAmount(armorType) * 0.025, absorbMax);
     }
 
@@ -151,6 +164,9 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
                 if (((EntityPlayer) entity).getEntityWorld().rand.nextInt(10) == 1) {
                     entity.setFire(4);
                 }
+            }
+            if(source == DamageSource.fall){
+
             }
         }
         extractEnergy(armor, damage * getEnergyPerDamage(armor), false);
@@ -189,10 +205,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getEnergyStored(ItemStack container) {
-        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
-            return 0;
-        }
-        return container.getTagCompound().getInteger("Energy");
+        return NBTUtil.getInteger(container, "Energy");
     }
 
     @Override

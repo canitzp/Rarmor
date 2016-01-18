@@ -2,6 +2,8 @@ package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.inventory.container.Slots.SlotCraftingInput;
+import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.util.gui.GuiCheckBox;
 import de.canitzp.util.util.GuiUtil;
 import de.canitzp.util.util.NBTUtil;
@@ -30,6 +32,7 @@ import java.util.List;
  */
 public class GuiRFArmor extends GuiContainer {
 
+    private EntityPlayer player;
     private ItemStack armor;
     private ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
     private ResourceLocation modulesGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorModules.png");
@@ -43,6 +46,7 @@ public class GuiRFArmor extends GuiContainer {
         this.xSize = 247;
         this.ySize = 226;
         this.armor = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId() + 1);
+        this.player = player;
     }
 
     @Override
@@ -124,12 +128,13 @@ public class GuiRFArmor extends GuiContainer {
             }
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;
-                System.out.println(this.isSettingsTab);
             }
             if(this.isSettingsTab){
                 for(GuiCheckBox checkBox : checkBoxList){
                     if(checkBox.mouseClicked(mouseX, mouseY, this.guiLeft, this.guiTop)){
+                        NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "SettingInWorldTooltip", checkBox.isClicked()));
                         NBTUtil.setBoolean(armor, "SettingInWorldTooltip", checkBox.isClicked());
+                        System.out.println(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
                     }
                 }
             }
