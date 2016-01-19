@@ -68,6 +68,13 @@ public class NBTUtil {
         stack.getTagCompound().setInteger(name, i);
     }
 
+    public static void setIntegerIfNot(ItemStack stack, String name, int i){
+        checkForNBT(stack);
+        if(stack.getTagCompound().getInteger(name) != i){
+            stack.getTagCompound().setInteger(name, i);
+        }
+    }
+
     public static int getInteger(ItemStack stack, String name){
         if(stack.getTagCompound() != null){
             return stack.getTagCompound().getInteger(name);

@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.inventory;
 
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
+import de.canitzp.rarmor.inventory.gui.GuiDigitalManual;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,11 +14,10 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
  */
 public class GuiHandler implements IGuiHandler {
 
-    public static final int RFArmorGui = 0;
+    public static final int RFArmorGui = 0, DigitalManualGui = 1;
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        ItemStack stack = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId()+1);
         switch (ID){
             case RFArmorGui:
                 return new ContainerRFArmor(player);
@@ -27,10 +27,11 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        ItemStack stack = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId()+1);
         switch (ID){
             case RFArmorGui:
                 return new GuiRFArmor(player, new ContainerRFArmor(player));
+            case DigitalManualGui:
+                return new GuiDigitalManual(player);
             default: return null;
         }
     }

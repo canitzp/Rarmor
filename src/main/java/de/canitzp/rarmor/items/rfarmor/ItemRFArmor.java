@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[] { 9, 24, 28, 9 }, 0);
+    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[] { 5, 15, 16, 5 }, 0);
 
     public int maxEnergy;
     public int maxTransfer;

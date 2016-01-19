@@ -1,5 +1,7 @@
 package de.canitzp.rarmor.items.rfarmor;
 
+import com.google.common.collect.Lists;
+import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.ItemStackUtil;
@@ -22,7 +24,7 @@ import java.util.List;
 public class ItemRFArmorBody extends ItemRFArmor {
 
     public int rfPerTick = 20, slotAmount = 31;
-    private final int FURNACEINPUT = 27, FURNACEOUTPUT = 28, MODULESLOT = 29, GENERATORSLOT = 30;
+    public static final int FURNACEINPUT = 27, FURNACEOUTPUT = 28, MODULESLOT = 29, GENERATORSLOT = 30;
 
     public ItemRFArmorBody() {
         super(ItemRFArmor.RFARMOR, ArmorType.BODY, 250000, 1500, "rfArmorBody");
@@ -33,6 +35,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
         this.setEnergy(stack, 0);
         NBTUtil.setBoolean(stack, "isFirstOpened", false);
+        NBTUtil.setInteger(stack, "rfPerTick", this.rfPerTick);
     }
 
     @Override
@@ -40,11 +43,13 @@ public class ItemRFArmorBody extends ItemRFArmor {
         ItemStack stackFull = new ItemStack(this);
         this.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
         NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
+        NBTUtil.setInteger(stackFull, "rfPerTick", this.rfPerTick);
         list.add(stackFull);
 
         ItemStack stackEmpty = new ItemStack(this);
         this.setEnergy(stackEmpty, 0);
-        NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
+        NBTUtil.setBoolean(stackEmpty, "isFirstOpened", false);
+        NBTUtil.setInteger(stackEmpty, "rfPerTick", this.rfPerTick);
         list.add(stackEmpty);
     }
 
@@ -57,8 +62,9 @@ public class ItemRFArmorBody extends ItemRFArmor {
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor) {
-        System.out.println(Arrays.toString(player.inventory.mainInventory));
         if(NBTUtil.getBoolean(armor, "isFirstOpened")){
+            if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", this.rfPerTick);
+            if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0) NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
             ItemStack foot = player.getCurrentArmor(0);
             ItemStack leggins = player.getCurrentArmor(1);
             ItemStack head = player.getCurrentArmor(3);
@@ -66,18 +72,18 @@ public class ItemRFArmorBody extends ItemRFArmor {
                 if (isBurnable(armor)) {
                     burn(armor);
                 } else NBTUtil.setInteger(armor, "BurnTime", 0);
-                this.handleModules(armor);
+                this.handleModules(world, player, armor);
                 EnergyUtil.balanceEnergy(new ItemStack[]{foot, leggins, armor, head});
             }
         }
     }
 
-    private void handleModules(ItemStack armor){
-        IInventory inventory = NBTUtil.readSlots(armor, this.slotAmount);
-        if (isGenerator(inventory, armor) || NBTUtil.getInteger(armor, "GenBurnTime") > 0) {
-            this.generate(armor);
-        } else {
-            NBTUtil.setInteger(armor, "GenBurnTime", 0);
+    private void handleModules(World world, EntityPlayer player, ItemStack armor){
+        InventoryBase inventory = NBTUtil.readSlots(armor, this.slotAmount);
+        ItemStack module = inventory.getStackInSlot(MODULESLOT);
+        if(module != null && module.getItem() instanceof IRarmorModule){
+            IRarmorModule mod = (IRarmorModule) module.getItem();
+            mod.onModuleTickInArmor(world, player, armor, module, inventory);
         }
     }
 
@@ -96,7 +102,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
             ItemStack input = inventory.getStackInSlot(FURNACEINPUT);
             if(input != null && FurnaceRecipes.instance().getSmeltingResult(input) != null){
                 ItemStack result = FurnaceRecipes.instance().getSmeltingResult(input);
-                if(this.extractEnergy(armor, this.rfPerTick * 200, true) >= 0){
+                if(this.extractEnergy(armor, NBTUtil.getInteger(armor, "rfPerTick") * 200, true) > 0){
                     ItemStack output = inventory.getStackInSlot(FURNACEOUTPUT);
                     if(output != null && result.isItemEqual(output)){
                         if(output.stackSize+result.stackSize<=inventory.getInventoryStackLimit()){
@@ -111,20 +117,11 @@ public class ItemRFArmorBody extends ItemRFArmor {
         return false;
     }
 
-    private boolean isGenerator(IInventory inv, ItemStack armor){
-        if(inv != null && NBTUtil.getBoolean(armor, "ModuleGenerator")){
-            int burnTime = TileEntityFurnace.getItemBurnTime(inv.getStackInSlot(GENERATORSLOT));
-            int energyToProduce = burnTime * this.rfPerTick;
-            return burnTime > 0 && this.getEnergyStored(armor) + (energyToProduce / 4) <= this.maxEnergy;
-        }
-        return false;
-    }
-
     public void burn(ItemStack body){
         int burnTime = NBTUtil.getInteger(body, "BurnTime");
         if(burnTime < 200){
-            burnTime++;
-            this.extractEnergy(body, rfPerTick, false);
+            burnTime += NBTUtil.getInteger(body, "BurnTimeMultiplier");
+            this.extractEnergy(body, NBTUtil.getInteger(body, "rfPerTick"), false);
         } else {
             smeltItem(body);
             burnTime = 0;
@@ -148,26 +145,6 @@ public class ItemRFArmorBody extends ItemRFArmor {
         }
     }
 
-    private void generate(ItemStack stack){
-        InventoryBase inventory = NBTUtil.readSlots(stack, this.slotAmount);
-        int burnTime = NBTUtil.getInteger(stack, "GenBurnTime");
-        if(burnTime == 0){
-            NBTUtil.setInteger(stack, "CurrentItemGenBurnTime", TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(GENERATORSLOT)));
-            ItemStack burnItem = inventory.getStackInSlot(GENERATORSLOT);
-            inventory = ItemStackUtil.reduceStackSize(inventory, GENERATORSLOT);
-            if(burnItem.getItem().getContainerItem() != null){
-                inventory = ItemStackUtil.addStackToSlot(inventory, new ItemStack(burnItem.getItem().getContainerItem()), GENERATORSLOT);
-            }
-            NBTUtil.saveSlots(stack, inventory);
-        }
-        if(burnTime < NBTUtil.getInteger(stack, "CurrentItemGenBurnTime")){
-            burnTime++;
-            this.receiveEnergy(stack, rfPerTick, false);
-        }else {
-            burnTime = 0;
-            NBTUtil.setInteger(stack, "CurrentItemGenBurnTime", 0);
-        }
-        NBTUtil.setInteger(stack, "GenBurnTime", burnTime);
-    }
+
 
 }

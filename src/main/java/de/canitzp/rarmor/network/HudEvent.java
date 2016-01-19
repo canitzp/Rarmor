@@ -1,9 +1,11 @@
 package de.canitzp.rarmor.network;
 
+import de.canitzp.rarmor.api.IIngameTooltipHandler;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
@@ -20,24 +22,18 @@ public class HudEvent {
     public void onGameOverlay(RenderGameOverlayEvent.Post event){
         Minecraft minecraft = Minecraft.getMinecraft();
         if(event.type == RenderGameOverlayEvent.ElementType.ALL && minecraft.currentScreen == null) {
-            EntityPlayer player = minecraft.thePlayer;
+            EntityPlayerSP player = minecraft.thePlayer;
+            ItemStack helmet = player.getCurrentArmor(3);
+            if(helmet != null && helmet.getItem() instanceof IIngameTooltipHandler){
+                ((IIngameTooltipHandler) helmet.getItem()).doRender(minecraft, player, event.resolution, minecraft.fontRendererObj, event.type, helmet, event.partialTicks);
+            }
+            /*
             if(isRarmorEquipped(player)){
                 ItemRFArmorHelmet item = (ItemRFArmorHelmet) player.getCurrentArmor(3).getItem();
                 item.displayHud(minecraft, player, event.resolution);
             }
+            */
         }
     }
 
-    private boolean isRarmorEquipped(EntityPlayer player) {
-        ItemStack head = player.getCurrentArmor(3);
-        ItemStack body = player.getCurrentArmor(2);
-        ItemStack leggins = player.getCurrentArmor(1);
-        ItemStack boots = player.getCurrentArmor(0);
-        if (head != null && body != null && leggins != null && boots != null) {
-            if (head.getItem() instanceof ItemRFArmorGeneric && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

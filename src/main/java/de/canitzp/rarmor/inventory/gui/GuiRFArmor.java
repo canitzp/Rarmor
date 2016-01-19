@@ -11,7 +11,7 @@ import de.canitzp.util.util.PacketUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
-import de.canitzp.rarmor.items.rfarmor.ItemModuleGenerator;
+import de.canitzp.rarmor.items.ItemModuleGenerator;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -65,12 +65,12 @@ public class GuiRFArmor extends GuiContainer {
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
         ItemRFArmorBody body = (ItemRFArmorBody) armor.getItem();
+        ItemStack generatorModule = NBTUtil.readSlots(armor, body.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         int energy = body.getEnergyStored(armor);
-        int factorOfEnergy = energy * 21 / body.maxEnergy;
         int factorOfBurnTime = (int) (NBTUtil.getInteger(armor, "BurnTime") * 11.9 / 200);
         int i = 0;
-        if(NBTUtil.getInteger(armor, "CurrentItemGenBurnTime") != 0){
-            i = (NBTUtil.getInteger(armor, "CurrentItemGenBurnTime") - NBTUtil.getInteger(armor, "GenBurnTime")) * 13 / NBTUtil.getInteger(armor, "CurrentItemGenBurnTime");
+        if(isModuleGenerator() && NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime") != 0){
+            i = (NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime") - NBTUtil.getInteger(generatorModule, "GenBurnTime")) * 13 / NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime");
         }
 
         //Draw Batterie:
@@ -82,7 +82,10 @@ public class GuiRFArmor extends GuiContainer {
         if(isModuleGenerator() && !this.isSettingsTab){
             this.mc.getTextureManager().bindTexture(modulesGui);
             this.drawTexturedModalRect(this.guiLeft + 120, this.guiTop + 13, 57, 0, 56, 55);
-            this.drawTexturedModalRect(this.guiLeft + 141, this.guiTop + 39 - i + 13, 58, 57 - i + 13, 13, i);
+            //this.drawTexturedModalRect(this.guiLeft + 141, this.guiTop + 39 - i + 13 - 1, 58, 57 - i + 13, 13, i);
+            if(NBTUtil.getInteger(generatorModule, "GenBurnTime") > 0){
+                this.drawTexturedModalRect(this.guiLeft + 141, this.guiTop + 39 - i + 12, 58, 57 - i + 12, 13, i + 1);
+            }
         }
         if(this.isSettingsTab){
             this.mc.getTextureManager().bindTexture(modulesGui);

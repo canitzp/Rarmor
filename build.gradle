@@ -21,7 +21,7 @@ plugins {
 }
 */
 
-version="0.1.1"
+version="0.1.3"
 group= "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "rarmor"
 
@@ -33,6 +33,10 @@ minecraft {
     useDepAts = true
     replaceIn "Rarmor.java"
     replace "@VERSION", project.version.toString()
+}
+
+dependencies {
+    deobfCompile "mezz.jei:jei_1.8.9:2.19.0.93"
 }
 
 processResources

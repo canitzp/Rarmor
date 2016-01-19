@@ -14,8 +14,9 @@ public class ItemRegistry {
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator;
+    public static Item moduleGenerator, moduleFastFurnace;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
+    public static Item digitalManual;
 
     public static void preInit(){
         Rarmor.logger.info("Registering Items");
@@ -25,10 +26,12 @@ public class ItemRegistry {
         rfArmorHelmet = new ItemRFArmorHelmet();
         rfArmorLeggins = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.LEGGINS, 250000, 1500, "rfArmorLeggins").setCreativeTab(Rarmor.rarmorTab);
         rfArmorBoots = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.SHOES, 250000, 1500, "rfArmorBoots").setCreativeTab(Rarmor.rarmorTab);
-        moduleGenerator = new ItemModuleGenerator().setCreativeTab(Rarmor.rarmorTab);
+        moduleGenerator = new ItemModuleGenerator();
+        moduleFastFurnace = new ItemModuleFurnaceSpeedUpgrade();
         ribbonCable = new Item().setUnlocalizedName(Rarmor.MODID + ".ribbonCable").setCreativeTab(Rarmor.rarmorTab);
         electricalController = new Item().setUnlocalizedName(Rarmor.MODID + ".electricalController").setCreativeTab(Rarmor.rarmorTab);
         advancedEyeMatrix = new ItemBase(Rarmor.MODID, "advancedEyeMatrix", Rarmor.rarmorTab);
+        //digitalManual = new ItemDigitalManual("digitalManual");
 
         GameRegistry.registerItem(ribbonCable, "ribbonCable");
         GameRegistry.registerItem(electricalController, "electricalController");

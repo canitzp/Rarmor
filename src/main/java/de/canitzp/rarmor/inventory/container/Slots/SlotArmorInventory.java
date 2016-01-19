@@ -24,7 +24,6 @@ public class SlotArmorInventory extends Slot {
     public void onSlotChanged(){
         ItemStack stack = this.player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId() + 1);
         if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemRFArmorBody){
-            //((ItemRFArmorBody) stack.getItem()).saveNBT(this.player, this.inv);
             NBTUtil.saveSlots(stack, (InventoryBase) inventory);
         }
         super.onSlotChanged();

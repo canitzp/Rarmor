@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.items.rfarmor;
+package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.Rarmor;
 import net.minecraft.item.Item;
@@ -13,7 +13,7 @@ public class ItemModule extends Item {
     public ItemModule(String name){
         setMaxStackSize(1);
         setUnlocalizedName(Rarmor.MODID + "." + name);
-        //setTextureName(Rarmor.MODID + ":" + name);
+        setCreativeTab(Rarmor.rarmorTab);
         Rarmor.proxy.addRenderer(new ItemStack(this), name);
         GameRegistry.registerItem(this, name);
     }
