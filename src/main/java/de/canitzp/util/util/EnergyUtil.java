@@ -18,8 +18,17 @@ public class EnergyUtil {
         int i = 0;
         for(ItemStack stack : stacks){
             i += NBTUtil.getInteger(stack, "Energy");
+            System.out.println(NBTUtil.getInteger(stack, "Energy"));
         }
         balanceEnergy(stacks, i);
+    }
+
+    public static void addEnergy(ItemStack stack, int energy, int maxEnergy){
+        int currentEnergy = NBTUtil.getInteger(stack, "Energy");
+        if(maxEnergy >= (currentEnergy + energy)){
+            currentEnergy += energy;
+            NBTUtil.setInteger(stack, "Energy", currentEnergy);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
+import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.inventory.container.Slots.SlotCraftingInput;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
@@ -35,11 +36,11 @@ public class GuiRFArmor extends GuiContainer {
     private EntityPlayer player;
     private ItemStack armor;
     private ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
-    private ResourceLocation modulesGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorModules.png");
+    public ResourceLocation modulesGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorModules.png");
     private float xSizeFloat;
     private float ySizeFloat;
     private List<GuiCheckBox> checkBoxList = Lists.newArrayList();
-    private boolean isSettingsTab;
+    public boolean isSettingsTab;
 
     public GuiRFArmor(EntityPlayer player, ContainerRFArmor containerRFArmor) {
         super(containerRFArmor);
@@ -65,33 +66,26 @@ public class GuiRFArmor extends GuiContainer {
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
         ItemRFArmorBody body = (ItemRFArmorBody) armor.getItem();
-        ItemStack generatorModule = NBTUtil.readSlots(armor, body.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         int energy = body.getEnergyStored(armor);
         int factorOfBurnTime = (int) (NBTUtil.getInteger(armor, "BurnTime") * 11.9 / 200);
-        int i = 0;
-        if(isModuleGenerator() && NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime") != 0){
-            i = (NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime") - NBTUtil.getInteger(generatorModule, "GenBurnTime")) * 13 / NBTUtil.getInteger(generatorModule, "CurrentItemGenBurnTime");
-        }
-
         //Draw Batterie:
-        //this.drawTexturedModalRect(this.guiLeft + 18, this.guiTop + 29 - factorOfEnergy, 55, 247 - factorOfEnergy, 10, factorOfEnergy);
         GuiUtil.drawBarHorizontal(normalGui, normalGui, this.guiLeft + 18, this.guiTop + 29, 55, 247, 10, 21, body.maxEnergy, energy);
         //Draw Furnace Burn Time:
         this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 89 - factorOfBurnTime, 39, 237 - factorOfBurnTime, 16, factorOfBurnTime);
-
-        if(isModuleGenerator() && !this.isSettingsTab){
-            this.mc.getTextureManager().bindTexture(modulesGui);
-            this.drawTexturedModalRect(this.guiLeft + 120, this.guiTop + 13, 57, 0, 56, 55);
-            //this.drawTexturedModalRect(this.guiLeft + 141, this.guiTop + 39 - i + 13 - 1, 58, 57 - i + 13, 13, i);
-            if(NBTUtil.getInteger(generatorModule, "GenBurnTime") > 0){
-                this.drawTexturedModalRect(this.guiLeft + 141, this.guiTop + 39 - i + 12, 58, 57 - i + 12, 13, i + 1);
-            }
-        }
         if(this.isSettingsTab){
             this.mc.getTextureManager().bindTexture(modulesGui);
             this.drawTexturedModalRect(this.guiLeft + 115, this.guiTop + 3, 114, 0, 129, 130);
             for(GuiCheckBox checkBox : checkBoxList){
                 checkBox.drawCheckBox(this.guiLeft, this.guiTop);
+            }
+            this.mc.getTextureManager().bindTexture(normalGui);
+        }
+
+        //Draw Module things:
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if(module != null){
+            if(module.getItem() instanceof IRarmorModule){
+                ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, module, this.isSettingsTab, par1, par2, par3);
             }
         }
 
@@ -99,10 +93,10 @@ public class GuiRFArmor extends GuiContainer {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float par3) {
+    public void drawScreen(int mouseX, int mouseY, float renderPartialTicks) {
         this.xSizeFloat = (float)mouseX;
         this.ySizeFloat = (float)mouseY;
-        super.drawScreen(mouseX, mouseY, par3);
+        super.drawScreen(mouseX, mouseY, renderPartialTicks);
 
         if(mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 &&mouseY <= this.guiTop + 28){
             int energy = ((ItemRFArmorBody) armor.getItem()).getEnergyStored(armor);
@@ -120,6 +114,15 @@ public class GuiRFArmor extends GuiContainer {
                 checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop, fontRendererObj);
             }
         }
+
+        //Draw Module things:
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if(module != null){
+            if(module.getItem() instanceof IRarmorModule){
+                ((IRarmorModule) module.getItem()).drawScreen(mc, this, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
+            }
+        }
+
     }
 
     @Override
@@ -137,11 +140,18 @@ public class GuiRFArmor extends GuiContainer {
                     if(checkBox.mouseClicked(mouseX, mouseY, this.guiLeft, this.guiTop)){
                         NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "SettingInWorldTooltip", checkBox.isClicked()));
                         NBTUtil.setBoolean(armor, "SettingInWorldTooltip", checkBox.isClicked());
-                        System.out.println(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
                     }
                 }
             }
         }
+        //Draw Module things:
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if(module != null){
+            if(module.getItem() instanceof IRarmorModule){
+                ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, module, this.isSettingsTab, type, mouseX, mouseY);
+            }
+        }
+
         try {
             super.mouseClicked(mouseX, mouseY, type);
         } catch (IOException e) {
@@ -163,15 +173,17 @@ public class GuiRFArmor extends GuiContainer {
                 return false;
             }
         }
-        if(moduleSlot != null){
-            if(moduleSlot.getStack() != null && !this.isSettingsTab){
-                Item item = moduleSlot.getStack().getItem();
-                if(item instanceof ItemModuleGenerator){
-                    return isAtCoordinates;
-                }
+
+        //Draw Module things:
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if(module != null && moduleSlot != null){
+            if(module.getItem() instanceof IRarmorModule){
+                return ((IRarmorModule) module.getItem()).showSlot(mc, this, module, this.isSettingsTab, moduleSlot, mouseX, mouseY, isAtCoordinates);
             }
+        } else {
             return isAtCoordinates && !(slot instanceof SlotModule);
         }
+
         return isAtCoordinates;
     }
 
@@ -185,9 +197,11 @@ public class GuiRFArmor extends GuiContainer {
         return null;
     }
 
-    private boolean isModuleGenerator(){
-        Slot moduleSlot = this.getSlotAtPosition(15, 34);
-        return moduleSlot != null && moduleSlot.getStack() != null && moduleSlot.getStack().getItem() instanceof ItemModuleGenerator;
+    public int getGuiLeft(){
+        return this.guiLeft;
+    }
+    public int getGuiTop(){
+        return this.guiTop;
     }
 
 }

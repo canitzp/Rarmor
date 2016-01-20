@@ -216,7 +216,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public boolean showDurabilityBar(ItemStack stack){
-        return stack.getTagCompound() == null || !stack.getTagCompound().getBoolean("CreativeTab");
+        return !(NBTUtil.getInteger(stack, "Energy") == this.maxEnergy);
     }
 
     public enum ArmorType{

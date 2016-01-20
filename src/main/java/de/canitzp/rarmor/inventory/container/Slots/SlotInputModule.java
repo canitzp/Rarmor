@@ -5,6 +5,7 @@ import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -14,7 +15,7 @@ public class SlotInputModule extends SlotArmorInventory {
 
     private final EntityPlayer player;
 
-    public SlotInputModule(InventoryBase inventory, int id, int x, int y, EntityPlayer player) {
+    public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y, player);
         this.player = player;
     }
@@ -40,7 +41,7 @@ public class SlotInputModule extends SlotArmorInventory {
         if(stack.getItem() instanceof IRarmorModule){
             IRarmorModule module = (IRarmorModule) stack.getItem();
             NBTUtil.setBoolean(stack, "Module" + module.getUniqueName(), false);
-            module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, (InventoryBase) this.inventory);
+            module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory);
         }
 
     }

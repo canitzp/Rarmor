@@ -1,6 +1,6 @@
 package de.canitzp.util.util;
 
-import de.canitzp.util.inventory.InventoryBase;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemStackUtil {
 
-    public static InventoryBase reduceStackSize(InventoryBase inventory, int slotId){
+    public static IInventory reduceStackSize(IInventory inventory, int slotId){
         if(inventory.getStackInSlot(slotId) != null){
             if(inventory.getStackInSlot(slotId).stackSize > 1){
                 inventory.getStackInSlot(slotId).stackSize--;
@@ -19,7 +19,7 @@ public class ItemStackUtil {
         return inventory;
     }
 
-    public static InventoryBase addStackToSlot(InventoryBase inventory, ItemStack stack, int slotId){
+    public static IInventory addStackToSlot(IInventory inventory, ItemStack stack, int slotId){
         if(inventory.getStackInSlot(slotId) != null){
             if(inventory.getStackInSlot(slotId).copy().isItemEqual(stack)){
                 inventory.setInventorySlotContents(slotId, new ItemStack(stack.getItem(), inventory.getStackInSlot(slotId).copy().stackSize + stack.stackSize, stack.getItemDamage()));

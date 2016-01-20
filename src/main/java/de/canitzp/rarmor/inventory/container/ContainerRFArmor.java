@@ -2,7 +2,6 @@ package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
-import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.ContainerUtil;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.inventory.container.Slots.*;
@@ -14,14 +13,12 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
-import java.util.List;
-
 /**
  * @author canitzp
  */
 public class ContainerRFArmor extends Container {
 
-    public InventoryBase inventory;
+    public IInventory inventory;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     public EntityPlayer player;
@@ -34,7 +31,7 @@ public class ContainerRFArmor extends Container {
         this.armor = player.getCurrentArmor(2);
         this.body = (ItemRFArmorBody) armor.getItem();
         InventoryPlayer inventoryPlayer = player.inventory;
-        this.inventory = NBTUtil.readSlots(this.armor, this.body.slotAmount);
+        this.inventory = NBTUtil.readSlots(this.armor, ItemRFArmorBody.slotAmount);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
@@ -91,20 +88,6 @@ public class ContainerRFArmor extends Container {
     }
 
     @Override
-    public void detectAndSendChanges() {
-        InventoryBase inv = NBTUtil.readSlots(this.armor, this.body.slotAmount);
-        if(this.inventory != inv){
-            for(int i = 0; inv.getSizeInventory() < i; i++){
-                this.inventory.setInventorySlotContents(i, inv.getStackInSlot(i));
-            }
-        }
-        this.inventory.slots = inv.slots;
-
-
-        super.detectAndSendChanges();
-    }
-
-    @Override
     public boolean canInteractWith(EntityPlayer player) {
         return this.inventory.isUseableByPlayer(player);
     }
@@ -128,13 +111,13 @@ public class ContainerRFArmor extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot){
-        return ContainerUtil.transferStackInSlot((List<Slot>)this.inventorySlots, player, slot);
+        return ContainerUtil.transferStackInSlot(this.inventorySlots, player, slot);
     }
 
     @Override
-    public void onCraftMatrixChanged(IInventory p_75130_1_) {
+    public void onCraftMatrixChanged(IInventory inventory) {
         this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.worldObj));
-        super.onCraftMatrixChanged(p_75130_1_);
+        super.onCraftMatrixChanged(inventory);
     }
 
     @Override

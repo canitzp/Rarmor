@@ -1,8 +1,6 @@
 package de.canitzp.rarmor.items.rfarmor;
 
-import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.ItemStackUtil;
 import de.canitzp.util.util.NBTUtil;
@@ -12,10 +10,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +19,7 @@ import java.util.List;
  */
 public class ItemRFArmorBody extends ItemRFArmor {
 
-    public int rfPerTick = 20, slotAmount = 31;
+    public static int rfPerTick = 20, slotAmount = 31;
     public static final int FURNACEINPUT = 27, FURNACEOUTPUT = 28, MODULESLOT = 29, GENERATORSLOT = 30;
 
     public ItemRFArmorBody() {
@@ -35,7 +31,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
         this.setEnergy(stack, 0);
         NBTUtil.setBoolean(stack, "isFirstOpened", false);
-        NBTUtil.setInteger(stack, "rfPerTick", this.rfPerTick);
+        NBTUtil.setInteger(stack, "rfPerTick", rfPerTick);
     }
 
     @Override
@@ -43,13 +39,13 @@ public class ItemRFArmorBody extends ItemRFArmor {
         ItemStack stackFull = new ItemStack(this);
         this.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
         NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
-        NBTUtil.setInteger(stackFull, "rfPerTick", this.rfPerTick);
+        NBTUtil.setInteger(stackFull, "rfPerTick", rfPerTick);
         list.add(stackFull);
 
         ItemStack stackEmpty = new ItemStack(this);
         this.setEnergy(stackEmpty, 0);
         NBTUtil.setBoolean(stackEmpty, "isFirstOpened", false);
-        NBTUtil.setInteger(stackEmpty, "rfPerTick", this.rfPerTick);
+        NBTUtil.setInteger(stackEmpty, "rfPerTick", rfPerTick);
         list.add(stackEmpty);
     }
 
@@ -62,8 +58,9 @@ public class ItemRFArmorBody extends ItemRFArmor {
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor) {
+        this.handleModules(world, player, armor);
         if(NBTUtil.getBoolean(armor, "isFirstOpened")){
-            if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", this.rfPerTick);
+            if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
             if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0) NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
             ItemStack foot = player.getCurrentArmor(0);
             ItemStack leggins = player.getCurrentArmor(1);
@@ -72,14 +69,13 @@ public class ItemRFArmorBody extends ItemRFArmor {
                 if (isBurnable(armor)) {
                     burn(armor);
                 } else NBTUtil.setInteger(armor, "BurnTime", 0);
-                this.handleModules(world, player, armor);
-                EnergyUtil.balanceEnergy(new ItemStack[]{foot, leggins, armor, head});
+                EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
             }
         }
     }
 
     private void handleModules(World world, EntityPlayer player, ItemStack armor){
-        InventoryBase inventory = NBTUtil.readSlots(armor, this.slotAmount);
+        IInventory inventory = NBTUtil.readSlots(armor, slotAmount);
         ItemStack module = inventory.getStackInSlot(MODULESLOT);
         if(module != null && module.getItem() instanceof IRarmorModule){
             IRarmorModule mod = (IRarmorModule) module.getItem();
@@ -97,7 +93,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     }
 
     private boolean isBurnable(ItemStack armor){
-        InventoryBase inventory = NBTUtil.readSlots(armor, this.slotAmount);
+        IInventory inventory = NBTUtil.readSlots(armor, slotAmount);
         if(inventory != null){
             ItemStack input = inventory.getStackInSlot(FURNACEINPUT);
             if(input != null && FurnaceRecipes.instance().getSmeltingResult(input) != null){
@@ -130,7 +126,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     }
 
     public void smeltItem(ItemStack body){
-        InventoryBase inventory = NBTUtil.readSlots(body, this.slotAmount);
+        IInventory inventory = NBTUtil.readSlots(body, slotAmount);
         ItemStack input = inventory.getStackInSlot(FURNACEINPUT);
         ItemStack output = inventory.getStackInSlot(FURNACEOUTPUT);
         if(input != null) {
