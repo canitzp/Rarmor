@@ -32,7 +32,7 @@ group= "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-c
 archivesBaseName = "rarmor"
 
 minecraft {
-    version = "1.8.9-11.15.0.1705"
+    version = "1.8.9-11.15.0.1710"
     runDir = "run"
     mappings = "stable_20"
     makeObfSourceJar = false

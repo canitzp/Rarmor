@@ -2,6 +2,7 @@ package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
+import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.ContainerUtil;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.inventory.container.Slots.*;
@@ -18,7 +19,7 @@ import net.minecraft.item.crafting.CraftingManager;
  */
 public class ContainerRFArmor extends Container {
 
-    public IInventory inventory;
+    public InventoryBase inventory;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     public EntityPlayer player;
@@ -31,7 +32,7 @@ public class ContainerRFArmor extends Container {
         this.armor = player.getCurrentArmor(2);
         this.body = (ItemRFArmorBody) armor.getItem();
         InventoryPlayer inventoryPlayer = player.inventory;
-        this.inventory = NBTUtil.readSlots(this.armor, ItemRFArmorBody.slotAmount);
+        this.inventory = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
@@ -85,6 +86,19 @@ public class ContainerRFArmor extends Container {
         this.addSlotToContainer(this.generatorSlot);
 
         this.onCraftMatrixChanged(this.craftMatrix);
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        InventoryBase inv = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
+        /*if (this.inventory != inv) {
+            for (int i = 0; inv.getSizeInventory() < i; i++) {
+                this.inventory.setInventorySlotContents(i, inv.getStackInSlot(i));
+            }
+        }
+        */
+        this.inventory.slots = inv.slots;
+        super.detectAndSendChanges();
     }
 
     @Override

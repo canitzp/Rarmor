@@ -1,5 +1,6 @@
 package de.canitzp.util.util;
 
+import de.canitzp.util.inventory.InventoryBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -55,6 +56,28 @@ public class NBTUtil {
             }
         }
         return new InventoryBasic("", false, slotAmo);
+    }
+
+    public static InventoryBase readSlotsBase(ItemStack stack, int slotAmo){
+        NBTTagCompound compound = stack.getTagCompound();
+        if(compound != null) {
+            if(compound.getInteger("SlotAmount") != 0){
+                int slotAmount = compound.getInteger("SlotAmount");
+                InventoryBase inv = new InventoryBase("", slotAmount);
+                if (inv.getSizeInventory() > 0) {
+                    NBTTagList tagList = compound.getTagList("Items", 10);
+                    for (int i = 0; i < tagList.tagCount(); i++) {
+                        NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
+                        byte slotIndex = tagCompound.getByte("Slot");
+                        if (slotIndex >= 0 && slotIndex < inv.getSizeInventory()) {
+                            inv.setInventorySlotContents(slotIndex, ItemStack.loadItemStackFromNBT(tagCompound));
+                        }
+                    }
+                }
+                return inv;
+            }
+        }
+        return new InventoryBase("", slotAmo);
     }
 
     public static void setInteger(ItemStack stack, String name, int i){
