@@ -18,7 +18,6 @@ public class EnergyUtil {
         int i = 0;
         for(ItemStack stack : stacks){
             i += NBTUtil.getInteger(stack, "Energy");
-            System.out.println(NBTUtil.getInteger(stack, "Energy"));
         }
         balanceEnergy(stacks, i);
     }
@@ -29,6 +28,16 @@ public class EnergyUtil {
             currentEnergy += energy;
             NBTUtil.setInteger(stack, "Energy", currentEnergy);
         }
+    }
+
+    public static void reduceEnergy(ItemStack stack, int energy){
+        int currentEnergy = NBTUtil.getInteger(stack, "Energy");
+        currentEnergy -= energy;
+        NBTUtil.setInteger(stack, "Energy", currentEnergy);
+    }
+
+    public static int getEnergy(ItemStack stack){
+        return NBTUtil.getInteger(stack, "Energy");
     }
 
 }

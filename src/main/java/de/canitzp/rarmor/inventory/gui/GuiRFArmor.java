@@ -2,6 +2,7 @@ package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.inventory.container.Slots.ISpecialSlot;
 import de.canitzp.rarmor.inventory.container.Slots.SlotCraftingInput;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class GuiRFArmor extends GuiContainer {
+public class GuiRFArmor extends GuiContainerBase {
 
     private EntityPlayer player;
     private ItemStack armor;
@@ -56,6 +57,26 @@ public class GuiRFArmor extends GuiContainer {
         GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, new ResourceLocation(Rarmor.MODID, "textures/gui/checkBox.png"), 117, 12, 124, 10, "Show In-World Tooltips", Lists.newArrayList("Show Tooltips like", "the Amount of Fluid in Tanks"));
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
         checkBoxList.add(setInWorldTooltip);
+        ISpecialSlot c1 = (ISpecialSlot) this.getSlotAtPosition(180, 14);
+        ISpecialSlot c2 = (ISpecialSlot) this.getSlotAtPosition(198, 14);
+        ISpecialSlot c3 = (ISpecialSlot) this.getSlotAtPosition(216, 14);
+        ISpecialSlot c4 = (ISpecialSlot) this.getSlotAtPosition(180, 32);
+        ISpecialSlot c5 = (ISpecialSlot) this.getSlotAtPosition(198, 32);
+        ISpecialSlot c6 = (ISpecialSlot) this.getSlotAtPosition(216, 32);
+        ISpecialSlot c7 = (ISpecialSlot) this.getSlotAtPosition(180, 50);
+        ISpecialSlot c8 = (ISpecialSlot) this.getSlotAtPosition(198, 50);
+        ISpecialSlot c9 = (ISpecialSlot) this.getSlotAtPosition(216, 50);
+        ISpecialSlot cO = (ISpecialSlot) this.getSlotAtPosition(217, 99);
+        c1.setSlotExist(true);
+        c2.setSlotExist(true);
+        c3.setSlotExist(true);
+        c4.setSlotExist(true);
+        c5.setSlotExist(true);
+        c6.setSlotExist(true);
+        c7.setSlotExist(true);
+        c8.setSlotExist(true);
+        c9.setSlotExist(true);
+        cO.setSlotExist(true);
     }
 
     @Override
@@ -137,6 +158,41 @@ public class GuiRFArmor extends GuiContainer {
             }
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;
+                ISpecialSlot c1 = (ISpecialSlot) this.getSlotAtPosition(180, 14);
+                ISpecialSlot c2 = (ISpecialSlot) this.getSlotAtPosition(198, 14);
+                ISpecialSlot c3 = (ISpecialSlot) this.getSlotAtPosition(216, 14);
+                ISpecialSlot c4 = (ISpecialSlot) this.getSlotAtPosition(180, 32);
+                ISpecialSlot c5 = (ISpecialSlot) this.getSlotAtPosition(198, 32);
+                ISpecialSlot c6 = (ISpecialSlot) this.getSlotAtPosition(216, 32);
+                ISpecialSlot c7 = (ISpecialSlot) this.getSlotAtPosition(180, 50);
+                ISpecialSlot c8 = (ISpecialSlot) this.getSlotAtPosition(198, 50);
+                ISpecialSlot c9 = (ISpecialSlot) this.getSlotAtPosition(216, 50);
+                ISpecialSlot cO = (ISpecialSlot) this.getSlotAtPosition(217, 99);
+                if(!this.isSettingsTab){
+                    c1.setSlotExist(true);
+                    c2.setSlotExist(true);
+                    c3.setSlotExist(true);
+                    c4.setSlotExist(true);
+                    c5.setSlotExist(true);
+                    c6.setSlotExist(true);
+                    c7.setSlotExist(true);
+                    c8.setSlotExist(true);
+                    c9.setSlotExist(true);
+                    cO.setSlotExist(true);
+                    this.isSettingsTab = false;
+                } else {
+                    c1.setSlotExist(false);
+                    c2.setSlotExist(false);
+                    c3.setSlotExist(false);
+                    c4.setSlotExist(false);
+                    c5.setSlotExist(false);
+                    c6.setSlotExist(false);
+                    c7.setSlotExist(false);
+                    c8.setSlotExist(false);
+                    c9.setSlotExist(false);
+                    cO.setSlotExist(false);
+                    this.isSettingsTab = true;
+                }
             }
 
             //Draw Module things:

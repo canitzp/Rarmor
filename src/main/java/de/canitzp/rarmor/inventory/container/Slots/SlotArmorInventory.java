@@ -11,9 +11,10 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotArmorInventory extends Slot {
+public class SlotArmorInventory extends Slot implements ISpecialSlot{
 
     private final EntityPlayer player;
+    public boolean slotExist = true;
 
     public SlotArmorInventory(IInventory inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y);
@@ -29,4 +30,13 @@ public class SlotArmorInventory extends Slot {
         super.onSlotChanged();
     }
 
+    @Override
+    public boolean doesSlotExist() {
+        return this.slotExist;
+    }
+
+    @Override
+    public void setSlotExist(boolean b) {
+        this.slotExist = b;
+    }
 }

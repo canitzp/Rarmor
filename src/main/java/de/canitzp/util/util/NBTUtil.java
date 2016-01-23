@@ -1,5 +1,6 @@
 package de.canitzp.util.util;
 
+import de.canitzp.rarmor.Rarmor;
 import de.canitzp.util.inventory.InventoryBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -13,8 +14,12 @@ import net.minecraft.nbt.NBTTagList;
 public class NBTUtil {
 
     public static void checkForNBT(ItemStack stack){
-        if(stack.getTagCompound() == null){
-            stack.setTagCompound(new NBTTagCompound());
+        if(stack != null){
+            if(stack.getTagCompound() == null){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+        } else {
+            Rarmor.logger.error("YOUR ITEMSTACK IS NULL! THIS CAN CAUSE CRASHES! NBTUtil-checkForNBT");
         }
     }
 

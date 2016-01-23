@@ -69,7 +69,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
                 if (isBurnable(armor)) {
                     burn(armor);
                 } else NBTUtil.setInteger(armor, "BurnTime", 0);
-                if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4){
+                if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
                     EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
                 }
             }

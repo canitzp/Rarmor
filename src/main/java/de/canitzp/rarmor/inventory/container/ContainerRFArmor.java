@@ -53,7 +53,7 @@ public class ContainerRFArmor extends Container {
             this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
         }
         //Armor Crafting Grid:
-        this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
+        this.addSlotToContainer(new SlotCraftingOutput(player, this.craftMatrix, this.craftResult, 0, 217, 99));
         for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 3; ++i1) {
                 this.addSlotToContainer(new SlotCraftingInput(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));

@@ -2,6 +2,8 @@ package de.canitzp.rarmor.items;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.inventory.container.Slots.ISpecialSlot;
+import de.canitzp.rarmor.inventory.container.Slots.SlotArmorInventory;
 import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
@@ -41,8 +43,8 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
-        dropSlot(inventory, inventory.getStackInSlot(30), player, armorChestplate);
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {
+        dropSlot(inventory, inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player, armorChestplate);
         NBTUtil.setInteger(module, "GenBurnTime", 0);
     }
 
@@ -65,22 +67,24 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY) {}
 
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY) {}
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY) {
+        if(settingActivated){
+            Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
+            if(moduleSlot instanceof ISpecialSlot){
+                ((ISpecialSlot) moduleSlot).setSlotExist(false);
+            }
+        }
+        if(!settingActivated){
+            Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
+            if(moduleSlot instanceof ISpecialSlot){
+                ((ISpecialSlot) moduleSlot).setSlotExist(true);
+            }
+        }
+    }
 
     @Override
     public boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-       //return !(settingActivated && slot instanceof SlotModule) && isMouseOverSlot;
-        Slot moduleSlot = this.getSlotAtPosition(gui, 15, 34);
-        if(moduleSlot != null){
-            if(moduleSlot.getStack() != null && !settingActivated){
-                Item item = moduleSlot.getStack().getItem();
-                if(item instanceof ItemModuleGenerator){
-                    return isMouseOverSlot;
-                }
-            }
-            return isMouseOverSlot && !(slot instanceof SlotModule);
-        }
-        return isMouseOverSlot;
+       return !(settingActivated && slot instanceof SlotModule) && isMouseOverSlot;
     }
 
     private boolean isGenerator(IInventory inv, ItemStack armor){

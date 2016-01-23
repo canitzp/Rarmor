@@ -40,8 +40,8 @@ public class SlotInputModule extends SlotArmorInventory {
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
         if(stack.getItem() instanceof IRarmorModule){
             IRarmorModule module = (IRarmorModule) stack.getItem();
+            module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory, this);
             NBTUtil.setBoolean(stack, "Module" + module.getUniqueName(), false);
-            module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory);
         }
 
     }

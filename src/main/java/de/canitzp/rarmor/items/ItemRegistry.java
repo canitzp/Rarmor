@@ -14,7 +14,7 @@ public class ItemRegistry {
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleJetPack, moduleSolarPanel;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
     public static Item digitalManual;
 
@@ -28,7 +28,7 @@ public class ItemRegistry {
         rfArmorBoots = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.SHOES, 250000, 1500, "rfArmorBoots").setCreativeTab(Rarmor.rarmorTab);
         moduleGenerator = new ItemModuleGenerator();
         moduleFastFurnace = new ItemModuleFurnaceSpeedUpgrade();
-        //moduleJetPack = new ItemModuleJetPack();
+        moduleFlying = new ItemModuleFlying();
         moduleSolarPanel = new ItemModuleSolarPanel();
         ribbonCable = new Item().setUnlocalizedName(Rarmor.MODID + ".ribbonCable").setCreativeTab(Rarmor.rarmorTab);
         electricalController = new Item().setUnlocalizedName(Rarmor.MODID + ".electricalController").setCreativeTab(Rarmor.rarmorTab);

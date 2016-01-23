@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 /**
  * @author canitzp
  */
-public class SlotModule extends SlotArmorInventory {
+public class SlotModule extends SlotArmorInventory{
 
     public SlotModule(IInventory inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y, player);

@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.util.util.NBTUtil;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,7 @@ public class ItemModuleFurnaceSpeedUpgrade extends ItemModule implements IRarmor
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {
         NBTUtil.setIntegerIfNot(armorChestplate, "rfPerTick", ItemRFArmorBody.rfPerTick);
         NBTUtil.setIntegerIfNot(armorChestplate, "BurnTimeMultiplier", 1);
     }
@@ -48,7 +49,7 @@ public class ItemModuleFurnaceSpeedUpgrade extends ItemModule implements IRarmor
 
     @Override
     public boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return isMouseOverSlot;
+        return isMouseOverSlot && !(slot instanceof SlotModule);
     }
 
 }
