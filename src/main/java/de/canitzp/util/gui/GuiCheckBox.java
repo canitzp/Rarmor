@@ -1,29 +1,32 @@
 package de.canitzp.util.gui;
 
+import de.canitzp.rarmor.api.IGuiRender;
 import de.canitzp.util.util.ColorUtil;
 import de.canitzp.util.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author canitzp
  */
-public class GuiCheckBox extends Gui{
+public class GuiCheckBox extends Gui implements IGuiRender{
 
     public ResourceLocation iconLocation;
-    public int x, y, width, height;
-    public GuiContainer guiContainer;
+    public int x, y, width, height, color;
+    public GuiScreen guiContainer;
     public String text;
     public List<String> description;
     private boolean isActivated;
+    private static List<GuiCheckBox> checkBoxList = new ArrayList<>();
 
-    public GuiCheckBox(GuiContainer guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description) {
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description, int color) {
         this.x = x;
         this.y = y;
         this.guiContainer = guiContainer;
@@ -32,11 +35,26 @@ public class GuiCheckBox extends Gui{
         this.iconLocation = iconLocation;
         this.width = width;
         this.height = height;
+        checkBoxList.add(this);
+        this.color = color;
+    }
+
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description) {
+        this.x = x;
+        this.y = y;
+        this.guiContainer = guiContainer;
+        this.text = text;
+        this.description = description;
+        this.iconLocation = iconLocation;
+        this.width = width;
+        this.height = height;
+        checkBoxList.add(this);
+        this.color = ColorUtil.BLACK;
     }
 
     public void drawCheckBox(int guiLeft, int guiTop){
         Minecraft minecraft = Minecraft.getMinecraft();
-        minecraft.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, ColorUtil.BLACK);
+        minecraft.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, this.color);
         minecraft.getTextureManager().bindTexture(iconLocation);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
@@ -75,4 +93,17 @@ public class GuiCheckBox extends Gui{
         this.isActivated = b;
     }
 
+    public static GuiCheckBox getCheckBoxAtCoordinates(int x, int y){
+        for(GuiCheckBox checkBox : checkBoxList){
+            if(checkBox.x == x && checkBox.y == y){
+                return checkBox;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void render(GuiScreen gui, int guiLeft, int guiTop) {
+        this.drawCheckBox(guiLeft, guiTop);
+    }
 }

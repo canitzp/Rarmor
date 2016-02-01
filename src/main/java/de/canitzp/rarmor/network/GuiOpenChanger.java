@@ -35,7 +35,7 @@ public class GuiOpenChanger {
                             NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "isFirstOpened", true));
                         }
                         event.setCanceled(true);
-                        NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player,  GuiHandler.RFArmorGui, Rarmor.instance));
+                        NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player,  GuiHandler.RFARMORGUI, Rarmor.instance));
                     } else if(body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                 }
             }

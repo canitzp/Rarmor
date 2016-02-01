@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.inventory.container.Slots;
+package de.canitzp.rarmor.api;
 
 /**
  * @author canitzp

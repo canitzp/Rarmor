@@ -1,9 +1,13 @@
-package de.canitzp.rarmor.items;
+package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
+import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.NBTUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockDoublePlant;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +16,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
 /**
  * @author canitzp
@@ -46,27 +49,11 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
         }
     }
 
-    @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {}
-
-    @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY) {}
-
-    @Override
-    public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY) {}
-
-    @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY) {}
-
-    @Override
-    public boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return isMouseOverSlot && !(slot instanceof SlotModule);
-    }
-
     private boolean canPlayerSeeSky(EntityPlayer player) {
-        if(!player.worldObj.isRaining()){
-            for(int i = (int) player.posY; i <= 256; i++){
-                if(!player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ))){
+        if(!player.worldObj.isRaining() && player.worldObj.isDaytime()){
+            for(int i = (int) player.posY + 1; i <= 256; i++){
+                Block block = player.worldObj.getBlockState(new BlockPos(player.posX, i, player.posZ)).getBlock();
+                if(block != null && ((block.isFullBlock() || block instanceof BlockLiquid) && !player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ)))){
                     return false;
                 }
             }
@@ -74,5 +61,6 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
         }
         return false;
     }
+
 
 }

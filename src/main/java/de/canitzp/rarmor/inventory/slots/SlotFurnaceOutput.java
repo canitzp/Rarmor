@@ -1,5 +1,6 @@
-package de.canitzp.rarmor.inventory.container.Slots;
+package de.canitzp.rarmor.inventory.slots;
 
+import de.canitzp.rarmor.api.SlotUpdate;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
@@ -10,7 +11,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotFurnaceOutput extends SlotArmorInventory {
+public class SlotFurnaceOutput extends SlotUpdate {
 
     private final EntityPlayer player;
 

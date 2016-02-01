@@ -14,9 +14,8 @@ public class ItemRegistry {
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleMovement;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
-    public static Item digitalManual;
 
     public static void preInit(){
         Rarmor.logger.info("Registering Items");
@@ -30,10 +29,10 @@ public class ItemRegistry {
         moduleFastFurnace = new ItemModuleFurnaceSpeedUpgrade();
         moduleFlying = new ItemModuleFlying();
         moduleSolarPanel = new ItemModuleSolarPanel();
+        //moduleMovement = new ItemModuleMovement();
         ribbonCable = new Item().setUnlocalizedName(Rarmor.MODID + ".ribbonCable").setCreativeTab(Rarmor.rarmorTab);
         electricalController = new Item().setUnlocalizedName(Rarmor.MODID + ".electricalController").setCreativeTab(Rarmor.rarmorTab);
         advancedEyeMatrix = new ItemBase(Rarmor.MODID, "advancedEyeMatrix", Rarmor.rarmorTab);
-        //digitalManual = new ItemDigitalManual("digitalManual");
 
         GameRegistry.registerItem(ribbonCable, "ribbonCable");
         GameRegistry.registerItem(electricalController, "electricalController");

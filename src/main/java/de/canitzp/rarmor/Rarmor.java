@@ -1,5 +1,6 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.blocks.BlockRegistry;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
@@ -34,6 +35,7 @@ public class Rarmor {
     public void preInit(FMLPreInitializationEvent event){
         logger.info("Starting " + NAME + " " + VERSION + " with ModID: " + MODID + ". Thanks for using this Mod :)");
         rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
+        BlockRegistry.preInit();
         ItemRegistry.preInit();
         logger.info("Finished PreInitialization");
     }

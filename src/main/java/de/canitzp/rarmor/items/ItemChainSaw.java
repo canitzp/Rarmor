@@ -41,16 +41,12 @@ public class ItemChainSaw extends ItemEnergyContainer {
         this.setMaxStackSize(1);
         this.rfPerUse = rfPerUse;
         this.setUnlocalizedName(Rarmor.MODID + "." + name);
+        this.setRegistryName(Rarmor.MODID + "." + name);
         this.setCreativeTab(Rarmor.rarmorTab);
         //this.setTextureName(Rarmor.MODID + ":" + name);
         this.setHarvestLevel("axe", 3);
         Rarmor.proxy.addRenderer(new ItemStack(this), name);
         GameRegistry.registerItem(this, name);
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player){
-        return stack;
     }
 
     @Override

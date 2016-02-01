@@ -1,8 +1,6 @@
-package de.canitzp.rarmor.inventory.container.Slots;
+package de.canitzp.rarmor.api;
 
 import de.canitzp.util.util.NBTUtil;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -11,20 +9,20 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotArmorInventory extends Slot implements ISpecialSlot{
+public class SlotUpdate extends Slot implements ISpecialSlot {
 
     private final EntityPlayer player;
     public boolean slotExist = true;
 
-    public SlotArmorInventory(IInventory inventory, int id, int x, int y, EntityPlayer player) {
+    public SlotUpdate(IInventory inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y);
         this.player = player;
     }
 
     @Override
     public void onSlotChanged(){
-        ItemStack stack = this.player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId() + 1);
-        if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemRFArmorBody){
+        ItemStack stack = this.player.getCurrentArmor(2);
+        if(stack != null){
             NBTUtil.saveSlots(stack, inventory);
         }
         super.onSlotChanged();

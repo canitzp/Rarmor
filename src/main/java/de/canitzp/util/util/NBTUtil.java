@@ -104,8 +104,13 @@ public class NBTUtil {
     }
 
     public static void setBoolean(ItemStack stack, String name, boolean b){
-        checkForNBT(stack);
-        stack.getTagCompound().setBoolean(name, b);
+        if(stack != null){
+            checkForNBT(stack);
+            stack.getTagCompound().setBoolean(name, b);
+        } else {
+            Rarmor.logger.error("NBTUtil.setBoolean(): My ItemStack is null. THIS IS AN ERROR!");
+        }
+
     }
 
     public static boolean getBoolean(ItemStack stack, String name) {

@@ -21,12 +21,12 @@ import net.minecraft.world.World;
 public interface IAtomicReconstructor{
 
     /**
-     * Returns the x coord of the reconstructor
+     * Returns the getX coord of the reconstructor
      */
     int getX();
 
     /**
-     * Returns the y coord of the reconstructor
+     * Returns the getY coord of the reconstructor
      */
     int getY();
 

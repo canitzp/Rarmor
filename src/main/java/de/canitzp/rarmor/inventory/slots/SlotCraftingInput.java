@@ -1,12 +1,13 @@
-package de.canitzp.rarmor.inventory.container.Slots;
+package de.canitzp.rarmor.inventory.slots;
 
+import de.canitzp.rarmor.api.ISpecialSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 
 /**
  * @author canitzp
  */
-public class SlotCraftingInput extends Slot implements ISpecialSlot{
+public class SlotCraftingInput extends Slot implements ISpecialSlot {
 
     public boolean isSlot;
 

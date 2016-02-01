@@ -1,8 +1,10 @@
 package de.canitzp.rarmor.network;
 
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.util.util.NBTUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -17,8 +19,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class PacketSendNBTBoolean implements IMessage{
 
     public String nbt;
-    public boolean b;
+    public boolean b, stackInput;
     public int playerID, worldID, playerSlotID;
+    public ItemStack stack;
 
     public PacketSendNBTBoolean(){}
 
@@ -33,6 +36,13 @@ public class PacketSendNBTBoolean implements IMessage{
         this.nbt = nbt;
         this.b = b;
         this.playerSlotID = slotID;
+        this.playerID = player.getEntityId();
+        this.worldID = player.getEntityWorld().provider.getDimensionId();
+    }
+    public PacketSendNBTBoolean(EntityPlayer player, String nbt, boolean b) {
+        this.nbt = nbt;
+        this.b = b;
+        this.playerSlotID = 123456;
         this.playerID = player.getEntityId();
         this.worldID = player.getEntityWorld().provider.getDimensionId();
     }
@@ -60,7 +70,12 @@ public class PacketSendNBTBoolean implements IMessage{
         public IMessage onMessage(PacketSendNBTBoolean message, MessageContext ctx) {
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-            ItemStack stack = player.inventory.getStackInSlot(message.playerSlotID);
+            ItemStack stack;
+            if(message.playerSlotID == 123456){
+                stack = NBTUtil.readSlots(player.inventory.getStackInSlot(38), ItemRFArmorBody.slotAmount).getStackInSlot(29);
+            } else {
+                stack = player.inventory.getStackInSlot(message.playerSlotID);
+            }
             NBTUtil.setBoolean(stack, message.nbt, message.b);
             return null;
         }

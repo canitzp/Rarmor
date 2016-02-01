@@ -1,7 +1,7 @@
-package de.canitzp.rarmor.inventory.container.Slots;
+package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.util.inventory.InventoryBase;
+import de.canitzp.rarmor.api.SlotUpdate;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,9 +11,10 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotInputModule extends SlotArmorInventory {
+public class SlotInputModule extends SlotUpdate {
 
     private final EntityPlayer player;
+    private ItemStack actualStack;
 
     public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y, player);
@@ -28,11 +29,17 @@ public class SlotInputModule extends SlotArmorInventory {
     @Override
     public void onSlotChanged(){
         ItemStack stack = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId()+1);
+        if(actualStack != null && !actualStack.isItemEqual(this.getStack())){
+            if(actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
+                ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory, this);
+            }
+        }
         if(getStack() != null && getStack().getItem() != null){
             if(getStack().getItem() instanceof IRarmorModule){
                 NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) getStack().getItem()).getUniqueName(), true);
             }
         }
+        actualStack = this.getStack();
         super.onSlotChanged();
     }
 
@@ -43,7 +50,7 @@ public class SlotInputModule extends SlotArmorInventory {
             module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory, this);
             NBTUtil.setBoolean(stack, "Module" + module.getUniqueName(), false);
         }
-
+        actualStack = null;
     }
 
 }

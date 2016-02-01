@@ -1,8 +1,6 @@
 package de.canitzp.rarmor.inventory.gui;
 
-import de.canitzp.rarmor.inventory.container.Slots.ISpecialSlot;
-import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.rarmor.api.ISpecialSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,10 +8,8 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemCoal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;

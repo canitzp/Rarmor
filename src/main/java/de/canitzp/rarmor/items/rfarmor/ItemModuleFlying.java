@@ -1,7 +1,7 @@
-package de.canitzp.rarmor.items;
+package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
+import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.NBTUtil;
 import net.minecraft.client.Minecraft;
@@ -55,20 +55,6 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule {
             player.capabilities.isFlying = false;
             player.capabilities.disableDamage = false;
         }
-    }
-
-    @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY) {}
-
-    @Override
-    public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY) {}
-
-    @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY) {}
-
-    @Override
-    public boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return isMouseOverSlot && !(slot instanceof SlotModule);
     }
 
 }

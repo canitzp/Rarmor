@@ -2,8 +2,8 @@ package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.inventory.container.Slots.ISpecialSlot;
-import de.canitzp.rarmor.inventory.container.Slots.SlotCraftingInput;
+import de.canitzp.rarmor.api.ISpecialSlot;
+import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.util.gui.GuiCheckBox;
@@ -12,16 +12,13 @@ import de.canitzp.util.util.NBTUtil;
 import de.canitzp.util.util.PacketUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
-import de.canitzp.rarmor.inventory.container.Slots.SlotModule;
-import de.canitzp.rarmor.items.ItemModuleGenerator;
+import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -38,6 +35,7 @@ public class GuiRFArmor extends GuiContainerBase {
     private ItemStack armor;
     private ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
     public ResourceLocation modulesGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorModules.png");
+    public ResourceLocation checkBox = new ResourceLocation(Rarmor.MODID, "textures/gui/checkBox.png");
     private float xSizeFloat;
     private float ySizeFloat;
     private List<GuiCheckBox> checkBoxList = Lists.newArrayList();
@@ -54,9 +52,15 @@ public class GuiRFArmor extends GuiContainerBase {
     @Override
     public void initGui() {
         super.initGui();
-        GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, new ResourceLocation(Rarmor.MODID, "textures/gui/checkBox.png"), 117, 12, 124, 10, "Show In-World Tooltips", Lists.newArrayList("Show Tooltips like", "the Amount of Fluid in Tanks"));
+        GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, this.checkBox, 117, 12, 124, 10, "Show In-World Tooltips", Lists.newArrayList("Show Tooltips like", "the Amount of Fluid in Tanks"));
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
         checkBoxList.add(setInWorldTooltip);
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if(module != null){
+            if(module.getItem() instanceof IRarmorModule){
+                ((IRarmorModule) module.getItem()).initGui(player.getEntityWorld(), player, armor, this, checkBoxList, checkBox);
+            }
+        }
         ISpecialSlot c1 = (ISpecialSlot) this.getSlotAtPosition(180, 14);
         ISpecialSlot c2 = (ISpecialSlot) this.getSlotAtPosition(198, 14);
         ISpecialSlot c3 = (ISpecialSlot) this.getSlotAtPosition(216, 14);
@@ -99,7 +103,7 @@ public class GuiRFArmor extends GuiContainerBase {
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, module, this.isSettingsTab, par1, par2, par3);
+                ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, par1, par2, par3, guiLeft, guiTop);
             }
         }
 
@@ -137,7 +141,7 @@ public class GuiRFArmor extends GuiContainerBase {
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) module.getItem()).drawScreen(mc, this, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
+                ((IRarmorModule) module.getItem()).drawScreen(mc, this, this.armor, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
             }
         }
 
@@ -199,7 +203,7 @@ public class GuiRFArmor extends GuiContainerBase {
             ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if(module != null){
                 if(module.getItem() instanceof IRarmorModule){
-                    ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, module, this.isSettingsTab, type, mouseX, mouseY);
+                    ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, type, mouseX, mouseY, this.guiLeft, this.guiTop);
                 }
             }
 
@@ -239,7 +243,7 @@ public class GuiRFArmor extends GuiContainerBase {
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null && moduleSlot != null){
             if(module.getItem() instanceof IRarmorModule){
-                return ((IRarmorModule) module.getItem()).showSlot(mc, this, module, this.isSettingsTab, slot, mouseX, mouseY, slotX, slotY, isAtCoordinates);
+                return ((IRarmorModule) module.getItem()).showSlot(mc, this, this.armor, module, this.isSettingsTab, slot, mouseX, mouseY, slotX, slotY, isAtCoordinates);
             }
         } else {
             return isAtCoordinates && !(slot instanceof SlotModule);

@@ -1,12 +1,13 @@
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.api.SlotUpdate;
+import de.canitzp.rarmor.inventory.slots.*;
+import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
 import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.ContainerUtil;
 import de.canitzp.util.util.NBTUtil;
-import de.canitzp.rarmor.inventory.container.Slots.*;
-import de.canitzp.rarmor.inventory.container.Slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -23,7 +24,7 @@ public class ContainerRFArmor extends Container {
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
     public EntityPlayer player;
-    public SlotArmorInventory generatorSlot;
+    public SlotUpdate generatorSlot;
     public ItemRFArmorBody body;
     public ItemStack armor;
 
@@ -39,7 +40,7 @@ public class ContainerRFArmor extends Container {
         //Armor Inventory:
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new SlotArmorInventory(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
+                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
             }
         }
         //Player Inventory:
@@ -60,7 +61,7 @@ public class ContainerRFArmor extends Container {
             }
         }
         //Armor Furnace Input:
-        this.addSlotToContainer(new SlotArmorInventory(this.inventory, 27, 15, 57, player));
+        this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
         //Armor Furnace Output:
         this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
         //Armor Module Slot:

@@ -13,6 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author canitzp
@@ -24,6 +26,7 @@ public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTool
         setCreativeTab(Rarmor.rarmorTab);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void doRender(Minecraft minecraft, EntityPlayerSP playerSP, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType elementType, ItemStack helmet, float partialTicks) {
         if(isRarmorEquipped(playerSP) && NBTUtil.getBoolean(playerSP.getCurrentArmor(2), "SettingInWorldTooltip")){

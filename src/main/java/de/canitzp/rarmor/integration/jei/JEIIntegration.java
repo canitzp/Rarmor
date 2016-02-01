@@ -29,6 +29,7 @@ public class JEIIntegration implements IModPlugin {
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBoots, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorHelmet, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorLeggins, "Energy", "isFirstOpened");
+        ignoreList.ignoreNbtTagNames(ItemRegistry.moduleGenerator);
     }
 
     @Override
