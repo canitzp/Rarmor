@@ -17,6 +17,10 @@ public interface IElectricalComponents {
 
     int getHeight();
 
+    int getTextureWidth();
+
+    int getTextureHeight();
+
     int getTextureX();
 
     int getTextureY();

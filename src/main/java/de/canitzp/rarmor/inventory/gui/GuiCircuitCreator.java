@@ -43,6 +43,19 @@ public class GuiCircuitCreator extends GuiContainer {
     }
 
     @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException{
+        for(ElectricalComponent component : electricalComponents) {
+            if (component != null) {
+                if(component instanceof IGuiInteraction){
+                    if(!((IGuiInteraction) component).onKeyPressed(this, this.world, this.player, typedChar, keyCode)){
+                        super.keyTyped(typedChar, keyCode);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         this.mc.getTextureManager().bindTexture(mainGui);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
@@ -50,7 +63,7 @@ public class GuiCircuitCreator extends GuiContainer {
         for(ElectricalComponent component : electricalComponents){
             if(component != null){
                 this.mc.getTextureManager().bindTexture(component.guiComponent());
-                this.drawTexturedModalRect(component.getX() + guiLeft, component.getY() + guiTop, component.getTextureX(), component.getTextureY(), component.getWidth(), component.getHeight());
+                this.drawTexturedModalRect(component.getX() + guiLeft, component.getY() + guiTop, component.getTextureX(), component.getTextureY(), component.getTextureWidth(), component.getTextureHeight());
                 if(component instanceof IGuiInteraction){
                     ((IGuiInteraction) component).drawGuiContainerBackgroundLayer(this, this.world, this.player, this.guiLeft, this.guiTop, partialTicks, mouseX, mouseY);
                     this.mc.getTextureManager().bindTexture(mainGui);
@@ -64,11 +77,11 @@ public class GuiCircuitCreator extends GuiContainer {
      super.drawScreen(mouseX, mouseY, partialTicks);
         for(ElectricalComponent component : electricalComponents){
             if(component != null){
-                this.drawHoveringText(component.getHoveringText(), component.getX() + guiLeft, component.getY() + guiTop);
+                //this.drawHoveringText(component.getHoveringText(), component.getX() + guiLeft, component.getY() + guiTop);
                 component.render(this, this.fontRendererObj);
                 if(component instanceof IGuiInteraction){
                     ((IGuiInteraction) component).drawScreen(this, this.world, this.player, mouseX, mouseY, partialTicks);
-                    ((IGuiInteraction) component).mouseHover(this, this.world, this.player, mouseX, mouseY);
+                    ((IGuiInteraction) component).mouseHover(this, this.world, this.player, this.guiLeft, this.guiTop, mouseX, mouseY);
                 }
             }
         }
@@ -78,9 +91,7 @@ public class GuiCircuitCreator extends GuiContainer {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
         for(ElectricalComponent component : electricalComponents){
             if(component != null){
-
                 if(component.getX() + guiLeft <= mouseX && component.getX() + guiLeft + component.getWidth() >= mouseX){
-                    System.out.println(component.getX() + guiLeft + component.getWidth() + " " + mouseX);
                     if(component.getY() + guiTop <= mouseY && component.getY() + guiTop + component.getHeight() >= mouseY){
                         if(component instanceof IGuiInteraction){
                             ((IGuiInteraction) component).mouseClicked(this, this.world, this.player, this.guiLeft, this.guiTop, mouseX, mouseY, mouseButton);
@@ -95,6 +106,7 @@ public class GuiCircuitCreator extends GuiContainer {
             ElectricalComponent base = new ElectricalComponent(mouseX - guiLeft, mouseY - guiTop, 8, 5, 0, 0, "srg");
             this.electricalComponents.add(base);
         }
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     public void addElectricalComponent(ElectricalComponent component){

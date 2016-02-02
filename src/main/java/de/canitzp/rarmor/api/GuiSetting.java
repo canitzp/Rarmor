@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.api;
 
 import com.google.common.collect.Lists;
+import de.canitzp.util.util.ColorUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -24,7 +25,7 @@ public class GuiSetting extends GuiScreen {
         int l1 = x + 12;
         int i2 = y - 12;
         int i = lenght;
-        int k = 8 + renderer.size();
+        int k = 10 * renderer.size();
         int l = -267386864;
         this.drawGradientRect(l1 - 3, i2 - 4, l1 + i + 3, i2 - 3, l, l);
         this.drawGradientRect(l1 - 3, i2 + k + 3, l1 + i + 3, i2 + k + 4, l, l);
