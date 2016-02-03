@@ -14,18 +14,18 @@ import java.io.IOException;
 @SideOnly(Side.CLIENT)
 public interface IGuiInteraction {
 
-    default void initGui(GuiScreen gui, World world, EntityPlayer player){}
+    default void initGui(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player){}
 
-    default void drawGuiContainerBackgroundLayer(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){}
+    default void drawGuiContainerBackgroundLayer(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){}
 
-    default void drawScreen(GuiScreen gui, World world, EntityPlayer player, int mouseX, int mouseY, float partialTicks){}
+    default void drawScreen(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int mouseX, int mouseY, float partialTicks){}
 
-    default void mouseClicked(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {}
+    default void mouseClicked(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {}
 
-    default void mouseHover(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY){}
+    default void mouseHover(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY){}
 
-    default void drawGuiContainerForegroundLayer(GuiScreen gui, World world, EntityPlayer player, int mouseX, int mouseY) {}
+    default void drawGuiContainerForegroundLayer(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int mouseX, int mouseY) {}
 
-    default boolean onKeyPressed(GuiScreen gui, World world, EntityPlayer player, char typedChar, int keyCode){return false;}
+    default boolean onKeyPressed(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, char typedChar, int keyCode){return false;}
 
 }

@@ -3,10 +3,11 @@ package de.canitzp.rarmor.inventory.gui;
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.api.ISpecialSlot;
+import de.canitzp.rarmor.api.RamorResources;
 import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.util.gui.GuiCheckBox;
+import de.canitzp.rarmor.api.GuiCheckBox;
 import de.canitzp.util.util.GuiUtil;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.util.util.PacketUtil;
@@ -33,9 +34,9 @@ public class GuiRFArmor extends GuiContainerBase {
 
     private EntityPlayer player;
     private ItemStack armor;
-    private ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
-    public ResourceLocation modulesGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorModules.png");
-    public ResourceLocation checkBox = new ResourceLocation(Rarmor.MODID, "textures/gui/checkBox.png");
+    private ResourceLocation normalGui = RamorResources.RARMORGUI.getNewLocation();
+    public ResourceLocation modulesGui = RamorResources.RARMORMODULEGUI.getNewLocation();
+    public ResourceLocation checkBox = RamorResources.GUIELEMENTS.getNewLocation();
     private float xSizeFloat;
     private float ySizeFloat;
     private List<GuiCheckBox> checkBoxList = Lists.newArrayList();

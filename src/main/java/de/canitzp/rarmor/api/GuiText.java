@@ -1,7 +1,8 @@
-package de.canitzp.rarmor.inventory.gui;
+package de.canitzp.rarmor.api;
 
 import de.canitzp.rarmor.api.IGuiRender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -21,7 +22,12 @@ public class GuiText extends Gui implements IGuiRender {
     }
 
     @Override
-    public void render(GuiScreen gui, int guiLeft, int guiTop) {
-        Minecraft.getMinecraft().fontRendererObj.drawString(this.text, this.x, this.y, this.color);
+    public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
+        Minecraft.getMinecraft().fontRendererObj.drawString(this.text, x, y, this.color);
+    }
+
+    @Override
+    public int getLength(FontRenderer fontRenderer) {
+        return fontRenderer.getStringWidth(this.text);
     }
 }

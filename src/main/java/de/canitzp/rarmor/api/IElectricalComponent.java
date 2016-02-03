@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public interface IElectricalComponents {
+public interface IElectricalComponent {
 
     ResourceLocation guiComponent();
 

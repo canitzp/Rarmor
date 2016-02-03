@@ -1,10 +1,6 @@
 package de.canitzp.rarmor.api;
 
 import com.google.common.collect.Lists;
-import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.inventory.gui.GuiText;
-import de.canitzp.rarmor.inventory.gui.GuiTextField;
-import de.canitzp.util.gui.GuiCheckBox;
 import de.canitzp.util.util.ColorUtil;
 import de.canitzp.util.util.GuiUtil;
 import net.minecraft.client.Minecraft;
@@ -19,16 +15,11 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ElectricalComponent implements IElectricalComponents, IGuiInteraction {
+public class ElectricalComponent implements IElectricalComponent, IGuiInteraction {
 
-    public ResourceLocation location = new ResourceLocation(Rarmor.MODID, "textures/gui/guiElectricalComponents.png");
-    public ResourceLocation checkBox = new ResourceLocation(Rarmor.MODID, "textures/gui/checkBox.png");
+    public ResourceLocation location = RamorResources.ELECTRICALCOMPONENTS.getNewLocation();
     public int x, y, width, height, textureX, textureY, textureW, textureH;
     public String hoveringText;
-    private List<GuiSetting> settings = Lists.newArrayList();
-    private GuiCheckBox box;
-    private GuiText text;
-    private GuiTextField field;
 
     public ElectricalComponent(int x, int y, int width, int height, int textureX, int textureY, String hoveringText) {
         this.x = x;
@@ -91,7 +82,7 @@ public class ElectricalComponent implements IElectricalComponents, IGuiInteracti
     }
 
     @Override
-    public void mouseHover(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY){
+    public void mouseHover(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY){
         if(this.getX() + guiLeft <= mouseX && this.getX() + guiLeft + this.getTextureWidth() >= mouseX) {
             if (this.getY() + guiTop <= mouseY && this.getY() + guiTop + this.getTextureHeight() >= mouseY) {
                 GuiUtil.drawHoveringText(gui, this.getHoveringText(), mouseX, mouseY, Minecraft.getMinecraft().fontRendererObj);
@@ -100,35 +91,38 @@ public class ElectricalComponent implements IElectricalComponents, IGuiInteracti
     }
 
     @Override
-    public boolean onKeyPressed(GuiScreen gui, World world, EntityPlayer player, char typedChar, int keyCode) {
-        return field != null && field.textboxKeyTyped(typedChar, keyCode);
+    public boolean onKeyPressed(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, char typedChar, int keyCode) {
+        if(!setting.textFields.isEmpty()){
+            for(GuiTextField field : setting.textFields){
+                if(field.textboxKeyTyped(typedChar, keyCode)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
-    public void mouseClicked(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {
-        if(box != null){
-            box.mouseClicked(mouseX, mouseY, guiLeft, guiTop);
-            field.mouseClicked(mouseX, mouseY, mouseButton);
-        }else {
-            box = new GuiCheckBox(gui, checkBox, x + 12, y + 2, 20, 8, "Ellpeck ist ein trottel", null, ColorUtil.WHITE);
-            text = new GuiText("Resistance:", x + guiLeft + 12, y + guiTop + 12, ColorUtil.WHITE);
-            field = new GuiTextField(0, x + guiLeft + 12, y + guiTop + 22, 140, 9);
-            GuiSetting setting = new GuiSetting();
-            setting.renderer.add(box);
-            setting.renderer.add(text);
-            setting.renderer.add(field);
-            settings.add(setting);
-            this.width += 150;
-            this.height += setting.renderer.size() * 12;
+    public void mouseClicked(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {
+        if(!setting.textFields.isEmpty()){
+            for(GuiTextField field : setting.textFields){
+                field.mouseClicked(mouseX, mouseY, mouseButton);
+            }
+        } else {
+            setting.textFields.add(new GuiTextField(0, x, y, 50, 9, "Resistance:", ColorUtil.WHITE, 69));
+            setting.textFields.add(new GuiTextField(1, x, y, 50, 9, "Capacitance:", ColorUtil.WHITE, 69));
+            setting.textFields.add(new GuiTextField(2, x, y, 50, 9, "Inductivity:", ColorUtil.WHITE, 69));
+            setting.textFields.add(new GuiTextField(3, x, y, 50, 9, "Max. Voltage:", ColorUtil.WHITE, 69));
+            setting.textFields.add(new GuiTextField(4, x, y, 50, 9, "Max. Current:", ColorUtil.WHITE, 69));
+            setting.textFields.add(new GuiTextField(5, x, y, 50, 9, "Max. Power:", ColorUtil.WHITE, 69));
+            setting.init();
         }
     }
 
     @Override
-    public void drawGuiContainerBackgroundLayer(GuiScreen gui, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){
-        for(GuiSetting setting : settings){
-            if(setting != null){
-                setting.render(gui, guiLeft, guiTop, guiLeft + x, guiTop + y + 14, 150);
-            }
+    public void drawGuiContainerBackgroundLayer(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){
+        if(!setting.renderer.isEmpty()){
+            setting.render(gui, this, guiLeft, guiTop, guiLeft + x, guiTop + y);
         }
     }
 

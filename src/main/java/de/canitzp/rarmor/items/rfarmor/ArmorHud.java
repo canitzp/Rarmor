@@ -5,6 +5,7 @@ import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.api.RamorResources;
 import de.canitzp.util.util.GuiUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -32,6 +33,9 @@ import java.util.List;
  * @author canitzp
  */
 public class ArmorHud {
+
+    private static final ResourceLocation guiBat = RamorResources.BATTERYGUI.getNewLocation();
+    private static final ResourceLocation guiRarmor = RamorResources.RARMORGUI.getNewLocation();
 
     public static void displayNames(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, int colorCode){
         MovingObjectPosition posHit = Minecraft.getMinecraft().objectMouseOver;
@@ -151,20 +155,16 @@ public class ArmorHud {
     }
 
     private static void drawBat(FontRenderer fontRenderer, ScaledResolution resolution, String energyText, float row, float y, int maxEnergy, int energyAmount){
-        ResourceLocation guiBat = new ResourceLocation(Rarmor.MODID, "textures/gui/guiBattery.png");
-        ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
         int xg = ((resolution.getScaledWidth() - fontRenderer.getStringWidth(energyText)) / 2) + fontRenderer.getStringWidth(energyText) + 1;
-        GuiUtil.drawTexturedModalRect(guiBat, normalGui, xg, (int) ((int) row + y) - 1, 10, 0, 21, 10);
-        GuiUtil.drawBarVertical(guiBat, normalGui, xg, (int) ((int) row + y) - 1 + 10, 10, 20, 20, 10, maxEnergy, energyAmount);
+        GuiUtil.drawTexturedModalRect(guiBat, guiRarmor, xg, (int) ((int) row + y) - 1, 10, 0, 21, 10);
+        GuiUtil.drawBarVertical(guiBat, guiRarmor, xg, (int) ((int) row + y) - 1 + 10, 10, 20, 20, 10, maxEnergy, energyAmount);
     }
 
     private static void drawTank(FontRenderer fontRenderer, ScaledResolution resolution, String energyText, float row, float y, FluidStack fluid, int maxTank){
-        ResourceLocation guiBat = new ResourceLocation(Rarmor.MODID, "textures/gui/guiBattery.png");
-        ResourceLocation normalGui = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRFArmorNormal.png");
         int xg = ((resolution.getScaledWidth() - fontRenderer.getStringWidth(energyText)) / 2) + fontRenderer.getStringWidth(energyText) + 1;
         int factor = (fluid.amount * 20) / maxTank;
         GuiUtil.drawFluid(fluid.getFluid(), xg, (int) ((int) row + y) - 1, 16, 512 + 10, factor + 1, 10);
-        GuiUtil.drawTexturedModalRect(guiBat, normalGui, xg, (int) ((int) row + y) - 1, 31, 21, 21, 10);
+        GuiUtil.drawTexturedModalRect(guiBat, guiRarmor, xg, (int) ((int) row + y) - 1, 31, 21, 21, 10);
     }
 
     public static void drawCenteredTextInWorld(FontRenderer fontRenderer, float x, float y, String text, int color){

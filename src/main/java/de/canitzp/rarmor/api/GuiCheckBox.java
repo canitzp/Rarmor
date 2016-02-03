@@ -1,6 +1,5 @@
-package de.canitzp.util.gui;
+package de.canitzp.rarmor.api;
 
-import de.canitzp.rarmor.api.IGuiRender;
 import de.canitzp.util.util.ColorUtil;
 import de.canitzp.util.util.GuiUtil;
 import net.minecraft.client.Minecraft;
@@ -9,6 +8,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,13 @@ import java.util.List;
 /**
  * @author canitzp
  */
+@SideOnly(Side.CLIENT)
 public class GuiCheckBox extends Gui implements IGuiRender{
 
     public ResourceLocation iconLocation;
     public int x, y, width, height, color;
     public GuiScreen guiContainer;
-    public String text;
+    public String text = "";
     public List<String> description;
     private boolean isActivated;
     private static List<GuiCheckBox> checkBoxList = new ArrayList<>();
@@ -33,23 +35,14 @@ public class GuiCheckBox extends Gui implements IGuiRender{
         this.text = text;
         this.description = description;
         this.iconLocation = iconLocation;
-        this.width = width;
+        this.width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(this.text) + 9;
         this.height = height;
         checkBoxList.add(this);
         this.color = color;
     }
 
     public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description) {
-        this.x = x;
-        this.y = y;
-        this.guiContainer = guiContainer;
-        this.text = text;
-        this.description = description;
-        this.iconLocation = iconLocation;
-        this.width = width;
-        this.height = height;
-        checkBoxList.add(this);
-        this.color = ColorUtil.BLACK;
+       this(guiContainer, iconLocation, x, y, width, height, text, description, ColorUtil.BLACK);
     }
 
     public void drawCheckBox(int guiLeft, int guiTop){
@@ -103,7 +96,14 @@ public class GuiCheckBox extends Gui implements IGuiRender{
     }
 
     @Override
-    public void render(GuiScreen gui, int guiLeft, int guiTop) {
-        this.drawCheckBox(guiLeft, guiTop);
+    public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.drawCheckBox(0, 0);
+    }
+
+    @Override
+    public int getLength(FontRenderer fontRenderer) {
+        return 10 + fontRenderer.getStringWidth(this.text);
     }
 }
