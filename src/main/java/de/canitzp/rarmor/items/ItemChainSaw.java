@@ -3,7 +3,8 @@ package de.canitzp.rarmor.items;
 import cofh.api.energy.ItemEnergyContainer;
 import com.google.common.collect.Multimap;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.Util;
+import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.util.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
@@ -29,7 +30,6 @@ import java.util.Set;
 
 /**
  * @author canitzp
- * @alternativeAuthor Ellpeck
  */
 public class ItemChainSaw extends ItemEnergyContainer {
 
@@ -43,7 +43,6 @@ public class ItemChainSaw extends ItemEnergyContainer {
         this.setUnlocalizedName(Rarmor.MODID + "." + name);
         this.setRegistryName(Rarmor.MODID + "." + name);
         this.setCreativeTab(Rarmor.rarmorTab);
-        //this.setTextureName(Rarmor.MODID + ":" + name);
         this.setHarvestLevel("axe", 3);
         Rarmor.proxy.addRenderer(new ItemStack(this), name);
         GameRegistry.registerItem(this, name);
@@ -71,9 +70,9 @@ public class ItemChainSaw extends ItemEnergyContainer {
         int y = pos.getY();
         int z = pos.getZ();
         World world = player.worldObj;
-        final Block wood = world.getBlockState(pos).getBlock();
-        if(!player.isSneaking() && !(player.worldObj.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world, pos) || wood == Blocks.brown_mushroom || wood == Blocks.red_mushroom_block) && Util.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
-            boolean b = Util.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
+        final Block wood = WorldUtil.getBlock(world, pos);
+        if(!player.isSneaking() && !(player.worldObj.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world, pos) || wood == Blocks.brown_mushroom || wood == Blocks.red_mushroom_block) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
+            boolean b = RarmorUtil.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
             return b || super.onBlockStartBreak(stack, pos, player);
         }
         return super.onBlockStartBreak(stack, pos, player);
@@ -110,7 +109,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
 
     @Override
     public boolean showDurabilityBar(ItemStack itemStack){
-        return true;
+        return getEnergyStored(itemStack) < getMaxEnergyStored(itemStack);
     }
 
     @Override

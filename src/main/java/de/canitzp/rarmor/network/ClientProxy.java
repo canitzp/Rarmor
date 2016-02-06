@@ -1,13 +1,11 @@
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Map;
 
@@ -18,10 +16,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init(){
-        GuiOpenChanger guiChanger = new GuiOpenChanger();
-        MinecraftForge.EVENT_BUS.register(guiChanger);
-        HudEvent hud = new HudEvent();
-        MinecraftForge.EVENT_BUS.register(hud);
+
     }
 
     @Override

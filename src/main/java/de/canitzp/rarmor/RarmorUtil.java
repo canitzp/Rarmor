@@ -1,6 +1,10 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.items.ItemChainSaw;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
+import de.canitzp.util.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -21,7 +25,7 @@ import net.minecraftforge.event.world.BlockEvent;
 /**
  * @author canitzp
  */
-public class Util {
+public class RarmorUtil {
 
     /**
      *
@@ -50,7 +54,7 @@ public class Util {
             for (int xPos = x - 1; xPos <= x + 1; xPos++) {
                 for (int yPos = height - 1; yPos <= height + 1; yPos++) {
                     for (int zPos = z - 1; zPos <= z + 1; zPos++) {
-                        Block leaves = world.getBlockState(new BlockPos(xPos, yPos, zPos)).getBlock();
+                        Block leaves = WorldUtil.getBlock(world, xPos, yPos, zPos);
                         if (leaves != null && leaves.isLeaves(world, new BlockPos(xPos, yPos, zPos)))
                             numLeaves++;
                     }
@@ -68,7 +72,7 @@ public class Util {
         for (int xPos = x - 1; xPos <= x + 1; xPos++) {
             for (int yPos = y; yPos <= y + 1; yPos++) {
                 for (int zPos = z - 1; zPos <= z + 1; zPos++) {
-                    Block localBlock = world.getBlockState(new BlockPos(xPos, yPos, zPos)).getBlock();
+                    Block localBlock = WorldUtil.getBlock(world, xPos, yPos, zPos);
                     if (bID == localBlock) {
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
                         float localHardness = localBlock.getBlockHardness(world, new BlockPos(xPos, yPos, zPos));
@@ -154,6 +158,21 @@ public class Util {
             Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
         }
         return removed;
+    }
+
+    public static boolean isPlayerWearingRarmor(EntityPlayer player) {
+        if (player != null) {
+            ItemStack head = player.getCurrentArmor(3);
+            ItemStack body = player.getCurrentArmor(2);
+            ItemStack leggins = player.getCurrentArmor(1);
+            ItemStack boots = player.getCurrentArmor(0);
+            if (head != null && body != null && leggins != null && boots != null) {
+                if (head.getItem() instanceof ItemRFArmorHelmet && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

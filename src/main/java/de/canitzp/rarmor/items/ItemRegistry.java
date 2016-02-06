@@ -26,7 +26,7 @@ public class ItemRegistry {
         rfArmorLeggins = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.LEGGINS, 250000, 1500, "rfArmorLeggins").setCreativeTab(Rarmor.rarmorTab);
         rfArmorBoots = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.SHOES, 250000, 1500, "rfArmorBoots").setCreativeTab(Rarmor.rarmorTab);
         moduleGenerator = new ItemModuleGenerator();
-        moduleFastFurnace = new ItemModuleFurnaceSpeedUpgrade();
+        moduleFastFurnace = new ItemModuleFastFurnace();
         moduleFlying = new ItemModuleFlying();
         moduleSolarPanel = new ItemModuleSolarPanel();
         //moduleMovement = new ItemModuleMovement();

@@ -14,9 +14,9 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public class ItemModuleFurnaceSpeedUpgrade extends ItemModule implements IRarmorModule {
+public class ItemModuleFastFurnace extends ItemModule implements IRarmorModule {
 
-    public ItemModuleFurnaceSpeedUpgrade() {
+    public ItemModuleFastFurnace() {
         super("moduleFastFurnace");
     }
 

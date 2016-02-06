@@ -1,6 +1,7 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.blocks.BlockRegistry;
+import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
@@ -44,6 +45,7 @@ public class Rarmor {
     public void init(FMLInitializationEvent event){
         logger.info("Starting Initialization");
         NetworkHandler.init();
+        EventHandler.init();
         proxy.registerRenderer();
         proxy.init();
         NetworkRegistry.INSTANCE.registerGuiHandler(MODID, new GuiHandler());
