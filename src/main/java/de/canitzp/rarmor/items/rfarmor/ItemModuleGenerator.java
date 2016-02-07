@@ -94,7 +94,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
         }
         if(!settingActivated){
             Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
-            if(moduleSlot instanceof ISpecialSlot){
+            if(moduleSlot instanceof SlotModule){
                 ((ISpecialSlot) moduleSlot).setSlotExist(true);
             }
         }

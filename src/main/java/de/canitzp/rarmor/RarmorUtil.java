@@ -4,6 +4,7 @@ import de.canitzp.rarmor.items.ItemChainSaw;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
+import de.canitzp.util.util.NBTUtil;
 import de.canitzp.util.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
@@ -175,5 +177,14 @@ public class RarmorUtil {
         return false;
     }
 
-
+    public static void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
+        if(stack != null){
+            if(!player.worldObj.isRemote){
+                player.dropPlayerItemWithRandomChoice(stack, false);
+            }
+            inventory.setInventorySlotContents(30, null);
+            NBTUtil.saveSlots(armor, inventory);
+        }
+    }
+    
 }

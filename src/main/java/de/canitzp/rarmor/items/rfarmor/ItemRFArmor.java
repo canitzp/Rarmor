@@ -36,6 +36,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     public ItemRFArmor(ArmorMaterial material, ArmorType type, int maxEnergy, int maxTransfer, String name) {
         super(material, 0, type.getId());
+        setCreativeTab(Rarmor.rarmorTab);
         setEnergyParams(maxEnergy, maxTransfer);
         setRegistryName(Rarmor.MODID + "." + name);
         setUnlocalizedName(Rarmor.MODID + "." + name);

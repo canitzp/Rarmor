@@ -16,6 +16,7 @@ import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.util.util.SlotUtil;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -62,16 +63,16 @@ public class GuiRFArmor extends GuiContainerBase {
                 ((IRarmorModule) module.getItem()).initGui(player.getEntityWorld(), player, armor, this, checkBoxList, checkBox);
             }
         }
-        ISpecialSlot c1 = (ISpecialSlot) this.getSlotAtPosition(180, 14);
-        ISpecialSlot c2 = (ISpecialSlot) this.getSlotAtPosition(198, 14);
-        ISpecialSlot c3 = (ISpecialSlot) this.getSlotAtPosition(216, 14);
-        ISpecialSlot c4 = (ISpecialSlot) this.getSlotAtPosition(180, 32);
-        ISpecialSlot c5 = (ISpecialSlot) this.getSlotAtPosition(198, 32);
-        ISpecialSlot c6 = (ISpecialSlot) this.getSlotAtPosition(216, 32);
-        ISpecialSlot c7 = (ISpecialSlot) this.getSlotAtPosition(180, 50);
-        ISpecialSlot c8 = (ISpecialSlot) this.getSlotAtPosition(198, 50);
-        ISpecialSlot c9 = (ISpecialSlot) this.getSlotAtPosition(216, 50);
-        ISpecialSlot cO = (ISpecialSlot) this.getSlotAtPosition(217, 99);
+        ISpecialSlot c1 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 14);
+        ISpecialSlot c2 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 14);
+        ISpecialSlot c3 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 14);
+        ISpecialSlot c4 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 32);
+        ISpecialSlot c5 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 32);
+        ISpecialSlot c6 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 32);
+        ISpecialSlot c7 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 50);
+        ISpecialSlot c8 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 50);
+        ISpecialSlot c9 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 50);
+        ISpecialSlot cO = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 217, 99);
         c1.setSlotExist(true);
         c2.setSlotExist(true);
         c3.setSlotExist(true);
@@ -163,16 +164,16 @@ public class GuiRFArmor extends GuiContainerBase {
             }
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;
-                ISpecialSlot c1 = (ISpecialSlot) this.getSlotAtPosition(180, 14);
-                ISpecialSlot c2 = (ISpecialSlot) this.getSlotAtPosition(198, 14);
-                ISpecialSlot c3 = (ISpecialSlot) this.getSlotAtPosition(216, 14);
-                ISpecialSlot c4 = (ISpecialSlot) this.getSlotAtPosition(180, 32);
-                ISpecialSlot c5 = (ISpecialSlot) this.getSlotAtPosition(198, 32);
-                ISpecialSlot c6 = (ISpecialSlot) this.getSlotAtPosition(216, 32);
-                ISpecialSlot c7 = (ISpecialSlot) this.getSlotAtPosition(180, 50);
-                ISpecialSlot c8 = (ISpecialSlot) this.getSlotAtPosition(198, 50);
-                ISpecialSlot c9 = (ISpecialSlot) this.getSlotAtPosition(216, 50);
-                ISpecialSlot cO = (ISpecialSlot) this.getSlotAtPosition(217, 99);
+                ISpecialSlot c1 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 14);
+                ISpecialSlot c2 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 14);
+                ISpecialSlot c3 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 14);
+                ISpecialSlot c4 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 32);
+                ISpecialSlot c5 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 32);
+                ISpecialSlot c6 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 32);
+                ISpecialSlot c7 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 50);
+                ISpecialSlot c8 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 50);
+                ISpecialSlot c9 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 50);
+                ISpecialSlot cO = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 217, 99);
                 if(!this.isSettingsTab){
                     c1.setSlotExist(true);
                     c2.setSlotExist(true);
@@ -232,8 +233,8 @@ public class GuiRFArmor extends GuiContainerBase {
         mouseX -= k1;
         mouseY -= l1;
         boolean isAtCoordinates = mouseX >= slotX - 1 && mouseX < slotX + width + 1 && mouseY >= slotY - 1 && mouseY < slotY + height + 1;
-        Slot slot = this.getSlotAtPosition(slotX, slotY);
-        Slot moduleSlot = this.getSlotAtPosition(15, 34);
+        Slot slot = SlotUtil.getSlotAtPosition(this, slotX, slotY);
+        Slot moduleSlot = SlotUtil.getSlotAtPosition(this, 15, 34);
         if(this.isSettingsTab){
             if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
                 return false;
@@ -251,16 +252,6 @@ public class GuiRFArmor extends GuiContainerBase {
         }
 
         return isAtCoordinates;
-    }
-
-    private Slot getSlotAtPosition(int x, int y) {
-        for (int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k) {
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(k);
-            if(x >= slot.xDisplayPosition - 1 && x < slot.xDisplayPosition + 16 + 1 && slot.yDisplayPosition >= y - 1 && slot.yDisplayPosition < y + 16 + 1){
-                return slot;
-            }
-        }
-        return null;
     }
 
     public int getGuiLeft(){

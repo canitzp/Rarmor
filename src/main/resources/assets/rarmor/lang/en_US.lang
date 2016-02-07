@@ -12,3 +12,5 @@ item.rarmor.advancedEyeMatrix.name=Advanced Eye Matrix
 item.rarmor.moduleFastFurnace.name=FastFurnace Module
 item.rarmor.moduleFlying.name=Flying Module
 item.rarmor.moduleSolarPanel.name=SolarPanel Module
+item.rarmor.moduleEnergeticLoader.name=Energetic Loader Module
+item.rarmor.moduleEnergeticUnloader.name=Energetic Unloader Module

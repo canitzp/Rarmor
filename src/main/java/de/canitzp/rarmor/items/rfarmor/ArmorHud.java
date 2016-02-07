@@ -3,8 +3,6 @@ package de.canitzp.rarmor.items.rfarmor;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
-import com.google.common.collect.Lists;
-import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RamorResources;
 import de.canitzp.util.util.GuiUtil;
 import net.minecraft.block.Block;
@@ -13,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -23,11 +20,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.BlockFluidBase;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import java.util.List;
 
 /**
  * @author canitzp

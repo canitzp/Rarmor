@@ -14,28 +14,29 @@ public class ItemRegistry {
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleMovement;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleMovement, moduleStat, moduleUnloader, moduleLoader;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
 
     public static void preInit(){
         Rarmor.logger.info("Registering Items");
         ironChainsaw = new ItemChainSaw(250000, 1500, 200, "ironChainsaw");
         diamondChainsaw = new ItemChainSaw(500000, 5000, 100, "diamondChainsaw");
-        rfArmorBody = new ItemRFArmorBody().setCreativeTab(Rarmor.rarmorTab);
+        rfArmorBody = new ItemRFArmorBody();
         rfArmorHelmet = new ItemRFArmorHelmet();
-        rfArmorLeggins = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.LEGGINS, 250000, 1500, "rfArmorLeggins").setCreativeTab(Rarmor.rarmorTab);
-        rfArmorBoots = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.SHOES, 250000, 1500, "rfArmorBoots").setCreativeTab(Rarmor.rarmorTab);
+        rfArmorLeggins = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.LEGGINS, 250000, 1500, "rfArmorLeggins");
+        rfArmorBoots = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.SHOES, 250000, 1500, "rfArmorBoots");
         moduleGenerator = new ItemModuleGenerator();
         moduleFastFurnace = new ItemModuleFastFurnace();
         moduleFlying = new ItemModuleFlying();
         moduleSolarPanel = new ItemModuleSolarPanel();
         //moduleMovement = new ItemModuleMovement();
-        ribbonCable = new Item().setUnlocalizedName(Rarmor.MODID + ".ribbonCable").setCreativeTab(Rarmor.rarmorTab);
-        electricalController = new Item().setUnlocalizedName(Rarmor.MODID + ".electricalController").setCreativeTab(Rarmor.rarmorTab);
+        //moduleStat = new ItemModuleStatistics();
+        moduleUnloader = new ItemModuleEnergeticUnloader();
+        moduleLoader = new ItemModuleEnergeticLoader();
+        ribbonCable = new ItemBase(Rarmor.MODID, "ribbonCable", Rarmor.rarmorTab);
+        electricalController = new ItemBase(Rarmor.MODID, "electricalController", Rarmor.rarmorTab);
         advancedEyeMatrix = new ItemBase(Rarmor.MODID, "advancedEyeMatrix", Rarmor.rarmorTab);
 
-        GameRegistry.registerItem(ribbonCable, "ribbonCable");
-        GameRegistry.registerItem(electricalController, "electricalController");
 
         Rarmor.proxy.addRenderer(new ItemStack(ribbonCable), "ribbonCable");
         Rarmor.proxy.addRenderer(new ItemStack(electricalController), "electricalController");

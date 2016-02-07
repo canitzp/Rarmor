@@ -29,11 +29,27 @@ public class JEIIntegration implements IModPlugin {
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBoots, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorHelmet, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorLeggins, "Energy", "isFirstOpened");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.moduleGenerator);
     }
 
+    /**
+     * Called when the IRecipeRegistry is available, after all mods have registered.
+     *
+     * @param recipeRegistry
+     * @deprecated since JEI 2.23.0. Get the recipe registry from jeiRuntime, passed in onRuntimeAvailable
+     */
     @Override
-    public void onRecipeRegistryAvailable(IRecipeRegistry iRecipeRegistry) {
+    public void onRecipeRegistryAvailable(IRecipeRegistry recipeRegistry) {
 
+    }
+
+
+    /**
+     * Called when jei's runtime features are available, after all mods have registered.
+     *
+     * @param jeiRuntime
+     * @since JEI 2.23.0
+     */
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
     }
 }

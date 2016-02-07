@@ -1,6 +1,5 @@
 package de.canitzp.rarmor.api;
 
-import de.canitzp.rarmor.inventory.slots.SlotModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -44,7 +43,7 @@ public interface IRarmorModule {
 
     @SideOnly(Side.CLIENT)
     default boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return isMouseOverSlot && !(slot instanceof SlotModule);
+        return isMouseOverSlot && !(slot instanceof IModuleSlot);
     }
 
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack module){}
