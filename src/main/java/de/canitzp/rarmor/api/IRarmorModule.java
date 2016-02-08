@@ -1,7 +1,6 @@
 package de.canitzp.rarmor.api;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -49,9 +48,9 @@ public interface IRarmorModule {
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack module){}
 
     @SideOnly(Side.CLIENT)
-    default void onGuiOpenEvent(World worldObj, EntityPlayerSP player, GuiScreen gui, ItemStack module){}
+    default void onGuiOpenEvent(World worldObj, EntityPlayer player, GuiScreen gui, ItemStack module){}
 
     @SideOnly(Side.CLIENT)
-    default void renderWorldScreen(Minecraft minecraft, EntityPlayerSP player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack module, float partialTicks){}
+    default void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack module, float partialTicks){}
 
 }

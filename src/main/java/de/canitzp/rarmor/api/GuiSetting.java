@@ -30,6 +30,12 @@ public class GuiSetting extends GuiScreen {
         }
     }
 
+    public void reinit(){
+        renderer.clear();
+        textFields.clear();
+        length = 0;
+    }
+
     public void render(GuiScreen screen, ElectricalComponent component, int guiLeft, int guiTop, int x, int y){
         GlStateManager.disableRescaleNormal();
         RenderHelper.disableStandardItemLighting();

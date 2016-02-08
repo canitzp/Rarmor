@@ -8,12 +8,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author canitzp
  */
+@SideOnly(Side.CLIENT)
 public interface IGuiRender {
 
-    @SideOnly(Side.CLIENT)
     void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y);
 
-    @SideOnly(Side.CLIENT)
     int getLength(FontRenderer fontRenderer);
 
 }

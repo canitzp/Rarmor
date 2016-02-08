@@ -3,9 +3,9 @@ package de.canitzp.rarmor.items.rfarmor;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.util.util.ColorUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -24,7 +24,7 @@ public class ItemModuleStatistics extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void renderWorldScreen(Minecraft minecraft, EntityPlayerSP player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack module, float partialTicks) {
+    public void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack module, float partialTicks) {
         fontRendererObj.drawString("Time:" + player.worldObj.getWorldTime() / 20 * 60, 100, 100, ColorUtil.WHITE);
     }
 }

@@ -23,7 +23,6 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderer(){
         for(Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
             if(entry.getKey() != null && entry.getKey().getItem() != null){
-                System.out.println(entry.getKey().getItem());
                 if(entry.getKey().getItem() instanceof ItemBlock){
                     registerBlock(entry.getKey().getItem(), entry.getValue());
                 } else{

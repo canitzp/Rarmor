@@ -104,11 +104,13 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
 
     @Override
     public void mouseClicked(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {
+        System.out.println("show");
         if(!setting.textFields.isEmpty()){
             for(GuiTextField field : setting.textFields){
                 field.mouseClicked(mouseX, mouseY, mouseButton);
             }
         } else {
+            setting.reinit();
             setting.textFields.add(new GuiTextField(0, x, y, 50, 9, "Resistance:", ColorUtil.WHITE, 69));
             setting.textFields.add(new GuiTextField(1, x, y, 50, 9, "Capacitance:", ColorUtil.WHITE, 69));
             setting.textFields.add(new GuiTextField(2, x, y, 50, 9, "Inductivity:", ColorUtil.WHITE, 69));
@@ -117,11 +119,13 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
             setting.textFields.add(new GuiTextField(5, x, y, 50, 9, "Max. Power:", ColorUtil.WHITE, 69));
             setting.init();
         }
+        System.out.println(setting.renderer);
     }
 
     @Override
     public void drawGuiContainerBackgroundLayer(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){
         if(!setting.renderer.isEmpty()){
+
             setting.render(gui, this, guiLeft, guiTop, guiLeft + x, guiTop + y);
         }
     }

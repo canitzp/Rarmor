@@ -23,7 +23,7 @@ public class GuiCircuitCreator extends GuiContainer {
     private World world;
     private ResourceLocation mainGui = RamorResources.CIRCUITCREATORGUI.getNewLocation();
     private List<ElectricalComponent> electricalComponents = new ArrayList<>();
-    public GuiSetting setting = new GuiSetting();
+    public GuiSetting setting;
 
     public GuiCircuitCreator(EntityPlayer player, Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -35,6 +35,7 @@ public class GuiCircuitCreator extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
+        setting = new GuiSetting();
         for (ElectricalComponent component : electricalComponents) {
             if (component != null) {
                 if (component instanceof IGuiInteraction) {
@@ -65,7 +66,6 @@ public class GuiCircuitCreator extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         this.mc.getTextureManager().bindTexture(mainGui);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-
         for (ElectricalComponent component : electricalComponents) {
             if (component != null) {
                 this.mc.getTextureManager().bindTexture(component.guiComponent());
@@ -101,11 +101,14 @@ public class GuiCircuitCreator extends GuiContainer {
                     if (component.getY() + guiTop <= mouseY && component.getY() + guiTop + component.getHeight() >= mouseY) {
                         if (component instanceof IGuiInteraction) {
                             ((IGuiInteraction) component).mouseClicked(this, this.setting, this.world, this.player, this.guiLeft, this.guiTop, mouseX, mouseY, mouseButton);
+                            return;
                         }
-                        return;
                     }
                 }
             }
+        }
+        if(!setting.renderer.isEmpty()){
+            setting.reinit();
         }
         if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + 249 && mouseY >= guiTop + 7 && mouseY <= guiTop + 170) {
             //TODO

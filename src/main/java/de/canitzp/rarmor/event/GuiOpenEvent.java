@@ -5,7 +5,6 @@ import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.util.packets.PacketOpenGui;
@@ -16,12 +15,16 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author canitzp
  */
+
 public class GuiOpenEvent {
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void overrideGui(net.minecraftforge.client.event.GuiOpenEvent event){
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -40,7 +43,7 @@ public class GuiOpenEvent {
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
                     ItemStack module = NBTUtil.readSlots(player.getCurrentArmor(2), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
-                        ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, (EntityPlayerSP) player, event.gui, module);
+                        ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, event.gui, module);
                     }
                 }
             }
