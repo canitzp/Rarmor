@@ -19,8 +19,9 @@ public class GuiSetting extends GuiScreen {
     public List<GuiTextField> textFields = Lists.newArrayList();
     public List<IGuiRender> renderer = Lists.newArrayList();
     private int length = 0;
+    private IElectricalComponent component;
 
-    public void init(){
+    public void init(IElectricalComponent component){
         renderer.addAll(textFields);
         for(IGuiRender render : renderer){
             int i = render.getLength(Minecraft.getMinecraft().fontRendererObj);
@@ -28,6 +29,15 @@ public class GuiSetting extends GuiScreen {
                 this.length = i;
             }
         }
+        this.component = component;
+    }
+
+    public IElectricalComponent getComponent(){
+        return this.component;
+    }
+
+    public boolean areComponentsEqual(IElectricalComponent component){
+        return this.component == component;
     }
 
     public void reinit(){
@@ -41,7 +51,8 @@ public class GuiSetting extends GuiScreen {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
-        this.zLevel = 300.0F;
+        Minecraft.getMinecraft().getRenderItem().zLevel = 301.0F;
+        this.zLevel = 301.0F;
         int l1 = x + 12;
         int k = 10 * renderer.size();
         int l = -267386864;
@@ -64,6 +75,7 @@ public class GuiSetting extends GuiScreen {
                 render.render(screen, guiLeft, guiTop, x + 12, y + ((i - 1) * 10) + 10);
             }
         }
+        Minecraft.getMinecraft().getRenderItem().zLevel = 0.0F;
         this.zLevel = 0.0F;
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();

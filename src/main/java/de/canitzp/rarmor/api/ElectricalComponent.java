@@ -6,6 +6,7 @@ import de.canitzp.util.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -82,6 +83,31 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
     }
 
     @Override
+    public NBTTagCompound writeNBT(NBTTagCompound compound, GuiSetting setting) {
+        compound.setInteger("Width", this.getWidth());
+        compound.setInteger("Height", this.getHeight());
+        compound.setInteger("TextureWidth", this.getTextureWidth());
+        compound.setInteger("TextureHeight", this.getTextureHeight());
+        compound.setInteger("X", this.getX());
+        compound.setInteger("Y", this.getY());
+        compound.setInteger("TextureX", this.getTextureX());
+        compound.setInteger("TextureY", this.getTextureY());
+        if(!setting.textFields.isEmpty()){
+            for(GuiTextField field : setting.textFields){
+                field.writeNBT(compound);
+            }
+        }
+        return compound;
+    }
+
+    @Override
+    public void onGuiSettingsClosed(GuiSetting setting) {
+        this.width = this.textureW;
+        this.height = this.textureH;
+        setting.reinit();
+    }
+
+    @Override
     public void mouseHover(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY){
         if(this.getX() + guiLeft <= mouseX && this.getX() + guiLeft + this.getTextureWidth() >= mouseX) {
             if (this.getY() + guiTop <= mouseY && this.getY() + guiTop + this.getTextureHeight() >= mouseY) {
@@ -93,6 +119,9 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
     @Override
     public boolean onKeyPressed(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, char typedChar, int keyCode) {
         if(!setting.textFields.isEmpty()){
+            if(keyCode == 28){
+                //TODO: write to NBT if circuit is inserted
+            }
             for(GuiTextField field : setting.textFields){
                 if(field.textboxKeyTyped(typedChar, keyCode)){
                     return true;
@@ -104,7 +133,6 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
 
     @Override
     public void mouseClicked(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int mouseButton) throws IOException {
-        System.out.println("show");
         if(!setting.textFields.isEmpty()){
             for(GuiTextField field : setting.textFields){
                 field.mouseClicked(mouseX, mouseY, mouseButton);
@@ -117,15 +145,13 @@ public class ElectricalComponent implements IElectricalComponent, IGuiInteractio
             setting.textFields.add(new GuiTextField(3, x, y, 50, 9, "Max. Voltage:", ColorUtil.WHITE, 69));
             setting.textFields.add(new GuiTextField(4, x, y, 50, 9, "Max. Current:", ColorUtil.WHITE, 69));
             setting.textFields.add(new GuiTextField(5, x, y, 50, 9, "Max. Power:", ColorUtil.WHITE, 69));
-            setting.init();
+            setting.init(this);
         }
-        System.out.println(setting.renderer);
     }
 
     @Override
     public void drawGuiContainerBackgroundLayer(GuiScreen gui, GuiSetting setting, World world, EntityPlayer player, int guiLeft, int guiTop, float partialTicks, int mouseX, int mouseY){
         if(!setting.renderer.isEmpty()){
-
             setting.render(gui, this, guiLeft, guiTop, guiLeft + x, guiTop + y);
         }
     }

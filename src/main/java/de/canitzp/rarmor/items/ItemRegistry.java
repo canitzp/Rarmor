@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.api.ElectricalItemBase;
 import de.canitzp.rarmor.items.rfarmor.*;
 import de.canitzp.util.items.ItemBase;
 import net.minecraft.item.Item;
@@ -36,6 +37,8 @@ public class ItemRegistry {
         ribbonCable = new ItemBase(Rarmor.MODID, "ribbonCable", Rarmor.rarmorTab);
         electricalController = new ItemBase(Rarmor.MODID, "electricalController", Rarmor.rarmorTab);
         advancedEyeMatrix = new ItemBase(Rarmor.MODID, "advancedEyeMatrix", Rarmor.rarmorTab);
+
+        new ElectricalItemBase(Rarmor.MODID, "testPart", "test", Rarmor.rarmorTab);
 
 
         Rarmor.proxy.addRenderer(new ItemStack(ribbonCable), "ribbonCable");

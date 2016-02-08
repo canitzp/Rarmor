@@ -3,6 +3,7 @@ package de.canitzp.rarmor.api;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author canitzp
@@ -13,7 +14,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
     public int color, end;
 
     public GuiTextField(int componentId, int x, int y, int width, int height) {
-        this(componentId, x, y, width, height, null, 0);
+        this(componentId, x, y, width, height, "", 0);
     }
 
     public GuiTextField(int componentId, int x, int y, int width, int height, String text, int color) {
@@ -46,5 +47,10 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
             i += fontRenderer.getStringWidth(this.text) + 3;
         }
         return i + this.width;
+    }
+
+    public NBTTagCompound writeNBT(NBTTagCompound compound){
+        compound.setString("SavedText" + this.text, this.getText());
+        return compound;
     }
 }

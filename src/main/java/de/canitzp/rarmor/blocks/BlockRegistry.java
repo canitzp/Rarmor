@@ -10,7 +10,7 @@ public class BlockRegistry {
     public static Block circuitCreator;
 
     public static void preInit(){
-        //circuitCreator = new BlockCircuitCreator();
+        circuitCreator = new BlockCircuitCreator();
     }
 
 }

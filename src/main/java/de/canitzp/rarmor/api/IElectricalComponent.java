@@ -2,6 +2,7 @@ package de.canitzp.rarmor.api;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -74,5 +75,9 @@ public interface IElectricalComponent {
     }
 
     default void render(GuiScreen gui, FontRenderer renderer){}
+
+    default NBTTagCompound writeNBT(NBTTagCompound compound, GuiSetting setting){return compound;}
+
+    void onGuiSettingsClosed(GuiSetting setting);
 
 }
