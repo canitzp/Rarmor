@@ -9,6 +9,7 @@ import de.canitzp.util.inventory.InventoryBase;
 import de.canitzp.util.util.ContainerUtil;
 import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -29,7 +30,8 @@ public class ContainerRFArmor extends Container {
     public ItemStack armor;
 
     public ContainerRFArmor(EntityPlayer player){
-        NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
+        if(player.worldObj.isRemote)
+            NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = player.getCurrentArmor(2);
         this.body = (ItemRFArmorBody) armor.getItem();
         InventoryPlayer inventoryPlayer = player.inventory;

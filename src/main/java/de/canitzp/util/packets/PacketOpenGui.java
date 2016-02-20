@@ -1,5 +1,6 @@
 package de.canitzp.util.packets;
 
+import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.util.util.PlayerUtil;
 import de.canitzp.rarmor.Rarmor;
 import io.netty.buffer.ByteBuf;
@@ -47,7 +48,8 @@ public class PacketOpenGui implements IMessage {
         public IMessage onMessage(PacketOpenGui message, MessageContext ctx){
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-            PlayerUtil.openInventoryFromServer(player, Rarmor.instance, message.guiID);
+            player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int)player.posX, (int)player.posY, (int)player.posZ);
+            //PlayerUtil.openInventoryFromServer(player, Rarmor.instance, message.guiID);
             return null;
         }
     }
