@@ -3,8 +3,8 @@ package de.canitzp.rarmor.items.rfarmor;
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.api.ISpecialSlot;
-import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
+import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.util.util.ItemStackUtil;
 import de.canitzp.util.util.NBTUtil;
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
         NBTUtil.setInteger(stack, "GenBurnTime", 0);
         NBTUtil.setInteger(stack, "CurrentItemGenBurnTime", 0);
-        NBTUtil.setInteger(stack, "rfPerTick", 20);
+        NBTUtil.setInteger(stack, "rfPerTick", ItemRFArmorBody.rfPerTick);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
         ItemStack stack = new ItemStack(item);
         NBTUtil.setInteger(stack, "GenBurnTime", 0);
         NBTUtil.setInteger(stack, "CurrentItemGenBurnTime", 0);
-        NBTUtil.setInteger(stack, "rfPerTick", 20);
+        NBTUtil.setInteger(stack, "rfPerTick", ItemRFArmorBody.rfPerTick);
         list.add(stack);
     }
 

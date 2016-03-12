@@ -1,8 +1,5 @@
-/idea
-/build.bat
-/src.rar
-/src.zip
 /build
+/idea
 /Rarmor.iml
 /Rarmor.iws
 /libraries
@@ -10,26 +7,3 @@
 /.gradle
 /run
 /Rarmor.ipr
-/setup.bat
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
-# gradle
-build
-.gradle
-
-# other
-eclipse
-run

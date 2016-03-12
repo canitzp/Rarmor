@@ -35,6 +35,7 @@ public class Rarmor {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         logger.info("Starting " + NAME + " " + VERSION + " with ModID: " + MODID + ". Thanks for using this Mod :)");
+        RarmorProperties.preInit(event);
         rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
         BlockRegistry.preInit();
         ItemRegistry.preInit();

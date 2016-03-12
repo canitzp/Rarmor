@@ -1,5 +1,6 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.items.ItemChainSaw;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.server.S23PacketBlockChange;
 import net.minecraft.tileentity.TileEntity;
@@ -175,6 +175,25 @@ public class RarmorUtil {
             }
         }
         return false;
+    }
+
+    public static IRarmorModule getRarmorModule(EntityPlayer player){
+        if(isPlayerWearingRarmor(player)){
+            ItemStack module = NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+            if(module != null){
+                if(module.getItem() instanceof IRarmorModule){
+                    return (IRarmorModule) module.getItem();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static ItemStack getPlayersRarmorChestplate(EntityPlayer player){
+        if(isPlayerWearingRarmor(player)){
+            return player.getCurrentArmor(2);
+        }
+        return null;
     }
 
     public static void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {

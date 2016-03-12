@@ -1,8 +1,8 @@
 package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
-import de.canitzp.util.util.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.util.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -166,9 +166,6 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
                 if (((EntityPlayer) entity).getEntityWorld().rand.nextInt(10) == 1) {
                     entity.setFire(4);
                 }
-            }
-            if(source == DamageSource.fall){
-
             }
         }
         extractEnergy(armor, damage * getEnergyPerDamage(armor), false);

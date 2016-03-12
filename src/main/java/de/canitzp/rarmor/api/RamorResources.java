@@ -22,4 +22,5 @@ public enum RamorResources {
     public ResourceLocation getNewLocation() {
         return new ResourceLocation("rarmor:textures/gui/" + textureName + ".png");
     }
+
 }

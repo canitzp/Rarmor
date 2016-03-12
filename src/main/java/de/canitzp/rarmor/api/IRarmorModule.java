@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -52,5 +53,16 @@ public interface IRarmorModule {
 
     @SideOnly(Side.CLIENT)
     default void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack module, float partialTicks){}
+
+    /**
+     *
+     * @param world The World of the Player
+     * @param player The Player itself
+     * @param armor The Rarmor Chestplate
+     * @param damageSource The Type of Damage the Player take
+     * @param damage The Amount of Damage th Player take
+     * @return true if you want to cancel the Damage
+     */
+    default boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armor, DamageSource damageSource, float damage){return false;}
 
 }

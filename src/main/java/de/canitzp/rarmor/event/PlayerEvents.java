@@ -8,12 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * @author canitzp
  */
-public class PlayerJoinEvent {
+public class PlayerEvents {
 
     @SubscribeEvent
     public void onPlayerLoggingIn(EntityJoinWorldEvent event){
@@ -27,6 +28,19 @@ public class PlayerJoinEvent {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTakeDamage(LivingHurtEvent event){
+        if(event.entity instanceof EntityPlayer){
+            if(RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.entity)){
+                IRarmorModule module = RarmorUtil.getRarmorModule((EntityPlayer) event.entity);
+                if(module != null){
+                    event.setCanceled(module.onPlayerTakeDamage(event.entity.getEntityWorld(),(EntityPlayer) event.entity, RarmorUtil.getPlayersRarmorChestplate((EntityPlayer) event.entity), event.source, event.ammount));
+                }
+            }
+        }
+
     }
 
 }

@@ -11,6 +11,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'idea'
 
 /*
 plugins {
@@ -19,9 +20,6 @@ plugins {
 */
 
 repositories {
-    maven {
-        url "http://chickenbones.net/maven/"
-    }
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
@@ -35,9 +33,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.8.9-11.15.1.1732"
+    version = "1.8.9-11.15.1.1722"
     runDir = "run"
-    mappings = "stable_20"
+    mappings = "stable_22"
     makeObfSourceJar = false
     useDepAts = true
     replaceIn "Rarmor.java"

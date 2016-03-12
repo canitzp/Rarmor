@@ -10,7 +10,7 @@ public class EventHandler {
     public static void init(){
         GuiOpenEvent guiChanger = new GuiOpenEvent();
         GameOverlayEvent hud = new GameOverlayEvent();
-        PlayerJoinEvent joinPlayer = new PlayerJoinEvent();
+        PlayerEvents joinPlayer = new PlayerEvents();
         MinecraftForge.EVENT_BUS.register(guiChanger);
         MinecraftForge.EVENT_BUS.register(hud);
         MinecraftForge.EVENT_BUS.register(joinPlayer);

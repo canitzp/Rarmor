@@ -1,18 +1,13 @@
 package de.canitzp.rarmor.items.rfarmor;
 
+import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.util.util.EnergyUtil;
 import de.canitzp.util.util.NBTUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
-import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
@@ -22,8 +17,11 @@ import net.minecraft.world.World;
  */
 public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
 
+    private int energyPerTick;
+
     public ItemModuleSolarPanel() {
         super("moduleSolarPanel");
+        this.energyPerTick = RarmorProperties.getInteger("moduleSolarEnergyPerTick");
     }
 
     @Override
@@ -35,7 +33,7 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
         if(NBTUtil.getInteger(module, "tick") >= 50){
             if(canPlayerSeeSky(player)){
-                EnergyUtil.addEnergy(armorChestplate, 4, armorChestplate.getMaxDamage());
+                EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
                 NBTUtil.setInteger(module, "tick", 0);
                 NBTUtil.setBoolean(module, "doWork", true);
             } else {
@@ -44,7 +42,7 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
         } else {
             NBTUtil.setInteger(module, "tick", NBTUtil.getInteger(module, "tick") + 1);
             if(NBTUtil.getBoolean(module, "doWork")){
-                EnergyUtil.addEnergy(armorChestplate, 4, armorChestplate.getMaxDamage());
+                EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
             }
         }
     }

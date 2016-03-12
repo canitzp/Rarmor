@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -121,16 +120,7 @@ public class GuiUtil {
 
     public static void drawTexturedModalRect(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height) {
         bindTexture(batRes);
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double)(x), (double)(y + height), (double) zLevel).tex((double)((float)(textureX) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), (double)zLevel).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y), (double)zLevel).tex((double)((float)(textureX + width) * f), (double)((float)(textureY) * f1)).endVertex();
-        worldrenderer.pos((double)(x), (double)(y), (double)zLevel).tex((double)((float)(textureX) * f), (double)((float)(textureY) * f1)).endVertex();
-        tessellator.draw();
+        drawTexturedModalRect(x, y, textureX, textureY, width, height);
         bindTexture(guiLoc);
     }
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
