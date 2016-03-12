@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.event;
 
+import de.canitzp.rarmor.Rarmor;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -8,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class EventHandler {
 
     public static void init(){
+        Rarmor.logger.info("Register Events");
         GuiOpenEvent guiChanger = new GuiOpenEvent();
         GameOverlayEvent hud = new GameOverlayEvent();
         PlayerEvents joinPlayer = new PlayerEvents();

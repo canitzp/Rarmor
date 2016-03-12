@@ -25,6 +25,7 @@ public class RarmorProperties extends Properties{
     }
 
     public static void preInit(FMLPreInitializationEvent event){
+        Rarmor.logger.info("Initialize Configuration");
         rarmorProperties = new RarmorProperties();
         rarmorProperties.readProperties();
     }

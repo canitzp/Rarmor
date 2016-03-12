@@ -14,6 +14,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class RecipeManager {
 
     public static void init(){
+        Rarmor.logger.info("Register Recipes");
         loadVanilla();
         loadActAddRecipes();
     }

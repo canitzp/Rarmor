@@ -21,6 +21,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerRenderer(){
+        Rarmor.logger.info("Register Renderer");
         for(Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
             if(entry.getKey() != null && entry.getKey().getItem() != null){
                 if(entry.getKey().getItem() instanceof ItemBlock){

@@ -2,7 +2,6 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.blocks.BlockRegistry;
 import de.canitzp.rarmor.event.EventHandler;
-import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
@@ -12,7 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +32,7 @@ public class Rarmor {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        logger.info("Starting " + NAME + " " + VERSION + " with ModID: " + MODID + ". Thanks for using this Mod :)");
+        logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
         RarmorProperties.preInit(event);
         rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
         BlockRegistry.preInit();
@@ -49,7 +47,6 @@ public class Rarmor {
         EventHandler.init();
         proxy.registerRenderer();
         proxy.init();
-        NetworkRegistry.INSTANCE.registerGuiHandler(MODID, new GuiHandler());
         RecipeManager.init();
         logger.info("Finished Initialization");
     }
