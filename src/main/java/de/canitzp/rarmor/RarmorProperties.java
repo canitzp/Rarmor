@@ -14,10 +14,14 @@ import java.util.*;
  */
 public class RarmorProperties extends Properties{
 
-    private static File propFile = new File(Minecraft.getMinecraft().mcDataDir + File.separator + "config" + File.separator + "Rarmor.properties");
+    private static File propFile;
     public static RarmorProperties rarmorProperties;
     private static Map<String, Boolean> booleanProperties = new HashMap<>();
     private static Map<String, Integer> integerProperties = new HashMap<>();
+
+    public RarmorProperties(File suggestedConfigurationFile) {
+        RarmorProperties.propFile = new File(suggestedConfigurationFile.getParent() + File.separator + "Rarmor.properties");
+    }
 
     @Override
     public synchronized Enumeration<Object> keys() {
@@ -26,7 +30,7 @@ public class RarmorProperties extends Properties{
 
     public static void preInit(FMLPreInitializationEvent event){
         Rarmor.logger.info("Initialize Configuration");
-        rarmorProperties = new RarmorProperties();
+        rarmorProperties = new RarmorProperties(event.getSuggestedConfigurationFile());
         rarmorProperties.readProperties();
     }
 
