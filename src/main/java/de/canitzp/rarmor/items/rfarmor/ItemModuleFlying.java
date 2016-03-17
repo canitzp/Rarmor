@@ -2,8 +2,8 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.util.util.EnergyUtil;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.rarmor.util.util.EnergyUtil;
+import de.canitzp.rarmor.util.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

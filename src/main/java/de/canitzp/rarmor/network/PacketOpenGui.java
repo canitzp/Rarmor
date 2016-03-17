@@ -1,8 +1,7 @@
-package de.canitzp.util.packets;
+package de.canitzp.rarmor.network;
 
-import de.canitzp.rarmor.inventory.GuiHandler;
-import de.canitzp.util.util.PlayerUtil;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.inventory.GuiHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -16,7 +15,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketOpenGui implements IMessage {
 
-    public int playerID, worldID, guiID;
+    private int playerID, worldID, guiID;
     public static Object instance;
 
     public PacketOpenGui(){}

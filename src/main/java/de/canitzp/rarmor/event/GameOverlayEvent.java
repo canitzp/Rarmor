@@ -4,7 +4,7 @@ import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IIngameTooltipHandler;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.rarmor.util.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

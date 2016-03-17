@@ -1,4 +1,4 @@
-package de.canitzp.util.util;
+package de.canitzp.rarmor.util.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -16,7 +16,7 @@ public class ContainerUtil {
         final int inventoryEnd = inventoryStart+26;
         final int hotbarStart = inventoryEnd+1;
         final int hotbarEnd = hotbarStart+8;
-        Slot theSlot = (Slot)inventorySlots.get(slot);
+        Slot theSlot = inventorySlots.get(slot);
         if(theSlot != null && theSlot.getHasStack()){
             ItemStack newStack = theSlot.getStack();
             ItemStack currentStack = newStack.copy();

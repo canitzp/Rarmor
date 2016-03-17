@@ -1,7 +1,7 @@
-package de.canitzp.util.util;
+package de.canitzp.rarmor.util.util;
 
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.util.inventory.InventoryBase;
+import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
