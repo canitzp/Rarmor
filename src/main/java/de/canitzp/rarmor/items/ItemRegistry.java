@@ -15,11 +15,13 @@ public class ItemRegistry {
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
     public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleMovement, moduleStat, moduleUnloader, moduleLoader, moduleDefense;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
+    public static Item modularTool;
 
     public static void preInit(){
         Rarmor.logger.info("Registering Items");
         ironChainsaw = new ItemChainSaw(250000, 1500, 200, "ironChainsaw");
         diamondChainsaw = new ItemChainSaw(500000, 5000, 100, "diamondChainsaw");
+        modularTool = new ItemModularTool(1000000, 8000, "modularTool");
         rfArmorBody = new ItemRFArmorBody();
         rfArmorHelmet = new ItemRFArmorHelmet();
         rfArmorLeggins = new ItemRFArmorGeneric(ItemRFArmor.ArmorType.LEGGINS, 250000, 1500, "rfArmorLeggins");

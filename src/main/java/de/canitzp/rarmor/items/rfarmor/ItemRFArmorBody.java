@@ -25,7 +25,6 @@ public class ItemRFArmorBody extends ItemRFArmor {
 
     public ItemRFArmorBody() {
         super(ItemRFArmor.RFARMOR, ArmorType.BODY, 250000, 1500, "rfArmorBody");
-        setHasSubtypes(true);
         rfPerTick = RarmorProperties.getInteger("maxRarmorTransferPerTick");
     }
 

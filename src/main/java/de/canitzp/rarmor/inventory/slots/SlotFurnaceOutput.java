@@ -15,8 +15,8 @@ public class SlotFurnaceOutput extends SlotUpdate {
 
     private final EntityPlayer player;
 
-    public SlotFurnaceOutput(IInventory inventory, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, EntityPlayer player) {
-        super(inventory, p_i1824_2_, p_i1824_3_, p_i1824_4_, player);
+    public SlotFurnaceOutput(IInventory inventory, int id, int x, int y, EntityPlayer player, ItemStack saveStack) {
+        super(inventory, id, x, y, saveStack);
         this.player = player;
     }
 

@@ -16,8 +16,8 @@ public class SlotInputModule extends SlotUpdate {
     private final EntityPlayer player;
     private ItemStack actualStack;
 
-    public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player) {
-        super(inventory, id, x, y, player);
+    public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player, ItemStack toSave) {
+        super(inventory, id, x, y, toSave);
         this.player = player;
     }
 
