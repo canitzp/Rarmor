@@ -1,4 +1,4 @@
-package de.canitzp.util.items;
+package de.canitzp.rarmor.util.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

@@ -1,4 +1,4 @@
-package de.canitzp.util.util;
+package de.canitzp.rarmor.util.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

@@ -1,4 +1,4 @@
-package de.canitzp.util.util;
+package de.canitzp.rarmor.util.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -60,7 +60,7 @@ public class GuiUtil {
             drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 - 3 + 1, i1, i1);
             drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
             for (int k1 = 0; k1 < textLines.size(); ++k1) {
-                String s1 = (String)textLines.get(k1);
+                String s1 = textLines.get(k1);
                 font.drawStringWithShadow(s1, (float)l1, (float)i2, -1);
                 if (k1 == 0) {
                     i2 += 2;

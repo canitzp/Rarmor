@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.items.rfarmor.*;
-import de.canitzp.util.items.ItemBase;
+import de.canitzp.rarmor.util.items.ItemBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

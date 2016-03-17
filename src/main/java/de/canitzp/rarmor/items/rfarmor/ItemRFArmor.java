@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.util.util.NBTUtil;
+import de.canitzp.rarmor.util.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -163,7 +163,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     public void damageArmor(EntityLivingBase entity, ItemStack armor, DamageSource source, int damage, int slot) {
         if (armor.getItem() instanceof ItemRFArmorBody && entity instanceof EntityPlayer) {
             if (NBTUtil.getInteger(armor, "BurnTime") > 0 || NBTUtil.getInteger(armor, "GenBurnTime") > 0) {
-                if (((EntityPlayer) entity).getEntityWorld().rand.nextInt(10) == 1) {
+                if (entity.getEntityWorld().rand.nextInt(10) == 1) {
                     entity.setFire(4);
                 }
             }

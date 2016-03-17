@@ -2,7 +2,6 @@ package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.GuiHandler;
-import de.canitzp.util.packets.PacketOpenGui;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
