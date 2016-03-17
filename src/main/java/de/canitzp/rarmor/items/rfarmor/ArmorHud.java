@@ -4,7 +4,7 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
 import de.canitzp.rarmor.api.RamorResources;
-import de.canitzp.rarmor.util.util.GuiUtil;
+import de.canitzp.rarmor.util.GuiUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;

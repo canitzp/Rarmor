@@ -3,7 +3,7 @@ package de.canitzp.rarmor.event;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

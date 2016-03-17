@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.util;
+package de.canitzp.rarmor.util;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;

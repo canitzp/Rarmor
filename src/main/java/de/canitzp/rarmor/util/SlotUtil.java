@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.util;
+package de.canitzp.rarmor.util;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;

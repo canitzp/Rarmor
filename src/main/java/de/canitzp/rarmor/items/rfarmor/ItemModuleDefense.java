@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.util.util.EnergyUtil;
+import de.canitzp.rarmor.util.EnergyUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;

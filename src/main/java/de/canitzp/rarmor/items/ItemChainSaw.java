@@ -4,7 +4,7 @@ import cofh.api.energy.ItemEnergyContainer;
 import com.google.common.collect.Multimap;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
-import de.canitzp.rarmor.util.util.WorldUtil;
+import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
