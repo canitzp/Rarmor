@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.items.rfarmor;
 
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -7,7 +8,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemRFArmorGeneric extends ItemRFArmor {
 
-    public ItemRFArmorGeneric(ArmorType type, int maxEnergy, int maxTransfer, String name) {
+    public ItemRFArmorGeneric(EntityEquipmentSlot type, int maxEnergy, int maxTransfer, String name) {
         super(RFARMOR, type, maxEnergy, maxTransfer, name);
     }
 

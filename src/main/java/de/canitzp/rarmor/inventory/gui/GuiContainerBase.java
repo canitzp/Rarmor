@@ -11,8 +11,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * @author canitzp
@@ -59,7 +59,7 @@ public abstract class GuiContainerBase extends GuiContainer {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k / 1.0F, (float)l / 1.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1) {
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
+            Slot slot = this.inventorySlots.inventorySlots.get(i1);
             this.drawSlot(slot);
             if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered()) {
                 theSlot = slot;
@@ -91,7 +91,7 @@ public abstract class GuiContainerBase extends GuiContainer {
                 itemstack = itemstack.copy();
                 itemstack.stackSize = this.dragSplittingRemnant;
                 if (itemstack.stackSize == 0) {
-                    s = "" + EnumChatFormatting.YELLOW + "0";
+                    s = "" + TextFormatting.YELLOW + "0";
                 }
             }
             this.drawItemStack(itemstack, mouseX - i - j2, mouseY - j - k2, s);
@@ -156,11 +156,11 @@ public abstract class GuiContainerBase extends GuiContainer {
                 flag = true;
                 Container.computeStackSize(this.dragSplittingSlots, this.dragSplittingLimit, itemstack, slotIn.getStack() == null ? 0 : slotIn.getStack().stackSize);
                 if (itemstack.stackSize > itemstack.getMaxStackSize()) {
-                    s = EnumChatFormatting.YELLOW + "" + itemstack.getMaxStackSize();
+                    s = TextFormatting.YELLOW + "" + itemstack.getMaxStackSize();
                     itemstack.stackSize = itemstack.getMaxStackSize();
                 }
                 if (itemstack.stackSize > slotIn.getItemStackLimit(itemstack)) {
-                    s = EnumChatFormatting.YELLOW + "" + slotIn.getItemStackLimit(itemstack);
+                    s = TextFormatting.YELLOW + "" + slotIn.getItemStackLimit(itemstack);
                     itemstack.stackSize = slotIn.getItemStackLimit(itemstack);
                 }
             } else {

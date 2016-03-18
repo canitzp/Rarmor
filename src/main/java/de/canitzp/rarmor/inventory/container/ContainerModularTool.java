@@ -24,8 +24,8 @@ public class ContainerModularTool extends Container {
     public ContainerModularTool(EntityPlayer player){
         this.player = player;
         this.world = player.worldObj;
-        this.armor = player.getCurrentArmor(2);
-        this.tool = player.getCurrentEquippedItem();
+        this.armor = player.inventory.armorInventory[2];
+        this.tool = player.getActiveItemStack();
         this.inventory = NBTUtil.readSlotsBase(this.tool, ItemModularTool.slots);
 
         for(int j = 0; j < 3; j++){

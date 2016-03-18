@@ -7,6 +7,7 @@ import de.canitzp.rarmor.util.ItemStackUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +25,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     public static final int FURNACEINPUT = 27, FURNACEOUTPUT = 28, MODULESLOT = 29, GENERATORSLOT = 30;
 
     public ItemRFArmorBody() {
-        super(ItemRFArmor.RFARMOR, ArmorType.BODY, 250000, 1500, "rfArmorBody");
+        super(ItemRFArmor.RFARMOR, EntityEquipmentSlot.CHEST, 250000, 1500, "rfArmorBody");
         rfPerTick = RarmorProperties.getInteger("maxRarmorTransferPerTick");
     }
 
@@ -63,9 +64,9 @@ public class ItemRFArmorBody extends ItemRFArmor {
         if(NBTUtil.getBoolean(armor, "isFirstOpened")){
             if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
             if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0) NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
-            ItemStack foot = player.getCurrentArmor(0);
-            ItemStack leggins = player.getCurrentArmor(1);
-            ItemStack head = player.getCurrentArmor(3);
+            ItemStack foot = player.inventory.armorInventory[0];
+            ItemStack leggins = player.inventory.armorInventory[1];
+            ItemStack head = player.inventory.armorInventory[3];
             if (this.isArmor(foot, leggins, armor, head)) {
                 if (isBurnable(armor)) {
                     burn(armor);

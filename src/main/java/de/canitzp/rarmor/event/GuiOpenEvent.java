@@ -29,7 +29,7 @@ public class GuiOpenEvent {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         if(player != null){
             if(RarmorUtil.isPlayerWearingRarmor(player)){
-                ItemStack body = player.getCurrentArmor(2);
+                ItemStack body = player.inventory.armorInventory[2];
                 if(event.gui instanceof GuiInventory && (body.getTagCompound() == null || !body.getTagCompound().getBoolean("click"))){
                     if(body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                     if(!NBTUtil.getBoolean(body, "isFirstOpened")){
@@ -40,7 +40,7 @@ public class GuiOpenEvent {
                     NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player,  GuiHandler.RFARMORGUI, Rarmor.instance));
                 } else if(body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
-                    ItemStack module = NBTUtil.readSlots(player.getCurrentArmor(2), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                    ItemStack module = NBTUtil.readSlots(player.inventory.armorInventory[2], ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
                         ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, event.gui, module);
                     }

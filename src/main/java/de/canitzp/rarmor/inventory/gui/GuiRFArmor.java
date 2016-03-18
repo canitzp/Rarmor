@@ -8,7 +8,6 @@ import de.canitzp.rarmor.api.RamorResources;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
 import de.canitzp.rarmor.inventory.slots.SlotModule;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
@@ -46,7 +45,7 @@ public class GuiRFArmor extends GuiContainerBase {
         super(containerRFArmor);
         this.xSize = 247;
         this.ySize = 226;
-        this.armor = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId() + 1);
+        this.armor = player.inventory.armorInventory[2];
         this.player = player;
     }
 

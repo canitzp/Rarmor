@@ -36,14 +36,14 @@ public class PacketSendNBTBoolean implements IMessage{
         this.b = b;
         this.playerSlotID = slotID;
         this.playerID = player.getEntityId();
-        this.worldID = player.getEntityWorld().provider.getDimensionId();
+        this.worldID = player.getEntityWorld().provider.getDimension();
     }
     public PacketSendNBTBoolean(EntityPlayer player, String nbt, boolean b) {
         this.nbt = nbt;
         this.b = b;
         this.playerSlotID = 123456;
         this.playerID = player.getEntityId();
-        this.worldID = player.getEntityWorld().provider.getDimensionId();
+        this.worldID = player.getEntityWorld().provider.getDimension();
     }
 
     @Override

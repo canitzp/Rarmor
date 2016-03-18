@@ -22,7 +22,7 @@ public class PacketOpenGui implements IMessage {
 
     public PacketOpenGui(EntityPlayer player, int guiID, Object instance){
         this.playerID = player.getEntityId();
-        this.worldID = player.getEntityWorld().provider.getDimensionId();
+        this.worldID = player.getEntityWorld().provider.getDimension();
         this.guiID = guiID;
         PacketOpenGui.instance = instance;
     }

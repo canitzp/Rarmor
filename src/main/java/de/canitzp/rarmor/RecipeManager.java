@@ -1,7 +1,6 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.items.ItemRegistry;
-import de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,7 @@ public class RecipeManager {
     }
 
     private static void loadActAddRecipes() {
-        ActuallyAdditionsAPI.addCrusherRecipe(new ItemStack(ItemRegistry.moduleFlying), new ItemStack(Items.nether_star));
+        //ActuallyAdditionsAPI.addCrusherRecipe(new ItemStack(ItemRegistry.moduleFlying), new ItemStack(Items.nether_star));
     }
 
     public static void loadVanilla(){

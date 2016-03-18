@@ -2,7 +2,6 @@ package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.api.SlotUpdate;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -28,10 +27,10 @@ public class SlotInputModule extends SlotUpdate {
 
     @Override
     public void onSlotChanged(){
-        ItemStack stack = player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId()+1);
+        ItemStack stack = player.inventory.armorInventory[2];
         if(actualStack != null && !actualStack.isItemEqual(this.getStack())){
             if(actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory, this);
+                ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, player.inventory.armorInventory[2], stack, this.inventory, this);
             }
         }
         if(getStack() != null && getStack().getItem() != null){
@@ -47,7 +46,7 @@ public class SlotInputModule extends SlotUpdate {
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
         if(stack.getItem() instanceof IRarmorModule){
             IRarmorModule module = (IRarmorModule) stack.getItem();
-            module.onPickupFromSlot(player.getEntityWorld(), player, player.getCurrentArmor(2), stack, this.inventory, this);
+            module.onPickupFromSlot(player.getEntityWorld(), player, player.inventory.armorInventory[2], stack, this.inventory, this);
             NBTUtil.setBoolean(stack, "Module" + module.getUniqueName(), false);
         }
         actualStack = null;

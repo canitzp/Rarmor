@@ -4,12 +4,12 @@ import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -50,7 +50,7 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
     private boolean canPlayerSeeSky(EntityPlayer player) {
         if(!player.worldObj.isRaining() && player.worldObj.isDaytime()){
             for(int i = (int) player.posY + 1; i <= 256; i++){
-                Block block = player.worldObj.getBlockState(new BlockPos(player.posX, i, player.posZ)).getBlock();
+                IBlockState block = player.worldObj.getBlockState(new BlockPos(player.posX, i, player.posZ));
                 if(block != null && ((block.isFullBlock() || block instanceof BlockLiquid) && !player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ)))){
                     return false;
                 }

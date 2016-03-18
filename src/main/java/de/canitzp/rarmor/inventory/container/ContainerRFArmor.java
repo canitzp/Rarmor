@@ -31,7 +31,7 @@ public class ContainerRFArmor extends Container {
     public ContainerRFArmor(EntityPlayer player){
         if(player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
-        this.armor = player.getCurrentArmor(2);
+        this.armor = player.inventory.armorInventory[2];
         this.body = (ItemRFArmorBody) armor.getItem();
         InventoryPlayer inventoryPlayer = player.inventory;
         this.inventory = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
@@ -68,21 +68,10 @@ public class ContainerRFArmor extends Container {
         //Armor Module Slot:
         this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player, this.armor));
 
-        final EntityPlayer p = player;
-        for(int i = 0; i < 4; ++i){
-            final int finalI = i;
-            this.addSlotToContainer(new SlotUnmovable(player.inventory, player.inventory.getSizeInventory()-1-i, 44, 10+i*18){
-                @Override
-                public boolean isItemValid(ItemStack stack){
-                    return stack != null && stack.getItem().isValidArmor(stack, finalI, p);
-                }
-
-                @Override
-                public int getSlotStackLimit(){
-                    return 1;
-                }
-            });
-        }
+        addSlotToContainer(new SlotUnmovable(player.inventory, 39, 44, 10));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 38, 44, 10+18));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 37, 44, 10+18*2));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 36, 44, 10+18*3));
 
         this.generatorSlot = new SlotModule(this.inventory, 30, 140, 18, this.armor);
         this.addSlotToContainer(this.generatorSlot);
@@ -93,12 +82,6 @@ public class ContainerRFArmor extends Container {
     @Override
     public void detectAndSendChanges() {
         InventoryBase inv = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
-        /*if (this.inventory != inv) {
-            for (int i = 0; inv.getSizeInventory() < i; i++) {
-                this.inventory.setInventorySlotContents(i, inv.getStackInSlot(i));
-            }
-        }
-        */
         this.inventory.slots = inv.slots;
         super.detectAndSendChanges();
     }

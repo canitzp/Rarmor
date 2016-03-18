@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -24,14 +25,14 @@ public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTool
     private ResourceLocation batLoc;
 
     public ItemRFArmorHelmet() {
-        super(ArmorType.HEAD, 250000, 1500, "rfArmorHelmet");
+        super(EntityEquipmentSlot.HEAD, 250000, 1500, "rfArmorHelmet");
         batLoc = RamorResources.BATTERYGUI.getNewLocation();
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public void doRender(Minecraft minecraft, EntityPlayer playerSP, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType elementType, ItemStack helmet, float partialTicks) {
-        if(RarmorUtil.isPlayerWearingRarmor(playerSP) && NBTUtil.getBoolean(playerSP.getCurrentArmor(2), "SettingInWorldTooltip")){
+        if(RarmorUtil.isPlayerWearingRarmor(playerSP) && NBTUtil.getBoolean(playerSP.inventory.armorInventory[2], "SettingInWorldTooltip")){
             ArmorHud.displayNames(minecraft, resolution, playerSP, 0, 5, ColorUtil.WHITE);
             //drawEnergyBarVer(100, 100, playerSP.getCurrentArmor(2).getMaxDamage(), NBTUtil.getInteger(playerSP.getCurrentArmor(2), "Energy"));
         }

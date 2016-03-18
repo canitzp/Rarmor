@@ -9,16 +9,12 @@ import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.server.S23PacketBlockChange;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,8 +41,8 @@ public class RarmorUtil {
         boolean foundTop = false;
         do{
             height++;
-            Block block = world.getBlockState(new BlockPos(x, height, z)).getBlock();
-            if (block != wood) {
+            IBlockState block = world.getBlockState(new BlockPos(x, height, z));
+            if (block.getBlock() != wood) {
                 height--;
                 foundTop = true;
             }
@@ -56,8 +52,8 @@ public class RarmorUtil {
             for (int xPos = x - 1; xPos <= x + 1; xPos++) {
                 for (int yPos = height - 1; yPos <= height + 1; yPos++) {
                     for (int zPos = z - 1; zPos <= z + 1; zPos++) {
-                        Block leaves = WorldUtil.getBlock(world, xPos, yPos, zPos);
-                        if (leaves != null && leaves.isLeaves(world, new BlockPos(xPos, yPos, zPos)))
+                        IBlockState leaves = WorldUtil.getBlockState(world, xPos, yPos, zPos);
+                        if (leaves != null && leaves.getBlock().isLeaves(leaves, world, new BlockPos(xPos, yPos, zPos)))
                             numLeaves++;
                     }
                 }
@@ -77,7 +73,7 @@ public class RarmorUtil {
                     Block localBlock = WorldUtil.getBlock(world, xPos, yPos, zPos);
                     if (bID == localBlock) {
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
-                        float localHardness = localBlock.getBlockHardness(world, new BlockPos(xPos, yPos, zPos));
+                        float localHardness = localBlock.getBlockHardness(localMeta, world, new BlockPos(xPos, yPos, zPos));
                         if (!(localHardness < 0)) {
                             boolean cancelHarvest;
                             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, new BlockPos(x, y, z), localMeta, player);
@@ -128,7 +124,7 @@ public class RarmorUtil {
         TileEntity tile = world.getTileEntity(pos);
         boolean canHarvest = block.canHarvestBlock(world, pos, player);
         if(player instanceof EntityPlayerMP){
-            int event = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)player).theItemInWorldManager.getGameType(), (EntityPlayerMP)player, pos);
+            int event = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)player).interactionManager.getGameType(), (EntityPlayerMP)player, pos);
             if(event == -1){
                 return false;
             }
@@ -139,35 +135,37 @@ public class RarmorUtil {
         else{
             world.playAuxSFX(2001, pos, Block.getIdFromBlock(block)+(meta << 12));
         }
-        boolean removed = block.removedByPlayer(world, pos, player, canHarvest);
+        boolean removed = block.removedByPlayer(state, world, pos, player, canHarvest);
         if(removed){
             block.onBlockDestroyedByPlayer(world, pos, state);
             if(!world.isRemote && !player.capabilities.isCreativeMode){
                 if(canHarvest){
-                    block.harvestBlock(world, player, pos, state, tile);
+                    block.harvestBlock(world, player, pos, state, tile, player.getHeldItemMainhand());
                 }
-                if(!EnchantmentHelper.getSilkTouchModifier(player)){
+                /*
+                if(!EnchantmentHelper.getgetSilkTouchModifier(player)){
                     block.dropXpOnBlockBreak(world, pos, block.getExpDrop(world, pos, EnchantmentHelper.getFortuneModifier(player)));
                 }
+                */
             }
         }
         if(!world.isRemote){
             if(player instanceof EntityPlayerMP){
-                ((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S23PacketBlockChange(world, pos));
+                //(EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S23PacketBlockChange(world, pos));
             }
         }
         else{
-            Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
+            //Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
         }
         return removed;
     }
 
     public static boolean isPlayerWearingRarmor(EntityPlayer player) {
         if (player != null) {
-            ItemStack head = player.getCurrentArmor(3);
-            ItemStack body = player.getCurrentArmor(2);
-            ItemStack leggins = player.getCurrentArmor(1);
-            ItemStack boots = player.getCurrentArmor(0);
+            ItemStack head = player.inventory.armorInventory[3];
+            ItemStack body = player.inventory.armorInventory[2];
+            ItemStack leggins = player.inventory.armorInventory[1];
+            ItemStack boots = player.inventory.armorInventory[0];
             if (head != null && body != null && leggins != null && boots != null) {
                 if (head.getItem() instanceof ItemRFArmorHelmet && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric) {
                     return true;
@@ -191,7 +189,7 @@ public class RarmorUtil {
 
     public static ItemStack getPlayersRarmorChestplate(EntityPlayer player){
         if(isPlayerWearingRarmor(player)){
-            return player.getCurrentArmor(2);
+            return player.inventory.armorInventory[2];
         }
         return null;
     }

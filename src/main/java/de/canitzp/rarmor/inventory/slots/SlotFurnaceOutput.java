@@ -1,7 +1,6 @@
 package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.api.SlotUpdate;
-import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +21,7 @@ public class SlotFurnaceOutput extends SlotUpdate {
 
     @Override
     public void onSlotChanged(){
-        ItemStack stack = this.player.getCurrentArmor(ItemRFArmor.ArmorType.BODY.getId() + 1);
+        ItemStack stack = this.player.inventory.armorInventory[2];
         if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemRFArmorBody){
             NBTUtil.saveSlots(stack, inventory);
         }

@@ -8,11 +8,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0);
+    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvent.soundEventRegistry.getObject(new ResourceLocation("block.anvil.break")));
 
     public int maxEnergy;
     public int maxTransfer;
@@ -33,8 +34,8 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     public String[] textures = new String[2];
 
-    public ItemRFArmor(ArmorMaterial material, ArmorType type, int maxEnergy, int maxTransfer, String name) {
-        super(material, 0, type.getId());
+    public ItemRFArmor(ArmorMaterial material, EntityEquipmentSlot type, int maxEnergy, int maxTransfer, String name) {
+        super(material, 0, type);
         setCreativeTab(Rarmor.rarmorTab);
         setEnergyParams(maxEnergy, maxTransfer);
         setHasSubtypes(true);
@@ -42,14 +43,17 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-        int i = EntityLiving.getArmorPosition(itemStackIn) - 1;
-        ItemStack itemstack = playerIn.getCurrentArmor(i);
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand) {
+        EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
+        ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
         if (itemstack == null) {
-            playerIn.setCurrentItemOrArmor(i + 1, itemStackIn.copy());
+            player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;
+            return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
         }
-        return itemStackIn;
+        else {
+            return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+        }
     }
 
     @Override
@@ -58,8 +62,8 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public String getArmorTexture(ItemStack itemstack, Entity entity, int slot, String type){
-        return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (this.armorType == 2 ? "2" : "1") + ".png";
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
+        return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
     public ItemRFArmor setEnergyParams(int maxEnergy, int maxTransfer) {
@@ -123,13 +127,13 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     protected int getAbsorptionRatio() {
 
         switch (armorType) {
-            case 0:
+            case FEET:
                 return 15;
-            case 1:
+            case LEGS:
                 return 40;
-            case 2:
+            case CHEST:
                 return 30;
-            case 3:
+            case HEAD:
                 return 15;
         }
         return 0;
@@ -214,19 +218,4 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         return !(NBTUtil.getInteger(stack, "Energy") == this.maxEnergy);
     }
 
-    public enum ArmorType{
-        HEAD(0),
-        BODY(1),
-        LEGGINS(2),
-        SHOES(3);
-
-        private int id;
-        ArmorType(int id){
-            this.id=id;
-        }
-
-        public int getId() {
-            return id;
-        }
-    }
 }

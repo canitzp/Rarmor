@@ -24,12 +24,12 @@ public class GameOverlayEvent {
         Minecraft minecraft = Minecraft.getMinecraft();
         if(event.type == RenderGameOverlayEvent.ElementType.ALL && minecraft.currentScreen == null) {
             EntityPlayer player = minecraft.thePlayer;
-            ItemStack helmet = player.getCurrentArmor(3);
+            ItemStack helmet = player.inventory.armorInventory[3];
             if(helmet != null && helmet.getItem() instanceof IIngameTooltipHandler){
                 ((IIngameTooltipHandler) helmet.getItem()).doRender(minecraft, player, event.resolution, minecraft.fontRendererObj, event.type, helmet, event.partialTicks);
             }
             if(RarmorUtil.isPlayerWearingRarmor(player)){
-                ItemStack module = NBTUtil.readSlots(player.getCurrentArmor(2), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                ItemStack module = NBTUtil.readSlots(player.inventory.armorInventory[2], ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                 if(module != null && module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).renderWorldScreen(minecraft, player, event.resolution, minecraft.fontRendererObj, event.type, module, event.partialTicks);
                 }

@@ -1,8 +1,6 @@
 package de.canitzp.rarmor.network;
 
-import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -12,9 +10,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author canitzp
@@ -30,7 +25,7 @@ public class PacketSyncPlayerHotbar implements IMessage {
     public PacketSyncPlayerHotbar(EntityPlayer player){
         this.inventoryPlayer = player.inventory;
         this.playerId = player.getEntityId();
-        this.worldId = player.getEntityWorld().provider.getDimensionId();
+        this.worldId = player.getEntityWorld().provider.getDimension();
     }
 
     @Override

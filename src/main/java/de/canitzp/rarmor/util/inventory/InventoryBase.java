@@ -3,7 +3,7 @@ package de.canitzp.rarmor.util.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author canitzp
@@ -117,7 +117,7 @@ public class InventoryBase implements IInventory {
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 }

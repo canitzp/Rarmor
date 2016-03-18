@@ -8,6 +8,9 @@ import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import org.lwjgl.input.Keyboard;
 
@@ -40,10 +43,10 @@ public class ItemModularTool extends ItemEnergyContainer {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-            player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, player.serverPosX, player.serverPosY, player.serverPosZ);
-            return stack;
+            player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, (int)player.serverPosX, (int)player.serverPosY, (int)player.serverPosZ);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
         for(ItemStack stack1 : inventory.slots){
@@ -51,7 +54,7 @@ public class ItemModularTool extends ItemEnergyContainer {
                 stack = ((IToolModule) stack1.getItem()).onRightClick(stack, world, player);
             }
         }
-        return super.onItemRightClick(stack, world, player);
+        return super.onItemRightClick(stack, world, player, hand);
     }
 
 }

@@ -16,9 +16,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -33,9 +33,9 @@ public class ArmorHud {
     private static final ResourceLocation guiRarmor = RamorResources.RARMORGUI.getNewLocation();
 
     public static void displayNames(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, int colorCode){
-        MovingObjectPosition posHit = Minecraft.getMinecraft().objectMouseOver;
+        RayTraceResult posHit = Minecraft.getMinecraft().objectMouseOver;
         if(posHit != null){
-            if(posHit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK || posHit.typeOfHit == MovingObjectPosition.MovingObjectType.MISS){
+            if(posHit.typeOfHit == RayTraceResult.Type.BLOCK || posHit.typeOfHit == RayTraceResult.Type.MISS){
                 IBlockState currentBlockState = player.getEntityWorld().getBlockState(posHit.getBlockPos());
                 if(currentBlockState != null) {
                     Block currentBlock = currentBlockState.getBlock();
@@ -48,7 +48,7 @@ public class ArmorHud {
                         displayStaticBlocks(minecraft, resolution,  player, x, y, currentBlock, currentBlockState, colorCode);
                     }
                 }
-            } else if(posHit.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY){
+            } else if(posHit.typeOfHit == RayTraceResult.Type.ENTITY){
                 String text = posHit.entityHit.getName();
                 minecraft.fontRendererObj.drawStringWithShadow(text, (resolution.getScaledWidth() - minecraft.fontRendererObj.getStringWidth(text)) / 2, y , colorCode);
             }
@@ -62,7 +62,7 @@ public class ArmorHud {
                 String text = item.getItemStackDisplayName(new ItemStack(block, 1, block.getMetaFromState(state)));
                 if(text != null){
                     FontRenderer fontRenderer = minecraft.fontRendererObj;
-                    MovingObjectPosition posHit = minecraft.objectMouseOver;
+                    RayTraceResult posHit = minecraft.objectMouseOver;
                     if(posHit != null){
                         fontRenderer.drawStringWithShadow(text, (resolution.getScaledWidth() - fontRenderer.getStringWidth(text)) / 2, y , colorCode);
                     }
@@ -75,10 +75,10 @@ public class ArmorHud {
 
     public static void displayAlternativeBlocks(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, Block block, int colorCode) {
         if (player.getEntityWorld().isRemote) {
-            String text = StatCollector.translateToLocal(block.getLocalizedName());
+            String text = I18n.translateToLocal(block.getLocalizedName());
             if (text != null) {
                 FontRenderer fontRenderer = minecraft.fontRendererObj;
-                MovingObjectPosition posHit = minecraft.objectMouseOver;
+                RayTraceResult posHit = minecraft.objectMouseOver;
                 if (posHit != null) {
                     fontRenderer.drawStringWithShadow(text, (resolution.getScaledWidth() - fontRenderer.getStringWidth(text)) / 2, 5, colorCode);
                 }
@@ -93,7 +93,7 @@ public class ArmorHud {
                 String text = item.getItemStackDisplayName(new ItemStack(block, 1, block.getMetaFromState(state)));
                 if (text != null) {
                     FontRenderer fontRenderer = minecraft.fontRendererObj;
-                    MovingObjectPosition posHit = minecraft.objectMouseOver;
+                    RayTraceResult posHit = minecraft.objectMouseOver;
                     if (posHit != null) {
                         drawCenteredTextInWorld(fontRenderer, resolution.getScaledWidth(), y, text, colorCode);
                         float row = 10;
@@ -108,7 +108,7 @@ public class ArmorHud {
                                         i = fluid.getTankInfo(posHit.sideHit).length;
                                         continue;
                                     }
-                                    String fluidText = StatCollector.translateToLocal(fluidStack.getLocalizedName()) + " " + String.valueOf(fluidStack.amount) + "mB";
+                                    String fluidText = I18n.translateToLocal(fluidStack.getLocalizedName()) + " " + String.valueOf(fluidStack.amount) + "mB";
                                     drawCenteredTextInWorld(fontRenderer, resolution.getScaledWidth(), y + row, fluidText, colorCode);
                                     drawTank(fontRenderer, resolution, fluidText, row, y, fluidStack, fluid.getTankInfo(posHit.sideHit)[i].capacity);
                                     row += 10;

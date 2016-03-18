@@ -22,7 +22,7 @@ public class PlayerEvents {
             World world = event.world;
             EntityPlayer player = (EntityPlayer) event.entity;
             if(RarmorUtil.isPlayerWearingRarmor(player)){
-                ItemStack module = NBTUtil.readSlots(player.getCurrentArmor(2), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                ItemStack module = NBTUtil.readSlots(player.inventory.armorInventory[2], ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                 if(module != null && module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onPlayerLoginEvent(world, player, module);
                 }
