@@ -9,10 +9,15 @@ import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketPlayerDigging;
+import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -86,17 +91,15 @@ public class RarmorUtil {
                                 if (cancelHarvest) {
                                     breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
                                 } else {
-                                    //if (localMeta % 4 == meta % 4) {
-                                        if(stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse){
-                                            playerHarvestBlock(world, new BlockPos(xPos, yPos, zPos), player);
-                                            ((ItemChainSaw) stack.getItem()).extractEnergy(stack, rfPerUse, false);
-                                        } else{
-                                            playerHarvestBlock(world, new BlockPos(x, y, z), player);
-                                            return false;
-                                        }
-                                        if (!world.isRemote)
-                                            breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
-                                    //}
+                                    if (stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse) {
+                                        playerHarvestBlock(world, new BlockPos(xPos, yPos, zPos), player, stack);
+                                        ((ItemChainSaw) stack.getItem()).extractEnergy(stack, rfPerUse, false);
+                                    } else {
+                                        playerHarvestBlock(world, new BlockPos(x, y, z), player, stack);
+                                        return false;
+                                    }
+                                    if (!world.isRemote)
+                                        breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
                                 }
                             }
                         }
@@ -117,7 +120,7 @@ public class RarmorUtil {
      *
      * Author: Ellpeck
      */
-    public static boolean playerHarvestBlock(World world, BlockPos pos, EntityPlayer player){
+    public static boolean playerHarvestBlock(World world, BlockPos pos, EntityPlayer player, ItemStack stack){
         Block block = world.getBlockState(pos).getBlock();
         IBlockState state = world.getBlockState(pos);
         int meta = world.getBlockState(pos).getBlock().getMetaFromState(world.getBlockState(pos));
@@ -142,20 +145,19 @@ public class RarmorUtil {
                 if(canHarvest){
                     block.harvestBlock(world, player, pos, state, tile, player.getHeldItemMainhand());
                 }
-                /*
-                if(!EnchantmentHelper.getgetSilkTouchModifier(player)){
-                    block.dropXpOnBlockBreak(world, pos, block.getExpDrop(world, pos, EnchantmentHelper.getFortuneModifier(player)));
+                if(EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack) != 0){
+                    block.dropXpOnBlockBreak(world, pos, block.getExpDrop(state, world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack)));
                 }
-                */
+
             }
         }
         if(!world.isRemote){
             if(player instanceof EntityPlayerMP){
-                //(EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S23PacketBlockChange(world, pos));
+                ((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new SPacketBlockChange(world, pos));
             }
         }
         else{
-            //Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
+            Minecraft.getMinecraft().getNetHandler().addToSendQueue(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
         }
         return removed;
     }
