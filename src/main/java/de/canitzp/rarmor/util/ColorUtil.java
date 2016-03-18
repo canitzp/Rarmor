@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.util;
+package de.canitzp.rarmor.util;
 
 /**
  * @author canitzp

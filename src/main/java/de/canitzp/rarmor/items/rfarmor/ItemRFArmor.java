@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -16,7 +16,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
 
@@ -38,11 +37,8 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         super(material, 0, type.getId());
         setCreativeTab(Rarmor.rarmorTab);
         setEnergyParams(maxEnergy, maxTransfer);
-        setRegistryName(Rarmor.MODID + "." + name);
-        setUnlocalizedName(Rarmor.MODID + "." + name);
-        Rarmor.proxy.addRenderer(new ItemStack(this), name);
-        setMaxDamage(maxEnergy);
-        GameRegistry.registerItem(this, name);
+        setHasSubtypes(true);
+        Rarmor.registerItem(this, name);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package de.canitzp.rarmor.api;
 
-import de.canitzp.rarmor.util.util.NBTUtil;
-import net.minecraft.entity.player.EntityPlayer;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -11,19 +10,18 @@ import net.minecraft.item.ItemStack;
  */
 public class SlotUpdate extends Slot implements ISpecialSlot {
 
-    private final EntityPlayer player;
-    public boolean slotExist = true;
+    private boolean slotExist = true;
+    private ItemStack toSave;
 
-    public SlotUpdate(IInventory inventory, int id, int x, int y, EntityPlayer player) {
+    public SlotUpdate(IInventory inventory, int id, int x, int y, ItemStack saveStack) {
         super(inventory, id, x, y);
-        this.player = player;
+        this.toSave = saveStack;
     }
 
     @Override
     public void onSlotChanged(){
-        ItemStack stack = this.player.getCurrentArmor(2);
-        if(stack != null){
-            NBTUtil.saveSlots(stack, inventory);
+        if(toSave != null){
+            NBTUtil.saveSlots(toSave, inventory);
         }
         super.onSlotChanged();
     }

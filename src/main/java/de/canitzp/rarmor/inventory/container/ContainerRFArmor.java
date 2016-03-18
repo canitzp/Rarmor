@@ -6,9 +6,9 @@ import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
+import de.canitzp.rarmor.util.ContainerUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.inventory.InventoryBase;
-import de.canitzp.rarmor.util.util.ContainerUtil;
-import de.canitzp.rarmor.util.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -41,7 +41,7 @@ public class ContainerRFArmor extends Container {
         //Armor Inventory:
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
+                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, this.armor));
             }
         }
         //Player Inventory:
@@ -62,11 +62,11 @@ public class ContainerRFArmor extends Container {
             }
         }
         //Armor Furnace Input:
-        this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
+        this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, this.armor));
         //Armor Furnace Output:
-        this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
+        this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player, this.armor));
         //Armor Module Slot:
-        this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
+        this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player, this.armor));
 
         final EntityPlayer p = player;
         for(int i = 0; i < 4; ++i){
@@ -84,7 +84,7 @@ public class ContainerRFArmor extends Container {
             });
         }
 
-        this.generatorSlot = new SlotModule(this.inventory, 30, 140, 18, player);
+        this.generatorSlot = new SlotModule(this.inventory, 30, 140, 18, this.armor);
         this.addSlotToContainer(this.generatorSlot);
 
         this.onCraftMatrixChanged(this.craftMatrix);

@@ -7,10 +7,12 @@ import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,5 +51,13 @@ public class Rarmor {
         proxy.init();
         RecipeManager.init();
         logger.info("Finished Initialization");
+    }
+
+    public static void registerItem(Item item, String name){
+        item.setUnlocalizedName(MODID + "." + name);
+        item.setRegistryName(name);
+        item.setCreativeTab(rarmorTab);
+        Rarmor.proxy.addRenderer(new ItemStack(item), name);
+        GameRegistry.registerItem(item, name);
     }
 }

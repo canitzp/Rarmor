@@ -3,7 +3,7 @@ package de.canitzp.rarmor.inventory.slots;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.api.SlotUpdate;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -16,8 +16,8 @@ public class SlotInputModule extends SlotUpdate {
     private final EntityPlayer player;
     private ItemStack actualStack;
 
-    public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player) {
-        super(inventory, id, x, y, player);
+    public SlotInputModule(IInventory inventory, int id, int x, int y, EntityPlayer player, ItemStack toSave) {
+        super(inventory, id, x, y, toSave);
         this.player = player;
     }
 

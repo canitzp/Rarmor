@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.util;
+package de.canitzp.rarmor.util;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.util.inventory.InventoryBase;

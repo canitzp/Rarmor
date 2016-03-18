@@ -1,7 +1,7 @@
 package de.canitzp.rarmor.api;
 
-import de.canitzp.rarmor.util.util.ColorUtil;
-import de.canitzp.rarmor.util.util.GuiUtil;
+import de.canitzp.rarmor.util.ColorUtil;
+import de.canitzp.rarmor.util.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;

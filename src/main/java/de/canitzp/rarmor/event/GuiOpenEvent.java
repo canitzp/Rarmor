@@ -8,7 +8,7 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketOpenGui;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;

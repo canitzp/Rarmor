@@ -4,7 +4,7 @@ import cofh.api.energy.ItemEnergyContainer;
 import com.google.common.collect.Multimap;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
-import de.canitzp.rarmor.util.util.WorldUtil;
+import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -40,16 +39,12 @@ public class ItemChainSaw extends ItemEnergyContainer {
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
         this.rfPerUse = rfPerUse;
-        this.setUnlocalizedName(Rarmor.MODID + "." + name);
-        this.setRegistryName(Rarmor.MODID + "." + name);
-        this.setCreativeTab(Rarmor.rarmorTab);
         this.setHarvestLevel("axe", 3);
-        Rarmor.proxy.addRenderer(new ItemStack(this), name);
-        GameRegistry.registerItem(this, name);
+        Rarmor.registerItem(this, name);
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase entity1, EntityLivingBase entity2){
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker){
         int use = rfPerUse;
         if(this.getEnergyStored(stack) >= use){
             this.extractEnergy(stack, use, false);

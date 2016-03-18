@@ -1,7 +1,7 @@
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

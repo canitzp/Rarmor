@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.util;
+package de.canitzp.rarmor.util;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

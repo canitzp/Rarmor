@@ -4,7 +4,7 @@ import de.canitzp.rarmor.api.GuiCheckBox;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.rarmor.util.util.NBTUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
