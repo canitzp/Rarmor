@@ -8,21 +8,10 @@ import mezz.jei.api.*;
  */
 @JEIPlugin
 public class JEIIntegration implements IModPlugin {
-    private IJeiHelpers helpers;
-
-    @Override
-    public void onJeiHelpersAvailable(IJeiHelpers iJeiHelpers) {
-        this.helpers = iJeiHelpers;
-    }
-
-    @Override
-    public void onItemRegistryAvailable(IItemRegistry iItemRegistry) {
-
-    }
 
     @Override
     public void register(IModRegistry iModRegistry) {
-        INbtIgnoreList ignoreList = this.helpers.getNbtIgnoreList();
+        INbtIgnoreList ignoreList = iModRegistry.getJeiHelpers().getNbtIgnoreList();
         ignoreList.ignoreNbtTagNames(ItemRegistry.ironChainsaw, "Energy");
         ignoreList.ignoreNbtTagNames(ItemRegistry.diamondChainsaw, "Energy");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBody, "Energy", "isFirstOpened", "rfPerTick");
@@ -30,18 +19,6 @@ public class JEIIntegration implements IModPlugin {
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorHelmet, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorLeggins, "Energy", "isFirstOpened");
     }
-
-    /**
-     * Called when the IRecipeRegistry is available, after all mods have registered.
-     *
-     * @param recipeRegistry
-     * @deprecated since JEI 2.23.0. Get the recipe registry from jeiRuntime, passed in onRuntimeAvailable
-     */
-    @Override
-    public void onRecipeRegistryAvailable(IRecipeRegistry recipeRegistry) {
-
-    }
-
 
     /**
      * Called when jei's runtime features are available, after all mods have registered.

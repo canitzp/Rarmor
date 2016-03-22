@@ -2,6 +2,7 @@ package de.canitzp.rarmor.util;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.util.inventory.InventoryBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -19,7 +20,9 @@ public class NBTUtil {
                 stack.setTagCompound(new NBTTagCompound());
             }
         } else {
-            Rarmor.logger.error("YOUR ITEMSTACK IS NULL! THIS CAN CAUSE CRASHES! NBTUtil-checkForNBT");
+            Rarmor.logger.error("An Error occurred while writing/reading a ItemStack");
+            stack = new ItemStack(Blocks.fire);
+            stack.setTagCompound(new NBTTagCompound());
         }
     }
 
@@ -98,23 +101,18 @@ public class NBTUtil {
     }
 
     public static int getInteger(ItemStack stack, String name){
-        if(stack.getTagCompound() != null){
+        if(stack.getTagCompound() != null && stack.getTagCompound().hasKey(name)){
             return stack.getTagCompound().getInteger(name);
         } else return 0;
     }
 
     public static void setBoolean(ItemStack stack, String name, boolean b){
-        if(stack != null){
-            checkForNBT(stack);
-            stack.getTagCompound().setBoolean(name, b);
-        } else {
-            Rarmor.logger.error("NBTUtil.setBoolean(): My ItemStack is null. THIS IS AN ERROR!");
-        }
-
+        checkForNBT(stack);
+        stack.getTagCompound().setBoolean(name, b);
     }
 
     public static boolean getBoolean(ItemStack stack, String name) {
-        return stack.getTagCompound() != null && stack.getTagCompound().getBoolean(name);
+        return stack.getTagCompound() != null && stack.getTagCompound().hasKey(name) && stack.getTagCompound().getBoolean(name);
     }
 
 }

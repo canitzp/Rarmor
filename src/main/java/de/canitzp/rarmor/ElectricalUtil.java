@@ -5,6 +5,7 @@ package de.canitzp.rarmor;
  */
 public class ElectricalUtil {
 
+    //RF To Realistic:
     public static float rfToAmpere(int rf){
         return rf / 1000;
     }
@@ -32,5 +33,10 @@ public class ElectricalUtil {
     public static int getResistance(float voltage, float ampere){
         return Math.round(voltage / ampere);
     }
+
+
+    //RF to RP(E-Flux)
+
+
 
 }

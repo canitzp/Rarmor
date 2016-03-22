@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.api;
 
-import net.minecraft.block.Block;
+import de.canitzp.rarmor.items.modularTool.ItemModularTool;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,15 +15,19 @@ public interface IToolModule {
 
     String getName();
 
-    default void onHitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker){}
+    ItemModularTool.ToolTypes getRenderTool();
 
-    default void onBlockDestroyed(ItemStack stack, World world, Block block, BlockPos pos, EntityLivingBase player){}
+    default float onHitEntity(ItemStack module, ItemStack tool, EntityLivingBase target, EntityLivingBase attacker){return 0.0F;}
 
-    default ItemStack onRightClick(ItemStack stack, World world, EntityPlayer player){return stack;}
+    default boolean onBlockDestroyed(ItemStack module, ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity){return true;}
 
-    default boolean canHarvestBlock(Block block)
-    {
-        return true;
+    default ItemStack onRightClick(ItemStack module, ItemStack stack, World world, EntityPlayer player){return stack;}
+
+    default boolean onBlockStartBreak(ItemStack module, ItemStack stack, IBlockState state, EntityPlayer player, BlockPos pos) {
+        return false;
     }
 
+    default float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack){return 1.0F;}
+
+    default boolean canHarvestBlock(ItemStack module, IBlockState state, ItemStack stack){return false;}
 }

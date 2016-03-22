@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.api;
 
-import net.minecraft.client.Minecraft;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,6 +12,7 @@ public class GuiText extends Gui implements IGuiRender {
 
     private String text;
     private int color;
+    private FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
     public GuiText(String text, int color) {
         this.text = text;
@@ -20,7 +21,7 @@ public class GuiText extends Gui implements IGuiRender {
 
     @Override
     public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
-        Minecraft.getMinecraft().fontRendererObj.drawString(this.text, x, y, this.color);
+        fontRenderer.drawString(this.text, x, y, this.color);
     }
 
     @Override

@@ -8,10 +8,12 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketOpenGui;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import net.minecraft.client.Minecraft;
+import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,10 +28,10 @@ public class GuiOpenEvent {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void overrideGui(net.minecraftforge.client.event.GuiOpenEvent event){
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = MinecraftUtil.getPlayer();
         if(player != null){
             if(RarmorUtil.isPlayerWearingRarmor(player)){
-                ItemStack body = player.inventory.armorInventory[2];
+                ItemStack body = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
                 if(event.gui instanceof GuiInventory && (body.getTagCompound() == null || !body.getTagCompound().getBoolean("click"))){
                     if(body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                     if(!NBTUtil.getBoolean(body, "isFirstOpened")){
@@ -40,7 +42,7 @@ public class GuiOpenEvent {
                     NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player,  GuiHandler.RFARMORGUI, Rarmor.instance));
                 } else if(body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
-                    ItemStack module = NBTUtil.readSlots(player.inventory.armorInventory[2], ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                    ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
                         ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, event.gui, module);
                     }

@@ -8,6 +8,7 @@ import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
 import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
+import de.canitzp.rarmor.util.PlayerUtil;
 import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -25,14 +26,12 @@ public class ContainerRFArmor extends Container {
     public IInventory craftResult = new InventoryCraftResult();
     public EntityPlayer player;
     public SlotUpdate generatorSlot;
-    public ItemRFArmorBody body;
     public ItemStack armor;
 
     public ContainerRFArmor(EntityPlayer player){
         if(player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
-        this.armor = player.inventory.armorInventory[2];
-        this.body = (ItemRFArmorBody) armor.getItem();
+        this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         InventoryPlayer inventoryPlayer = player.inventory;
         this.inventory = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
         this.player = player;

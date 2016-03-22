@@ -3,8 +3,9 @@ package de.canitzp.rarmor.items.rfarmor;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
-import de.canitzp.rarmor.api.RamorResources;
+import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.util.GuiUtil;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -19,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidBase;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -29,39 +31,40 @@ import net.minecraftforge.fluids.IFluidHandler;
  */
 public class ArmorHud {
 
-    private static final ResourceLocation guiBat = RamorResources.BATTERYGUI.getNewLocation();
-    private static final ResourceLocation guiRarmor = RamorResources.RARMORGUI.getNewLocation();
+    private static final ResourceLocation guiBat = RarmorResources.BATTERYGUI.getNewLocation();
+    private static final ResourceLocation guiRarmor = RarmorResources.RARMORGUI.getNewLocation();
+    private static FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
-    public static void displayNames(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, int colorCode){
-        RayTraceResult posHit = Minecraft.getMinecraft().objectMouseOver;
+    public static void displayNames(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float y, int colorCode){
+        RayTraceResult posHit = minecraft.objectMouseOver;
+        World world = player.getEntityWorld();
         if(posHit != null){
             if(posHit.typeOfHit == RayTraceResult.Type.BLOCK || posHit.typeOfHit == RayTraceResult.Type.MISS){
-                IBlockState currentBlockState = player.getEntityWorld().getBlockState(posHit.getBlockPos());
+                IBlockState currentBlockState = world.getBlockState(posHit.getBlockPos());
                 if(currentBlockState != null) {
                     Block currentBlock = currentBlockState.getBlock();
-                    TileEntity tileEntity = Minecraft.getMinecraft().theWorld.getTileEntity(posHit.getBlockPos());
+                    TileEntity tileEntity = world.getTileEntity(posHit.getBlockPos());
                     if(currentBlock != null && currentBlock.hasTileEntity(currentBlockState)){
-                        displayTileEntity(minecraft,resolution, player, x, y, currentBlock, currentBlockState, tileEntity, colorCode);
+                        displayTileEntity(minecraft,resolution, player, y, currentBlock, currentBlockState, tileEntity, colorCode);
                     } else if(currentBlock != null && (currentBlock instanceof BlockLiquid || currentBlock instanceof BlockFluidBase)){
                         displayAlternativeBlocks(minecraft, resolution, player, currentBlock, colorCode);
                     } else if(currentBlock != null && currentBlock != Blocks.air){
-                        displayStaticBlocks(minecraft, resolution,  player, x, y, currentBlock, currentBlockState, colorCode);
+                        displayStaticBlocks(minecraft, resolution,  player, y, currentBlock, currentBlockState, colorCode);
                     }
                 }
             } else if(posHit.typeOfHit == RayTraceResult.Type.ENTITY){
                 String text = posHit.entityHit.getName();
-                minecraft.fontRendererObj.drawStringWithShadow(text, (resolution.getScaledWidth() - minecraft.fontRendererObj.getStringWidth(text)) / 2, y , colorCode);
+                fontRenderer.drawStringWithShadow(text, (resolution.getScaledWidth() - fontRenderer.getStringWidth(text)) / 2, y , colorCode);
             }
         }
     }
 
-    public static void displayStaticBlocks(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, Block block, IBlockState state, int colorCode){
+    public static void displayStaticBlocks(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float y, Block block, IBlockState state, int colorCode){
         if (player.getEntityWorld().isRemote) {
             Item item = Item.getItemFromBlock(block);
             if(item != null){
                 String text = item.getItemStackDisplayName(new ItemStack(block, 1, block.getMetaFromState(state)));
                 if(text != null){
-                    FontRenderer fontRenderer = minecraft.fontRendererObj;
                     RayTraceResult posHit = minecraft.objectMouseOver;
                     if(posHit != null){
                         fontRenderer.drawStringWithShadow(text, (resolution.getScaledWidth() - fontRenderer.getStringWidth(text)) / 2, y , colorCode);
@@ -86,7 +89,7 @@ public class ArmorHud {
         }
     }
 
-    public static void displayTileEntity(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float x, float y, Block block, IBlockState state, TileEntity tileEntity, int colorCode) {
+    public static void displayTileEntity(Minecraft minecraft, ScaledResolution resolution, EntityPlayer player, float y, Block block, IBlockState state, TileEntity tileEntity, int colorCode) {
         if (player.getEntityWorld().isRemote) {
             Item item = Item.getItemFromBlock(block);
             if (item != null) {

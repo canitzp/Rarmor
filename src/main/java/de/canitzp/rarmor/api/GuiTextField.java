@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.api;
 
-import net.minecraft.client.Minecraft;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +12,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
 
     public String text;
     public int color, end;
+    private FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
     public GuiTextField(int componentId, int x, int y, int width, int height) {
         this(componentId, x, y, width, height, "", 0);
@@ -22,7 +23,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
     }
 
     public GuiTextField(int componentId, int x, int y, int width, int height, String text, int color, int end) {
-        super(componentId, Minecraft.getMinecraft().fontRendererObj, x, y, width, height);
+        super(componentId, MinecraftUtil.getFontRenderer(), x, y, width, height);
         this.text = text;
         this.color = color;
         this.end = end;
@@ -30,10 +31,8 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
 
     @Override
     public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
-        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
         if(this.text != null){
             fontRenderer.drawString(this.text, x, y, color);
-            //x += fontRenderer.getStringWidth(this.text) + 3 ;
         }
         this.xPosition = x + end;
         this.yPosition = y;

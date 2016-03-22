@@ -2,7 +2,7 @@ package de.canitzp.rarmor.api;
 
 import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.GuiUtil;
-import net.minecraft.client.Minecraft;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
@@ -27,28 +27,28 @@ public class GuiCheckBox extends Gui implements IGuiRender{
     public List<String> description;
     private boolean isActivated;
     private static List<GuiCheckBox> checkBoxList = new ArrayList<>();
+    private FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
-    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description, int color) {
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description, int color) {
         this.x = x;
         this.y = y;
         this.guiContainer = guiContainer;
         this.text = text;
         this.description = description;
         this.iconLocation = iconLocation;
-        this.width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(this.text) + 9;
+        this.width = fontRenderer.getStringWidth(this.text) + 9;
         this.height = height;
         checkBoxList.add(this);
         this.color = color;
     }
 
-    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int width, int height, String text, List<String> description) {
-       this(guiContainer, iconLocation, x, y, width, height, text, description, ColorUtil.BLACK);
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description) {
+       this(guiContainer, iconLocation, x, y, height, text, description, ColorUtil.BLACK);
     }
 
     public void drawCheckBox(int guiLeft, int guiTop){
-        Minecraft minecraft = Minecraft.getMinecraft();
-        minecraft.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, this.color);
-        minecraft.getTextureManager().bindTexture(iconLocation);
+        fontRenderer.drawString(text, guiLeft + x + 9, guiTop + y + 1, this.color);
+        GuiUtil.bindTexture(iconLocation);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

@@ -1,6 +1,5 @@
 package de.canitzp.rarmor;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
@@ -52,8 +51,10 @@ public class RarmorProperties extends Properties{
         try {
             rarmorProperties.load(new FileInputStream(propFile));
             for(Map.Entry<Object, Object> entry : entrySet()){
+                System.out.println((String)entry.getValue());
                 if(this.isEntryBoolean((String) entry.getValue())){
-                    booleanProperties.put((String) entry.getKey(), Boolean.getBoolean((String) entry.getValue()));
+                    System.out.println((String)entry.getValue());
+                    booleanProperties.put((String) entry.getKey(), parseBool((String) entry.getValue()));
                 }
                 if(this.isEntryInteger((String) entry.getValue())){
                     integerProperties.put((String) entry.getKey(), Integer.parseInt((String) entry.getValue()));
@@ -70,6 +71,7 @@ public class RarmorProperties extends Properties{
         addInteger("moduleDefenseDamageMultiplier", 2500);
         addInteger("moduleFlyingEnergyPerTick", 5);
         addInteger("moduleSolarEnergyPerTick", 5);
+        addBoolean("AlwaysShowAdvancedInGameTooltip", false);
 
         saveProperties();
     }
@@ -105,6 +107,10 @@ public class RarmorProperties extends Properties{
             return false;
         }
         return true;
+    }
+
+    private boolean parseBool(String bool){
+        return bool.equals("true");
     }
 
 }

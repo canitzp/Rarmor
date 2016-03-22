@@ -5,6 +5,7 @@ import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -58,6 +59,14 @@ public class Rarmor {
         item.setRegistryName(name);
         item.setCreativeTab(rarmorTab);
         Rarmor.proxy.addRenderer(new ItemStack(item), name);
-        GameRegistry.registerItem(item, name);
+        GameRegistry.registerItem(item);
+    }
+
+    public static void registerBlock(Block block, String name){
+        block.setUnlocalizedName(MODID + "." + name);
+        block.setRegistryName(name);
+        block.setCreativeTab(rarmorTab);
+        Rarmor.proxy.addRenderer(new ItemStack(block), name);
+        GameRegistry.registerBlock(block);
     }
 }

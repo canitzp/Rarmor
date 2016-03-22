@@ -4,19 +4,17 @@ import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.GuiCheckBox;
 import de.canitzp.rarmor.api.IRarmorModule;
 import de.canitzp.rarmor.api.ISpecialSlot;
-import de.canitzp.rarmor.api.RamorResources;
+import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
 import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.rarmor.util.GuiUtil;
-import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PacketUtil;
-import de.canitzp.rarmor.util.SlotUtil;
+import de.canitzp.rarmor.util.*;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
@@ -33,9 +31,9 @@ public class GuiRFArmor extends GuiContainerBase {
 
     private EntityPlayer player;
     private ItemStack armor;
-    private ResourceLocation normalGui = RamorResources.RARMORGUI.getNewLocation();
-    public ResourceLocation modulesGui = RamorResources.RARMORMODULEGUI.getNewLocation();
-    public ResourceLocation checkBox = RamorResources.GUIELEMENTS.getNewLocation();
+    private ResourceLocation normalGui = RarmorResources.RARMORGUI.getNewLocation();
+    public ResourceLocation modulesGui = RarmorResources.RARMORMODULEGUI.getNewLocation();
+    public ResourceLocation checkBox = RarmorResources.GUIELEMENTS.getNewLocation();
     private float xSizeFloat;
     private float ySizeFloat;
     private List<GuiCheckBox> checkBoxList = Lists.newArrayList();
@@ -45,14 +43,14 @@ public class GuiRFArmor extends GuiContainerBase {
         super(containerRFArmor);
         this.xSize = 247;
         this.ySize = 226;
-        this.armor = player.inventory.armorInventory[2];
+        this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         this.player = player;
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, this.checkBox, 117, 12, 124, 10, "Show In-World Tooltips", Lists.newArrayList("Show Tooltips like", "the Amount of Fluid in Tanks"));
+        GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, this.checkBox, 117, 12, 10, "Show In-World Tooltips", JavaUtil.newList("Show Tooltips like", "the Amount of Fluid in Tanks"));
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
         checkBoxList.add(setInWorldTooltip);
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);

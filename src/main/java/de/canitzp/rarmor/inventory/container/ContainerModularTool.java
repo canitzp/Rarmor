@@ -1,12 +1,15 @@
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.api.IToolModule;
 import de.canitzp.rarmor.api.SlotUpdate;
-import de.canitzp.rarmor.items.ItemModularTool;
+import de.canitzp.rarmor.items.modularTool.ItemModularTool;
 import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
+import de.canitzp.rarmor.util.PlayerUtil;
 import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -24,23 +27,28 @@ public class ContainerModularTool extends Container {
     public ContainerModularTool(EntityPlayer player){
         this.player = player;
         this.world = player.worldObj;
-        this.armor = player.inventory.armorInventory[2];
-        this.tool = player.getActiveItemStack();
+        this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
+        this.tool = player.getHeldItemMainhand();
         this.inventory = NBTUtil.readSlotsBase(this.tool, ItemModularTool.slots);
 
         for(int j = 0; j < 3; j++){
-            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 44 + j * 18, 87, this.tool));
+            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, this.tool){
+                @Override
+                public boolean isItemValid(ItemStack stack) {
+                    return stack.getItem() instanceof IToolModule;
+                }
+            });
         }
 
         //Player Inventory:
         for (int j = 0; j < 3; ++j) {
             for (int k = 0; k < 9; ++k) {
-                this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
+                this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 8 + k * 18, 29 + j * 18));
             }
         }
         //Player Hotbar:
         for (int j = 0; j < 9; ++j) {
-            this.addSlotToContainer(new Slot(player.inventory, j, 44 + j * 18, 202));
+            this.addSlotToContainer(new Slot(player.inventory, j, 8 + j * 18, 87));
         }
     }
 

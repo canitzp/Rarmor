@@ -5,18 +5,16 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author canitzp
  */
-public enum RamorResources {
+public enum RarmorResources {
 
-    CIRCUITCREATOREMPTYGUI("guiCircuitCreator"),
-    CIRCUITCREATORGUI("guiCircuitCreatorGrid"),
-    ELECTRICALCOMPONENTS("guiElectricalComponents"),
     GUIELEMENTS("guiGuiElements"),
     RARMORGUI("guiRFArmorNormal"),
     RARMORMODULEGUI("guiRFArmorModules"),
-    BATTERYGUI("guiBattery");
+    BATTERYGUI("guiBattery"),
+    MODULARTOOLGUI("guiModularTool");
 
     public String textureName;
-    RamorResources(String location) {
+    RarmorResources(String location) {
         this.textureName = location;
     }
     public ResourceLocation getNewLocation() {

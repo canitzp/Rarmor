@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.inventory.gui;
 
-import de.canitzp.rarmor.api.RamorResources;
+import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.util.GuiUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -12,12 +12,12 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiModularTool extends GuiContainer {
 
-    private ResourceLocation guiLocation = RamorResources.RARMORGUI.getNewLocation();
+    private ResourceLocation guiLocation = RarmorResources.MODULARTOOLGUI.getNewLocation();
 
     public GuiModularTool(Container inventorySlotsIn) {
         super(inventorySlotsIn);
-        this.xSize = 247;
-        this.ySize = 226;
+        this.xSize = 176;
+        this.ySize = 111;
     }
 
     @Override

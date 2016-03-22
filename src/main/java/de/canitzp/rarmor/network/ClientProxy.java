@@ -1,7 +1,7 @@
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
-import net.minecraft.client.Minecraft;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -34,10 +34,10 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerItem(ItemStack item, String blockName){
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item.getItem(), item.getItemDamage(), new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
+        MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(item.getItem(), item.getItemDamage(), new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
     private void registerBlock(Item block, String blockName){
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(block, 0, new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
+        MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(block, 0, new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
 
 

@@ -2,7 +2,9 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
+import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -45,7 +47,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand) {
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
-        ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
+        ItemStack itemstack = PlayerUtil.getItemStackFromSlot(player, entityequipmentslot);
         if (itemstack == null) {
             player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;
@@ -58,7 +60,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
-        this.setEnergy(stack, 0);
+        EnergyUtil.setEnergy(stack, 0);
     }
 
     @Override
@@ -105,16 +107,12 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         ItemStack stackFull = new ItemStack(this);
-        this.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
+        EnergyUtil.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
         list.add(stackFull);
 
         ItemStack stackEmpty = new ItemStack(this);
-        this.setEnergy(stackEmpty, 0);
+        EnergyUtil.setEnergy(stackEmpty, 0);
         list.add(stackEmpty);
-    }
-
-    public void setEnergy(ItemStack stack, int energy){
-        NBTUtil.setInteger(stack, "Energy", energy);
     }
 
     protected int getBaseAbsorption() {
