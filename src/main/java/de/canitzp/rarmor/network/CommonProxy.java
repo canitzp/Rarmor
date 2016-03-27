@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class CommonProxy {
 
     protected HashMap<ItemStack, String> textureMap = new HashMap<ItemStack, String>();
+    protected HashMap<ItemStack, String> specialTextures = new HashMap<>();
 
     public void init(){
 
@@ -19,6 +20,10 @@ public class CommonProxy {
 
     public void addRenderer(ItemStack stack, String name){
         textureMap.put(stack, name);
+    }
+
+    public void addSpecialRenderer(ItemStack stack, String name){
+        specialTextures.put(stack, name);
     }
 
 }

@@ -1,6 +1,6 @@
 package de.canitzp.rarmor;
 
-import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.ItemChainSaw;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;

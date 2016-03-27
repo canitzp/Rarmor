@@ -1,7 +1,7 @@
 package de.canitzp.rarmor.inventory.slots;
 
-import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.api.SlotUpdate;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
+import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

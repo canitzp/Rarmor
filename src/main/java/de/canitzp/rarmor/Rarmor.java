@@ -1,5 +1,7 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.hudExtensions.RarmorHud;
 import de.canitzp.rarmor.blocks.BlockRegistry;
 import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
@@ -40,6 +42,7 @@ public class Rarmor {
         rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
         BlockRegistry.preInit();
         ItemRegistry.preInit();
+        if(event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
         logger.info("Finished PreInitialization");
     }
 

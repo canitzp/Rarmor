@@ -1,0 +1,6 @@
+{
+    "parent": "rarmor:item/modularTool",
+    "textures": {
+        "layer0": "items/iron_pickaxe"
+    }
+}

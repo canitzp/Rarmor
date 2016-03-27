@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.api;
+package de.canitzp.rarmor.api.modules;
 
 import de.canitzp.rarmor.items.modularTool.ItemModularTool;
 import net.minecraft.block.state.IBlockState;

@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.api;
+package de.canitzp.rarmor.api.gui;
 
 import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.GuiUtil;

@@ -1,10 +1,10 @@
 package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
-import de.canitzp.rarmor.api.GuiCheckBox;
-import de.canitzp.rarmor.api.IRarmorModule;
-import de.canitzp.rarmor.api.ISpecialSlot;
 import de.canitzp.rarmor.api.RarmorResources;
+import de.canitzp.rarmor.api.gui.GuiCheckBox;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
+import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
 import de.canitzp.rarmor.inventory.slots.SlotModule;
@@ -18,6 +18,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -156,7 +157,10 @@ public class GuiRFArmor extends GuiContainerBase {
         if(type == 0){
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161) {
                 this.armor.getTagCompound().setBoolean("click", true);
-                PacketUtil.openPlayerInventoryFromClient(this.mc, this);
+                this.onGuiClosed();
+                this.mc.thePlayer.sendQueue.addToSendQueue(new CPacketCloseWindow(this.mc.thePlayer.openContainer.windowId));
+                GuiInventory inventory = new GuiInventory(this.mc.thePlayer);
+                this.mc.displayGuiScreen(inventory);
             }
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;

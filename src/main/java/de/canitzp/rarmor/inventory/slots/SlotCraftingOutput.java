@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.inventory.slots;
 
-import de.canitzp.rarmor.api.ISpecialSlot;
+import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;

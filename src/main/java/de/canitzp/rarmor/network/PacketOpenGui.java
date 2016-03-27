@@ -48,7 +48,6 @@ public class PacketOpenGui implements IMessage {
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
             player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int)player.posX, (int)player.posY, (int)player.posZ);
-            //PlayerUtil.openInventoryFromServer(player, Rarmor.instance, message.guiID);
             return null;
         }
     }

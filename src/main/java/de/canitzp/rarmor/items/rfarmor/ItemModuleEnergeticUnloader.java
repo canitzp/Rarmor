@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.RarmorUtil;
-import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.util.NBTUtil;

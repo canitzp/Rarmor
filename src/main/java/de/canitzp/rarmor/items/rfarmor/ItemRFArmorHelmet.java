@@ -2,7 +2,6 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IIngameTooltipHandler;
-import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.client.Minecraft;
@@ -28,7 +27,7 @@ public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTool
     @Override
     public void doRender(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType elementType, ItemStack helmet, float partialTicks) {
         if(RarmorUtil.isPlayerWearingRarmor(player) && NBTUtil.getBoolean(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), "SettingInWorldTooltip")){
-            ArmorHud.displayNames(minecraft, resolution, player, 5, ColorUtil.WHITE);
+            ArmorHud.display(minecraft, resolution, player, 0, 5);
         }
     }
 

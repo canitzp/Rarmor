@@ -51,9 +51,7 @@ public class RarmorProperties extends Properties{
         try {
             rarmorProperties.load(new FileInputStream(propFile));
             for(Map.Entry<Object, Object> entry : entrySet()){
-                System.out.println((String)entry.getValue());
                 if(this.isEntryBoolean((String) entry.getValue())){
-                    System.out.println((String)entry.getValue());
                     booleanProperties.put((String) entry.getKey(), parseBool((String) entry.getValue()));
                 }
                 if(this.isEntryInteger((String) entry.getValue())){

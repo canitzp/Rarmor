@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.api;
+package de.canitzp.rarmor.api.modules;
 
 /**
  * @author canitzp

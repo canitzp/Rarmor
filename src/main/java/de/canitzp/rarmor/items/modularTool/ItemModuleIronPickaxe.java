@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.items.modularTool;
 
-import de.canitzp.rarmor.api.IToolModule;
+import de.canitzp.rarmor.api.modules.IToolModule;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;

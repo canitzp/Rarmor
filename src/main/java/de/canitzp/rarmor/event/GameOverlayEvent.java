@@ -3,10 +3,9 @@ package de.canitzp.rarmor.event;
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IIngameTooltipHandler;
-import de.canitzp.rarmor.api.IRarmorModule;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ArmorHud;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
@@ -27,22 +26,22 @@ public class GameOverlayEvent {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onGameOverlay(RenderGameOverlayEvent.Post event){
-        if(event.type == RenderGameOverlayEvent.ElementType.ALL && MinecraftUtil.getCurrentScreen() == null) {
+        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL && MinecraftUtil.getCurrentScreen() == null) {
             EntityPlayer player = MinecraftUtil.getPlayer();
             FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
             ItemStack helmet = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
             if(!RarmorProperties.getBoolean("AlwaysShowAdvancedInGameTooltip")){
                 if(helmet != null && helmet.getItem() instanceof IIngameTooltipHandler){
-                    ((IIngameTooltipHandler) helmet.getItem()).doRender(MinecraftUtil.getMinecraft(), player, event.resolution, fontRenderer, event.type, helmet, event.partialTicks);
+                    ((IIngameTooltipHandler) helmet.getItem()).doRender(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), helmet, event.getPartialTicks());
                 }
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
                     ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
-                        ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, event.resolution, fontRenderer, event.type, module, event.partialTicks);
+                        ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), module, event.getPartialTicks());
                     }
                 }
             } else {
-                ArmorHud.displayNames(MinecraftUtil.getMinecraft(), event.resolution, player, 5, ColorUtil.WHITE);
+                ArmorHud.display(MinecraftUtil.getMinecraft(), event.getResolution(), player, 0, 5);
             }
 
         }

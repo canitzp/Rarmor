@@ -2,7 +2,7 @@ package de.canitzp.rarmor.items.modularTool;
 
 import cofh.api.energy.ItemEnergyContainer;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.api.IToolModule;
+import de.canitzp.rarmor.api.modules.IToolModule;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -19,11 +19,15 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.lwjgl.input.Keyboard;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static de.canitzp.rarmor.Rarmor.MODID;
+import static de.canitzp.rarmor.Rarmor.rarmorTab;
 
 /**
  * @author canitzp
@@ -36,7 +40,16 @@ public class ItemModularTool extends ItemEnergyContainer {
         super(maxEnergy, maxTransfer);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
-        Rarmor.registerItem(this, name);
+        this.setUnlocalizedName(MODID + "." + name);
+        this.setRegistryName(name);
+        this.setCreativeTab(rarmorTab);
+        Rarmor.proxy.addRenderer(new ItemStack(this), name);
+        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.PICKAXE.meta), name);
+        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.AXE.meta), name);
+        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SHOVEL.meta), name);
+        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SWORD.meta), name);
+        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.HOE.meta), name);
+        GameRegistry.registerItem(this);
     }
 
     public static int getModulesAmount(ItemStack tool){
@@ -109,6 +122,7 @@ public class ItemModularTool extends ItemEnergyContainer {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+        stack.setItemDamage(1);
         if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
             player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, (int)player.serverPosX, (int)player.serverPosY, (int)player.serverPosZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
@@ -158,10 +172,15 @@ public class ItemModularTool extends ItemEnergyContainer {
     }
 
     public enum ToolTypes{
-        PICKAXE,
-        AXE,
-        SHOVEL,
-        SWORD,
-        HOE
+        PICKAXE(1),
+        AXE(2),
+        SHOVEL(3),
+        SWORD(4),
+        HOE(5);
+
+        public int meta;
+        ToolTypes(int meta) {
+            this.meta = meta;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package de.canitzp.rarmor.inventory.container;
 
-import de.canitzp.rarmor.api.IToolModule;
-import de.canitzp.rarmor.api.SlotUpdate;
+import de.canitzp.rarmor.api.modules.IToolModule;
+import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.modularTool.ItemModularTool;
 import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;

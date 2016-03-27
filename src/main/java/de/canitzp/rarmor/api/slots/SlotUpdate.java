@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.api;
+package de.canitzp.rarmor.api.slots;
 
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.inventory.IInventory;

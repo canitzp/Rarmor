@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.items.rfarmor;
 
-import de.canitzp.rarmor.api.IModuleIntegration;
+import de.canitzp.rarmor.api.modules.IModuleIntegration;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

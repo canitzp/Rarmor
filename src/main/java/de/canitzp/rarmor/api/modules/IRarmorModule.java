@@ -1,5 +1,7 @@
-package de.canitzp.rarmor.api;
+package de.canitzp.rarmor.api.modules;
 
+import de.canitzp.rarmor.api.gui.GuiCheckBox;
+import de.canitzp.rarmor.api.slots.IModuleSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

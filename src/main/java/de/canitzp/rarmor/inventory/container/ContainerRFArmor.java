@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.inventory.container;
 
-import de.canitzp.rarmor.api.SlotUpdate;
+import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.slots.*;
 import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
