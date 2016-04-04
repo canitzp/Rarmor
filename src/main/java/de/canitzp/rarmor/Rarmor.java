@@ -7,6 +7,7 @@ import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.util.ItemUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
@@ -57,19 +59,28 @@ public class Rarmor {
         logger.info("Finished Initialization");
     }
 
+    @Mod.EventHandler
+    public void missingMapping(FMLMissingMappingsEvent event){
+        for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
+            if(mapping.name.startsWith("rarmor.")){
+                mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
+            }
+        }
+    }
+
     public static void registerItem(Item item, String name){
-        item.setUnlocalizedName(MODID + "." + name);
+        item.setUnlocalizedName(MODID + ":" + name);
         item.setRegistryName(name);
         item.setCreativeTab(rarmorTab);
         Rarmor.proxy.addRenderer(new ItemStack(item), name);
-        GameRegistry.registerItem(item);
+        GameRegistry.register(item);
     }
 
     public static void registerBlock(Block block, String name){
-        block.setUnlocalizedName(MODID + "." + name);
+        block.setUnlocalizedName(MODID + ":" + name);
         block.setRegistryName(name);
         block.setCreativeTab(rarmorTab);
         Rarmor.proxy.addRenderer(new ItemStack(block), name);
-        GameRegistry.registerBlock(block);
+        GameRegistry.register(block);
     }
 }

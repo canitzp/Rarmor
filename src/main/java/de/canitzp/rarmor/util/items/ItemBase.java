@@ -10,10 +10,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ItemBase extends Item {
 
     public ItemBase(String modid, String name, CreativeTabs tabs){
-        setUnlocalizedName(modid + "." + name);
+        setUnlocalizedName(modid + ":" + name);
         setCreativeTab(tabs);
-        setRegistryName(modid + "." + name);
-        GameRegistry.registerItem(this, name);
+        setRegistryName(name);
+        GameRegistry.register(this);
     }
 
 }

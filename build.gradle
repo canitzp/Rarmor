@@ -25,7 +25,7 @@ repositories {
     }
 }
 
-version="0.5.0"
+version="0.5.1"
 group= "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Rarmor"
 
@@ -33,9 +33,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.9-12.16.0.1811-1.9"
+    version = "1.9-12.16.0.1837-1.9"
     runDir = "run"
-    mappings = "snapshot_20160326"
+    mappings = "snapshot_20160404"
     makeObfSourceJar = false
     useDepAts = true
     replaceIn "Rarmor.java"
@@ -43,7 +43,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9:3.1.0.170"
+    deobfCompile "mezz.jei:jei_1.9:3.2.4.177"
 }
 
 processResources

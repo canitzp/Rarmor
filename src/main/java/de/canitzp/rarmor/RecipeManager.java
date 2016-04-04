@@ -38,6 +38,7 @@ public class RecipeManager {
         addRecipe(new ItemStack(ItemRegistry.moduleFlying), "GDG", "GNG", "GDG", 'G', "dyeGreen", 'N', Items.nether_star, 'D', "gemDiamond");
         addRecipe(new ItemStack(ItemRegistry.moduleLoader), "GIG", "GNG", "GGG", 'G', "dyeGreen", 'N', "nuggetGold", 'I', "ingotIron");
         addRecipe(new ItemStack(ItemRegistry.moduleUnloader), "GGG", "GNG", "GIG", 'G', "dyeGreen", 'N', "nuggetGold", 'I', "ingotIron");
+        addRecipe(new ItemStack(ItemRegistry.moduleDefense), "GSG", "GDG", "GGG", 'G', "dyeGreen", 'S', Items.shield, 'D', "gemDiamond");
     }
 
     public static void addRecipe(ItemStack output, Object... input){

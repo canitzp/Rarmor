@@ -49,7 +49,7 @@ public class ItemModularTool extends ItemEnergyContainer {
         Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SHOVEL.meta), name);
         Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SWORD.meta), name);
         Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.HOE.meta), name);
-        GameRegistry.registerItem(this);
+        GameRegistry.register(this);
     }
 
     public static int getModulesAmount(ItemStack tool){

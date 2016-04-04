@@ -1,8 +1,6 @@
 package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.items.modularTool.ItemModularTool;
-import de.canitzp.rarmor.items.modularTool.ItemModuleIronPickaxe;
 import de.canitzp.rarmor.items.rfarmor.*;
 import de.canitzp.rarmor.util.items.ItemBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -25,7 +23,7 @@ public class ItemRegistry {
         Rarmor.logger.info("Registering Items");
         ironChainsaw = new ItemChainSaw(250000, 1500, 200, "ironChainsaw");
         diamondChainsaw = new ItemChainSaw(500000, 5000, 100, "diamondChainsaw");
-        modularTool = new ItemModularTool(1000000, 8000, "modularTool");
+        //modularTool = new ItemModularTool(1000000, 8000, "modularTool");
         rfArmorBody = new ItemRFArmorBody();
         rfArmorHelmet = new ItemRFArmorHelmet();
         rfArmorLeggins = new ItemRFArmorGeneric(EntityEquipmentSlot.LEGS, 250000, 1500, "rfArmorLeggins");
@@ -37,7 +35,7 @@ public class ItemRegistry {
         moduleUnloader = new ItemModuleEnergeticUnloader();
         moduleLoader = new ItemModuleEnergeticLoader();
         moduleDefense = new ItemModuleDefense();
-        moduleIronPickaxe = new ItemModuleIronPickaxe();
+        //moduleIronPickaxe = new ItemModuleIronPickaxe();
         ribbonCable = new ItemBase(Rarmor.MODID, "ribbonCable", Rarmor.rarmorTab);
         electricalController = new ItemBase(Rarmor.MODID, "electricalController", Rarmor.rarmorTab);
         advancedEyeMatrix = new ItemBase(Rarmor.MODID, "advancedEyeMatrix", Rarmor.rarmorTab);
