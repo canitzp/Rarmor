@@ -52,19 +52,18 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
             player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;
             return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-        }
-        else {
+        } else {
             return new ActionResult(EnumActionResult.FAIL, itemStackIn);
         }
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player){
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         EnergyUtil.setEnergy(stack, 0);
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
@@ -81,7 +80,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean check) {
-        list.add(this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack)+" RF");
+        list.add(this.getEnergyStored(stack) + "/" + this.getMaxEnergyStored(stack) + " RF");
     }
 
     @Override
@@ -100,7 +99,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public int getMetadata(int damage){
+    public int getMetadata(int damage) {
         return damage;
     }
 
@@ -138,7 +137,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     protected int getEnergyPerDamage(ItemStack stack) {
-        return energyPerDamage*2;
+        return energyPerDamage * 2;
     }
 
     /* ISpecialArmor */
@@ -212,7 +211,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack){
+    public boolean showDurabilityBar(ItemStack stack) {
         return !(NBTUtil.getInteger(stack, "Energy") == this.maxEnergy);
     }
 

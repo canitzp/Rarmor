@@ -13,7 +13,7 @@ public class NetworkHandler {
 
     public static SimpleNetworkWrapper wrapper;
 
-    public static void init(){
+    public static void init() {
         Rarmor.logger.info("Register Network Stuff");
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Rarmor.MODID);
         wrapper.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);

@@ -13,7 +13,7 @@ public class InventoryBase implements IInventory {
     public ItemStack[] slots;
     public String name;
 
-    public InventoryBase(String name, int slotAmount){
+    public InventoryBase(String name, int slotAmount) {
         this.slots = new ItemStack[slotAmount];
         this.name = name;
     }
@@ -59,6 +59,7 @@ public class InventoryBase implements IInventory {
         if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
             stack.stackSize = this.getInventoryStackLimit();
         }
+
         this.markDirty();
     }
 
@@ -68,7 +69,8 @@ public class InventoryBase implements IInventory {
     }
 
     @Override
-    public void markDirty(){}
+    public void markDirty() {
+    }
 
     @Override
     public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
@@ -76,10 +78,12 @@ public class InventoryBase implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {}
+    public void openInventory(EntityPlayer player) {
+    }
 
     @Override
-    public void closeInventory(EntityPlayer player) {}
+    public void closeInventory(EntityPlayer player) {
+    }
 
     @Override
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {

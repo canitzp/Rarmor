@@ -15,22 +15,22 @@ public class SlotUnmovable extends Slot {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack){
+    public boolean isItemValid(ItemStack stack) {
         return false;
     }
 
     @Override
-    public void putStack(ItemStack stack){
+    public void putStack(ItemStack stack) {
 
     }
 
     @Override
-    public ItemStack decrStackSize(int i){
+    public ItemStack decrStackSize(int i) {
         return null;
     }
 
     @Override
-    public boolean canTakeStack(EntityPlayer player){
+    public boolean canTakeStack(EntityPlayer player) {
         return false;
     }
 }

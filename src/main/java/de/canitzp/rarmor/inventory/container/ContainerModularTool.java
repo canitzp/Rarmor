@@ -24,15 +24,15 @@ public class ContainerModularTool extends Container {
     public ItemStack armor, tool;
     public InventoryBase inventory;
 
-    public ContainerModularTool(EntityPlayer player){
+    public ContainerModularTool(EntityPlayer player) {
         this.player = player;
         this.world = player.worldObj;
         this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         this.tool = player.getHeldItemMainhand();
         this.inventory = NBTUtil.readSlotsBase(this.tool, ItemModularTool.slots);
 
-        for(int j = 0; j < 3; j++){
-            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, this.tool){
+        for (int j = 0; j < 3; j++) {
+            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, this.tool) {
                 @Override
                 public boolean isItemValid(ItemStack stack) {
                     return stack.getItem() instanceof IToolModule;
@@ -65,7 +65,7 @@ public class ContainerModularTool extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
         return ContainerUtil.transferStackInSlot(this.inventorySlots, player, slot);
     }
 

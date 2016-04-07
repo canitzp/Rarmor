@@ -11,26 +11,26 @@ import net.minecraft.util.EnumHand;
  */
 public class PlayerUtil {
 
-    public static ItemStack getArmor(EntityEquipmentSlot slot){
-        if(MinecraftUtil.getMinecraftSide().isClient()){
+    public static ItemStack getArmor(EntityEquipmentSlot slot) {
+        if (MinecraftUtil.getMinecraftSide().isClient()) {
             return MinecraftUtil.getPlayer().inventory.armorInventory[slot.getIndex()];
         }
         return new ItemStack(Blocks.fire);
     }
 
-    public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot){
+    public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot) {
         return player.inventory.armorInventory[slot.getIndex()];
     }
 
-    public static ItemStack getHoldItemInMainHand(EntityPlayer player){
+    public static ItemStack getHoldItemInMainHand(EntityPlayer player) {
         return player.getHeldItem(EnumHand.MAIN_HAND);
     }
 
-    public static ItemStack getHoldItemInOffHand(EntityPlayer player){
+    public static ItemStack getHoldItemInOffHand(EntityPlayer player) {
         return player.getHeldItem(EnumHand.OFF_HAND);
     }
 
-    public static ItemStack getItemStackFromSlot(EntityPlayer player, EntityEquipmentSlot slot){
+    public static ItemStack getItemStackFromSlot(EntityPlayer player, EntityEquipmentSlot slot) {
         return player.getItemStackFromSlot(slot);
     }
 

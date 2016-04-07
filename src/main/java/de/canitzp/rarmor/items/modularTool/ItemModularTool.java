@@ -36,7 +36,7 @@ public class ItemModularTool extends ItemEnergyContainer {
 
     public static int slots = 3;
 
-    public ItemModularTool(int maxEnergy, int maxTransfer, String name){
+    public ItemModularTool(int maxEnergy, int maxTransfer, String name) {
         super(maxEnergy, maxTransfer);
         this.setHasSubtypes(true);
         this.setMaxStackSize(1);
@@ -52,11 +52,11 @@ public class ItemModularTool extends ItemEnergyContainer {
         GameRegistry.register(this);
     }
 
-    public static int getModulesAmount(ItemStack tool){
+    public static int getModulesAmount(ItemStack tool) {
         int amount = 0;
         InventoryBase inventory = NBTUtil.readSlotsBase(tool, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
                 amount++;
             }
         }
@@ -79,7 +79,7 @@ public class ItemModularTool extends ItemEnergyContainer {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player){
+    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         EnergyUtil.setEnergy(stack, 0);
     }
 
@@ -98,12 +98,12 @@ public class ItemModularTool extends ItemEnergyContainer {
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
         float attack = 0;
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
                 attack += ((IToolModule) stack1.getItem()).onHitEntity(stack1, stack, target, attacker);
             }
         }
-        target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), attack/getModulesAmount(stack));
+        target.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) attacker), attack / getModulesAmount(stack));
         return super.hitEntity(stack, target, attacker);
     }
 
@@ -111,10 +111,10 @@ public class ItemModularTool extends ItemEnergyContainer {
     public float getStrVsBlock(ItemStack stack, IBlockState state) {
         float lowest = Float.MAX_VALUE;
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
                 float f = ((IToolModule) stack1.getItem()).getStrengthAgainstBlock(stack1, state, stack);
-                if(f < lowest) lowest = f;
+                if (f < lowest) lowest = f;
             }
         }
         return lowest == Float.MAX_VALUE ? super.getStrVsBlock(stack, state) : lowest;
@@ -123,13 +123,13 @@ public class ItemModularTool extends ItemEnergyContainer {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
         stack.setItemDamage(1);
-        if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-            player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, (int)player.serverPosX, (int)player.serverPosY, (int)player.serverPosZ);
+        if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, (int) player.serverPosX, (int) player.serverPosY, (int) player.serverPosZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
                 stack = ((IToolModule) stack1.getItem()).onRightClick(stack1, stack, world, player);
             }
         }
@@ -139,8 +139,8 @@ public class ItemModularTool extends ItemEnergyContainer {
     @Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState blockIn, BlockPos pos, EntityLivingBase entityLiving) {
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
                 return ((IToolModule) stack1.getItem()).onBlockDestroyed(stack1, stack, worldIn, blockIn, pos, entityLiving);
             }
         }
@@ -150,9 +150,10 @@ public class ItemModularTool extends ItemEnergyContainer {
     @Override
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
         InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-        for(ItemStack stack1 : inventory.slots){
-            if(stack1 != null && stack1.getItem() instanceof IToolModule){
-                if(((IToolModule) stack1.getItem()).onBlockStartBreak(stack1, stack, player.worldObj.getBlockState(pos), player, pos)) return true;
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
+                if (((IToolModule) stack1.getItem()).onBlockStartBreak(stack1, stack, player.worldObj.getBlockState(pos), player, pos))
+                    return true;
             }
         }
         return super.onBlockStartBreak(stack, pos, player);
@@ -161,17 +162,17 @@ public class ItemModularTool extends ItemEnergyContainer {
 
     @Override
     public boolean canHarvestBlock(IBlockState state, ItemStack stack) {
-            InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
-            for(ItemStack stack1 : inventory.slots){
-                if(stack1 != null && stack1.getItem() instanceof IToolModule){
-                    if(((IToolModule) stack1.getItem()).canHarvestBlock(stack1, state, stack)) return true;
-                }
+        InventoryBase inventory = NBTUtil.readSlotsBase(stack, slots);
+        for (ItemStack stack1 : inventory.slots) {
+            if (stack1 != null && stack1.getItem() instanceof IToolModule) {
+                if (((IToolModule) stack1.getItem()).canHarvestBlock(stack1, state, stack)) return true;
             }
+        }
 
         return super.canHarvestBlock(state, stack);
     }
 
-    public enum ToolTypes{
+    public enum ToolTypes {
         PICKAXE(1),
         AXE(2),
         SHOVEL(3),
@@ -179,6 +180,7 @@ public class ItemModularTool extends ItemEnergyContainer {
         HOE(5);
 
         public int meta;
+
         ToolTypes(int meta) {
             this.meta = meta;
         }

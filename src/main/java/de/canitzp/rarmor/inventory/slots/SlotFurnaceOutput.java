@@ -20,9 +20,9 @@ public class SlotFurnaceOutput extends SlotUpdate {
     }
 
     @Override
-    public void onSlotChanged(){
+    public void onSlotChanged() {
         ItemStack stack = this.player.inventory.armorInventory[2];
-        if(stack != null && stack.getItem() != null && stack.getItem() instanceof ItemRFArmorBody){
+        if (stack != null && stack.getItem() != null && stack.getItem() instanceof ItemRFArmorBody) {
             NBTUtil.saveSlots(stack, inventory);
         }
         super.onSlotChanged();
@@ -31,8 +31,7 @@ public class SlotFurnaceOutput extends SlotUpdate {
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
-    public boolean isItemValid(ItemStack p_75214_1_)
-    {
+    public boolean isItemValid(ItemStack p_75214_1_) {
         return false;
     }
 

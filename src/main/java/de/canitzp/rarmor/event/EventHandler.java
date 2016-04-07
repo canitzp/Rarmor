@@ -8,7 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class EventHandler {
 
-    public static void init(){
+    public static void init() {
         Rarmor.logger.info("Register Events");
         GuiOpenEvent guiChanger = new GuiOpenEvent();
         GameOverlayEvent hud = new GameOverlayEvent();

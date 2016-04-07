@@ -16,7 +16,7 @@ public class RarmorAPI {
     public static List<IAdvancedHud> hudExtension = new ArrayList<>();
 
     @SideOnly(Side.CLIENT)
-    public static void addAdvancedHud(IAdvancedHud hud){
+    public static void addAdvancedHud(IAdvancedHud hud) {
         hudExtension.add(hud);
     }
 

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotModule extends SlotUpdate implements IModuleSlot{
+public class SlotModule extends SlotUpdate implements IModuleSlot {
 
     public boolean active;
 

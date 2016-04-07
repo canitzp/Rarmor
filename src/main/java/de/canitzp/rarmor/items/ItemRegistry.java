@@ -14,12 +14,12 @@ public class ItemRegistry {
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense, moduleModuleSplitter;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
     public static Item modularTool;
     public static Item moduleIronPickaxe;
 
-    public static void preInit(){
+    public static void preInit() {
         Rarmor.logger.info("Registering Items");
         ironChainsaw = new ItemChainSaw(250000, 1500, 200, "ironChainsaw");
         diamondChainsaw = new ItemChainSaw(500000, 5000, 100, "diamondChainsaw");
@@ -35,6 +35,7 @@ public class ItemRegistry {
         moduleUnloader = new ItemModuleEnergeticUnloader();
         moduleLoader = new ItemModuleEnergeticLoader();
         moduleDefense = new ItemModuleDefense();
+        moduleModuleSplitter = new ItemModuleModuleSplitter();
         //moduleIronPickaxe = new ItemModuleIronPickaxe();
         ribbonCable = new ItemBase(Rarmor.MODID, "ribbonCable", Rarmor.rarmorTab);
         electricalController = new ItemBase(Rarmor.MODID, "electricalController", Rarmor.rarmorTab);

@@ -17,19 +17,25 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID){
-            case RFARMORGUI: return new ContainerRFArmor(player);
-            case MODULARTOOL: return new ContainerModularTool(player);
-            default: return null;
+        switch (ID) {
+            case RFARMORGUI:
+                return new ContainerRFArmor(player);
+            case MODULARTOOL:
+                return new ContainerModularTool(player);
+            default:
+                return null;
         }
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID){
-            case RFARMORGUI: return new GuiRFArmor(player, new ContainerRFArmor(player));
-            case MODULARTOOL: return new GuiModularTool(new ContainerModularTool(player));
-            default: return null;
+        switch (ID) {
+            case RFARMORGUI:
+                return new GuiRFArmor(player, new ContainerRFArmor(player));
+            case MODULARTOOL:
+                return new GuiModularTool(new ContainerModularTool(player));
+            default:
+                return null;
         }
     }
 }

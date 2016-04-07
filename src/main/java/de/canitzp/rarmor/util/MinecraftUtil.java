@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @SuppressWarnings("ConstantConditions")
 public class MinecraftUtil {
 
-    public static Side getMinecraftSide(){
+    public static Side getMinecraftSide() {
         try {
             ClassLoader.getSystemClassLoader().loadClass("net.minecraft.client.main.Main");
             return Side.CLIENT;
@@ -22,36 +22,36 @@ public class MinecraftUtil {
         }
     }
 
-    public static Minecraft getMinecraft(){
-        if(getMinecraftSide().isClient()){
+    public static Minecraft getMinecraft() {
+        if (getMinecraftSide().isClient()) {
             return Minecraft.getMinecraft();
         }
         return null;
     }
 
-    public static FontRenderer getFontRenderer(){
-        if(getMinecraftSide().isClient()){
+    public static FontRenderer getFontRenderer() {
+        if (getMinecraftSide().isClient()) {
             return getMinecraft().fontRendererObj;
         }
         return null;
     }
 
-    public static EntityPlayer getPlayer(){
-        if(getMinecraftSide().isClient()){
+    public static EntityPlayer getPlayer() {
+        if (getMinecraftSide().isClient()) {
             return getMinecraft().thePlayer;
         }
         return null;
     }
 
-    public static GuiScreen getCurrentScreen(){
-        if(MinecraftUtil.getMinecraftSide().isClient()){
+    public static GuiScreen getCurrentScreen() {
+        if (MinecraftUtil.getMinecraftSide().isClient()) {
             return getMinecraft().currentScreen;
         }
         return null;
     }
 
-    public static RayTraceResult getMouseOver(){
-        if(getMinecraftSide().isClient()){
+    public static RayTraceResult getMouseOver() {
+        if (getMinecraftSide().isClient()) {
             return getMinecraft().objectMouseOver;
         }
         return null;

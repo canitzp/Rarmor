@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemModuleIronPickaxe extends ItemModule implements IToolModule {
 
-    public ItemModuleIronPickaxe(){
+    public ItemModuleIronPickaxe() {
         super("pickaxeIron");
     }
 
@@ -26,7 +26,7 @@ public class ItemModuleIronPickaxe extends ItemModule implements IToolModule {
 
     @Override
     public float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack) {
-        if(state.getBlock().isToolEffective("pickaxe", state)){
+        if (state.getBlock().isToolEffective("pickaxe", state)) {
             return ToolMaterial.IRON.getEfficiencyOnProperMaterial();
         }
         return super.getStrVsBlock(stack, state);

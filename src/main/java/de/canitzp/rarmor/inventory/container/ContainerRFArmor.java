@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.slots.*;
 import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
@@ -28,8 +29,8 @@ public class ContainerRFArmor extends Container {
     public SlotUpdate generatorSlot;
     public ItemStack armor;
 
-    public ContainerRFArmor(EntityPlayer player){
-        if(player.worldObj.isRemote)
+    public ContainerRFArmor(EntityPlayer player) {
+        if (player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         InventoryPlayer inventoryPlayer = player.inventory;
@@ -38,8 +39,8 @@ public class ContainerRFArmor extends Container {
         armor.getTagCompound().setBoolean("click", false);
 
         //Armor Inventory:
-        for(int i = 0; i < 3; ++i){
-            for(int j = 0; j < 9; j++){
+        for (int i = 0; i < 3; ++i) {
+            for (int j = 0; j < 9; j++) {
                 this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, this.armor));
             }
         }
@@ -68,20 +69,34 @@ public class ContainerRFArmor extends Container {
         this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player, this.armor));
 
         addSlotToContainer(new SlotUnmovable(player.inventory, 39, 44, 10));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 38, 44, 10+18));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 37, 44, 10+18*2));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 36, 44, 10+18*3));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 38, 44, 10 + 18));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 37, 44, 10 + 18 * 2));
+        addSlotToContainer(new SlotUnmovable(player.inventory, 36, 44, 10 + 18 * 3));
 
         this.generatorSlot = new SlotModule(this.inventory, 30, 140, 18, this.armor);
         this.addSlotToContainer(this.generatorSlot);
 
         this.onCraftMatrixChanged(this.craftMatrix);
+
+        ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if (module != null) {
+            if (module.getItem() instanceof IRarmorModule) {
+                ((IRarmorModule) module.getItem()).onContainerIsInit(this, player, inventory, this.armor, module);
+            }
+        }
+
     }
 
     @Override
     public void detectAndSendChanges() {
         InventoryBase inv = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
         this.inventory.slots = inv.slots;
+        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        if (module != null) {
+            if (module.getItem() instanceof IRarmorModule) {
+                ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
+            }
+        }
         super.detectAndSendChanges();
     }
 
@@ -91,7 +106,7 @@ public class ContainerRFArmor extends Container {
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player){
+    public void onContainerClosed(EntityPlayer player) {
         dropCraftMatrix(player);
         super.onContainerClosed(player);
     }
@@ -108,7 +123,7 @@ public class ContainerRFArmor extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
         return ContainerUtil.transferStackInSlot(this.inventorySlots, player, slot);
     }
 
@@ -120,10 +135,14 @@ public class ContainerRFArmor extends Container {
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
-        if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
+        if (slot instanceof SlotCrafting || slot instanceof SlotCraftingInput) {
             return slot.inventory != this.craftResult && super.canMergeSlot(stack, slot);
         }
         return super.canMergeSlot(stack, slot);
+    }
+
+    public void addSlot(Slot slot){
+        this.addSlotToContainer(slot);
     }
 
 }

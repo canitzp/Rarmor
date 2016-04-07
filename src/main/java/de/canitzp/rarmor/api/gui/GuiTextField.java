@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @author canitzp
  */
-public class GuiTextField extends net.minecraft.client.gui.GuiTextField implements IGuiRender{
+public class GuiTextField extends net.minecraft.client.gui.GuiTextField implements IGuiRender {
 
     public String text;
     public int color, end;
@@ -31,7 +31,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
 
     @Override
     public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
-        if(this.text != null){
+        if (this.text != null) {
             fontRenderer.drawString(this.text, x, y, color);
         }
         this.xPosition = x + end;
@@ -42,13 +42,13 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
     @Override
     public int getLength(FontRenderer fontRenderer) {
         int i = 0;
-        if(this.text != null){
+        if (this.text != null) {
             i += fontRenderer.getStringWidth(this.text) + 3;
         }
         return i + this.width;
     }
 
-    public NBTTagCompound writeNBT(NBTTagCompound compound){
+    public NBTTagCompound writeNBT(NBTTagCompound compound) {
         compound.setString("SavedText" + this.text, this.getText());
         return compound;
     }

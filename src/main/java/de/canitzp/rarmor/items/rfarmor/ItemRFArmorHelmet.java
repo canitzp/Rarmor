@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author canitzp
  */
-public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTooltipHandler{
+public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTooltipHandler {
 
     public ItemRFArmorHelmet() {
         super(EntityEquipmentSlot.HEAD, 250000, 1500, "rfArmorHelmet");
@@ -26,7 +26,7 @@ public class ItemRFArmorHelmet extends ItemRFArmorGeneric implements IIngameTool
     @SideOnly(Side.CLIENT)
     @Override
     public void doRender(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType elementType, ItemStack helmet, float partialTicks) {
-        if(RarmorUtil.isPlayerWearingRarmor(player) && NBTUtil.getBoolean(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), "SettingInWorldTooltip")){
+        if (RarmorUtil.isPlayerWearingRarmor(player) && NBTUtil.getBoolean(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), "SettingInWorldTooltip")) {
             ArmorHud.display(minecraft, resolution, player, 0, 5);
         }
     }

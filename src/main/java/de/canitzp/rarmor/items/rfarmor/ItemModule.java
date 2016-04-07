@@ -13,7 +13,7 @@ public class ItemModule extends Item {
 
     public static Map<String, ItemModule> modules = new HashMap<>();
 
-    public ItemModule(String name){
+    public ItemModule(String name) {
         setMaxStackSize(1);
         modules.put(name, this);
         Rarmor.registerItem(this, name);

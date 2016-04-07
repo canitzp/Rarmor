@@ -30,15 +30,15 @@ import java.util.List;
  */
 public class GuiRFArmor extends GuiContainerBase {
 
+    public ResourceLocation modulesGui = RarmorResources.RARMORMODULEGUI.getNewLocation();
+    public ResourceLocation checkBox = RarmorResources.GUIELEMENTS.getNewLocation();
+    public boolean isSettingsTab;
     private EntityPlayer player;
     private ItemStack armor;
     private ResourceLocation normalGui = RarmorResources.RARMORGUI.getNewLocation();
-    public ResourceLocation modulesGui = RarmorResources.RARMORMODULEGUI.getNewLocation();
-    public ResourceLocation checkBox = RarmorResources.GUIELEMENTS.getNewLocation();
     private float xSizeFloat;
     private float ySizeFloat;
     private List<GuiCheckBox> checkBoxList = Lists.newArrayList();
-    public boolean isSettingsTab;
 
     public GuiRFArmor(EntityPlayer player, ContainerRFArmor containerRFArmor) {
         super(containerRFArmor);
@@ -55,8 +55,8 @@ public class GuiRFArmor extends GuiContainerBase {
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
         checkBoxList.add(setInWorldTooltip);
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if(module != null){
-            if(module.getItem() instanceof IRarmorModule){
+        if (module != null) {
+            if (module.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) module.getItem()).initGui(player.getEntityWorld(), player, armor, this, checkBoxList, checkBox);
             }
         }
@@ -100,52 +100,52 @@ public class GuiRFArmor extends GuiContainerBase {
 
         //Draw Module things:
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if(module != null){
-            if(module.getItem() instanceof IRarmorModule){
+        if (module != null) {
+            if (module.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, par1, par2, par3, guiLeft, guiTop);
             }
         }
 
-        if(this.isSettingsTab){
+        if (this.isSettingsTab) {
             this.mc.getTextureManager().bindTexture(modulesGui);
             this.drawTexturedModalRect(this.guiLeft + 115, this.guiTop + 3, 114, 0, 129, 130);
-            for(GuiCheckBox checkBox : checkBoxList){
+            for (GuiCheckBox checkBox : checkBoxList) {
                 checkBox.drawCheckBox(this.guiLeft, this.guiTop);
             }
         }
 
-        GuiInventory.drawEntityOnScreen(this.guiLeft + 88, this.guiTop + 74, 30, (float)(this.guiLeft + 88) - this.xSizeFloat, (float)(this.guiTop + 72 - 50) - this.ySizeFloat, this.mc.thePlayer);
+        GuiInventory.drawEntityOnScreen(this.guiLeft + 88, this.guiTop + 74, 30, (float) (this.guiLeft + 88) - this.xSizeFloat, (float) (this.guiTop + 72 - 50) - this.ySizeFloat, this.mc.thePlayer);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float renderPartialTicks) {
-        this.xSizeFloat = (float)mouseX;
-        this.ySizeFloat = (float)mouseY;
+        this.xSizeFloat = (float) mouseX;
+        this.ySizeFloat = (float) mouseY;
         super.drawScreen(mouseX, mouseY, renderPartialTicks);
 
-        if(mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 &&mouseY <= this.guiTop + 28){
+        if (mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 && mouseY <= this.guiTop + 28) {
             int energy = ((ItemRFArmorBody) armor.getItem()).getEnergyStored(armor);
             int cap = ((ItemRFArmorBody) armor.getItem()).getMaxEnergyStored(armor);
             this.drawHoveringText(Lists.newArrayList(Integer.toString(energy) + "/" + Integer.toString(cap) + " RF"), mouseX, mouseY, this.fontRendererObj);
         }
-        if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 161) {
+        if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161) {
             this.drawHoveringText(Lists.newArrayList("Back to normal Inventory"), mouseX, mouseY, this.fontRendererObj);
         }
-        if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
+        if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 187) {
             this.drawHoveringText(Lists.newArrayList("Settings"), mouseX, mouseY, this.fontRendererObj);
         }
 
 
         //Draw Module things:
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if(module != null){
-            if(module.getItem() instanceof IRarmorModule){
+        if (module != null) {
+            if (module.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) module.getItem()).drawScreen(mc, this, this.armor, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
             }
         }
 
-        if(this.isSettingsTab){
-            for(GuiCheckBox checkBox : checkBoxList){
+        if (this.isSettingsTab) {
+            for (GuiCheckBox checkBox : checkBoxList) {
                 checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop, fontRendererObj);
             }
         }
@@ -153,16 +153,16 @@ public class GuiRFArmor extends GuiContainerBase {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int type){
-        if(type == 0){
-            if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161) {
+    protected void mouseClicked(int mouseX, int mouseY, int type) {
+        if (type == 0) {
+            if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161) {
                 this.armor.getTagCompound().setBoolean("click", true);
                 this.onGuiClosed();
                 this.mc.thePlayer.sendQueue.addToSendQueue(new CPacketCloseWindow(this.mc.thePlayer.openContainer.windowId));
                 GuiInventory inventory = new GuiInventory(this.mc.thePlayer);
                 this.mc.displayGuiScreen(inventory);
             }
-            if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 &&mouseY <= this.guiTop + 187) {
+            if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;
                 ISpecialSlot c1 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 14);
                 ISpecialSlot c2 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 14);
@@ -174,7 +174,7 @@ public class GuiRFArmor extends GuiContainerBase {
                 ISpecialSlot c8 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 50);
                 ISpecialSlot c9 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 50);
                 ISpecialSlot cO = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 217, 99);
-                if(!this.isSettingsTab){
+                if (!this.isSettingsTab) {
                     c1.setSlotExist(true);
                     c2.setSlotExist(true);
                     c3.setSlotExist(true);
@@ -203,15 +203,15 @@ public class GuiRFArmor extends GuiContainerBase {
 
             //Draw Module things:
             ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-            if(module != null){
-                if(module.getItem() instanceof IRarmorModule){
+            if (module != null) {
+                if (module.getItem() instanceof IRarmorModule) {
                     ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, type, mouseX, mouseY, this.guiLeft, this.guiTop);
                 }
             }
 
-            if(this.isSettingsTab){
-                for(GuiCheckBox checkBox : checkBoxList){
-                    if(checkBox.mouseClicked(mouseX, mouseY, this.guiLeft, this.guiTop)){
+            if (this.isSettingsTab) {
+                for (GuiCheckBox checkBox : checkBoxList) {
+                    if (checkBox.mouseClicked(mouseX, mouseY, this.guiLeft, this.guiTop)) {
                         NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "SettingInWorldTooltip", checkBox.isClicked()));
                         NBTUtil.setBoolean(armor, "SettingInWorldTooltip", checkBox.isClicked());
                     }
@@ -235,16 +235,16 @@ public class GuiRFArmor extends GuiContainerBase {
         boolean isAtCoordinates = mouseX >= slotX - 1 && mouseX < slotX + width + 1 && mouseY >= slotY - 1 && mouseY < slotY + height + 1;
         Slot slot = SlotUtil.getSlotAtPosition(this, slotX, slotY);
         Slot moduleSlot = SlotUtil.getSlotAtPosition(this, 15, 34);
-        if(this.isSettingsTab){
-            if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
+        if (this.isSettingsTab) {
+            if (slot instanceof SlotCrafting || slot instanceof SlotCraftingInput) {
                 return false;
             }
         }
 
         //Draw Module things:
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if(module != null && moduleSlot != null){
-            if(module.getItem() instanceof IRarmorModule){
+        if (module != null && moduleSlot != null) {
+            if (module.getItem() instanceof IRarmorModule) {
                 return ((IRarmorModule) module.getItem()).showSlot(mc, this, this.armor, module, this.isSettingsTab, slot, mouseX, mouseY, slotX, slotY, isAtCoordinates);
             }
         } else {
@@ -254,10 +254,11 @@ public class GuiRFArmor extends GuiContainerBase {
         return isAtCoordinates;
     }
 
-    public int getGuiLeft(){
+    public int getGuiLeft() {
         return this.guiLeft;
     }
-    public int getGuiTop(){
+
+    public int getGuiTop() {
         return this.guiTop;
     }
 

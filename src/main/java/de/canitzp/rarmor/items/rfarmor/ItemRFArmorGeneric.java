@@ -13,10 +13,10 @@ public class ItemRFArmorGeneric extends ItemRFArmor {
     }
 
     @Override
-    public double getDurabilityForDisplay(ItemStack stack){
-        double energyDif = getMaxEnergyStored(stack)-getEnergyStored(stack);
+    public double getDurabilityForDisplay(ItemStack stack) {
+        double energyDif = getMaxEnergyStored(stack) - getEnergyStored(stack);
         double maxAmount = getMaxEnergyStored(stack);
-        return energyDif/maxAmount;
+        return energyDif / maxAmount;
     }
 
 }

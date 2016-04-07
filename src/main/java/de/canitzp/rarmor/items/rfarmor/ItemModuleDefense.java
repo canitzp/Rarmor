@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public class ItemModuleDefense extends ItemModule implements IRarmorModule{
+public class ItemModuleDefense extends ItemModule implements IRarmorModule {
 
     public int damageMultiplier;
 
@@ -37,12 +37,12 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
     @Override
     public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armor, DamageSource damageSource, float damage) {
         int energyYouNeed = (int) (damage * this.damageMultiplier);
-        if(EnergyUtil.getEnergy(armor) >= energyYouNeed){
-            if(damageSource == DamageSource.fall){
+        if (EnergyUtil.getEnergy(armor) >= energyYouNeed) {
+            if (damageSource == DamageSource.fall) {
                 EnergyUtil.reduceEnergy(armor, energyYouNeed);
                 return true;
             }
-            if(damageSource == DamageSource.onFire){
+            if (damageSource == DamageSource.onFire) {
                 EnergyUtil.reduceEnergy(armor, energyYouNeed);
                 player.attackEntityFrom(DamageSource.onFire, 5F);
                 return true;

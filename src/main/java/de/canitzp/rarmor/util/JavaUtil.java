@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class JavaUtil {
 
-    public static <E> List<E> newList(E... elements){
-        if(elements != null){
+    public static <E> List<E> newList(E... elements) {
+        if (elements != null) {
             List<E> list = new ArrayList<>();
             Collections.addAll(list, elements);
             return list;

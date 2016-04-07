@@ -8,16 +8,14 @@ import net.minecraft.util.ResourceLocation;
  */
 public class ItemUtil {
 
-    public static Item getItemFromName(String name){
+    public static Item getItemFromName(String name) {
         ResourceLocation loc = new ResourceLocation(name);
         if (Item.itemRegistry.containsKey(loc)) {
             return Item.itemRegistry.getObject(loc);
-        }
-        else {
+        } else {
             try {
                 return Item.itemRegistry.getObjectById(Integer.parseInt(name));
-            }
-            catch (NumberFormatException numberformatexception) {
+            } catch (NumberFormatException numberformatexception) {
                 return null;
             }
         }

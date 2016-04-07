@@ -31,7 +31,7 @@ public class RarmorHud implements IAdvancedHud {
             for (int i = 0; i < fluid.getTankInfo(trace.sideHit).length; i++) {
                 FluidStack fluidStack = fluid.getTankInfo(trace.sideHit)[i].fluid;
                 if (fluidStack != null) {
-                    if(y / 10 > 4) {
+                    if (y / 10 > 4) {
                         ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, "To many Fluids to show!", ColorUtil.WHITE);
                         y += 10;
                         i = fluid.getTankInfo(trace.sideHit).length;
@@ -39,7 +39,7 @@ public class RarmorHud implements IAdvancedHud {
                     }
                     String fluidText = I18n.translateToLocal(fluidStack.getLocalizedName()) + " " + String.valueOf(fluidStack.amount) + "mB";
                     ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, fluidText, ColorUtil.WHITE);
-                    ArmorHud.drawTank((x + fontRenderer.getStringWidth(fluidText))/2 + 1, y, fluidStack, fluid.getTankInfo(trace.sideHit)[i].capacity);
+                    ArmorHud.drawTank((x + fontRenderer.getStringWidth(fluidText)) / 2 + 1, y, fluidStack, fluid.getTankInfo(trace.sideHit)[i].capacity);
                     y += 10;
                 }
             }
@@ -51,7 +51,7 @@ public class RarmorHud implements IAdvancedHud {
             if (energy.getMaxEnergyStored() > 1) {
                 String energyText = energy.getEnergyStored() + "/" + energy.getMaxEnergyStored() + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
-                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText))/2 + 1, y, energy.getMaxEnergyStored(), energy.getEnergyStored());
+                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(), energy.getEnergyStored());
                 y += 10;
             }
         } else if (tileEntity instanceof IEnergyReceiver) {
@@ -59,7 +59,7 @@ public class RarmorHud implements IAdvancedHud {
             if (energy.getMaxEnergyStored(trace.sideHit) > 1) {
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
-                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText))/2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
+                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
                 y += 10;
             }
         } else if (tileEntity instanceof IEnergyProvider) {
@@ -67,7 +67,7 @@ public class RarmorHud implements IAdvancedHud {
             if (energy.getMaxEnergyStored(trace.sideHit) > 1) {
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
-                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText))/2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
+                ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
                 y += 10;
             }
         }

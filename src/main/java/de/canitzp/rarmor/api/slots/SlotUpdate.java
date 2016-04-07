@@ -19,8 +19,8 @@ public class SlotUpdate extends Slot implements ISpecialSlot {
     }
 
     @Override
-    public void onSlotChanged(){
-        if(toSave != null){
+    public void onSlotChanged() {
+        if (toSave != null) {
             NBTUtil.saveSlots(toSave, inventory);
         }
         super.onSlotChanged();

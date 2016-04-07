@@ -15,12 +15,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketOpenGui implements IMessage {
 
-    private int playerID, worldID, guiID;
     public static Object instance;
+    private int playerID, worldID, guiID;
 
-    public PacketOpenGui(){}
+    public PacketOpenGui() {
+    }
 
-    public PacketOpenGui(EntityPlayer player, int guiID, Object instance){
+    public PacketOpenGui(EntityPlayer player, int guiID, Object instance) {
         this.playerID = player.getEntityId();
         this.worldID = player.getEntityWorld().provider.getDimension();
         this.guiID = guiID;
@@ -28,14 +29,14 @@ public class PacketOpenGui implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf){
+    public void fromBytes(ByteBuf buf) {
         playerID = buf.readInt();
         worldID = buf.readInt();
         guiID = buf.readInt();
     }
 
     @Override
-    public void toBytes(ByteBuf buf){
+    public void toBytes(ByteBuf buf) {
         buf.writeInt(playerID);
         buf.writeInt(worldID);
         buf.writeInt(guiID);
@@ -44,10 +45,10 @@ public class PacketOpenGui implements IMessage {
     public static class Handler implements IMessageHandler<PacketOpenGui, IMessage> {
 
         @Override
-        public IMessage onMessage(PacketOpenGui message, MessageContext ctx){
+        public IMessage onMessage(PacketOpenGui message, MessageContext ctx) {
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-            player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int)player.posX, (int)player.posY, (int)player.posZ);
+            player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
             return null;
         }
     }

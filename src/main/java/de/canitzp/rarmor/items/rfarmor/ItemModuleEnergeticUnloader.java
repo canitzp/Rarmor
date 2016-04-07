@@ -69,7 +69,7 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
         ItemStack chargeSlot = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
-        if(chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem){
+        if (chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem) {
             ((IEnergyContainerItem) chargeSlot.getItem()).extractEnergy(chargeSlot, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
             ((IEnergyContainerItem) armorChestplate.getItem()).receiveEnergy(armorChestplate, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
         }

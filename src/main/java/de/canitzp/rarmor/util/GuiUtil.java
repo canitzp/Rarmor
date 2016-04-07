@@ -61,7 +61,7 @@ public class GuiUtil {
             drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
             for (int k1 = 0; k1 < textLines.size(); ++k1) {
                 String s1 = textLines.get(k1);
-                font.drawStringWithShadow(s1, (float)l1, (float)i2, -1);
+                font.drawStringWithShadow(s1, (float) l1, (float) i2, -1);
                 if (k1 == 0) {
                     i2 += 2;
                 }
@@ -75,16 +75,15 @@ public class GuiUtil {
         }
     }
 
-    public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
-    {
-        float f = (float)(startColor >> 24 & 255) / 255.0F;
-        float f1 = (float)(startColor >> 16 & 255) / 255.0F;
-        float f2 = (float)(startColor >> 8 & 255) / 255.0F;
-        float f3 = (float)(startColor & 255) / 255.0F;
-        float f4 = (float)(endColor >> 24 & 255) / 255.0F;
-        float f5 = (float)(endColor >> 16 & 255) / 255.0F;
-        float f6 = (float)(endColor >> 8 & 255) / 255.0F;
-        float f7 = (float)(endColor & 255) / 255.0F;
+    public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+        float f = (float) (startColor >> 24 & 255) / 255.0F;
+        float f1 = (float) (startColor >> 16 & 255) / 255.0F;
+        float f2 = (float) (startColor >> 8 & 255) / 255.0F;
+        float f3 = (float) (startColor & 255) / 255.0F;
+        float f4 = (float) (endColor >> 24 & 255) / 255.0F;
+        float f5 = (float) (endColor >> 16 & 255) / 255.0F;
+        float f6 = (float) (endColor >> 8 & 255) / 255.0F;
+        float f7 = (float) (endColor & 255) / 255.0F;
         GlStateManager.disableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
@@ -93,10 +92,10 @@ public class GuiUtil {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        worldrenderer.pos((double)right, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos((double)left, (double)top, (double)zLevel).color(f1, f2, f3, f).endVertex();
-        worldrenderer.pos((double)left, (double)bottom, (double)zLevel).color(f5, f6, f7, f4).endVertex();
-        worldrenderer.pos((double)right, (double)bottom, (double)zLevel).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos((double) right, (double) top, (double) zLevel).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos((double) left, (double) top, (double) zLevel).color(f1, f2, f3, f).endVertex();
+        worldrenderer.pos((double) left, (double) bottom, (double) zLevel).color(f5, f6, f7, f4).endVertex();
+        worldrenderer.pos((double) right, (double) bottom, (double) zLevel).color(f5, f6, f7, f4).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
         GlStateManager.disableBlend();
@@ -104,17 +103,17 @@ public class GuiUtil {
         GlStateManager.enableTexture2D();
     }
 
-    public static void drawBarHorizontal(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount){
+    public static void drawBarHorizontal(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount) {
         int factor = amount * height / maxCapacity;
         drawTexturedModalRect(batRes, guiLoc, x, y - factor, textureX, textureY - factor, width, factor);
     }
 
-    public static void drawBarVertical(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount){
+    public static void drawBarVertical(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount) {
         int factor = (amount * width) / maxCapacity;
         drawTexturedModalRect(batRes, guiLoc, x, y - height, textureX, textureY - 10, factor + 1, height);
     }
 
-    public static void bindTexture(ResourceLocation location){
+    public static void bindTexture(ResourceLocation location) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(location);
     }
 
@@ -123,29 +122,30 @@ public class GuiUtil {
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
         bindTexture(guiLoc);
     }
+
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer worldrenderer = tessellator.getBuffer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double)(x), (double)(y + height), (double) zLevel).tex((double)((float)(textureX) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), (double)zLevel).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y), (double)zLevel).tex((double)((float)(textureX + width) * f), (double)((float)(textureY) * f1)).endVertex();
-        worldrenderer.pos((double)(x), (double)(y), (double)zLevel).tex((double)((float)(textureX) * f), (double)((float)(textureY) * f1)).endVertex();
+        worldrenderer.pos((double) (x), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY) * f1)).endVertex();
+        worldrenderer.pos((double) (x), (double) (y), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY) * f1)).endVertex();
         tessellator.draw();
     }
 
-    public static void drawFluid(Fluid fluid, int x, int y, int textureX, int textureY, int width, int height){
+    public static void drawFluid(Fluid fluid, int x, int y, int textureX, int textureY, int width, int height) {
         ResourceLocation fluidTexture = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill().getResourcePath() + ".png");
         bindTexture(fluidTexture);
-        drawTexturedModalRect(x, y,textureX, textureY, width, height);
+        drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
-    public static void drawFluid(Gui gui, Fluid fluid, int x, int y, int textureX, int textureY, int width, int height){
+    public static void drawFluid(Gui gui, Fluid fluid, int x, int y, int textureX, int textureY, int width, int height) {
         ResourceLocation fluidTexture = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill() + ".png");
         Minecraft.getMinecraft().getTextureManager().bindTexture(fluidTexture);
-        gui.drawTexturedModalRect(x, y,textureX, textureY, width, height);
+        gui.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
 }

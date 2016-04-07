@@ -5,6 +5,7 @@ package de.canitzp.rarmor.blocks;
  */
 public class BlockRegistry {
 
-    public static void preInit(){}
+    public static void preInit() {
+    }
 
 }

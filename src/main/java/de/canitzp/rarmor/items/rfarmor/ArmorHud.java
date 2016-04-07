@@ -35,13 +35,13 @@ public class ArmorHud {
     private static final ResourceLocation guiRarmor = RarmorResources.RARMORGUI.getNewLocation();
     private static FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
-    public static void display(Minecraft mc, ScaledResolution resolution, EntityPlayer player, float x, float y){
+    public static void display(Minecraft mc, ScaledResolution resolution, EntityPlayer player, float x, float y) {
         x += resolution.getScaledWidth();
         RayTraceResult trace = mc.objectMouseOver;
         FontRenderer fontRenderer = mc.fontRendererObj;
         World world = player.getEntityWorld();
-        if(trace != null){
-            if(trace.typeOfHit == RayTraceResult.Type.BLOCK || trace.typeOfHit == RayTraceResult.Type.MISS){
+        if (trace != null) {
+            if (trace.typeOfHit == RayTraceResult.Type.BLOCK || trace.typeOfHit == RayTraceResult.Type.MISS) {
                 IBlockState state = world.getBlockState(trace.getBlockPos());
                 TileEntity tile = world.getTileEntity(trace.getBlockPos());
                 if (state != null) {
@@ -58,16 +58,16 @@ public class ArmorHud {
                         }
                     }
                 }
-            } else if(trace.typeOfHit == RayTraceResult.Type.ENTITY){
+            } else if (trace.typeOfHit == RayTraceResult.Type.ENTITY) {
                 drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), ColorUtil.WHITE);
             }
         }
     }
 
-    private static float displayBlock(IBlockState state, float x, float y){
-        if(state.getBlock() != Blocks.air){
+    private static float displayBlock(IBlockState state, float x, float y) {
+        if (state.getBlock() != Blocks.air) {
             Item itemBlock = Item.getItemFromBlock(state.getBlock());
-            if(itemBlock != null){
+            if (itemBlock != null) {
                 drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE);
             } else {
                 drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE);
@@ -76,18 +76,18 @@ public class ArmorHud {
         return y + 10;
     }
 
-    public static void drawBat(float x, float y, int maxEnergy, int energyAmount){
+    public static void drawBat(float x, float y, int maxEnergy, int energyAmount) {
         GuiUtil.drawTexturedModalRect(guiBat, guiRarmor, (int) x, (int) (y - 1), 10, 0, 21, 10);
         GuiUtil.drawBarVertical(guiBat, guiRarmor, (int) x, (int) (y - 1 + 10), 10, 20, 20, 10, maxEnergy, energyAmount);
     }
 
-    public static void drawTank(float x, float y, FluidStack fluid, int maxTank){
+    public static void drawTank(float x, float y, FluidStack fluid, int maxTank) {
         int factor = (fluid.amount * 20) / maxTank;
-        GuiUtil.drawFluid(fluid.getFluid(), (int) x, (int)y - 1, 16, 512 + 10, factor + 1, 10);
-        GuiUtil.drawTexturedModalRect(guiBat, guiRarmor, (int) x, (int)y - 1, 31, 21, 21, 10);
+        GuiUtil.drawFluid(fluid.getFluid(), (int) x, (int) y - 1, 16, 512 + 10, factor + 1, 10);
+        GuiUtil.drawTexturedModalRect(guiBat, guiRarmor, (int) x, (int) y - 1, 31, 21, 21, 10);
     }
 
-    public static void drawCenteredTextInWorld(FontRenderer fontRenderer, float x, float y, String text, int color){
+    public static void drawCenteredTextInWorld(FontRenderer fontRenderer, float x, float y, String text, int color) {
         fontRenderer.drawStringWithShadow(text, (x - fontRenderer.getStringWidth(text)) / 2, y, color);
     }
 }

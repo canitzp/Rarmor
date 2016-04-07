@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ItemRFArmorBody extends ItemRFArmor {
 
-    public static int rfPerTick = 20, slotAmount = 31;
     public static final int FURNACEINPUT = 27, FURNACEOUTPUT = 28, MODULESLOT = 29, GENERATORSLOT = 30;
+    public static int rfPerTick = 20, slotAmount = 50;
 
     public ItemRFArmorBody() {
         super(ItemRFArmor.RFARMOR, EntityEquipmentSlot.CHEST, 250000, 1500, "rfArmorBody");

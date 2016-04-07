@@ -28,28 +28,48 @@ import org.apache.logging.log4j.Logger;
 public class Rarmor {
     public static final String MODID = "rarmor", NAME = "Rarmor", VERSION = "@VERSION";
     public static final Logger logger = LogManager.getLogger(NAME);
-    public static CreativeTabs rarmorTab;
     public static final String CLIENTPROXY = "de.canitzp.rarmor.network.ClientProxy";
     public static final String SERVERPROXY = "de.canitzp.rarmor.network.CommonProxy";
-
+    public static CreativeTabs rarmorTab;
     @Mod.Instance(MODID)
     public static Rarmor instance;
     @SidedProxy(clientSide = Rarmor.CLIENTPROXY, serverSide = Rarmor.SERVERPROXY)
     public static CommonProxy proxy;
 
+    public static void registerItem(Item item, String name) {
+        item.setUnlocalizedName(MODID + ":" + name);
+        item.setRegistryName(name);
+        item.setCreativeTab(rarmorTab);
+        Rarmor.proxy.addRenderer(new ItemStack(item), name);
+        GameRegistry.register(item);
+    }
+
+    public static void registerBlock(Block block, String name) {
+        block.setUnlocalizedName(MODID + ":" + name);
+        block.setRegistryName(name);
+        block.setCreativeTab(rarmorTab);
+        Rarmor.proxy.addRenderer(new ItemStack(block), name);
+        GameRegistry.register(block);
+    }
+
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public void preInit(FMLPreInitializationEvent event) {
         logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
         RarmorProperties.preInit(event);
-        rarmorTab = new CreativeTabs(NAME) {@Override public Item getTabIconItem() {return ItemRegistry.rfArmorBody;}};
+        rarmorTab = new CreativeTabs(NAME) {
+            @Override
+            public Item getTabIconItem() {
+                return ItemRegistry.rfArmorBody;
+            }
+        };
         BlockRegistry.preInit();
         ItemRegistry.preInit();
-        if(event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
+        if (event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
         logger.info("Finished PreInitialization");
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event){
+    public void init(FMLInitializationEvent event) {
         logger.info("Starting Initialization");
         NetworkHandler.init();
         EventHandler.init();
@@ -60,27 +80,11 @@ public class Rarmor {
     }
 
     @Mod.EventHandler
-    public void missingMapping(FMLMissingMappingsEvent event){
-        for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
-            if(mapping.name.startsWith("rarmor.")){
+    public void missingMapping(FMLMissingMappingsEvent event) {
+        for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
+            if (mapping.name.startsWith("rarmor.")) {
                 mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
             }
         }
-    }
-
-    public static void registerItem(Item item, String name){
-        item.setUnlocalizedName(MODID + ":" + name);
-        item.setRegistryName(name);
-        item.setCreativeTab(rarmorTab);
-        Rarmor.proxy.addRenderer(new ItemStack(item), name);
-        GameRegistry.register(item);
-    }
-
-    public static void registerBlock(Block block, String name){
-        block.setUnlocalizedName(MODID + ":" + name);
-        block.setRegistryName(name);
-        block.setCreativeTab(rarmorTab);
-        Rarmor.proxy.addRenderer(new ItemStack(block), name);
-        GameRegistry.register(block);
     }
 }

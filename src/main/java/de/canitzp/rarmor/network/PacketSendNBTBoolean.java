@@ -15,29 +15,30 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author canitzp
  */
-public class PacketSendNBTBoolean implements IMessage{
+public class PacketSendNBTBoolean implements IMessage {
 
     public String nbt;
     public boolean b, stackInput;
     public int playerID, worldID, playerSlotID;
     public ItemStack stack;
 
-    public PacketSendNBTBoolean(){}
+    public PacketSendNBTBoolean() {
+    }
 
     /**
-     *
      * @param player The EntityPlayerSP
      * @param slotID The id of the slot. Have to be a slotid from PlayerInventory (37: Leggins, 38: Body)
-     * @param nbt The Name of the NBT
-     * @param b The Value of the NBT
+     * @param nbt    The Name of the NBT
+     * @param b      The Value of the NBT
      */
-    public PacketSendNBTBoolean(EntityPlayer player, int slotID,  String nbt, boolean b) {
+    public PacketSendNBTBoolean(EntityPlayer player, int slotID, String nbt, boolean b) {
         this.nbt = nbt;
         this.b = b;
         this.playerSlotID = slotID;
         this.playerID = player.getEntityId();
         this.worldID = player.getEntityWorld().provider.getDimension();
     }
+
     public PacketSendNBTBoolean(EntityPlayer player, String nbt, boolean b) {
         this.nbt = nbt;
         this.b = b;
@@ -64,13 +65,13 @@ public class PacketSendNBTBoolean implements IMessage{
         buf.writeInt(this.playerSlotID);
     }
 
-    public static class PacketHandler implements IMessageHandler<PacketSendNBTBoolean, IMessage>{
+    public static class PacketHandler implements IMessageHandler<PacketSendNBTBoolean, IMessage> {
         @Override
         public IMessage onMessage(PacketSendNBTBoolean message, MessageContext ctx) {
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
             ItemStack stack;
-            if(message.playerSlotID == 123456){
+            if (message.playerSlotID == 123456) {
                 stack = NBTUtil.readSlots(player.inventory.getStackInSlot(38), ItemRFArmorBody.slotAmount).getStackInSlot(29);
             } else {
                 stack = player.inventory.getStackInSlot(message.playerSlotID);

@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.inventory.slots;
 
+import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -26,15 +27,15 @@ public class SlotInputModule extends SlotUpdate {
     }
 
     @Override
-    public void onSlotChanged(){
-        ItemStack stack = player.inventory.armorInventory[2];
-        if(actualStack != null && !actualStack.isItemEqual(this.getStack())){
-            if(actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
+    public void onSlotChanged() {
+        ItemStack stack = RarmorUtil.getPlayersRarmorChestplate(player);
+        if (actualStack != null && !actualStack.isItemEqual(this.getStack())) {
+            if (actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, player.inventory.armorInventory[2], stack, this.inventory, this);
             }
         }
-        if(getStack() != null && getStack().getItem() != null){
-            if(getStack().getItem() instanceof IRarmorModule){
+        if (getStack() != null && getStack().getItem() != null) {
+            if (getStack().getItem() instanceof IRarmorModule) {
                 NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) getStack().getItem()).getUniqueName(), true);
             }
         }
@@ -44,7 +45,7 @@ public class SlotInputModule extends SlotUpdate {
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
-        if(stack.getItem() instanceof IRarmorModule){
+        if (stack.getItem() instanceof IRarmorModule) {
             IRarmorModule module = (IRarmorModule) stack.getItem();
             module.onPickupFromSlot(player.getEntityWorld(), player, player.inventory.armorInventory[2], stack, this.inventory, this);
             NBTUtil.setBoolean(stack, "Module" + module.getUniqueName(), false);

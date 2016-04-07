@@ -6,37 +6,36 @@ package de.canitzp.rarmor;
 public class ElectricalUtil {
 
     //RF To Realistic:
-    public static float rfToAmpere(int rf){
+    public static float rfToAmpere(int rf) {
         return rf / 1000;
     }
 
-    public static int ampereToRF(float ampere){
+    public static int ampereToRF(float ampere) {
         return Math.round(ampere * 1000);
     }
 
-    public static float euToAmpere(int eu){
+    public static float euToAmpere(int eu) {
         return (eu / 1000) * 3.5F;
     }
 
-    public static int ampereToEU(float ampere){
+    public static int ampereToEU(float ampere) {
         return Math.round((ampere * 1000) / 3.5F);
     }
 
-    public static float getVolage(int resistance, float ampere){
+    public static float getVolage(int resistance, float ampere) {
         return resistance * ampere;
     }
 
-    public static float getAmpere(int resistance, float voltage){
+    public static float getAmpere(int resistance, float voltage) {
         return resistance / voltage;
     }
 
-    public static int getResistance(float voltage, float ampere){
+    public static int getResistance(float voltage, float ampere) {
         return Math.round(voltage / ampere);
     }
 
 
     //RF to RP(E-Flux)
-
 
 
 }

@@ -15,38 +15,39 @@ import java.util.Map;
 public class ClientProxy extends CommonProxy {
 
     @Override
-    public void init(){
+    public void init() {
 
     }
 
     @Override
-    public void registerRenderer(){
+    public void registerRenderer() {
         Rarmor.logger.info("Register Renderer");
         //ModelBakery.registerItemVariants(ItemRegistry.modularTool, new ResourceLocation(Rarmor.MODID, "modularTool"));
-        for(Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
-            if(entry.getKey() != null && entry.getKey().getItem() != null){
-                if(entry.getKey().getItem() instanceof ItemBlock){
+        for (Map.Entry<ItemStack, String> entry : textureMap.entrySet()) {
+            if (entry.getKey() != null && entry.getKey().getItem() != null) {
+                if (entry.getKey().getItem() instanceof ItemBlock) {
                     registerBlock(entry.getKey().getItem(), entry.getValue());
-                } else{
+                } else {
                     registerItem(entry.getKey(), entry.getValue());
                 }
             }
         }
-        for(Map.Entry<ItemStack, String> entry : specialTextures.entrySet()){
-            if(entry.getKey() != null && entry.getKey().getItem() != null){
-                if(entry.getKey().getItem() instanceof ItemBlock){
+        for (Map.Entry<ItemStack, String> entry : specialTextures.entrySet()) {
+            if (entry.getKey() != null && entry.getKey().getItem() != null) {
+                if (entry.getKey().getItem() instanceof ItemBlock) {
                     registerBlock(entry.getKey().getItem(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
-                } else{
+                } else {
                     registerItem(entry.getKey(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
                 }
             }
         }
     }
 
-    private void registerItem(ItemStack item, String blockName){
+    private void registerItem(ItemStack item, String blockName) {
         MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(item.getItem(), item.getMetadata(), new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
-    private void registerBlock(Item block, String blockName){
+
+    private void registerBlock(Item block, String blockName) {
         MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(block, 0, new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
 
