@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvent.soundEventRegistry.getObject(new ResourceLocation("block.anvil.break")));
+    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvent.REGISTRY.getObject(new ResourceLocation("block.anvil.break")));
 
     public int maxEnergy;
     public int maxTransfer;

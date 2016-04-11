@@ -1,9 +1,9 @@
 package de.canitzp.rarmor.items.rfarmor;
 
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IModuleIntegration;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -32,12 +32,12 @@ public class ItemModuleAntiRadiation extends ItemModule implements IModuleIntegr
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, Slot slot) {
         armorChestplate.getTagCompound().removeTag("AntiRadiationArmor");
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
         NBTUtil.setBoolean(armorChestplate, "AntiRadiationArmor", true);
     }
 }

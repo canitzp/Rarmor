@@ -15,7 +15,7 @@ public class PlayerUtil {
         if (MinecraftUtil.getMinecraftSide().isClient()) {
             return MinecraftUtil.getPlayer().inventory.armorInventory[slot.getIndex()];
         }
-        return new ItemStack(Blocks.fire);
+        return new ItemStack(Blocks.FIRE);
     }
 
     public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot) {

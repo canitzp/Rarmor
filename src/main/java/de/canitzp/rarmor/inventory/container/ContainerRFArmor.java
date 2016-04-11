@@ -1,5 +1,7 @@
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.api.InventoryBase;
+import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.slots.*;
@@ -10,7 +12,6 @@ import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
 import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
-import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -20,7 +21,7 @@ import net.minecraft.item.crafting.CraftingManager;
 /**
  * @author canitzp
  */
-public class ContainerRFArmor extends Container {
+public class ContainerRFArmor extends ContainerBase {
 
     public InventoryBase inventory;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
@@ -37,6 +38,8 @@ public class ContainerRFArmor extends Container {
         this.inventory = NBTUtil.readSlotsBase(this.armor, ItemRFArmorBody.slotAmount);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
+
+
 
         //Armor Inventory:
         for (int i = 0; i < 3; ++i) {
@@ -84,7 +87,10 @@ public class ContainerRFArmor extends Container {
                 ((IRarmorModule) module.getItem()).onContainerIsInit(this, player, inventory, this.armor, module);
             }
         }
-
+        ItemStack stack = NBTUtil.readItemStack(armor, "CurrentHoldItemStack");
+        if(stack != null){
+            player.inventory.setItemStack(stack);
+        }
     }
 
     @Override
@@ -116,7 +122,7 @@ public class ContainerRFArmor extends Container {
             for (int i = 0; i < 9; ++i) {
                 ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
                 if (itemstack != null) {
-                    player.dropPlayerItemWithRandomChoice(itemstack, false);
+                    player.dropItem(itemstack, false);
                 }
             }
         }
@@ -139,10 +145,6 @@ public class ContainerRFArmor extends Container {
             return slot.inventory != this.craftResult && super.canMergeSlot(stack, slot);
         }
         return super.canMergeSlot(stack, slot);
-    }
-
-    public void addSlot(Slot slot){
-        this.addSlotToContainer(slot);
     }
 
 }

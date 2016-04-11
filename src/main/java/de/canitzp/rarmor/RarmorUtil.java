@@ -144,8 +144,8 @@ public class RarmorUtil {
                 if (canHarvest) {
                     block.harvestBlock(world, player, pos, state, tile, player.getHeldItemMainhand());
                 }
-                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack) != 0) {
-                    block.dropXpOnBlockBreak(world, pos, block.getExpDrop(state, world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, stack)));
+                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) != 0) {
+                    block.dropXpOnBlockBreak(world, pos, block.getExpDrop(state, world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack)));
                 }
 
             }
@@ -197,7 +197,7 @@ public class RarmorUtil {
     public static void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
         if (stack != null) {
             if (!player.worldObj.isRemote) {
-                player.dropPlayerItemWithRandomChoice(stack, false);
+                player.dropItem(stack, false);
             }
             inventory.setInventorySlotContents(30, null);
             NBTUtil.saveSlots(armor, inventory);

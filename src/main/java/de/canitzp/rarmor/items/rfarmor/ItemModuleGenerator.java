@@ -1,6 +1,8 @@
 package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.canitzp.rarmor.api.InventoryBase;
+import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
@@ -53,7 +55,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
         if (isGenerator(inventory, armorChestplate) || NBTUtil.getInteger(module, "GenBurnTime") > 0) {
             this.generate(armorChestplate, module);
         } else {
@@ -62,30 +64,30 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, Slot slot) {
         dropSlot(inventory, inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player, armorChestplate);
         NBTUtil.setInteger(module, "GenBurnTime", 0);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (!settingActivated) {
             int i = 0;
             if (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") != 0) {
                 i = (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") - NBTUtil.getInteger(module, "GenBurnTime")) * 13 / NBTUtil.getInteger(module, "CurrentItemGenBurnTime");
             }
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
-            gui.drawTexturedModalRect(((GuiRFArmor) gui).getGuiLeft() + 120, ((GuiRFArmor) gui).getGuiTop() + 13, 57, 0, 56, 55);
+            gui.drawTexturedModalRect(gui.getGuiLeft() + 120, gui.getGuiTop() + 13, 57, 0, 56, 55);
             if (NBTUtil.getInteger(module, "GenBurnTime") > 0) {
-                gui.drawTexturedModalRect(((GuiRFArmor) gui).getGuiLeft() + 141, ((GuiRFArmor) gui).getGuiTop() + 39 + 12 - i, 58, 57 + 12 - i, 14, i + 1);
+                gui.drawTexturedModalRect(gui.getGuiLeft() + 141, gui.getGuiTop() + 39 + 12 - i, 58, 57 + 12 - i, 14, i + 1);
             }
         }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (settingActivated) {
             Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
             if (moduleSlot instanceof ISpecialSlot) {
@@ -102,7 +104,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean showSlot(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
+    public boolean showSlot(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
         return !(settingActivated && slot instanceof SlotModule) && isMouseOverSlot;
     }
 
@@ -140,7 +142,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     private void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
         if (stack != null) {
             if (!player.worldObj.isRemote) {
-                player.dropPlayerItemWithRandomChoice(stack, false);
+                player.dropItem(stack, false);
             }
             inventory.setInventorySlotContents(30, null);
             NBTUtil.saveSlots(armor, inventory);

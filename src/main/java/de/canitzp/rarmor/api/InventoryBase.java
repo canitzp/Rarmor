@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.util.inventory;
+package de.canitzp.rarmor.api;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

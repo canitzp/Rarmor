@@ -70,7 +70,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
         int z = pos.getZ();
         World world = player.worldObj;
         final Block wood = WorldUtil.getBlock(world, pos);
-        if (!player.isSneaking() && !(world.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world.getBlockState(pos), world, pos) || wood == Blocks.brown_mushroom || wood == Blocks.red_mushroom_block) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse) {
+        if (!player.isSneaking() && !(world.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world.getBlockState(pos), world, pos) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse) {
             boolean b = RarmorUtil.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
             return b || super.onBlockStartBreak(stack, pos, player);
         }
@@ -85,7 +85,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
     @Override
     public float getStrVsBlock(ItemStack stack, IBlockState state) {
         Block block = state.getBlock();
-        return this.getEnergyStored(stack) >= rfPerUse ? ((block instanceof BlockLog || block.getMaterial(state) == Material.wood || block.getMaterial(state) == Material.leaves) ? 5F : 1.0F) : 1.0F;
+        return this.getEnergyStored(stack) >= rfPerUse ? ((block instanceof BlockLog || block.getMaterial(state) == Material.WOOD || block.getMaterial(state) == Material.LEAVES) ? 5F : 1.0F) : 1.0F;
     }
 
     @Override

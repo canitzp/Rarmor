@@ -2,6 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.ItemStackUtil;
@@ -82,7 +83,7 @@ public class ItemRFArmorBody extends ItemRFArmor {
     }
 
     private void handleModules(World world, EntityPlayer player, ItemStack armor) {
-        IInventory inventory = NBTUtil.readSlots(armor, slotAmount);
+        InventoryBase inventory = NBTUtil.readSlots(armor, slotAmount);
         ItemStack module = inventory.getStackInSlot(MODULESLOT);
         if (module != null && module.getItem() instanceof IRarmorModule) {
             IRarmorModule mod = (IRarmorModule) module.getItem();

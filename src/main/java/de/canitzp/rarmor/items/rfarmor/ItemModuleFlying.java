@@ -1,11 +1,11 @@
 package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.RarmorProperties;
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -28,7 +28,7 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
         if (!player.capabilities.isCreativeMode) {
             if (!NBTUtil.getBoolean(module, "deactivated")) {
                 if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick) {
@@ -52,7 +52,7 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, IInventory inventory, Slot slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, Slot slot) {
         if (!player.capabilities.isCreativeMode) {
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
@@ -61,7 +61,7 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack playersRarmorChestplate, ItemStack module) {
+    public void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module) {
         if (!NBTUtil.getBoolean(module, "deactivated")) {
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;

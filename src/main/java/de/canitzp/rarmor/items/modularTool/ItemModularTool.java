@@ -2,11 +2,11 @@ package de.canitzp.rarmor.items.modularTool;
 
 import cofh.api.energy.ItemEnergyContainer;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IToolModule;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.inventory.InventoryBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;

@@ -1,10 +1,9 @@
 package de.canitzp.rarmor.util;
 
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.util.inventory.InventoryBase;
+import de.canitzp.rarmor.api.InventoryBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,7 +20,7 @@ public class NBTUtil {
             }
         } else {
             Rarmor.logger.error("An Error occurred while writing/reading a ItemStack");
-            stack = new ItemStack(Blocks.fire);
+            stack = new ItemStack(Blocks.FIRE);
             stack.setTagCompound(new NBTTagCompound());
         }
     }
@@ -44,12 +43,13 @@ public class NBTUtil {
         }
     }
 
-    public static InventoryBasic readSlots(ItemStack stack, int slotAmo) {
+    public static InventoryBase readSlots(ItemStack stack, int slotAmo) {
         NBTTagCompound compound = stack.getTagCompound();
         if (compound != null) {
             if (compound.getInteger("SlotAmount") != 0) {
                 int slotAmount = compound.getInteger("SlotAmount");
-                InventoryBasic inv = new InventoryBasic("", false, slotAmount);
+                String name = compound.getString("InventoryName");
+                InventoryBase inv = new InventoryBase(name, slotAmount);
                 if (inv.getSizeInventory() > 0) {
                     NBTTagList tagList = compound.getTagList("Items", 10);
                     for (int i = 0; i < tagList.tagCount(); i++) {
@@ -63,7 +63,7 @@ public class NBTUtil {
                 return inv;
             }
         }
-        return new InventoryBasic("", false, slotAmo);
+        return new InventoryBase("", slotAmo);
     }
 
     public static InventoryBase readSlotsBase(ItemStack stack, int slotAmo) {
@@ -113,6 +113,22 @@ public class NBTUtil {
 
     public static boolean getBoolean(ItemStack stack, String name) {
         return stack.getTagCompound() != null && stack.getTagCompound().hasKey(name) && stack.getTagCompound().getBoolean(name);
+    }
+
+    public static void saveItemStack(ItemStack toSave, ItemStack onSave, String key){
+        if(toSave != null && onSave != null){
+            checkForNBT(onSave);
+            NBTTagCompound c = new NBTTagCompound();
+            toSave.writeToNBT(c);
+            onSave.getTagCompound().setTag(key, c);
+        }
+    }
+
+    public static ItemStack readItemStack(ItemStack onSave, String key){
+        if(onSave != null && onSave.getTagCompound().hasKey(key)){
+            return ItemStack.loadItemStackFromNBT((NBTTagCompound) onSave.getTagCompound().getTag(key));
+        }
+        return null;
     }
 
 }

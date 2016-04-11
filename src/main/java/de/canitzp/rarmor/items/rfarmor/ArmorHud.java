@@ -65,7 +65,7 @@ public class ArmorHud {
     }
 
     private static float displayBlock(IBlockState state, float x, float y) {
-        if (state.getBlock() != Blocks.air) {
+        if (state.getBlock() != Blocks.AIR) {
             Item itemBlock = Item.getItemFromBlock(state.getBlock());
             if (itemBlock != null) {
                 drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE);

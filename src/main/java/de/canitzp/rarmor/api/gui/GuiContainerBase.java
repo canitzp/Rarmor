@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.inventory.gui;
+package de.canitzp.rarmor.api.gui;
 
 import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import net.minecraft.client.Minecraft;
@@ -61,7 +61,7 @@ public abstract class GuiContainerBase extends GuiContainer {
         for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1) {
             Slot slot = this.inventorySlots.inventorySlots.get(i1);
             this.drawSlot(slot);
-            if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered()) {
+            if (isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered()) {
                 theSlot = slot;
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
@@ -222,6 +222,19 @@ public abstract class GuiContainerBase extends GuiContainer {
 
     private boolean isMouseOverSlot(Slot slotIn, int mouseX, int mouseY) {
         return this.isPointInRegion(slotIn.xDisplayPosition, slotIn.yDisplayPosition, 16, 16, mouseX, mouseY);
+    }
+
+    public static boolean isMouseOverSlot(Slot slot, int mouseX, int mouseY, int guiLeft, int guiTop){
+        mouseX = mouseX - guiLeft;
+        mouseY = mouseY - guiTop;
+        return slot != null && mouseX >= slot.xDisplayPosition - 1 && mouseX < slot.xDisplayPosition + 16 + 1 && mouseY >= slot.yDisplayPosition - 1 && mouseY < slot.yDisplayPosition + 16 + 1;
+    }
+
+    public int getGuiLeft(){
+        return this.guiLeft;
+    }
+    public int getGuiTop(){
+        return this.guiTop;
     }
 
 }

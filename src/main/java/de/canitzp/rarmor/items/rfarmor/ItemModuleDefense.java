@@ -29,21 +29,21 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
     /**
      * @param world        The World of the Player
      * @param player       The Player itself
-     * @param armor        The Rarmor Chestplate
+     * @param armorChestplate        The Rarmor Chestplate
      * @param damageSource The Type of Damage the Player take
      * @param damage       The Amount of Damage th Player take
      * @return true if you want to cancel the Damage
      */
     @Override
-    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armor, DamageSource damageSource, float damage) {
+    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage) {
         int energyYouNeed = (int) (damage * this.damageMultiplier);
-        if (EnergyUtil.getEnergy(armor) >= energyYouNeed) {
+        if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed) {
             if (damageSource == DamageSource.fall) {
-                EnergyUtil.reduceEnergy(armor, energyYouNeed);
+                EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
             if (damageSource == DamageSource.onFire) {
-                EnergyUtil.reduceEnergy(armor, energyYouNeed);
+                EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 player.attackEntityFrom(DamageSource.onFire, 5F);
                 return true;
             }

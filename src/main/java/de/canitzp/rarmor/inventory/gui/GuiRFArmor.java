@@ -3,6 +3,7 @@ package de.canitzp.rarmor.inventory.gui;
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
+import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
