@@ -1,7 +1,9 @@
 package de.canitzp.rarmor.integration.jei;
 
+import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.items.ItemRegistry;
 import mezz.jei.api.*;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 
 /**
  * @author canitzp
@@ -18,6 +20,8 @@ public class JEIIntegration implements IModPlugin {
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBoots, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorHelmet, "Energy", "isFirstOpened");
         ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorLeggins, "Energy", "isFirstOpened");
+        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.CRAFTING, 64, 9, 27, 36);
+        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.SMELTING, 73, 1, 27, 36);
     }
 
     /**

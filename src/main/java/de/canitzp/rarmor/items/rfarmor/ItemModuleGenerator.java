@@ -1,27 +1,31 @@
 package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
+import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.ISpecialSlot;
+import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
-import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.util.ItemStackUtil;
+import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,6 +40,17 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     @Override
     public String getUniqueName() {
         return "Generator";
+    }
+
+    @Override
+    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
+        return JavaUtil.newList("The Generator Module produce some Energy for the Rarmor.", "It produce " + TextFormatting.RED + ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF per Tick.",
+                "One Coal adds " + TextFormatting.RED + TileEntityFurnace.getItemBurnTime(new ItemStack(Items.COAL)) * ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF to the Rarmor.");
+    }
+
+    @Override
+    public ModuleType getModuleType() {
+        return ModuleType.ACTIVE;
     }
 
     @Override
@@ -64,7 +79,8 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, Slot slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot) {
+        RarmorUtil.toggleSlotInGui(140, 18, true);
         dropSlot(inventory, inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player, armorChestplate);
         NBTUtil.setInteger(module, "GenBurnTime", 0);
     }
@@ -73,6 +89,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     @Override
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
         if (!settingActivated) {
+            RarmorUtil.toggleSlotInGui(140, 18, false);
             int i = 0;
             if (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") != 0) {
                 i = (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") - NBTUtil.getInteger(module, "GenBurnTime")) * 13 / NBTUtil.getInteger(module, "CurrentItemGenBurnTime");
@@ -88,24 +105,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     @SideOnly(Side.CLIENT)
     @Override
     public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (settingActivated) {
-            Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
-            if (moduleSlot instanceof ISpecialSlot) {
-                ((ISpecialSlot) moduleSlot).setSlotExist(false);
-            }
-        }
-        if (!settingActivated) {
-            Slot moduleSlot = this.getSlotAtPosition(gui, 140, 18);
-            if (moduleSlot instanceof SlotModule) {
-                ((ISpecialSlot) moduleSlot).setSlotExist(true);
-            }
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public boolean showSlot(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return !(settingActivated && slot instanceof SlotModule) && isMouseOverSlot;
+        RarmorUtil.toggleSlotInGui(140, 18, settingActivated);
     }
 
     private boolean isGenerator(IInventory inv, ItemStack armor) {
@@ -118,16 +118,17 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
     }
 
     private void generate(ItemStack armor, ItemStack module) {
-        IInventory inventory = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount);
+        InventoryBase inventory = RarmorUtil.readRarmor(armor);
         int burnTime = NBTUtil.getInteger(module, "GenBurnTime");
         if (burnTime == 0) {
             NBTUtil.setInteger(module, "CurrentItemGenBurnTime", TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT)));
             ItemStack burnItem = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
             inventory = ItemStackUtil.reduceStackSize(inventory, ItemRFArmorBody.GENERATORSLOT);
+            System.out.println(Arrays.toString(inventory.slots));
             if (burnItem.getItem().getContainerItem() != null) {
                 inventory = ItemStackUtil.addStackToSlot(inventory, new ItemStack(burnItem.getItem().getContainerItem()), ItemRFArmorBody.GENERATORSLOT);
             }
-            NBTUtil.saveSlots(armor, inventory);
+            RarmorUtil.saveRarmor(armor, inventory);
         }
         if (burnTime < NBTUtil.getInteger(module, "CurrentItemGenBurnTime")) {
             burnTime++;
@@ -139,13 +140,13 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
         NBTUtil.setInteger(module, "GenBurnTime", burnTime);
     }
 
-    private void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
+    private void dropSlot(InventoryBase inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
         if (stack != null) {
             if (!player.worldObj.isRemote) {
                 player.dropItem(stack, false);
             }
             inventory.setInventorySlotContents(30, null);
-            NBTUtil.saveSlots(armor, inventory);
+            RarmorUtil.saveRarmor(armor, inventory);
         }
     }
 

@@ -1,21 +1,26 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.inventory.GuiHandler;
+import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.ItemChainSaw;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
+import de.canitzp.rarmor.util.SlotUtil;
 import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
@@ -194,21 +199,47 @@ public class RarmorUtil {
         return null;
     }
 
-    public static void dropSlot(IInventory inventory, ItemStack stack, EntityPlayer player, ItemStack armor) {
+    public static void dropSlot(ItemStack stack, EntityPlayer player) {
         if (stack != null) {
             if (!player.worldObj.isRemote) {
                 player.dropItem(stack, false);
             }
-            inventory.setInventorySlotContents(30, null);
-            NBTUtil.saveSlots(armor, inventory);
         }
     }
 
-    public static void reopenRarmorGui(EntityPlayer player){
-        if(!player.getEntityWorld().isRemote){
-            player.closeScreen();
-            player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+    public static Slot toggleSlotInGui(int slotX, int slotY, boolean value){
+        if(MinecraftUtil.getMinecraftSide().isClient()){
+            GuiScreen gui = MinecraftUtil.getCurrentScreen();
+            if(gui instanceof GuiRFArmor){
+                Slot slot = SlotUtil.getSlotAtPosition((GuiContainer) gui, slotX, slotY);
+                if(slot != null){
+                    if(!value){
+                        if(((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                            ((GuiRFArmor) gui).deactivatedSlots.remove(slot);
+                        }
+                    } else {
+                        if(!((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                            ((GuiRFArmor) gui).deactivatedSlots.add(slot);
+                        }
+                    }
+                }
+                return slot;
+            }
         }
+        return null;
+    }
+
+    public static void saveRarmor(EntityPlayer player, InventoryBase base){
+        NBTUtil.saveSlots(getPlayersRarmorChestplate(player), base);
+    }
+    public static void saveRarmor(ItemStack armor, InventoryBase base){
+        NBTUtil.saveSlots(armor, base);
+    }
+    public static InventoryBase readRarmor(EntityPlayer player){
+        return NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount);
+    }
+    public static InventoryBase readRarmor(ItemStack armor){
+        return NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount);
     }
 
 }

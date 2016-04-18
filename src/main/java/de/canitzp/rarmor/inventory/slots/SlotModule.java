@@ -3,6 +3,7 @@ package de.canitzp.rarmor.inventory.slots;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.slots.IModuleSlot;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -12,8 +13,8 @@ public class SlotModule extends SlotUpdate implements IModuleSlot {
 
     public boolean active;
 
-    public SlotModule(InventoryBase inventory, int id, int x, int y, ItemStack saveStack) {
-        super(inventory, id, x, y, saveStack);
+    public SlotModule(InventoryBase inventory, int id, int x, int y, EntityPlayer player) {
+        super(inventory, id, x, y, player);
     }
 
     @Override

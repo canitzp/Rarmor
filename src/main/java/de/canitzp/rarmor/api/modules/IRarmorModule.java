@@ -4,13 +4,12 @@ import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
 import de.canitzp.rarmor.api.gui.GuiContainerBase;
-import de.canitzp.rarmor.api.slots.IModuleSlot;
+import de.canitzp.rarmor.api.slots.SlotUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -30,10 +29,14 @@ public interface IRarmorModule {
 
     default List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){return null;}
 
+    default ModuleType getModuleType(){return ModuleType.NONE;}
+
+    default List<String> getGuiHelp(){return null;}
+
     default void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
     }
 
-    default void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, Slot slot) {
+    default void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot) {
     }
 
     @SideOnly(Side.CLIENT)
@@ -50,11 +53,6 @@ public interface IRarmorModule {
 
     @SideOnly(Side.CLIENT)
     default void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop) {
-    }
-
-    @SideOnly(Side.CLIENT)
-    default boolean showSlot(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, Slot slot, int mouseX, int mouseY, int slotX, int slotY, boolean isMouseOverSlot) {
-        return isMouseOverSlot && !(slot instanceof IModuleSlot);
     }
 
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module) {
@@ -80,7 +78,13 @@ public interface IRarmorModule {
         return false;
     }
 
-    default void onContainerIsInit(ContainerBase container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){}
-
     default void onContainerTick(ContainerBase container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){}
+
+    default void initModule(World world, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){}
+
+    enum ModuleType{
+        ACTIVE,
+        PASSIVE,
+        NONE
+    }
 }

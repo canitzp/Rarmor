@@ -4,13 +4,17 @@ import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.util.EnergyUtil;
+import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * @author canitzp
@@ -27,6 +31,20 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule {
     @Override
     public String getUniqueName() {
         return "SolarPanel";
+    }
+
+    @Override
+    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
+        return JavaUtil.newList("Like the GeneratorModule this thing can produce some Energy,",
+                "but it doesn't need a Burn Material instead it use the Energy produced by our Sun.",
+                "It produce " + TextFormatting.RED + this.energyPerTick + TextFormatting.GRAY + "RF per Tick.",
+                "Some times it need some seconds to start the work.",
+                TextFormatting.DARK_RED + "There is a Minecraft/MinecraftForge Bug so this module does produce at night too. HAVE FUN");
+    }
+
+    @Override
+    public ModuleType getModuleType() {
+        return ModuleType.PASSIVE;
     }
 
     @Override

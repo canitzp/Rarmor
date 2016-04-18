@@ -1,23 +1,22 @@
 package de.canitzp.rarmor.inventory.gui;
 
 import com.google.common.collect.Lists;
+import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
 import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
-import de.canitzp.rarmor.inventory.slots.SlotCraftingInput;
-import de.canitzp.rarmor.inventory.slots.SlotModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.rarmor.network.ClientProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.rarmor.util.*;
+import javafx.util.Pair;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.util.ResourceLocation;
@@ -61,26 +60,11 @@ public class GuiRFArmor extends GuiContainerBase {
                 ((IRarmorModule) module.getItem()).initGui(player.getEntityWorld(), player, armor, this, checkBoxList, checkBox);
             }
         }
-        ISpecialSlot c1 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 14);
-        ISpecialSlot c2 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 14);
-        ISpecialSlot c3 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 14);
-        ISpecialSlot c4 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 32);
-        ISpecialSlot c5 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 32);
-        ISpecialSlot c6 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 32);
-        ISpecialSlot c7 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 50);
-        ISpecialSlot c8 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 50);
-        ISpecialSlot c9 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 50);
-        ISpecialSlot cO = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 217, 99);
-        c1.setSlotExist(true);
-        c2.setSlotExist(true);
-        c3.setSlotExist(true);
-        c4.setSlotExist(true);
-        c5.setSlotExist(true);
-        c6.setSlotExist(true);
-        c7.setSlotExist(true);
-        c8.setSlotExist(true);
-        c9.setSlotExist(true);
-        cO.setSlotExist(true);
+
+        this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, 140, 18));
+        this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 14));
+        this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 34));
+        this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 54));
     }
 
     @Override
@@ -98,9 +82,11 @@ public class GuiRFArmor extends GuiContainerBase {
         //Draw Furnace Burn Time:
         this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 89 - factorOfBurnTime, 39, 237 - factorOfBurnTime, 16, factorOfBurnTime);
 
+        this.mc.getTextureManager().bindTexture(checkBox);
+        this.drawTexturedModalRect(this.guiLeft + 33, this.guiTop + 33, 15, 0, 3, 7);
 
         //Draw Module things:
-        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if (module != null) {
             if (module.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, par1, par2, par3, guiLeft, guiTop);
@@ -113,6 +99,8 @@ public class GuiRFArmor extends GuiContainerBase {
             for (GuiCheckBox checkBox : checkBoxList) {
                 checkBox.drawCheckBox(this.guiLeft, this.guiTop);
             }
+        } else {
+            this.craftingSlot(false);
         }
 
         GuiInventory.drawEntityOnScreen(this.guiLeft + 88, this.guiTop + 74, 30, (float) (this.guiLeft + 88) - this.xSizeFloat, (float) (this.guiTop + 72 - 50) - this.ySizeFloat, this.mc.thePlayer);
@@ -135,10 +123,20 @@ public class GuiRFArmor extends GuiContainerBase {
         if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 187) {
             this.drawHoveringText(Lists.newArrayList("Settings"), mouseX, mouseY, this.fontRendererObj);
         }
+        if(mouseX >= this.guiLeft + 33 && mouseY >= this.guiTop + 33 && mouseX <= this.guiLeft + 36 && mouseY <= this.guiTop + 40){
+            IRarmorModule module = RarmorUtil.getRarmorModule(player);
+            if(module != null){
+                if(module.getGuiHelp() != null){
+                    this.drawHoveringText(module.getGuiHelp(), mouseX, mouseY);
+                } else {
+                    this.drawHoveringText(JavaUtil.newList("This Module doesn't provide", "a help page."), mouseX, mouseY);
+                }
+            }
+        }
 
 
         //Draw Module things:
-        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if (module != null) {
             if (module.getItem() instanceof IRarmorModule) {
                 ((IRarmorModule) module.getItem()).drawScreen(mc, this, this.armor, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
@@ -151,6 +149,11 @@ public class GuiRFArmor extends GuiContainerBase {
             }
         }
 
+        if(ClientProxy.specialPlayers.containsKey(player.getName())){
+            Pair<String, Integer> pair = ClientProxy.specialPlayers.get(player.getName());
+            this.drawCenteredString(fontRendererObj, pair.getKey(), this.guiLeft + (this.xSize/2), this.guiTop - 18, pair.getValue());
+            this.drawCenteredString(fontRendererObj, player.getName(), this.guiLeft + (this.xSize/2), this.guiTop - 8, pair.getValue());
+        }
     }
 
     @Override
@@ -165,45 +168,11 @@ public class GuiRFArmor extends GuiContainerBase {
             }
             if (mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 166 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 187) {
                 this.isSettingsTab = !this.isSettingsTab;
-                ISpecialSlot c1 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 14);
-                ISpecialSlot c2 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 14);
-                ISpecialSlot c3 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 14);
-                ISpecialSlot c4 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 32);
-                ISpecialSlot c5 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 32);
-                ISpecialSlot c6 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 32);
-                ISpecialSlot c7 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 180, 50);
-                ISpecialSlot c8 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 198, 50);
-                ISpecialSlot c9 = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 216, 50);
-                ISpecialSlot cO = (ISpecialSlot) SlotUtil.getSlotAtPosition(this, 217, 99);
-                if (!this.isSettingsTab) {
-                    c1.setSlotExist(true);
-                    c2.setSlotExist(true);
-                    c3.setSlotExist(true);
-                    c4.setSlotExist(true);
-                    c5.setSlotExist(true);
-                    c6.setSlotExist(true);
-                    c7.setSlotExist(true);
-                    c8.setSlotExist(true);
-                    c9.setSlotExist(true);
-                    cO.setSlotExist(true);
-                    this.isSettingsTab = false;
-                } else {
-                    c1.setSlotExist(false);
-                    c2.setSlotExist(false);
-                    c3.setSlotExist(false);
-                    c4.setSlotExist(false);
-                    c5.setSlotExist(false);
-                    c6.setSlotExist(false);
-                    c7.setSlotExist(false);
-                    c8.setSlotExist(false);
-                    c9.setSlotExist(false);
-                    cO.setSlotExist(false);
-                    this.isSettingsTab = true;
-                }
             }
 
+            craftingSlot(this.isSettingsTab);
             //Draw Module things:
-            ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+            ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if (module != null) {
                 if (module.getItem() instanceof IRarmorModule) {
                     ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, type, mouseX, mouseY, this.guiLeft, this.guiTop);
@@ -235,23 +204,16 @@ public class GuiRFArmor extends GuiContainerBase {
         mouseY -= l1;
         boolean isAtCoordinates = mouseX >= slotX - 1 && mouseX < slotX + width + 1 && mouseY >= slotY - 1 && mouseY < slotY + height + 1;
         Slot slot = SlotUtil.getSlotAtPosition(this, slotX, slotY);
-        Slot moduleSlot = SlotUtil.getSlotAtPosition(this, 15, 34);
-        if (this.isSettingsTab) {
-            if (slot instanceof SlotCrafting || slot instanceof SlotCraftingInput) {
-                return false;
+        if (isAtCoordinates) {
+            for (Slot slotUpdate : deactivatedSlots) {
+                if (slotUpdate != null) {
+                    if (slotUpdate.xDisplayPosition == slotX && slotUpdate.yDisplayPosition == slotY) {
+                        return false;
+                    }
+                }
             }
-        }
 
-        //Draw Module things:
-        ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if (module != null && moduleSlot != null) {
-            if (module.getItem() instanceof IRarmorModule) {
-                return ((IRarmorModule) module.getItem()).showSlot(mc, this, this.armor, module, this.isSettingsTab, slot, mouseX, mouseY, slotX, slotY, isAtCoordinates);
-            }
-        } else {
-            return isAtCoordinates && !(slot instanceof SlotModule);
         }
-
         return isAtCoordinates;
     }
 
@@ -261,6 +223,19 @@ public class GuiRFArmor extends GuiContainerBase {
 
     public int getGuiTop() {
         return this.guiTop;
+    }
+
+    public void craftingSlot(boolean activated){
+        RarmorUtil.toggleSlotInGui(180, 14, activated);
+        RarmorUtil.toggleSlotInGui(198, 14, activated);
+        RarmorUtil.toggleSlotInGui(216, 14, activated);
+        RarmorUtil.toggleSlotInGui(180, 32, activated);
+        RarmorUtil.toggleSlotInGui(198, 32, activated);
+        RarmorUtil.toggleSlotInGui(216, 32, activated);
+        RarmorUtil.toggleSlotInGui(180, 50, activated);
+        RarmorUtil.toggleSlotInGui(198, 50, activated);
+        RarmorUtil.toggleSlotInGui(216, 50, activated);
+        RarmorUtil.toggleSlotInGui(217, 99, activated);
     }
 
 }

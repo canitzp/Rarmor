@@ -4,6 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+
+import java.util.Arrays;
 
 /**
  * @author canitzp
@@ -50,16 +53,14 @@ public class InventoryBase implements IInventory {
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return null;
+        ItemStack stack = this.slots[index];
+        this.setInventorySlotContents(index, null);
+        return stack;
     }
 
     @Override
     public void setInventorySlotContents(int slotId, ItemStack stack) {
         this.slots[slotId] = stack;
-        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
-            stack.stackSize = this.getInventoryStackLimit();
-        }
-
         this.markDirty();
     }
 
@@ -73,8 +74,8 @@ public class InventoryBase implements IInventory {
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
-        return true;
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return !player.isDead && player.getDistanceSqToEntity(player) <= 64.0D;
     }
 
     @Override
@@ -107,7 +108,7 @@ public class InventoryBase implements IInventory {
 
     @Override
     public void clear() {
-
+        Arrays.fill(this.slots, null);
     }
 
     @Override
@@ -122,6 +123,6 @@ public class InventoryBase implements IInventory {
 
     @Override
     public ITextComponent getDisplayName() {
-        return null;
+        return new TextComponentString(getName());
     }
 }

@@ -44,6 +44,10 @@ public class ItemChainSaw extends ItemEnergyContainer {
         Rarmor.registerItem(this, name);
     }
 
+    private boolean canHarvest(IBlockState state){
+        return state.getBlock() instanceof BlockLog || state.getMaterial() == Material.WOOD || state.getMaterial() == Material.LEAVES;
+    }
+
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
         int use = rfPerUse;
@@ -70,7 +74,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
         int z = pos.getZ();
         World world = player.worldObj;
         final Block wood = WorldUtil.getBlock(world, pos);
-        if (!player.isSneaking() && !(world.getBlockState(pos).getBlock() == null) && (wood.isWood(world, pos) || wood.isLeaves(world.getBlockState(pos), world, pos) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse) {
+        if (!player.isSneaking() && (canHarvest(WorldUtil.getBlockState(world, pos)) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse) {
             boolean b = RarmorUtil.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
             return b || super.onBlockStartBreak(stack, pos, player);
         }
@@ -84,8 +88,7 @@ public class ItemChainSaw extends ItemEnergyContainer {
 
     @Override
     public float getStrVsBlock(ItemStack stack, IBlockState state) {
-        Block block = state.getBlock();
-        return this.getEnergyStored(stack) >= rfPerUse ? ((block instanceof BlockLog || block.getMaterial(state) == Material.WOOD || block.getMaterial(state) == Material.LEAVES) ? 5F : 1.0F) : 1.0F;
+        return this.getEnergyStored(stack) >= rfPerUse && canHarvest(state) ? 5F : super.getStrVsBlock(stack, state);
     }
 
     @Override

@@ -5,6 +5,7 @@ import de.canitzp.rarmor.api.modules.IRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,14 @@ public class ItemModule extends Item {
                 tooltip.addAll(desc);
             } else {
                 super.addInformation(stack, playerIn, tooltip, advanced);
+            }
+            IRarmorModule.ModuleType moduleType = ((IRarmorModule) stack.getItem()).getModuleType();
+            if(moduleType != IRarmorModule.ModuleType.NONE){
+                if(moduleType == IRarmorModule.ModuleType.ACTIVE){
+                    tooltip.add(TextFormatting.GREEN + "Active" + TextFormatting.GRAY);
+                } else {
+                    tooltip.add(TextFormatting.RED + "Passive" + TextFormatting.GRAY);
+                }
             }
         } else {
             super.addInformation(stack, playerIn, tooltip, advanced);

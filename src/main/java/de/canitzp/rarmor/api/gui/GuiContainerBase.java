@@ -14,6 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author canitzp
  */
@@ -29,6 +32,7 @@ public abstract class GuiContainerBase extends GuiContainer {
     private int touchUpY;
     private Slot clickedSlot;
     private int dragSplittingLimit;
+    public List<Slot> deactivatedSlots = new ArrayList<>();
 
     public GuiContainerBase(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -131,8 +135,8 @@ public abstract class GuiContainerBase extends GuiContainer {
     }
 
     private void drawSlot(Slot slotIn) {
-        if (slotIn instanceof ISpecialSlot) {
-            if (!((ISpecialSlot) slotIn).doesSlotExist()) {
+        for(Slot slot : deactivatedSlots){
+            if(slotIn.equals(slot)){
                 return;
             }
         }

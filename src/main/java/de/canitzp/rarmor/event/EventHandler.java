@@ -17,4 +17,9 @@ public class EventHandler {
         MinecraftForge.EVENT_BUS.register(hud);
         MinecraftForge.EVENT_BUS.register(joinPlayer);
     }
+
+    public static void postInitClient(){
+        ClientEvents clientEvents = new ClientEvents();
+        MinecraftForge.EVENT_BUS.register(clientEvents);
+    }
 }

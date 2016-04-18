@@ -49,7 +49,7 @@ public class NBTUtil {
             if (compound.getInteger("SlotAmount") != 0) {
                 int slotAmount = compound.getInteger("SlotAmount");
                 String name = compound.getString("InventoryName");
-                InventoryBase inv = new InventoryBase(name, slotAmount);
+                InventoryBase inv = new InventoryBase(name, slotAmo);
                 if (inv.getSizeInventory() > 0) {
                     NBTTagList tagList = compound.getTagList("Items", 10);
                     for (int i = 0; i < tagList.tagCount(); i++) {
@@ -71,7 +71,7 @@ public class NBTUtil {
         if (compound != null) {
             if (compound.getInteger("SlotAmount") != 0) {
                 int slotAmount = compound.getInteger("SlotAmount");
-                InventoryBase inv = new InventoryBase("", slotAmount);
+                InventoryBase inv = new InventoryBase("", slotAmo);
                 if (inv.getSizeInventory() > 0) {
                     NBTTagList tagList = compound.getTagList("Items", 10);
                     for (int i = 0; i < tagList.tagCount(); i++) {

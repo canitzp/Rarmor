@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.network;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 
 import java.util.HashMap;
 
@@ -15,6 +16,8 @@ public class CommonProxy {
     public void init() {
 
     }
+
+    public void postInit(FMLPostInitializationEvent event){}
 
     public void registerRenderer() {
     }

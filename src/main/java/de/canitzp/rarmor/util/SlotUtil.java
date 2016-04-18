@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.util;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 
 /**
@@ -16,6 +17,12 @@ public class SlotUtil {
             }
         }
         return null;
+    }
+
+    public static void clearSlot(IInventory inventory, int slotId){
+        if(inventory != null){
+            inventory.setInventorySlotContents(slotId, null);
+        }
     }
 
 

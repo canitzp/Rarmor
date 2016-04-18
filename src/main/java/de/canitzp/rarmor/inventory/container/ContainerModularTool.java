@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.api.InventoryBase;
+import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.modules.IToolModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.modularTool.ItemModularTool;
@@ -8,7 +9,6 @@ import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public class ContainerModularTool extends Container {
+public class ContainerModularTool extends ContainerBase {
 
     public EntityPlayer player;
     public World world;
@@ -32,7 +32,7 @@ public class ContainerModularTool extends Container {
         this.inventory = NBTUtil.readSlotsBase(this.tool, ItemModularTool.slots);
 
         for (int j = 0; j < 3; j++) {
-            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, this.tool) {
+            this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, player) {
                 @Override
                 public boolean isItemValid(ItemStack stack) {
                     return stack.getItem() instanceof IToolModule;

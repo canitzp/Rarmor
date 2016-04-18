@@ -1,30 +1,28 @@
 package de.canitzp.rarmor.api.slots;
 
+import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.util.NBTUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 
 /**
  * @author canitzp
  */
 public class SlotUpdate extends Slot implements ISpecialSlot {
 
-    private boolean slotExist = true;
-    private ItemStack toSave;
-    protected InventoryBase inventory;
+    public boolean slotExist = true;
+    public InventoryBase inv;
+    public EntityPlayer player;
 
-    public SlotUpdate(InventoryBase inventory, int id, int x, int y, ItemStack saveStack) {
+    public SlotUpdate(InventoryBase inventory, int id, int x, int y, EntityPlayer player) {
         super(inventory, id, x, y);
-        this.toSave = saveStack;
-        this.inventory = inventory;
+        this.inv = inventory;
+        this.player = player;
     }
 
     @Override
     public void onSlotChanged() {
-        if (toSave != null) {
-            NBTUtil.saveSlots(toSave, inventory);
-        }
+        RarmorUtil.saveRarmor(this.player, this.inv);
         super.onSlotChanged();
     }
 
@@ -37,4 +35,5 @@ public class SlotUpdate extends Slot implements ISpecialSlot {
     public void setSlotExist(boolean b) {
         this.slotExist = b;
     }
+
 }
