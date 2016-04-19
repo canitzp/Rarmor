@@ -32,14 +32,14 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("This Module save you for Damage,",
-                "aslong you have enough Energy.",
-                "The higher the damage multiplier,",
+        return JavaUtil.newList("This module saves you from damage,",
+                "as long as you have enough energy.",
+                "The higher the damage multiplier",
                 "the more energy is needed.",
                 TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
                 TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
                 TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.",
-                TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Port you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
+                TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
     }
 
     @Override
@@ -59,9 +59,9 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
     public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
         if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld){
             if (player.getBedLocation() != null){
-                player.setPosition(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
+                player.teleportTo_(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
             }else{
-                player.setPosition(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
+                player.teleportTo_(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
             }
             EnergyUtil.reduceEnergy(armorChestplate, 50000);
             return true;

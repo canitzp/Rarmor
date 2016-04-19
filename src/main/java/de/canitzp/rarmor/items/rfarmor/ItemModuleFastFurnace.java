@@ -28,7 +28,8 @@ public class ItemModuleFastFurnace extends ItemModule implements IRarmorModule{
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("The FastFurnace Module increases your Furnace speed by" + TextFormatting.BLUE + " 2" + TextFormatting.GRAY + ",",
+        return JavaUtil.newList("The FastFurnace Module increases your",
+                "Furnace speed by" + TextFormatting.BLUE + " 2" + TextFormatting.GRAY + ",",
                 "but it also needs " + TextFormatting.BLUE + "300%" + TextFormatting.GRAY + " of the normal energy usage.");
     }
 

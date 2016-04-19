@@ -42,20 +42,20 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
 
     @Override
     public List<String> getGuiHelp(){
-        return JavaUtil.newList(TextFormatting.GRAY + "The ModuleSplitter lets you activate 3 Modules",
-                TextFormatting.GRAY + "instead of 1. All Modules are categorised in '" + TextFormatting.GREEN + "Active" + TextFormatting.GRAY + "' or '" + TextFormatting.RED + "Passive" + TextFormatting.GRAY + "'.",
+        return JavaUtil.newList(TextFormatting.GRAY + "The ModuleSplitter lets you activate three Modules",
+                TextFormatting.GRAY + "instead of one. All Modules are categorised in '" + TextFormatting.GREEN + "Active" + TextFormatting.GRAY + "' or '" + TextFormatting.RED + "Passive" + TextFormatting.GRAY + "'.",
                 TextFormatting.GRAY + "The Active Modules have special abilities and they have to stay",
-                TextFormatting.GRAY + "in the top slot. The passive one can be stored in all 3 slots.",
+                TextFormatting.GRAY + "in the top slot. The passive ones can be stored in all three slots.",
                 TextFormatting.GRAY + "Two modules of the same type don't work.",
                 "",
-                TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at YOUR own risk!",
-                TextFormatting.DARK_RED + "Some strange Bugs may happened!");
+                TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at your OWN risk!",
+                TextFormatting.DARK_RED + "Some strange bugs may happen!");
     }
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList(TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at YOUR own risk!",
-                TextFormatting.DARK_RED + "Some strange Bugs may happened!");
+        return JavaUtil.newList(TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at your OWN risk!",
+                TextFormatting.DARK_RED + "Some strange bugs may happen!");
     }
 
     private void toggleSlots(boolean value){

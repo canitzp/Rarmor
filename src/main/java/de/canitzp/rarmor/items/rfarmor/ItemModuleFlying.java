@@ -28,8 +28,8 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("With this Module you can grab the starts in CreativeFlightMode.",
-                "It uses " + TextFormatting.RED + this.energyUsagePerTick + TextFormatting.GRAY + "RF per Tick, while you're flying.");
+        return JavaUtil.newList("With this Module you can grab the stars in CreativeFlightMode.",
+                "It uses " + TextFormatting.RED + this.energyUsagePerTick + TextFormatting.GRAY + "RF per Tick while you're flying.");
     }
 
     @Override

@@ -34,8 +34,8 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("If you have some Tools and your Rarmor needs more Energy,",
-                "simply use the Energy of them to Power up your Rarmor.");
+        return JavaUtil.newList("If you have some tools and your Rarmor needs more energy,",
+                "this module simply uses the energy of them to power up your Rarmor.");
     }
 
     @Override

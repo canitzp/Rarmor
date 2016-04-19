@@ -13,5 +13,7 @@ public class ColorUtil{
     public static final int RED = 0xFF0000;
     public static final int BLUE = 0x0000FF;
     public static final int GREY = 0x808080;
+    public static final int GREEN = 0x18ae1a;
+
 
 }

@@ -35,11 +35,12 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("Like the GeneratorModule this thing can produce some Energy,",
-                "but it doesn't need a Burn Material instead it use the Energy produced by our Sun.",
-                "It produce " + TextFormatting.RED + this.energyPerTick + TextFormatting.GRAY + "RF per Tick.",
-                "Some times it need some seconds to start the work.",
-                TextFormatting.DARK_RED + "There is a Minecraft/MinecraftForge Bug so this module does produce at night too. HAVE FUN");
+        return JavaUtil.newList("Like the GeneratorModule, this thing can produce some energy,",
+                "but it doesn't need a Burn Material. Instead,",
+                "it uses the energy produced by our Sun.",
+                "It produces " + TextFormatting.RED + this.energyPerTick + TextFormatting.GRAY + "RF per Tick.",
+                "Sometimes, it needs a couple of seconds to start working.",
+                TextFormatting.DARK_RED + "There is a Minecraft/MinecraftForge bug so this module does produce at night too. HAVE FUN");
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
 
     private boolean canPlayerSeeSky(EntityPlayer player){
         if (!player.worldObj.isRaining() && player.worldObj.isDaytime()){
-            for (int i = (int) player.posY + 1; i <= 256; i++){
+            for (int i = (int) player.posY + 1; i < player.worldObj.getHeight(); i++){
                 IBlockState block = player.worldObj.getBlockState(new BlockPos(player.posX, i, player.posZ));
                 if (block != null && ((block.isFullBlock() || block instanceof BlockLiquid) && !player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ)))){
                     return false;
@@ -77,6 +78,5 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
         }
         return false;
     }
-
 
 }

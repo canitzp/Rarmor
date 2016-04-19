@@ -25,6 +25,7 @@ public class ClientProxy extends CommonProxy{
     public void init(){
         specialPlayers.put("Xogue", Pair.of("Thank you for your help to create a better mod.", ColorUtil.CYAN));
         specialPlayers.put("canitzp", Pair.of("Thank you Developer.", ColorUtil.RED));
+        specialPlayers.put("Ellpeck", Pair.of("Thank you for helping with everything in all of my Mods", ColorUtil.GREEN));
     }
 
     @Override
