@@ -55,6 +55,11 @@ public class Rarmor {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        String javaVersion = System.getProperty("java.version");
+        javaVersion = javaVersion.substring(0, 3);
+        if(!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
+            logger.error("You aren't using a compatible Java version to use Rarmor. This may crash your Game. Required-minimum: Java 1.8.0 Yours: " + System.getProperty("java.version"));
+        }
         logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
         RarmorProperties.preInit(event);
         rarmorTab = new CreativeTabs(NAME) {

@@ -3,12 +3,12 @@ package de.canitzp.rarmor.network;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
-import javafx.util.Pair;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +22,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void init() {
-        specialPlayers.put("Xogue", new Pair<>("Thank you for your help to create a better mod.", ColorUtil.CYAN));
-        specialPlayers.put("canitzp", new Pair<>("Thank you Developer.", ColorUtil.RED));
+        specialPlayers.put("Xogue", Pair.of("Thank you for your help to create a better mod.", ColorUtil.CYAN));
+        specialPlayers.put("canitzp", Pair.of("Thank you Developer.", ColorUtil.RED));
     }
 
     @Override
