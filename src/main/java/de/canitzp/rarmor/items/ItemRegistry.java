@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class ItemRegistry {
+public class ItemRegistry{
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
@@ -19,7 +19,7 @@ public class ItemRegistry {
     public static Item modularTool;
     public static Item moduleIronPickaxe;
 
-    public static void preInit() {
+    public static void preInit(){
         Rarmor.logger.info("Registering Items");
         ironChainsaw = new ItemChainSaw(250000, 1500, 200, "ironChainsaw");
         diamondChainsaw = new ItemChainSaw(500000, 5000, 100, "diamondChainsaw");

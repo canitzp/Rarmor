@@ -11,29 +11,29 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class SlotInputModule extends SlotUpdate {
+public class SlotInputModule extends SlotUpdate{
 
     protected ItemStack actualStack;
 
-    public SlotInputModule(InventoryBase inventory, int id, int x, int y, EntityPlayer player) {
+    public SlotInputModule(InventoryBase inventory, int id, int x, int y, EntityPlayer player){
         super(inventory, id, x, y, player);
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean isItemValid(ItemStack stack){
         return stack.getItem() instanceof IRarmorModule;
     }
 
     @Override
-    public void onSlotChanged() {
+    public void onSlotChanged(){
         ItemStack stack = RarmorUtil.getPlayersRarmorChestplate(player);
-        if (actualStack != null && !actualStack.isItemEqual(this.getStack())) {
-            if (actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule) {
+        if (actualStack != null && !actualStack.isItemEqual(this.getStack())){
+            if (actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
             }
         }
-        if (getStack() != null && getStack().getItem() != null) {
-            if (getStack().getItem() instanceof IRarmorModule) {
+        if (getStack() != null && getStack().getItem() != null){
+            if (getStack().getItem() instanceof IRarmorModule){
                 NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) getStack().getItem()).getUniqueName(), true);
             }
         }
@@ -42,8 +42,8 @@ public class SlotInputModule extends SlotUpdate {
     }
 
     @Override
-    public void onPickupFromSlot(EntityPlayer player, ItemStack stack) {
-        if (stack.getItem() instanceof IRarmorModule) {
+    public void onPickupFromSlot(EntityPlayer player, ItemStack stack){
+        if (stack.getItem() instanceof IRarmorModule){
             ((IRarmorModule) stack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
             NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) stack.getItem()).getUniqueName(), false);
             NBTUtil.setBoolean(stack, "FirstOpenedModule", true);

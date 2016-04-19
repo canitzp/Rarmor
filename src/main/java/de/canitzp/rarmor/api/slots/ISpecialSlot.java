@@ -4,7 +4,7 @@ package de.canitzp.rarmor.api.slots;
 /**
  * @author canitzp
  */
-public interface ISpecialSlot {
+public interface ISpecialSlot{
 
     boolean doesSlotExist();
 

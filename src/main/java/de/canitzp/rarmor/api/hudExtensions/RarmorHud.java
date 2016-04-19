@@ -21,17 +21,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author canitzp
  */
 @SideOnly(Side.CLIENT)
-public class RarmorHud implements IAdvancedHud {
+public class RarmorHud implements IAdvancedHud{
 
     @Override
-    public float onShow(FontRenderer fontRenderer, ScaledResolution resolution, World world, RayTraceResult trace, IBlockState state, TileEntity tileEntity, float x, float y) {
+    public float onShow(FontRenderer fontRenderer, ScaledResolution resolution, World world, RayTraceResult trace, IBlockState state, TileEntity tileEntity, float x, float y){
         //Forge Fluids:
-        if (tileEntity instanceof IFluidHandler) {
+        if (tileEntity instanceof IFluidHandler){
             IFluidHandler fluid = (IFluidHandler) tileEntity;
-            for (int i = 0; i < fluid.getTankInfo(trace.sideHit).length; i++) {
+            for (int i = 0; i < fluid.getTankInfo(trace.sideHit).length; i++){
                 FluidStack fluidStack = fluid.getTankInfo(trace.sideHit)[i].fluid;
-                if (fluidStack != null) {
-                    if (y / 10 > 4) {
+                if (fluidStack != null){
+                    if (y / 10 > 4){
                         ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, "To many Fluids to show!", ColorUtil.WHITE);
                         y += 10;
                         i = fluid.getTankInfo(trace.sideHit).length;
@@ -46,25 +46,25 @@ public class RarmorHud implements IAdvancedHud {
         }
 
         //CoFH Energy:
-        if (tileEntity instanceof IEnergyStorage) {
+        if (tileEntity instanceof IEnergyStorage){
             IEnergyStorage energy = (IEnergyStorage) tileEntity;
-            if (energy.getMaxEnergyStored() > 1) {
+            if (energy.getMaxEnergyStored() > 1){
                 String energyText = energy.getEnergyStored() + "/" + energy.getMaxEnergyStored() + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(), energy.getEnergyStored());
                 y += 10;
             }
-        } else if (tileEntity instanceof IEnergyReceiver) {
+        }else if (tileEntity instanceof IEnergyReceiver){
             IEnergyReceiver energy = (IEnergyReceiver) tileEntity;
-            if (energy.getMaxEnergyStored(trace.sideHit) > 1) {
+            if (energy.getMaxEnergyStored(trace.sideHit) > 1){
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
                 y += 10;
             }
-        } else if (tileEntity instanceof IEnergyProvider) {
+        }else if (tileEntity instanceof IEnergyProvider){
             IEnergyProvider energy = (IEnergyProvider) tileEntity;
-            if (energy.getMaxEnergyStored(trace.sideHit) > 1) {
+            if (energy.getMaxEnergyStored(trace.sideHit) > 1){
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
                 ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));

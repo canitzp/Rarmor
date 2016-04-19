@@ -10,18 +10,18 @@ import org.lwjgl.opengl.GL11;
 /**
  * @author canitzp
  */
-public class GuiModularTool extends GuiContainer {
+public class GuiModularTool extends GuiContainer{
 
     private ResourceLocation guiLocation = RarmorResources.MODULARTOOLGUI.getNewLocation();
 
-    public GuiModularTool(Container inventorySlotsIn) {
+    public GuiModularTool(Container inventorySlotsIn){
         super(inventorySlotsIn);
         this.xSize = 176;
         this.ySize = 111;
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GuiUtil.bindTexture(this.guiLocation);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);

@@ -21,38 +21,38 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorModule {
+public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorModule{
 
-    public ItemModuleEnergeticUnloader() {
+    public ItemModuleEnergeticUnloader(){
         super("moduleEnergeticUnloader");
     }
 
     @Override
-    public String getUniqueName() {
+    public String getUniqueName(){
         return "EnergeticUnloader";
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
+    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return JavaUtil.newList("If you have some Tools and your Rarmor needs more Energy,",
                 "simply use the Energy of them to Power up your Rarmor.");
     }
 
     @Override
-    public ModuleType getModuleType() {
+    public ModuleType getModuleType(){
         return ModuleType.ACTIVE;
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
         RarmorUtil.toggleSlotInGui(140, 18, true);
         RarmorUtil.dropSlot(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player);
         slot.inv.setInventorySlotContents(30, null);
     }
 
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (!settingActivated) {
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+        if (!settingActivated){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
             gui.drawTexturedModalRect(gui.getGuiLeft() + 120, gui.getGuiTop() + 13, 0, 73, 56, 55);
@@ -61,14 +61,14 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop) {
+    public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
         RarmorUtil.toggleSlotInGui(140, 18, settingActivated);
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         ItemStack chargeSlot = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
-        if (chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem) {
+        if (chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem){
             ((IEnergyContainerItem) chargeSlot.getItem()).extractEnergy(chargeSlot, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
             ((IEnergyContainerItem) armorChestplate.getItem()).receiveEnergy(armorChestplate, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
         }

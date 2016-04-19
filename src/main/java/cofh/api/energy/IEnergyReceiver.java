@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author King Lemming
  */
-public interface IEnergyReceiver extends IEnergyHandler {
+public interface IEnergyReceiver extends IEnergyHandler{
 
     /**
      * Add energy to an IEnergyReceiver, internal distribution is left entirely to the IEnergyReceiver.

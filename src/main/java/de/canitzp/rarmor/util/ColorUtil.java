@@ -3,7 +3,7 @@ package de.canitzp.rarmor.util;
 /**
  * @author canitzp
  */
-public class ColorUtil {
+public class ColorUtil{
 
     public static final int BLACK = 0;
     public static final int WHITE = 0xffffff;

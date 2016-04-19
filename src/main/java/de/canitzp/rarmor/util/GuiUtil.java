@@ -2,7 +2,6 @@ package de.canitzp.rarmor.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -17,33 +16,33 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class GuiUtil {
+public class GuiUtil{
 
     private static float zLevel;
 
-    public static void drawHoveringText(GuiScreen guiScreen, List<String> textLines, int x, int y, FontRenderer font) {
-        if (!textLines.isEmpty()) {
+    public static void drawHoveringText(GuiScreen guiScreen, List<String> textLines, int x, int y, FontRenderer font){
+        if (!textLines.isEmpty()){
             GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             int i = 0;
-            for (String s : textLines) {
+            for (String s : textLines){
                 int j = font.getStringWidth(s);
-                if (j > i) {
+                if (j > i){
                     i = j;
                 }
             }
             int l1 = x + 12;
             int i2 = y - 12;
             int k = 8;
-            if (textLines.size() > 1) {
+            if (textLines.size() > 1){
                 k += 2 + (textLines.size() - 1) * 10;
             }
-            if (l1 + i > guiScreen.width) {
+            if (l1 + i > guiScreen.width){
                 l1 -= 28 + i;
             }
-            if (i2 + k + 6 > guiScreen.height) {
+            if (i2 + k + 6 > guiScreen.height){
                 i2 = guiScreen.height - k - 6;
             }
             zLevel = 300.0F;
@@ -59,10 +58,10 @@ public class GuiUtil {
             drawGradientRect(l1 + i + 2, i2 - 3 + 1, l1 + i + 3, i2 + k + 3 - 1, i1, j1);
             drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 - 3 + 1, i1, i1);
             drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
-            for (int k1 = 0; k1 < textLines.size(); ++k1) {
+            for (int k1 = 0; k1 < textLines.size(); ++k1){
                 String s1 = textLines.get(k1);
                 font.drawStringWithShadow(s1, (float) l1, (float) i2, -1);
-                if (k1 == 0) {
+                if (k1 == 0){
                     i2 += 2;
                 }
                 i2 += 10;
@@ -75,7 +74,7 @@ public class GuiUtil {
         }
     }
 
-    public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+    public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor){
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
         float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -103,27 +102,27 @@ public class GuiUtil {
         GlStateManager.enableTexture2D();
     }
 
-    public static void drawBarHorizontal(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount) {
+    public static void drawBarHorizontal(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount){
         int factor = amount * height / maxCapacity;
         drawTexturedModalRect(batRes, guiLoc, x, y - factor, textureX, textureY - factor, width, factor);
     }
 
-    public static void drawBarVertical(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount) {
+    public static void drawBarVertical(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height, int maxCapacity, int amount){
         int factor = (amount * width) / maxCapacity;
         drawTexturedModalRect(batRes, guiLoc, x, y - height, textureX, textureY - 10, factor + 1, height);
     }
 
-    public static void bindTexture(ResourceLocation location) {
+    public static void bindTexture(ResourceLocation location){
         Minecraft.getMinecraft().getTextureManager().bindTexture(location);
     }
 
-    public static void drawTexturedModalRect(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height) {
+    public static void drawTexturedModalRect(ResourceLocation batRes, ResourceLocation guiLoc, int x, int y, int textureX, int textureY, int width, int height){
         bindTexture(batRes);
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
         bindTexture(guiLoc);
     }
 
-    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height){
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
@@ -136,16 +135,10 @@ public class GuiUtil {
         tessellator.draw();
     }
 
-    public static void drawFluid(Fluid fluid, int x, int y, int textureX, int textureY, int width, int height) {
+    public static void drawFluid(Fluid fluid, int x, int y, int textureX, int textureY, int width, int height){
         ResourceLocation fluidTexture = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill().getResourcePath() + ".png");
         bindTexture(fluidTexture);
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
-    }
-
-    public static void drawFluid(Gui gui, Fluid fluid, int x, int y, int textureX, int textureY, int width, int height) {
-        ResourceLocation fluidTexture = new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill() + ".png");
-        Minecraft.getMinecraft().getTextureManager().bindTexture(fluidTexture);
-        gui.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
 }

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author canitzp
  */
 
-public interface IIngameTooltipHandler {
+public interface IIngameTooltipHandler{
 
     @SideOnly(Side.CLIENT)
     void doRender(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType elementType, ItemStack helmet, float partialTicks);

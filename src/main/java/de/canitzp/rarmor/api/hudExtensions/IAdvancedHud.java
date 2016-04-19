@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public interface IAdvancedHud {
+public interface IAdvancedHud{
 
     float onShow(FontRenderer fontRenderer, ScaledResolution resolution, World world, RayTraceResult trace, IBlockState state, TileEntity tileEntity, float x, float y);
 

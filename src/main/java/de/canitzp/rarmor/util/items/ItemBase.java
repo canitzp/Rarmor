@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 /**
  * @author canitzp
  */
-public class ItemBase extends Item {
+public class ItemBase extends Item{
 
-    public ItemBase(String modid, String name, CreativeTabs tabs) {
+    public ItemBase(String modid, String name, CreativeTabs tabs){
         setUnlocalizedName(modid + ":" + name);
         setCreativeTab(tabs);
         setRegistryName(name);

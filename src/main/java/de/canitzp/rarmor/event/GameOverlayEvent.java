@@ -21,26 +21,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author canitzp
  */
-public class GameOverlayEvent {
+public class GameOverlayEvent{
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onGameOverlay(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL && MinecraftUtil.getCurrentScreen() == null) {
+    public void onGameOverlay(RenderGameOverlayEvent.Post event){
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ALL && MinecraftUtil.getCurrentScreen() == null){
             EntityPlayer player = MinecraftUtil.getPlayer();
             FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
             ItemStack helmet = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
-            if (!RarmorProperties.getBoolean("AlwaysShowAdvancedInGameTooltip")) {
-                if (helmet != null && helmet.getItem() instanceof IIngameTooltipHandler) {
+            if (!RarmorProperties.getBoolean("AlwaysShowAdvancedInGameTooltip")){
+                if (helmet != null && helmet.getItem() instanceof IIngameTooltipHandler){
                     ((IIngameTooltipHandler) helmet.getItem()).doRender(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), helmet, event.getPartialTicks());
                 }
-                if (RarmorUtil.isPlayerWearingRarmor(player)) {
+                if (RarmorUtil.isPlayerWearingRarmor(player)){
                     ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-                    if (module != null && module.getItem() instanceof IRarmorModule) {
+                    if (module != null && module.getItem() instanceof IRarmorModule){
                         ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), RarmorUtil.getPlayersRarmorChestplate(player), module, event.getPartialTicks());
                     }
                 }
-            } else {
+            }else{
                 ArmorHud.display(MinecraftUtil.getMinecraft(), event.getResolution(), player, 0, 5);
             }
 

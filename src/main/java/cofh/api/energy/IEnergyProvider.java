@@ -10,7 +10,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author King Lemming
  */
-public interface IEnergyProvider extends IEnergyHandler {
+public interface IEnergyProvider extends IEnergyHandler{
 
     /**
      * Remove energy from an IEnergyProvider, internal distribution is left entirely to the IEnergyProvider.

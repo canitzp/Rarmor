@@ -16,16 +16,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author canitzp
  */
-public class PlayerEvents {
+public class PlayerEvents{
 
     @SubscribeEvent
-    public void onPlayerLoggingIn(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
+    public void onPlayerLoggingIn(EntityJoinWorldEvent event){
+        if (event.getEntity() instanceof EntityPlayer){
             World world = event.getWorld();
             EntityPlayer player = (EntityPlayer) event.getEntity();
-            if (RarmorUtil.isPlayerWearingRarmor(player)) {
+            if (RarmorUtil.isPlayerWearingRarmor(player)){
                 ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-                if (module != null && module.getItem() instanceof IRarmorModule) {
+                if (module != null && module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onPlayerLoginEvent(world, player, RarmorUtil.getPlayersRarmorChestplate(player), module);
                 }
             }
@@ -33,11 +33,11 @@ public class PlayerEvents {
     }
 
     @SubscribeEvent
-    public void onPlayerTakeDamage(LivingHurtEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            if (RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.getEntity())) {
+    public void onPlayerTakeDamage(LivingHurtEvent event){
+        if (event.getEntity() instanceof EntityPlayer){
+            if (RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.getEntity())){
                 IRarmorModule module = RarmorUtil.getRarmorModule((EntityPlayer) event.getEntity());
-                if (module != null) {
+                if (module != null){
                     event.setCanceled(module.onPlayerTakeDamage(event.getEntity().getEntityWorld(), (EntityPlayer) event.getEntity(), RarmorUtil.getPlayersRarmorChestplate((EntityPlayer) event.getEntity()), event.getSource(), event.getAmount()));
                 }
             }

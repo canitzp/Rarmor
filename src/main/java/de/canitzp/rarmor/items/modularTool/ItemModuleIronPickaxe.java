@@ -8,32 +8,32 @@ import net.minecraft.item.ItemStack;
 /**
  * @author canitzp
  */
-public class ItemModuleIronPickaxe extends ItemModule implements IToolModule {
+public class ItemModuleIronPickaxe extends ItemModule implements IToolModule{
 
-    public ItemModuleIronPickaxe() {
+    public ItemModuleIronPickaxe(){
         super("pickaxeIron");
     }
 
     @Override
-    public String getName() {
+    public String getName(){
         return "PickaxeIron";
     }
 
     @Override
-    public ItemModularTool.ToolTypes getRenderTool() {
+    public ItemModularTool.ToolTypes getRenderTool(){
         return ItemModularTool.ToolTypes.PICKAXE;
     }
 
     @Override
-    public float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack) {
-        if (state.getBlock().isToolEffective("pickaxe", state)) {
+    public float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack){
+        if (state.getBlock().isToolEffective("pickaxe", state)){
             return ToolMaterial.IRON.getEfficiencyOnProperMaterial();
         }
         return super.getStrVsBlock(stack, state);
     }
 
     @Override
-    public boolean canHarvestBlock(ItemStack module, IBlockState state, ItemStack stack) {
+    public boolean canHarvestBlock(ItemStack module, IBlockState state, ItemStack stack){
         return state.getBlock().isToolEffective("pickaxe", state);
     }
 }

@@ -10,13 +10,13 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class RarmorAPI {
+public class RarmorAPI{
 
     @SideOnly(Side.CLIENT)
     public static List<IAdvancedHud> hudExtension = new ArrayList<>();
 
     @SideOnly(Side.CLIENT)
-    public static void addAdvancedHud(IAdvancedHud hud) {
+    public static void addAdvancedHud(IAdvancedHud hud){
         hudExtension.add(hud);
     }
 

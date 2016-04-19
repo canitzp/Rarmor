@@ -7,83 +7,84 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  * @author King Lemming
  */
-public class EnergyStorage implements IEnergyStorage {
+@SuppressWarnings("JavaDoc")
+public class EnergyStorage implements IEnergyStorage{
 
     protected int energy;
     protected int capacity;
     protected int maxReceive;
     protected int maxExtract;
 
-    public EnergyStorage(int capacity) {
+    public EnergyStorage(int capacity){
 
         this(capacity, capacity, capacity);
     }
 
-    public EnergyStorage(int capacity, int maxTransfer) {
+    public EnergyStorage(int capacity, int maxTransfer){
 
         this(capacity, maxTransfer, maxTransfer);
     }
 
-    public EnergyStorage(int capacity, int maxReceive, int maxExtract) {
+    public EnergyStorage(int capacity, int maxReceive, int maxExtract){
 
         this.capacity = capacity;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
     }
 
-    public EnergyStorage readFromNBT(NBTTagCompound nbt) {
+    public EnergyStorage readFromNBT(NBTTagCompound nbt){
 
         this.energy = nbt.getInteger("Energy");
 
-        if (energy > capacity) {
+        if (energy > capacity){
             energy = capacity;
         }
         return this;
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 
-        if (energy < 0) {
+        if (energy < 0){
             energy = 0;
         }
         nbt.setInteger("Energy", energy);
         return nbt;
     }
 
-    public EnergyStorage setCapacity(int capacity) {
+    public EnergyStorage setCapacity(int capacity){
 
         this.capacity = capacity;
 
-        if (energy > capacity) {
+        if (energy > capacity){
             energy = capacity;
         }
         return this;
     }
 
-    public EnergyStorage setMaxTransfer(int maxTransfer) {
+    public EnergyStorage setMaxTransfer(int maxTransfer){
 
         setMaxReceive(maxTransfer);
         setMaxExtract(maxTransfer);
         return this;
     }
 
-    public int getMaxReceive() {
+    public int getMaxReceive(){
 
         return maxReceive;
     }
 
-    public EnergyStorage setMaxReceive(int maxReceive) {
+    public EnergyStorage setMaxReceive(int maxReceive){
 
         this.maxReceive = maxReceive;
         return this;
     }
 
-    public int getMaxExtract() {
+    public int getMaxExtract(){
 
         return maxExtract;
     }
 
-    public EnergyStorage setMaxExtract(int maxExtract) {
+    public EnergyStorage setMaxExtract(int maxExtract){
 
         this.maxExtract = maxExtract;
         return this;
@@ -95,42 +96,42 @@ public class EnergyStorage implements IEnergyStorage {
      *
      * @param energy
      */
-    public void modifyEnergyStored(int energy) {
+    public void modifyEnergyStored(int energy){
 
         this.energy += energy;
 
-        if (this.energy > capacity) {
+        if (this.energy > capacity){
             this.energy = capacity;
-        } else if (this.energy < 0) {
+        }else if (this.energy < 0){
             this.energy = 0;
         }
     }
 
     /* IEnergyStorage */
     @Override
-    public int receiveEnergy(int maxReceive, boolean simulate) {
+    public int receiveEnergy(int maxReceive, boolean simulate){
 
         int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
 
-        if (!simulate) {
+        if (!simulate){
             energy += energyReceived;
         }
         return energyReceived;
     }
 
     @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
+    public int extractEnergy(int maxExtract, boolean simulate){
 
         int energyExtracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
 
-        if (!simulate) {
+        if (!simulate){
             energy -= energyExtracted;
         }
         return energyExtracted;
     }
 
     @Override
-    public int getEnergyStored() {
+    public int getEnergyStored(){
 
         return energy;
     }
@@ -141,19 +142,19 @@ public class EnergyStorage implements IEnergyStorage {
      *
      * @param energy
      */
-    public void setEnergyStored(int energy) {
+    public void setEnergyStored(int energy){
 
         this.energy = energy;
 
-        if (this.energy > capacity) {
+        if (this.energy > capacity){
             this.energy = capacity;
-        } else if (this.energy < 0) {
+        }else if (this.energy < 0){
             this.energy = 0;
         }
     }
 
     @Override
-    public int getMaxEnergyStored() {
+    public int getMaxEnergyStored(){
 
         return capacity;
     }

@@ -11,33 +11,33 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public interface IToolModule {
+public interface IToolModule{
 
     String getName();
 
     ItemModularTool.ToolTypes getRenderTool();
 
-    default float onHitEntity(ItemStack module, ItemStack tool, EntityLivingBase target, EntityLivingBase attacker) {
+    default float onHitEntity(ItemStack module, ItemStack tool, EntityLivingBase target, EntityLivingBase attacker){
         return 0.0F;
     }
 
-    default boolean onBlockDestroyed(ItemStack module, ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity) {
+    default boolean onBlockDestroyed(ItemStack module, ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entity){
         return true;
     }
 
-    default ItemStack onRightClick(ItemStack module, ItemStack stack, World world, EntityPlayer player) {
+    default ItemStack onRightClick(ItemStack module, ItemStack stack, World world, EntityPlayer player){
         return stack;
     }
 
-    default boolean onBlockStartBreak(ItemStack module, ItemStack stack, IBlockState state, EntityPlayer player, BlockPos pos) {
+    default boolean onBlockStartBreak(ItemStack module, ItemStack stack, IBlockState state, EntityPlayer player, BlockPos pos){
         return false;
     }
 
-    default float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack) {
+    default float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack){
         return 1.0F;
     }
 
-    default boolean canHarvestBlock(ItemStack module, IBlockState state, ItemStack stack) {
+    default boolean canHarvestBlock(ItemStack module, IBlockState state, ItemStack stack){
         return false;
     }
 }

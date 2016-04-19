@@ -15,14 +15,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author canitzp
  */
-public class PacketSendNBTBoolean implements IMessage {
+public class PacketSendNBTBoolean implements IMessage{
 
     public String nbt;
     public boolean b, stackInput;
     public int playerID, worldID, playerSlotID;
     public ItemStack stack;
 
-    public PacketSendNBTBoolean() {
+    public PacketSendNBTBoolean(){
     }
 
     /**
@@ -31,7 +31,7 @@ public class PacketSendNBTBoolean implements IMessage {
      * @param nbt    The Name of the NBT
      * @param b      The Value of the NBT
      */
-    public PacketSendNBTBoolean(EntityPlayer player, int slotID, String nbt, boolean b) {
+    public PacketSendNBTBoolean(EntityPlayer player, int slotID, String nbt, boolean b){
         this.nbt = nbt;
         this.b = b;
         this.playerSlotID = slotID;
@@ -39,7 +39,7 @@ public class PacketSendNBTBoolean implements IMessage {
         this.worldID = player.getEntityWorld().provider.getDimension();
     }
 
-    public PacketSendNBTBoolean(EntityPlayer player, String nbt, boolean b) {
+    public PacketSendNBTBoolean(EntityPlayer player, String nbt, boolean b){
         this.nbt = nbt;
         this.b = b;
         this.playerSlotID = 123456;
@@ -48,7 +48,7 @@ public class PacketSendNBTBoolean implements IMessage {
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf){
         this.nbt = ByteBufUtils.readUTF8String(buf);
         this.b = buf.readBoolean();
         this.playerID = buf.readInt();
@@ -57,7 +57,7 @@ public class PacketSendNBTBoolean implements IMessage {
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf){
         ByteBufUtils.writeUTF8String(buf, this.nbt);
         buf.writeBoolean(this.b);
         buf.writeInt(this.playerID);
@@ -65,15 +65,15 @@ public class PacketSendNBTBoolean implements IMessage {
         buf.writeInt(this.playerSlotID);
     }
 
-    public static class PacketHandler implements IMessageHandler<PacketSendNBTBoolean, IMessage> {
+    public static class PacketHandler implements IMessageHandler<PacketSendNBTBoolean, IMessage>{
         @Override
-        public IMessage onMessage(PacketSendNBTBoolean message, MessageContext ctx) {
+        public IMessage onMessage(PacketSendNBTBoolean message, MessageContext ctx){
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
             ItemStack stack;
-            if (message.playerSlotID == 123456) {
+            if (message.playerSlotID == 123456){
                 stack = NBTUtil.readSlots(player.inventory.getStackInSlot(38), ItemRFArmorBody.slotAmount).getStackInSlot(29);
-            } else {
+            }else{
                 stack = player.inventory.getStackInSlot(message.playerSlotID);
             }
             NBTUtil.setBoolean(stack, message.nbt, message.b);

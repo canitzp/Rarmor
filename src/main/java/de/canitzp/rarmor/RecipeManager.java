@@ -10,19 +10,19 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 /**
  * @author canitzp
  */
-public class RecipeManager {
+public class RecipeManager{
 
-    public static void init() {
+    public static void init(){
         Rarmor.logger.info("Register Recipes");
         loadVanilla();
         loadActAddRecipes();
     }
 
-    private static void loadActAddRecipes() {
+    private static void loadActAddRecipes(){
         //ActuallyAdditionsAPI.addCrusherRecipe(new ItemStack(ItemRegistry.moduleFlying), new ItemStack(Items.nether_star));
     }
 
-    public static void loadVanilla() {
+    public static void loadVanilla(){
         addRecipe(new ItemStack(ItemRegistry.ribbonCable, 12), "WIW", "WIW", "WIW", 'W', Blocks.WOOL, 'I', "nuggetGold");
         addRecipe(new ItemStack(ItemRegistry.electricalController, 1), " G ", "GIG", "CGC", 'C', ItemRegistry.ribbonCable, 'G', "dyeGreen", 'I', "ingotIron");
         addRecipe(new ItemStack(ItemRegistry.rfArmorBoots), "   ", "DCD", "IRI", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
@@ -42,7 +42,7 @@ public class RecipeManager {
         addRecipe(new ItemStack(ItemRegistry.moduleModuleSplitter), "GCG", "CDC", "GCG", 'G', "dyeGreen", 'C', ItemRegistry.electricalController, 'D', ItemRegistry.ribbonCable);
     }
 
-    public static void addRecipe(ItemStack output, Object... input) {
+    public static void addRecipe(ItemStack output, Object... input){
         GameRegistry.addRecipe(new ShapedOreRecipe(output, input));
     }
 

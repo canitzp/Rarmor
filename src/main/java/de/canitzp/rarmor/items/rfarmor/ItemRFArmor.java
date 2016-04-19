@@ -25,7 +25,8 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor {
+@SuppressWarnings("unchecked")
+public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor{
 
     public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvent.REGISTRY.getObject(new ResourceLocation("block.anvil.break")));
 
@@ -36,7 +37,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     public String[] textures = new String[2];
 
-    public ItemRFArmor(ArmorMaterial material, EntityEquipmentSlot type, int maxEnergy, int maxTransfer, String name) {
+    public ItemRFArmor(ArmorMaterial material, EntityEquipmentSlot type, int maxEnergy, int maxTransfer, String name){
         super(material, 0, type);
         setCreativeTab(Rarmor.rarmorTab);
         setEnergyParams(maxEnergy, maxTransfer);
@@ -44,67 +45,69 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         Rarmor.registerItem(this, name);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand){
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
         ItemStack itemstack = PlayerUtil.getItemStackFromSlot(player, entityequipmentslot);
-        if (itemstack == null) {
+        if (itemstack == null){
             player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;
             return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-        } else {
+        }else{
             return new ActionResult(EnumActionResult.FAIL, itemStackIn);
         }
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+    public void onCreated(ItemStack stack, World world, EntityPlayer player){
         EnergyUtil.setEnergy(stack, 0);
     }
 
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
         return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
-    public ItemRFArmor setEnergyParams(int maxEnergy, int maxTransfer) {
+    public ItemRFArmor setEnergyParams(int maxEnergy, int maxTransfer){
         this.maxEnergy = maxEnergy;
         this.maxTransfer = maxTransfer;
         return this;
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack itemToRepair, ItemStack stack) {
+    public boolean getIsRepairable(ItemStack itemToRepair, ItemStack stack){
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean check) {
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean check){
         list.add(this.getEnergyStored(stack) + "/" + this.getMaxEnergyStored(stack) + " RF");
     }
 
     @Override
-    public void setDamage(ItemStack stack, int damage) {
+    public void setDamage(ItemStack stack, int damage){
         super.setDamage(stack, 0);
     }
 
     @Override
-    public int getMaxDamage(ItemStack stack) {
+    public int getMaxDamage(ItemStack stack){
         return this.maxEnergy;
     }
 
     @Override
-    public boolean isDamaged(ItemStack stack) {
+    public boolean isDamaged(ItemStack stack){
         return !(this.getEnergyStored(stack) == this.getMaxDamage(stack));
     }
 
     @Override
-    public int getMetadata(int damage) {
+    public int getMetadata(int damage){
         return damage;
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List list){
         ItemStack stackFull = new ItemStack(this);
         EnergyUtil.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
         list.add(stackFull);
@@ -114,16 +117,16 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         list.add(stackEmpty);
     }
 
-    protected int getBaseAbsorption() {
+    protected int getBaseAbsorption(){
         return 20;
     }
 
     /**
      * Returns a % that each piece absorbs, set sums to 100.
      */
-    protected int getAbsorptionRatio() {
+    protected int getAbsorptionRatio(){
 
-        switch (armorType) {
+        switch (armorType){
             case FEET:
                 return 15;
             case LEGS:
@@ -136,31 +139,31 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         return 0;
     }
 
-    protected int getEnergyPerDamage(ItemStack stack) {
+    protected int getEnergyPerDamage(ItemStack stack){
         return energyPerDamage * 2;
     }
 
     /* ISpecialArmor */
     @Override
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot){
         //int absorbMax = getEnergyPerDamage(armor) > 0 ? 25 * getEnergyStored(armor) / getEnergyPerDamage(armor) : 0;
         int absorbMax = getEnergyPerDamage(armor) * getEnergyStored(armor);
         return new ArmorProperties(0, absorbRatio * getArmorMaterial().getDamageReductionAmount(armorType) * 0.025, absorbMax);
     }
 
     @Override
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        if (getEnergyStored(armor) >= getEnergyPerDamage(armor)) {
+    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot){
+        if (getEnergyStored(armor) >= getEnergyPerDamage(armor)){
             return Math.min(getBaseAbsorption(), 20) * getAbsorptionRatio() / 100;
         }
         return 0;
     }
 
     @Override
-    public void damageArmor(EntityLivingBase entity, ItemStack armor, DamageSource source, int damage, int slot) {
-        if (armor.getItem() instanceof ItemRFArmorBody && entity instanceof EntityPlayer) {
-            if (NBTUtil.getInteger(armor, "BurnTime") > 0 || NBTUtil.getInteger(armor, "GenBurnTime") > 0) {
-                if (entity.getEntityWorld().rand.nextInt(10) == 1) {
+    public void damageArmor(EntityLivingBase entity, ItemStack armor, DamageSource source, int damage, int slot){
+        if (armor.getItem() instanceof ItemRFArmorBody && entity instanceof EntityPlayer){
+            if (NBTUtil.getInteger(armor, "BurnTime") > 0 || NBTUtil.getInteger(armor, "GenBurnTime") > 0){
+                if (entity.getEntityWorld().rand.nextInt(10) == 1){
                     entity.setFire(4);
                 }
             }
@@ -170,14 +173,14 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     /* IEnergyContainerItem */
     @Override
-    public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate) {
-        if (container.getTagCompound() == null) {
+    public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate){
+        if (container.getTagCompound() == null){
             container.setTagCompound(new NBTTagCompound());
         }
         int energy = container.getTagCompound().getInteger("Energy");
         int energyReceived = Math.min(maxEnergy - energy, Math.min(this.maxTransfer, maxReceive));
 
-        if (!simulate) {
+        if (!simulate){
             energy += energyReceived;
             container.getTagCompound().setInteger("Energy", energy);
         }
@@ -185,14 +188,14 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate) {
-        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")) {
+    public int extractEnergy(ItemStack container, int maxExtract, boolean simulate){
+        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")){
             return 0;
         }
         int energy = container.getTagCompound().getInteger("Energy");
         int energyExtracted = Math.min(energy, Math.min(this.maxTransfer, maxExtract));
 
-        if (!simulate) {
+        if (!simulate){
             energy -= energyExtracted;
             container.getTagCompound().setInteger("Energy", energy);
         }
@@ -200,18 +203,18 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public int getEnergyStored(ItemStack container) {
+    public int getEnergyStored(ItemStack container){
         return NBTUtil.getInteger(container, "Energy");
     }
 
     @Override
-    public int getMaxEnergyStored(ItemStack container) {
+    public int getMaxEnergyStored(ItemStack container){
         return maxEnergy;
     }
 
 
     @Override
-    public boolean showDurabilityBar(ItemStack stack) {
+    public boolean showDurabilityBar(ItemStack stack){
         return !(NBTUtil.getInteger(stack, "Energy") == this.maxEnergy);
     }
 

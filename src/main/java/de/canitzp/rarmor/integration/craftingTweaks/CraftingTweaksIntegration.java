@@ -9,13 +9,13 @@ import net.minecraftforge.fml.common.Loader;
 /**
  * @author canitzp
  */
-public class CraftingTweaksIntegration {
+public class CraftingTweaksIntegration{
 
     public static boolean isActive = false;
 
     public static void init(){
         isActive = Loader.isModLoaded("craftingtweaks");
-        if(isActive){
+        if (isActive){
             SimpleTweakProvider providerRarmor = CraftingTweaksAPI.registerSimpleProvider(Rarmor.MODID, ContainerRFArmor.class);
             providerRarmor.setGrid(64, 9);
             providerRarmor.setTweakRotate(true, true, 235, 14);

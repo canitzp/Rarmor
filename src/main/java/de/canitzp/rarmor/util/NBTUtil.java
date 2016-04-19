@@ -11,28 +11,27 @@ import net.minecraft.nbt.NBTTagList;
 /**
  * @author canitzp
  */
-public class NBTUtil {
+public class NBTUtil{
 
-    public static void checkForNBT(ItemStack stack) {
-        if (stack != null) {
-            if (stack.getTagCompound() == null) {
+    public static void checkForNBT(ItemStack stack){
+        if (stack != null){
+            if (stack.getTagCompound() == null){
                 stack.setTagCompound(new NBTTagCompound());
             }
-        } else {
+        }else{
             Rarmor.logger.error("An Error occurred while writing/reading a ItemStack");
             stack = new ItemStack(Blocks.FIRE);
             stack.setTagCompound(new NBTTagCompound());
         }
     }
 
-    public static void saveSlots(ItemStack stack, IInventory inventory) {
+    public static void saveSlots(ItemStack stack, IInventory inventory){
         checkForNBT(stack);
-        if (inventory != null && inventory.getSizeInventory() > 0) {
-            stack.getTagCompound().setInteger("SlotAmount", inventory.getSizeInventory());
+        if (inventory != null && inventory.getSizeInventory() > 0){
             stack.getTagCompound().setString("InventoryName", inventory.getName());
             NBTTagList tagList = new NBTTagList();
-            for (int currentIndex = 0; currentIndex < inventory.getSizeInventory(); currentIndex++) {
-                if (inventory.getStackInSlot(currentIndex) != null) {
+            for (int currentIndex = 0; currentIndex < inventory.getSizeInventory(); currentIndex++){
+                if (inventory.getStackInSlot(currentIndex) != null){
                     NBTTagCompound tagCompound = new NBTTagCompound();
                     tagCompound.setByte("Slot", (byte) currentIndex);
                     inventory.getStackInSlot(currentIndex).writeToNBT(tagCompound);
@@ -43,19 +42,18 @@ public class NBTUtil {
         }
     }
 
-    public static InventoryBase readSlots(ItemStack stack, int slotAmo) {
+    public static InventoryBase readSlots(ItemStack stack, int slotAmo){
         NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null) {
-            if (compound.getInteger("SlotAmount") != 0) {
-                int slotAmount = compound.getInteger("SlotAmount");
+        if (compound != null){
+            if (compound.getInteger("SlotAmount") != 0){
                 String name = compound.getString("InventoryName");
                 InventoryBase inv = new InventoryBase(name, slotAmo);
-                if (inv.getSizeInventory() > 0) {
+                if (inv.getSizeInventory() > 0){
                     NBTTagList tagList = compound.getTagList("Items", 10);
-                    for (int i = 0; i < tagList.tagCount(); i++) {
+                    for (int i = 0; i < tagList.tagCount(); i++){
                         NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
                         byte slotIndex = tagCompound.getByte("Slot");
-                        if (slotIndex >= 0 && slotIndex < inv.getSizeInventory()) {
+                        if (slotIndex >= 0 && slotIndex < inv.getSizeInventory()){
                             inv.setInventorySlotContents(slotIndex, ItemStack.loadItemStackFromNBT(tagCompound));
                         }
                     }
@@ -66,69 +64,31 @@ public class NBTUtil {
         return new InventoryBase("", slotAmo);
     }
 
-    public static InventoryBase readSlotsBase(ItemStack stack, int slotAmo) {
-        NBTTagCompound compound = stack.getTagCompound();
-        if (compound != null) {
-            if (compound.getInteger("SlotAmount") != 0) {
-                int slotAmount = compound.getInteger("SlotAmount");
-                InventoryBase inv = new InventoryBase("", slotAmo);
-                if (inv.getSizeInventory() > 0) {
-                    NBTTagList tagList = compound.getTagList("Items", 10);
-                    for (int i = 0; i < tagList.tagCount(); i++) {
-                        NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-                        byte slotIndex = tagCompound.getByte("Slot");
-                        if (slotIndex >= 0 && slotIndex < inv.getSizeInventory()) {
-                            inv.setInventorySlotContents(slotIndex, ItemStack.loadItemStackFromNBT(tagCompound));
-                        }
-                    }
-                }
-                return inv;
-            }
-        }
-        return new InventoryBase("", slotAmo);
-    }
-
-    public static void setInteger(ItemStack stack, String name, int i) {
+    public static void setInteger(ItemStack stack, String name, int i){
         checkForNBT(stack);
         stack.getTagCompound().setInteger(name, i);
     }
 
-    public static void setIntegerIfNot(ItemStack stack, String name, int i) {
+    public static void setIntegerIfNot(ItemStack stack, String name, int i){
         checkForNBT(stack);
-        if (stack.getTagCompound().getInteger(name) != i) {
+        if (stack.getTagCompound().getInteger(name) != i){
             stack.getTagCompound().setInteger(name, i);
         }
     }
 
-    public static int getInteger(ItemStack stack, String name) {
-        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(name)) {
+    public static int getInteger(ItemStack stack, String name){
+        if (stack.getTagCompound() != null && stack.getTagCompound().hasKey(name)){
             return stack.getTagCompound().getInteger(name);
-        } else return 0;
+        }else return 0;
     }
 
-    public static void setBoolean(ItemStack stack, String name, boolean b) {
+    public static void setBoolean(ItemStack stack, String name, boolean b){
         checkForNBT(stack);
         stack.getTagCompound().setBoolean(name, b);
     }
 
-    public static boolean getBoolean(ItemStack stack, String name) {
+    public static boolean getBoolean(ItemStack stack, String name){
         return stack.getTagCompound() != null && stack.getTagCompound().hasKey(name) && stack.getTagCompound().getBoolean(name);
-    }
-
-    public static void saveItemStack(ItemStack toSave, ItemStack onSave, String key){
-        if(toSave != null && onSave != null){
-            checkForNBT(onSave);
-            NBTTagCompound c = new NBTTagCompound();
-            toSave.writeToNBT(c);
-            onSave.getTagCompound().setTag(key, c);
-        }
-    }
-
-    public static ItemStack readItemStack(ItemStack onSave, String key){
-        if(onSave != null && onSave.getTagCompound().hasKey(key)){
-            return ItemStack.loadItemStackFromNBT((NBTTagCompound) onSave.getTagCompound().getTag(key));
-        }
-        return null;
     }
 
 }

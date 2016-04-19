@@ -14,34 +14,34 @@ import java.util.Map;
 /**
  * @author canitzp
  */
-public class ItemModule extends Item {
+public class ItemModule extends Item{
 
     public static Map<String, ItemModule> modules = new HashMap<>();
 
-    public ItemModule(String name) {
+    public ItemModule(String name){
         setMaxStackSize(1);
         modules.put(name, this);
         Rarmor.registerItem(this, name);
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        if(stack != null && stack.getItem() != null && stack.getItem() instanceof IRarmorModule){
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+        if (stack != null && stack.getItem() != null && stack.getItem() instanceof IRarmorModule){
             List<String> desc = ((IRarmorModule) stack.getItem()).getDescription(playerIn, stack, advanced);
-            if(desc != null){
+            if (desc != null){
                 tooltip.addAll(desc);
-            } else {
+            }else{
                 super.addInformation(stack, playerIn, tooltip, advanced);
             }
             IRarmorModule.ModuleType moduleType = ((IRarmorModule) stack.getItem()).getModuleType();
-            if(moduleType != IRarmorModule.ModuleType.NONE){
-                if(moduleType == IRarmorModule.ModuleType.ACTIVE){
+            if (moduleType != IRarmorModule.ModuleType.NONE){
+                if (moduleType == IRarmorModule.ModuleType.ACTIVE){
                     tooltip.add(TextFormatting.GREEN + "Active" + TextFormatting.GRAY);
-                } else {
+                }else{
                     tooltip.add(TextFormatting.RED + "Passive" + TextFormatting.GRAY);
                 }
             }
-        } else {
+        }else{
             super.addInformation(stack, playerIn, tooltip, advanced);
         }
     }

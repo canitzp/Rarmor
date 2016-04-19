@@ -17,58 +17,58 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemModuleFlying extends ItemModule implements IRarmorModule {
+public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     private int energyUsagePerTick;
 
-    public ItemModuleFlying() {
+    public ItemModuleFlying(){
         super("moduleFlying");
         this.energyUsagePerTick = RarmorProperties.getInteger("moduleFlyingEnergyPerTick");
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
+    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return JavaUtil.newList("With this Module you can grab the starts in CreativeFlightMode.",
                 "It uses " + TextFormatting.RED + this.energyUsagePerTick + TextFormatting.GRAY + "RF per Tick, while you're flying.");
     }
 
     @Override
-    public String getUniqueName() {
+    public String getUniqueName(){
         return "Flying";
     }
 
     @Override
-    public ModuleType getModuleType() {
+    public ModuleType getModuleType(){
         return ModuleType.PASSIVE;
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
-        if (!player.capabilities.isCreativeMode) {
-            if (!NBTUtil.getBoolean(module, "deactivated")) {
-                if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
+        if (!player.capabilities.isCreativeMode){
+            if (!NBTUtil.getBoolean(module, "deactivated")){
+                if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
                     player.capabilities.allowFlying = true;
-                    if (player.capabilities.isFlying) {
+                    if (player.capabilities.isFlying){
                         EnergyUtil.reduceEnergy(armorChestplate, this.energyUsagePerTick);
                         NBTUtil.setBoolean(module, "deactivated", false);
-                    } else {
+                    }else{
                         NBTUtil.setBoolean(module, "deactivated", true);
                     }
-                } else {
+                }else{
                     player.capabilities.allowFlying = false;
                     player.capabilities.isFlying = false;
                     player.capabilities.disableDamage = false;
                     NBTUtil.setBoolean(module, "deactivated", true);
                 }
-            } else if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick) {
+            }else if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
                 NBTUtil.setBoolean(module, "deactivated", false);
             }
         }
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot) {
-        if (!player.capabilities.isCreativeMode) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+        if (!player.capabilities.isCreativeMode){
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
             player.capabilities.disableDamage = false;
@@ -77,8 +77,8 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module) {
-        if (!NBTUtil.getBoolean(module, "deactivated")) {
+    public void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module){
+        if (!NBTUtil.getBoolean(module, "deactivated")){
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
             player.sendPlayerAbilities();

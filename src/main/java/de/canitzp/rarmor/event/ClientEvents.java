@@ -10,15 +10,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author canitzp
  */
 @SideOnly(Side.CLIENT)
-public class ClientEvents {
+public class ClientEvents{
 
-    public ClientEvents() {
+    public ClientEvents(){
     }
 
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent event){
         EntityPlayer player = event.getEntityPlayer();
-        if(player.getName().equals("canitzp")){
+        if (player.getName().equals("canitzp")){
             System.out.println("render");
         }
 

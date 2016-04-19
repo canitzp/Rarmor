@@ -11,68 +11,68 @@ import java.util.*;
 /**
  * @author canitzp
  */
-public class RarmorProperties extends Properties {
+public class RarmorProperties extends Properties{
 
     public static RarmorProperties rarmorProperties;
     private static File propFile;
     private static Map<String, Boolean> booleanProperties = new HashMap<>();
     private static Map<String, Integer> integerProperties = new HashMap<>();
 
-    public RarmorProperties(File suggestedConfigurationFile) {
+    public RarmorProperties(File suggestedConfigurationFile){
         RarmorProperties.propFile = new File(suggestedConfigurationFile.getParent() + File.separator + "Rarmor.properties");
     }
 
-    public static void preInit(FMLPreInitializationEvent event) {
+    public static void preInit(FMLPreInitializationEvent event){
         Rarmor.logger.info("Initialize Configuration");
         rarmorProperties = new RarmorProperties(event.getSuggestedConfigurationFile());
         rarmorProperties.readProperties();
     }
 
-    public static boolean getBoolean(String key) {
+    public static boolean getBoolean(String key){
         return booleanProperties.containsKey(key) && booleanProperties.get(key);
     }
 
-    public static int getInteger(String key) {
+    public static int getInteger(String key){
         return integerProperties.containsKey(key) ? integerProperties.get(key) : 0;
     }
 
     @Override
-    public synchronized Enumeration<Object> keys() {
-        return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+    public synchronized Enumeration<Object> keys(){
+        return Collections.enumeration(new TreeSet<>(super.keySet()));
     }
 
-    public void saveProperties() {
-        try {
-            for (Map.Entry<String, Boolean> entry : booleanProperties.entrySet()) {
+    public void saveProperties(){
+        try{
+            for (Map.Entry<String, Boolean> entry : booleanProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
-            for (Map.Entry<String, Integer> entry : integerProperties.entrySet()) {
+            for (Map.Entry<String, Integer> entry : integerProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
             rarmorProperties.store(new FileOutputStream(propFile), "These are the Properties of Rarmor");
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public void readProperties() {
-        try {
+    public void readProperties(){
+        try{
             rarmorProperties.load(new FileInputStream(propFile));
-            for (Map.Entry<Object, Object> entry : entrySet()) {
-                if (this.isEntryBoolean((String) entry.getValue())) {
+            for (Map.Entry<Object, Object> entry : entrySet()){
+                if (this.isEntryBoolean((String) entry.getValue())){
                     booleanProperties.put((String) entry.getKey(), parseBool((String) entry.getValue()));
                 }
-                if (this.isEntryInteger((String) entry.getValue())) {
+                if (this.isEntryInteger((String) entry.getValue())){
                     integerProperties.put((String) entry.getKey(), Integer.parseInt((String) entry.getValue()));
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException e){
             Rarmor.logger.info("Can't find Rarmor.properties creating new ones.");
         }
         initProperties();
     }
 
-    private void initProperties() {
+    private void initProperties(){
         addInteger("maxRarmorTransferPerTick", 20);
         addInteger("moduleDefenseDamageMultiplier", 2500);
         addInteger("moduleFlyingEnergyPerTick", 5);
@@ -82,32 +82,33 @@ public class RarmorProperties extends Properties {
         saveProperties();
     }
 
-    private void addBoolean(String key, boolean value) {
-        if (!booleanProperties.containsKey(key)) {
+    private void addBoolean(String key, boolean value){
+        if (!booleanProperties.containsKey(key)){
             booleanProperties.put(key, value);
         }
     }
 
-    private void addInteger(String key, int value) {
-        if (!integerProperties.containsKey(key)) {
+    private void addInteger(String key, int value){
+        if (!integerProperties.containsKey(key)){
             integerProperties.put(key, value);
         }
     }
 
-    private boolean isEntryBoolean(String entry) {
+    private boolean isEntryBoolean(String entry){
         return entry.equals("true") || entry.equals("false");
     }
 
-    private boolean isEntryInteger(String entry) {
-        try {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private boolean isEntryInteger(String entry){
+        try{
             Integer.parseInt(entry);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e){
             return false;
         }
         return true;
     }
 
-    private boolean parseBool(String bool) {
+    private boolean parseBool(String bool){
         return bool.equals("true");
     }
 

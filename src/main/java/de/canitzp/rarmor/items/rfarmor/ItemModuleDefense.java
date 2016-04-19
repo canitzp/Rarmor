@@ -16,22 +16,22 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemModuleDefense extends ItemModule implements IRarmorModule {
+public class ItemModuleDefense extends ItemModule implements IRarmorModule{
 
     public int damageMultiplier;
 
-    public ItemModuleDefense() {
+    public ItemModuleDefense(){
         super("moduleDefense");
         this.damageMultiplier = RarmorProperties.getInteger("moduleDefenseDamageMultiplier");
     }
 
     @Override
-    public String getUniqueName() {
+    public String getUniqueName(){
         return "Defense";
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
+    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return JavaUtil.newList("This Module save you for Damage,",
                 "aslong you have enough Energy.",
                 "The higher the damage multiplier,",
@@ -43,7 +43,7 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
     }
 
     @Override
-    public ModuleType getModuleType() {
+    public ModuleType getModuleType(){
         return ModuleType.PASSIVE;
     }
 
@@ -56,28 +56,28 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
      * @return true if you want to cancel the Damage
      */
     @Override
-    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage) {
-        if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld) {
-            if(player.getBedLocation() != null){
+    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
+        if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld){
+            if (player.getBedLocation() != null){
                 player.setPosition(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
-            } else {
+            }else{
                 player.setPosition(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
             }
             EnergyUtil.reduceEnergy(armorChestplate, 50000);
             return true;
         }
         int energyYouNeed = (int) (damage * this.damageMultiplier);
-        if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed) {
-            if (damageSource == DamageSource.fall) {
+        if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed){
+            if (damageSource == DamageSource.fall){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
-            if (damageSource == DamageSource.onFire) {
+            if (damageSource == DamageSource.onFire){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
-        } else if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed * 2) {
-            if (damageSource == DamageSource.lava) {
+        }else if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed * 2){
+            if (damageSource == DamageSource.lava){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed * 2);
                 return true;
             }

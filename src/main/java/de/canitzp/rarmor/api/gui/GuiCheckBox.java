@@ -18,7 +18,7 @@ import java.util.List;
  * @author canitzp
  */
 @SideOnly(Side.CLIENT)
-public class GuiCheckBox extends Gui implements IGuiRender {
+public class GuiCheckBox extends Gui implements IGuiRender{
 
     private static List<GuiCheckBox> checkBoxList = new ArrayList<>();
     public ResourceLocation iconLocation;
@@ -29,7 +29,7 @@ public class GuiCheckBox extends Gui implements IGuiRender {
     private boolean isActivated;
     private FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
 
-    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description, int color) {
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description, int color){
         this.x = x;
         this.y = y;
         this.guiContainer = guiContainer;
@@ -42,44 +42,44 @@ public class GuiCheckBox extends Gui implements IGuiRender {
         this.color = color;
     }
 
-    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description) {
+    public GuiCheckBox(GuiScreen guiContainer, ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description){
         this(guiContainer, iconLocation, x, y, height, text, description, ColorUtil.BLACK);
     }
 
-    public static GuiCheckBox getCheckBoxAtCoordinates(int x, int y) {
-        for (GuiCheckBox checkBox : checkBoxList) {
-            if (checkBox.x == x && checkBox.y == y) {
+    public static GuiCheckBox getCheckBoxAtCoordinates(int x, int y){
+        for (GuiCheckBox checkBox : checkBoxList){
+            if (checkBox.x == x && checkBox.y == y){
                 return checkBox;
             }
         }
         return null;
     }
 
-    public void drawCheckBox(int guiLeft, int guiTop) {
+    public void drawCheckBox(int guiLeft, int guiTop){
         fontRenderer.drawString(text, guiLeft + x + 9, guiTop + y + 1, this.color);
         GuiUtil.bindTexture(iconLocation);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.blendFunc(770, 771);
-        if (!isActivated) {
+        if (!isActivated){
             this.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 0, 0, 8, 8);
-        } else {
+        }else{
             this.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 0, 8, 8, 8);
         }
     }
 
-    public void mouseOverEvent(int mouseX, int mouseY, int guiLeft, int guiTop, FontRenderer fontRenderer) {
-        if (description != null && mouseX >= x + guiLeft && mouseY >= y + guiTop) {
-            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop) {
+    public void mouseOverEvent(int mouseX, int mouseY, int guiLeft, int guiTop, FontRenderer fontRenderer){
+        if (description != null && mouseX >= x + guiLeft && mouseY >= y + guiTop){
+            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
                 GuiUtil.drawHoveringText(guiContainer, description, mouseX, mouseY, fontRenderer);
             }
         }
     }
 
-    public boolean mouseClicked(int mouseX, int mouseY, int guiLeft, int guiTop) {
-        if (mouseX >= x + guiLeft && mouseY >= y + guiTop) {
-            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop) {
+    public boolean mouseClicked(int mouseX, int mouseY, int guiLeft, int guiTop){
+        if (mouseX >= x + guiLeft && mouseY >= y + guiTop){
+            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
                 this.isActivated = !this.isActivated;
                 return true;
             }
@@ -87,23 +87,23 @@ public class GuiCheckBox extends Gui implements IGuiRender {
         return false;
     }
 
-    public boolean isClicked() {
+    public boolean isClicked(){
         return this.isActivated;
     }
 
-    public void setClicked(boolean b) {
+    public void setClicked(boolean b){
         this.isActivated = b;
     }
 
     @Override
-    public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y) {
+    public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y){
         this.x = x;
         this.y = y;
         this.drawCheckBox(0, 0);
     }
 
     @Override
-    public int getLength(FontRenderer fontRenderer) {
+    public int getLength(FontRenderer fontRenderer){
         return 10 + fontRenderer.getStringWidth(this.text);
     }
 }

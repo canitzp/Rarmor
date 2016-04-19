@@ -16,50 +16,51 @@ import java.util.Map;
 /**
  * @author canitzp
  */
-public class ClientProxy extends CommonProxy {
+@SuppressWarnings("ConstantConditions")
+public class ClientProxy extends CommonProxy{
 
     public static Map<String, Pair<String, Integer>> specialPlayers = new HashMap<>();
 
     @Override
-    public void init() {
+    public void init(){
         specialPlayers.put("Xogue", Pair.of("Thank you for your help to create a better mod.", ColorUtil.CYAN));
         specialPlayers.put("canitzp", Pair.of("Thank you Developer.", ColorUtil.RED));
     }
 
     @Override
-    public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event){
         //TODO Fix whatever is broken: EventHandler.postInitClient();
     }
 
     @Override
-    public void registerRenderer() {
+    public void registerRenderer(){
         Rarmor.logger.info("Register Renderer");
         //ModelBakery.registerItemVariants(ItemRegistry.modularTool, new ResourceLocation(Rarmor.MODID, "modularTool"));
-        for (Map.Entry<ItemStack, String> entry : textureMap.entrySet()) {
-            if (entry.getKey() != null && entry.getKey().getItem() != null) {
-                if (entry.getKey().getItem() instanceof ItemBlock) {
+        for (Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
+            if (entry.getKey() != null && entry.getKey().getItem() != null){
+                if (entry.getKey().getItem() instanceof ItemBlock){
                     registerBlock(entry.getKey().getItem(), entry.getValue());
-                } else {
+                }else{
                     registerItem(entry.getKey(), entry.getValue());
                 }
             }
         }
-        for (Map.Entry<ItemStack, String> entry : specialTextures.entrySet()) {
-            if (entry.getKey() != null && entry.getKey().getItem() != null) {
-                if (entry.getKey().getItem() instanceof ItemBlock) {
+        for (Map.Entry<ItemStack, String> entry : specialTextures.entrySet()){
+            if (entry.getKey() != null && entry.getKey().getItem() != null){
+                if (entry.getKey().getItem() instanceof ItemBlock){
                     registerBlock(entry.getKey().getItem(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
-                } else {
+                }else{
                     registerItem(entry.getKey(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
                 }
             }
         }
     }
 
-    private void registerItem(ItemStack item, String blockName) {
+    private void registerItem(ItemStack item, String blockName){
         MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(item.getItem(), item.getMetadata(), new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
 
-    private void registerBlock(Item block, String blockName) {
+    private void registerBlock(Item block, String blockName){
         MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(block, 0, new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
     }
 

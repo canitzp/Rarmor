@@ -7,21 +7,21 @@ import net.minecraft.inventory.Slot;
 /**
  * @author canitzp
  */
-public class SlotCraftingInput extends Slot implements ISpecialSlot {
+public class SlotCraftingInput extends Slot implements ISpecialSlot{
 
     public boolean isSlot;
 
-    public SlotCraftingInput(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public SlotCraftingInput(IInventory inventoryIn, int index, int xPosition, int yPosition){
         super(inventoryIn, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean doesSlotExist() {
+    public boolean doesSlotExist(){
         return this.isSlot;
     }
 
     @Override
-    public void setSlotExist(boolean b) {
+    public void setSlotExist(boolean b){
         this.isSlot = b;
     }
 }

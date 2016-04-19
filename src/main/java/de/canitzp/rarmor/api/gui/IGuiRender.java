@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author canitzp
  */
 @SideOnly(Side.CLIENT)
-public interface IGuiRender {
+public interface IGuiRender{
 
     void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y);
 

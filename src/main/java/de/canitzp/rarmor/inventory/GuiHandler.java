@@ -11,13 +11,13 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 /**
  * @author canitzp
  */
-public class GuiHandler implements IGuiHandler {
+public class GuiHandler implements IGuiHandler{
 
     public static final int RFARMORGUI = 0, MODULARTOOL = 1;
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID) {
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
+        switch (ID){
             case RFARMORGUI:
                 return new ContainerRFArmor(player);
             case MODULARTOOL:
@@ -28,8 +28,8 @@ public class GuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID) {
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
+        switch (ID){
             case RFARMORGUI:
                 return new GuiRFArmor(player, new ContainerRFArmor(player));
             case MODULARTOOL:

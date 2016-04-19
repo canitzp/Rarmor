@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author canitzp
  */
-public enum RarmorResources {
+public enum RarmorResources{
 
     GUIELEMENTS("guiGuiElements"),
     RARMORGUI("guiRFArmorNormal"),
@@ -15,11 +15,11 @@ public enum RarmorResources {
 
     public String textureName;
 
-    RarmorResources(String location) {
+    RarmorResources(String location){
         this.textureName = location;
     }
 
-    public ResourceLocation getNewLocation() {
+    public ResourceLocation getNewLocation(){
         return new ResourceLocation("rarmor:textures/gui/" + textureName + ".png");
     }
 

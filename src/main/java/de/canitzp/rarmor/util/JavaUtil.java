@@ -7,10 +7,11 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class JavaUtil {
+public class JavaUtil{
 
-    public static <E> List<E> newList(E... elements) {
-        if (elements != null) {
+    @SafeVarargs
+    public static <E> List<E> newList(E... elements){
+        if (elements != null){
             List<E> list = new ArrayList<>();
             Collections.addAll(list, elements);
             return list;

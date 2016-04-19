@@ -14,45 +14,45 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author canitzp
  */
-public class PacketSyncPlayerHotbar implements IMessage {
+public class PacketSyncPlayerHotbar implements IMessage{
 
     private int playerId, worldId;
     private InventoryPlayer inventoryPlayer;
     private ItemStack[] stackList = new ItemStack[9];
 
-    public PacketSyncPlayerHotbar() {
+    public PacketSyncPlayerHotbar(){
     }
 
-    public PacketSyncPlayerHotbar(EntityPlayer player) {
+    public PacketSyncPlayerHotbar(EntityPlayer player){
         this.inventoryPlayer = player.inventory;
         this.playerId = player.getEntityId();
         this.worldId = player.getEntityWorld().provider.getDimension();
     }
 
     @Override
-    public void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf){
         this.worldId = buf.readInt();
         this.playerId = buf.readInt();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++){
             this.stackList[i] = ByteBufUtils.readItemStack(buf);
         }
     }
 
     @Override
-    public void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf){
         buf.writeInt(this.worldId);
         buf.writeInt(this.playerId);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 9; i++){
             ByteBufUtils.writeItemStack(buf, inventoryPlayer.getStackInSlot(i));
         }
     }
 
-    public static class Handler implements IMessageHandler<PacketSyncPlayerHotbar, IMessage> {
+    public static class Handler implements IMessageHandler<PacketSyncPlayerHotbar, IMessage>{
         @Override
-        public IMessage onMessage(PacketSyncPlayerHotbar message, MessageContext ctx) {
+        public IMessage onMessage(PacketSyncPlayerHotbar message, MessageContext ctx){
             World world = DimensionManager.getWorld(message.worldId);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerId);
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 9; i++){
                 player.inventory.setInventorySlotContents(i, message.stackList[i]);
             }
             return null;

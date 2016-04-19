@@ -12,32 +12,32 @@ import net.minecraftforge.fml.common.Loader;
 /**
  * @author canitzp
  */
-public class ItemModuleAntiRadiation extends ItemModule implements IModuleIntegration {
+public class ItemModuleAntiRadiation extends ItemModule implements IModuleIntegration{
 
     private boolean isModuleLoaded;
 
-    public ItemModuleAntiRadiation() {
+    public ItemModuleAntiRadiation(){
         super("moduleAntiRadiation");
         this.isModuleLoaded = Loader.isModLoaded("deepresonance");
     }
 
     @Override
-    public boolean isModuleLoaded() {
+    public boolean isModuleLoaded(){
         return this.isModuleLoaded;
     }
 
     @Override
-    public String getUniqueName() {
+    public String getUniqueName(){
         return "AntiRadiation";
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot) {
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
         armorChestplate.getTagCompound().removeTag("AntiRadiationArmor");
     }
 
     @Override
-    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory) {
+    public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         NBTUtil.setBoolean(armorChestplate, "AntiRadiationArmor", true);
     }
 }

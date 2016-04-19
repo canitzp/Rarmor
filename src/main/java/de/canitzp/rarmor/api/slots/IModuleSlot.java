@@ -3,7 +3,7 @@ package de.canitzp.rarmor.api.slots;
 /**
  * @author canitzp
  */
-public interface IModuleSlot {
+public interface IModuleSlot{
 
     boolean isSlotActive();
 

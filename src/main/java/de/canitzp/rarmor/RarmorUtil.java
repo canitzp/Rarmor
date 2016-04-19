@@ -34,7 +34,7 @@ import net.minecraftforge.event.world.BlockEvent;
 /**
  * @author canitzp
  */
-public class RarmorUtil {
+public class RarmorUtil{
 
     /**
      * @param world The World of the Player
@@ -46,22 +46,22 @@ public class RarmorUtil {
      * <p>
      * Author: mDiyo, boni-xx
      */
-    public static boolean detectTree(World world, int x, int y, int z, Block wood) {
+    public static boolean detectTree(World world, int x, int y, int z, Block wood){
         int height = y;
         boolean foundTop = false;
-        do {
+        do{
             height++;
             IBlockState block = world.getBlockState(new BlockPos(x, height, z));
-            if (block.getBlock() != wood) {
+            if (block.getBlock() != wood){
                 height--;
                 foundTop = true;
             }
-        } while (!foundTop);
+        }while (!foundTop);
         int numLeaves = 0;
-        if (height - y < 50) {
-            for (int xPos = x - 1; xPos <= x + 1; xPos++) {
-                for (int yPos = height - 1; yPos <= height + 1; yPos++) {
-                    for (int zPos = z - 1; zPos <= z + 1; zPos++) {
+        if (height - y < 50){
+            for (int xPos = x - 1; xPos <= x + 1; xPos++){
+                for (int yPos = height - 1; yPos <= height + 1; yPos++){
+                    for (int zPos = z - 1; zPos <= z + 1; zPos++){
                         IBlockState leaves = WorldUtil.getBlockState(world, xPos, yPos, zPos);
                         if (leaves != null && leaves.getBlock().isLeaves(leaves, world, new BlockPos(xPos, yPos, zPos)))
                             numLeaves++;
@@ -76,15 +76,15 @@ public class RarmorUtil {
     /**
      * Author: mDiyo, boni-xx
      */
-    public static boolean breakTree(World world, int x, int y, int z, int xStart, int yStart, int zStart, ItemStack stack, Block bID, EntityPlayer player, int rfPerUse) {
-        for (int xPos = x - 1; xPos <= x + 1; xPos++) {
-            for (int yPos = y; yPos <= y + 1; yPos++) {
-                for (int zPos = z - 1; zPos <= z + 1; zPos++) {
+    public static boolean breakTree(World world, int x, int y, int z, int xStart, int yStart, int zStart, ItemStack stack, Block bID, EntityPlayer player, int rfPerUse){
+        for (int xPos = x - 1; xPos <= x + 1; xPos++){
+            for (int yPos = y; yPos <= y + 1; yPos++){
+                for (int zPos = z - 1; zPos <= z + 1; zPos++){
                     Block localBlock = WorldUtil.getBlock(world, xPos, yPos, zPos);
-                    if (bID == localBlock) {
+                    if (bID == localBlock){
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
                         float localHardness = localBlock.getBlockHardness(localMeta, world, new BlockPos(xPos, yPos, zPos));
-                        if (!(localHardness < 0)) {
+                        if (!(localHardness < 0)){
                             boolean cancelHarvest;
                             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, new BlockPos(x, y, z), localMeta, player);
                             MinecraftForge.EVENT_BUS.post(event);
@@ -92,14 +92,14 @@ public class RarmorUtil {
                             int xDist = xPos - xStart;
                             int yDist = yPos - yStart;
                             int zDist = zPos - zStart;
-                            if (9 * xDist * xDist + yDist * yDist + 9 * zDist * zDist < 2500) {
-                                if (cancelHarvest) {
+                            if (9 * xDist * xDist + yDist * yDist + 9 * zDist * zDist < 2500){
+                                if (cancelHarvest){
                                     breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
-                                } else {
-                                    if (stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse) {
+                                }else{
+                                    if (stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse){
                                         playerHarvestBlock(world, new BlockPos(xPos, yPos, zPos), player, stack);
                                         ((ItemChainSaw) stack.getItem()).extractEnergy(stack, rfPerUse, false);
-                                    } else {
+                                    }else{
                                         playerHarvestBlock(world, new BlockPos(x, y, z), player, stack);
                                         return false;
                                     }
@@ -125,54 +125,54 @@ public class RarmorUtil {
      * <p>
      * Author: Ellpeck
      */
-    public static boolean playerHarvestBlock(World world, BlockPos pos, EntityPlayer player, ItemStack stack) {
+    public static boolean playerHarvestBlock(World world, BlockPos pos, EntityPlayer player, ItemStack stack){
         Block block = world.getBlockState(pos).getBlock();
         IBlockState state = world.getBlockState(pos);
         int meta = world.getBlockState(pos).getBlock().getMetaFromState(world.getBlockState(pos));
         TileEntity tile = world.getTileEntity(pos);
         boolean canHarvest = block.canHarvestBlock(world, pos, player);
-        if (player instanceof EntityPlayerMP) {
+        if (player instanceof EntityPlayerMP){
             int event = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP) player).interactionManager.getGameType(), (EntityPlayerMP) player, pos);
-            if (event == -1) {
+            if (event == -1){
                 return false;
             }
         }
-        if (!world.isRemote) {
+        if (!world.isRemote){
             block.onBlockHarvested(world, pos, state, player);
-        } else {
+        }else{
             world.playAuxSFX(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         boolean removed = block.removedByPlayer(state, world, pos, player, canHarvest);
-        if (removed) {
+        if (removed){
             block.onBlockDestroyedByPlayer(world, pos, state);
-            if (!world.isRemote && !player.capabilities.isCreativeMode) {
-                if (canHarvest) {
+            if (!world.isRemote && !player.capabilities.isCreativeMode){
+                if (canHarvest){
                     block.harvestBlock(world, player, pos, state, tile, player.getHeldItemMainhand());
                 }
-                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) != 0) {
+                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) != 0){
                     block.dropXpOnBlockBreak(world, pos, block.getExpDrop(state, world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack)));
                 }
 
             }
         }
-        if (!world.isRemote) {
-            if (player instanceof EntityPlayerMP) {
+        if (!world.isRemote){
+            if (player instanceof EntityPlayerMP){
                 ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new SPacketBlockChange(world, pos));
             }
-        } else {
+        }else{
             Minecraft.getMinecraft().getNetHandler().addToSendQueue(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
         }
         return removed;
     }
 
-    public static boolean isPlayerWearingRarmor(EntityPlayer player) {
-        if (player != null) {
+    public static boolean isPlayerWearingRarmor(EntityPlayer player){
+        if (player != null){
             ItemStack head = player.inventory.armorInventory[3];
             ItemStack body = player.inventory.armorInventory[2];
             ItemStack leggins = player.inventory.armorInventory[1];
             ItemStack boots = player.inventory.armorInventory[0];
-            if (head != null && body != null && leggins != null && boots != null) {
-                if (head.getItem() instanceof ItemRFArmorHelmet && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric) {
+            if (head != null && body != null && leggins != null && boots != null){
+                if (head.getItem() instanceof ItemRFArmorHelmet && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric){
                     return true;
                 }
             }
@@ -180,11 +180,11 @@ public class RarmorUtil {
         return false;
     }
 
-    public static IRarmorModule getRarmorModule(EntityPlayer player) {
-        if (isPlayerWearingRarmor(player)) {
+    public static IRarmorModule getRarmorModule(EntityPlayer player){
+        if (isPlayerWearingRarmor(player)){
             ItemStack module = NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-            if (module != null) {
-                if (module.getItem() instanceof IRarmorModule) {
+            if (module != null){
+                if (module.getItem() instanceof IRarmorModule){
                     return (IRarmorModule) module.getItem();
                 }
             }
@@ -192,33 +192,33 @@ public class RarmorUtil {
         return null;
     }
 
-    public static ItemStack getPlayersRarmorChestplate(EntityPlayer player) {
-        if (isPlayerWearingRarmor(player)) {
+    public static ItemStack getPlayersRarmorChestplate(EntityPlayer player){
+        if (isPlayerWearingRarmor(player)){
             return player.inventory.armorInventory[2];
         }
         return null;
     }
 
-    public static void dropSlot(ItemStack stack, EntityPlayer player) {
-        if (stack != null) {
-            if (!player.worldObj.isRemote) {
+    public static void dropSlot(ItemStack stack, EntityPlayer player){
+        if (stack != null){
+            if (!player.worldObj.isRemote){
                 player.dropItem(stack, false);
             }
         }
     }
 
     public static Slot toggleSlotInGui(int slotX, int slotY, boolean value){
-        if(MinecraftUtil.getMinecraftSide().isClient()){
+        if (MinecraftUtil.getMinecraftSide().isClient()){
             GuiScreen gui = MinecraftUtil.getCurrentScreen();
-            if(gui instanceof GuiRFArmor){
+            if (gui instanceof GuiRFArmor){
                 Slot slot = SlotUtil.getSlotAtPosition((GuiContainer) gui, slotX, slotY);
-                if(slot != null){
-                    if(!value){
-                        if(((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                if (slot != null){
+                    if (!value){
+                        if (((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
                             ((GuiRFArmor) gui).deactivatedSlots.remove(slot);
                         }
-                    } else {
-                        if(!((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                    }else{
+                        if (!((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
                             ((GuiRFArmor) gui).deactivatedSlots.add(slot);
                         }
                     }
@@ -232,12 +232,15 @@ public class RarmorUtil {
     public static void saveRarmor(EntityPlayer player, InventoryBase base){
         NBTUtil.saveSlots(getPlayersRarmorChestplate(player), base);
     }
+
     public static void saveRarmor(ItemStack armor, InventoryBase base){
         NBTUtil.saveSlots(armor, base);
     }
+
     public static InventoryBase readRarmor(EntityPlayer player){
         return NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount);
     }
+
     public static InventoryBase readRarmor(ItemStack armor){
         return NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount);
     }

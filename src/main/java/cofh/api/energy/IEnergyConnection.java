@@ -11,7 +11,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author King Lemming
  */
-public interface IEnergyConnection {
+public interface IEnergyConnection{
 
     /**
      * Returns TRUE if the TileEntity can connect on a given side.

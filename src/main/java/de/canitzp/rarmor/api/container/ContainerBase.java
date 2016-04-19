@@ -7,7 +7,7 @@ import net.minecraft.inventory.Slot;
 /**
  * @author canitzp
  */
-public abstract class ContainerBase extends Container {
+public abstract class ContainerBase extends Container{
 
     public void addSlot(Slot slot){
         this.addSlotToContainer(slot);

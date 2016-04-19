@@ -8,11 +8,12 @@ import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 /**
  * @author canitzp
  */
+@SuppressWarnings("ALL")
 @JEIPlugin
-public class JEIIntegration implements IModPlugin {
+public class JEIIntegration implements IModPlugin{
 
     @Override
-    public void register(IModRegistry iModRegistry) {
+    public void register(IModRegistry iModRegistry){
         INbtIgnoreList ignoreList = iModRegistry.getJeiHelpers().getNbtIgnoreList();
         ignoreList.ignoreNbtTagNames(ItemRegistry.ironChainsaw, "Energy");
         ignoreList.ignoreNbtTagNames(ItemRegistry.diamondChainsaw, "Energy");
@@ -31,6 +32,6 @@ public class JEIIntegration implements IModPlugin {
      * @since JEI 2.23.0
      */
     @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime){
     }
 }

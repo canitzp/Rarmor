@@ -11,7 +11,7 @@ import net.minecraft.util.EnumFacing;
  *
  * @author King Lemming
  */
-public interface IEnergyHandler extends IEnergyConnection {
+public interface IEnergyHandler extends IEnergyConnection{
 
     /**
      * Returns the amount of energy currently stored.
