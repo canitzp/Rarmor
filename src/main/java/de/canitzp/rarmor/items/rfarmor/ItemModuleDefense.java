@@ -32,11 +32,14 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips) {
-        return JavaUtil.newList("This Module save you for Damage, aslong you have enough Energy.",
-                "The higher the damage multiplier, the more energy is needed.",
-                TextFormatting.DARK_AQUA + "Fall Damage: " + TextFormatting.GRAY + "Nearly full absorption.",
-                TextFormatting.DARK_AQUA + "Fire Damage: " + TextFormatting.GRAY + "Nearly full absorption.",
-                TextFormatting.DARK_AQUA + "Lava Damage: " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.");
+        return JavaUtil.newList("This Module save you for Damage,",
+                "aslong you have enough Energy.",
+                "The higher the damage multiplier,",
+                "the more energy is needed.",
+                TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
+                TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
+                TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.",
+                TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Port you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
     }
 
     @Override
@@ -45,17 +48,25 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
     }
 
     /**
-     * @param world             The World of the Player
-     * @param player            The Player itself
-     * @param armorChestplate   The Rarmor Chestplate
-     * @param damageSource      The Type of Damage the Player take
-     * @param damage            The Amount of Damage th Player take
+     * @param world           The World of the Player
+     * @param player          The Player itself
+     * @param armorChestplate The Rarmor Chestplate
+     * @param damageSource    The Type of Damage the Player take
+     * @param damage          The Amount of Damage th Player take
      * @return true if you want to cancel the Damage
      */
     @Override
     public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage) {
+        if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld) {
+            if(player.getBedLocation() != null){
+                player.setPosition(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
+            } else {
+                player.setPosition(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
+            }
+            EnergyUtil.reduceEnergy(armorChestplate, 50000);
+            return true;
+        }
         int energyYouNeed = (int) (damage * this.damageMultiplier);
-        System.out.println(energyYouNeed);
         if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed) {
             if (damageSource == DamageSource.fall) {
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
@@ -65,8 +76,9 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule {
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
-            if(damageSource == DamageSource.lava){
-                EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed*2);
+        } else if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed * 2) {
+            if (damageSource == DamageSource.lava) {
+                EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed * 2);
                 return true;
             }
         }

@@ -66,7 +66,7 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
 
     @Override
     public void onContainerTick(ContainerBase container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module) {
-        toggleSlots(false);
+        if(player.worldObj.isRemote) toggleSlots(false);
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
             ((IRarmorModule) mod1.getItem()).onContainerTick(container, player, inventory, armorChestplate, module);
@@ -102,7 +102,7 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
         slot.inv.setInventorySlotContents(31, null);
         slot.inv.setInventorySlotContents(32, null);
         slot.inv.setInventorySlotContents(33, null);
-        this.toggleSlots(true);
+        if(world.isRemote) this.toggleSlots(true);
         RarmorUtil.saveRarmor(player, base);
     }
 

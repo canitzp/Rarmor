@@ -29,7 +29,7 @@ repositories {
     }
 }
 
-version = "0.6.0RC2"
+version = "0.6.0RC3"
 group = "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Rarmor"
 

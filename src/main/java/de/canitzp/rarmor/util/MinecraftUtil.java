@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author canitzp
@@ -22,6 +23,7 @@ public class MinecraftUtil {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static Minecraft getMinecraft() {
         if (getMinecraftSide().isClient()) {
             return Minecraft.getMinecraft();
@@ -29,6 +31,7 @@ public class MinecraftUtil {
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     public static FontRenderer getFontRenderer() {
         if (getMinecraftSide().isClient()) {
             return getMinecraft().fontRendererObj;
@@ -36,6 +39,7 @@ public class MinecraftUtil {
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     public static EntityPlayer getPlayer() {
         if (getMinecraftSide().isClient()) {
             return getMinecraft().thePlayer;
@@ -43,6 +47,7 @@ public class MinecraftUtil {
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     public static GuiScreen getCurrentScreen() {
         if (MinecraftUtil.getMinecraftSide().isClient()) {
             return getMinecraft().currentScreen;
@@ -50,6 +55,7 @@ public class MinecraftUtil {
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     public static RayTraceResult getMouseOver() {
         if (getMinecraftSide().isClient()) {
             return getMinecraft().objectMouseOver;
