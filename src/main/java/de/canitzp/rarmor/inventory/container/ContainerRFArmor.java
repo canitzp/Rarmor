@@ -39,34 +39,34 @@ public class ContainerRFArmor extends ContainerBase {
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
-        //Armor Inventory:
+        //Armor Inventory: 0-26
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; j++) {
                 this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
             }
         }
-        //Player Inventory:
+        //Player Inventory: 27-54
         for (int j = 0; j < 3; ++j) {
             for (int k = 0; k < 9; ++k) {
                 this.addSlotToContainer(new Slot(inventoryPlayer, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
-        //Player Hotbar:
+        //Player Hotbar: 55-64
         for (int j = 0; j < 9; ++j) {
             this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
         }
-        //Armor Crafting Grid:
+        //Armor Crafting Grid: 65 + 66-75
         this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
         for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 3; ++i1) {
                 this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
             }
         }
-        //Armor Furnace Input:
+        //Armor Furnace Input: 76
         this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
-        //Armor Furnace Output:
+        //Armor Furnace Output: 77
         this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
-        //Armor Module Slot:
+        //Armor Module Slot: 78
         this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
 
         addSlotToContainer(new SlotUnmovable(player.inventory, 39, 44, 10));
@@ -94,7 +94,6 @@ public class ContainerRFArmor extends ContainerBase {
                 ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
             }
         }
-
     }
 
     @Override

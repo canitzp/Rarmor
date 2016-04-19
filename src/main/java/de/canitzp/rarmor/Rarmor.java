@@ -4,6 +4,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.hudExtensions.RarmorHud;
 import de.canitzp.rarmor.blocks.BlockRegistry;
 import de.canitzp.rarmor.event.EventHandler;
+import de.canitzp.rarmor.integration.craftingTweaks.CraftingTweaksIntegration;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
@@ -83,6 +84,7 @@ public class Rarmor {
         proxy.init();
         RecipeManager.init();
         logger.info("Finished Initialization");
+        CraftingTweaksIntegration.init();
     }
 
     @Mod.EventHandler

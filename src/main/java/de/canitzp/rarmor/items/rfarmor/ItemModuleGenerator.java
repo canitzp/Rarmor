@@ -146,7 +146,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule {
                 player.dropItem(stack, false);
             }
             inventory.setInventorySlotContents(30, null);
-            RarmorUtil.saveRarmor(armor, inventory);
+            RarmorUtil.saveRarmor(player, inventory);
         }
     }
 

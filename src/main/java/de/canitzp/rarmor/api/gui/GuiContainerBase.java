@@ -2,6 +2,8 @@ package de.canitzp.rarmor.api.gui;
 
 import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -13,6 +15,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public abstract class GuiContainerBase extends GuiContainer {
     private Slot clickedSlot;
     private int dragSplittingLimit;
     public List<Slot> deactivatedSlots = new ArrayList<>();
+    public List<Pair<Integer, Integer>> deactivatedButtons = new ArrayList<>();
 
     public GuiContainerBase(Container inventorySlotsIn) {
         super(inventorySlotsIn);
@@ -51,6 +55,21 @@ public abstract class GuiContainerBase extends GuiContainer {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
+
+        //Draw the Button Shit:
+        for (GuiButton aButtonList : this.buttonList) {
+            boolean flag = false;
+            for(Pair<Integer, Integer> pair : deactivatedButtons){
+                if(pair.getKey() == aButtonList.xPosition && pair.getValue() == aButtonList.yPosition){
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag) aButtonList.drawButton(this.mc, mouseX, mouseY);
+        }
+        for (GuiLabel aLabelList : this.labelList) {
+            aLabelList.drawLabel(this.mc, mouseX, mouseY);
+        }
         //super.drawScreen(mouseX, mouseY, partialTicks);
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.pushMatrix();

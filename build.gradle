@@ -23,6 +23,10 @@ repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
     }
+    maven {
+        name = "eiranet"
+        url ="http://repo.blay09.net"
+    }
 }
 
 version = "0.6.0RC2"
@@ -35,7 +39,7 @@ targetCompatibility = 1.8
 minecraft {
     version = "1.9-12.16.0.1865-1.9"
     runDir = "run"
-    mappings = "snapshot_20160417"
+    mappings = "snapshot_20160419"
     makeObfSourceJar = false
     useDepAts = true
     replaceIn "Rarmor.java"
@@ -43,7 +47,8 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9:3.2.10.185"
+    deobfCompile "mezz.jei:jei_1.9:3.2.11.186"
+    deobfCompile 'net.blay09.mods:craftingtweaks:4.0.10' // or just api instead of dev
 }
 
 processResources

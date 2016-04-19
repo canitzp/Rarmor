@@ -6,6 +6,7 @@ import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
 import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
+import de.canitzp.rarmor.integration.craftingTweaks.CraftingTweaksIntegration;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.ClientProxy;
@@ -50,7 +51,6 @@ public class GuiRFArmor extends GuiContainerBase {
 
     @Override
     public void initGui() {
-        super.initGui();
         GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, this.checkBox, 117, 12, 10, "Show In-World Tooltips", JavaUtil.newList("Show Tooltips like", "the Amount of Fluid in Tanks"));
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
         checkBoxList.add(setInWorldTooltip);
@@ -65,6 +65,7 @@ public class GuiRFArmor extends GuiContainerBase {
         this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 14));
         this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 34));
         this.deactivatedSlots.add(SlotUtil.getSlotAtPosition(this, -16, 54));
+        super.initGui();
     }
 
     @Override
@@ -101,6 +102,10 @@ public class GuiRFArmor extends GuiContainerBase {
             }
         } else {
             this.craftingSlot(false);
+            if(CraftingTweaksIntegration.isActive){
+                this.mc.getTextureManager().bindTexture(modulesGui);
+                this.drawTexturedModalRect(this.guiLeft + 244, this.guiTop + 7, 26, 129, 12, 67);
+            }
         }
 
         GuiInventory.drawEntityOnScreen(this.guiLeft + 88, this.guiTop + 74, 30, (float) (this.guiLeft + 88) - this.xSizeFloat, (float) (this.guiTop + 72 - 50) - this.ySizeFloat, this.mc.thePlayer);
@@ -111,6 +116,20 @@ public class GuiRFArmor extends GuiContainerBase {
         this.xSizeFloat = (float) mouseX;
         this.ySizeFloat = (float) mouseY;
         super.drawScreen(mouseX, mouseY, renderPartialTicks);
+        ItemStack stack = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+
+        //Draw Module things:
+        if (stack != null) {
+            if (stack.getItem() instanceof IRarmorModule) {
+                ((IRarmorModule) stack.getItem()).drawScreen(mc, this, this.armor, stack, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
+            }
+        }
+
+        if(this.isSettingsTab){
+            for (GuiCheckBox checkBox : checkBoxList) {
+                checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop, fontRendererObj);
+            }
+        }
 
         if (mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 && mouseY <= this.guiTop + 28) {
             int energy = ((ItemRFArmorBody) armor.getItem()).getEnergyStored(armor);
@@ -131,21 +150,6 @@ public class GuiRFArmor extends GuiContainerBase {
                 } else {
                     this.drawHoveringText(JavaUtil.newList("This Module doesn't provide", "a help page."), mouseX, mouseY);
                 }
-            }
-        }
-
-
-        //Draw Module things:
-        ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if (module != null) {
-            if (module.getItem() instanceof IRarmorModule) {
-                ((IRarmorModule) module.getItem()).drawScreen(mc, this, this.armor, module, this.isSettingsTab, renderPartialTicks, mouseX, mouseY);
-            }
-        }
-
-        if (this.isSettingsTab) {
-            for (GuiCheckBox checkBox : checkBoxList) {
-                checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop, fontRendererObj);
             }
         }
 
@@ -236,6 +240,22 @@ public class GuiRFArmor extends GuiContainerBase {
         RarmorUtil.toggleSlotInGui(198, 50, activated);
         RarmorUtil.toggleSlotInGui(216, 50, activated);
         RarmorUtil.toggleSlotInGui(217, 99, activated);
+        toggleBtn(235, 14, activated);
+        toggleBtn(235, 32, activated);
+        toggleBtn(235, 50, activated);
+    }
+
+    private void toggleBtn(int x, int y, boolean value){
+        Pair<Integer, Integer> pair = Pair.of(x, y);
+        if(value){
+            if(!deactivatedButtons.contains(pair)){
+                deactivatedButtons.add(pair);
+            }
+        } else {
+            if(deactivatedButtons.contains(pair)){
+                deactivatedButtons.remove(pair);
+            }
+        }
     }
 
 }
