@@ -1,6 +1,5 @@
 package de.canitzp.rarmor.api.modules;
 
-import de.canitzp.rarmor.items.modularTool.ItemModularTool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +13,6 @@ import net.minecraft.world.World;
 public interface IToolModule{
 
     String getName();
-
-    ItemModularTool.ToolTypes getRenderTool();
 
     default float onHitEntity(ItemStack module, ItemStack tool, EntityLivingBase target, EntityLivingBase attacker){
         return 0.0F;

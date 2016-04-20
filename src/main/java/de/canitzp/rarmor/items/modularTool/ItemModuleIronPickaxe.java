@@ -20,11 +20,6 @@ public class ItemModuleIronPickaxe extends ItemModule implements IToolModule{
     }
 
     @Override
-    public ItemModularTool.ToolTypes getRenderTool(){
-        return ItemModularTool.ToolTypes.PICKAXE;
-    }
-
-    @Override
     public float getStrengthAgainstBlock(ItemStack module, IBlockState state, ItemStack stack){
         if (state.getBlock().isToolEffective("pickaxe", state)){
             return ToolMaterial.IRON.getEfficiencyOnProperMaterial();

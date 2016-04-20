@@ -44,11 +44,6 @@ public class ItemModularTool extends ItemEnergyContainer{
         this.setRegistryName(name);
         this.setCreativeTab(rarmorTab);
         Rarmor.proxy.addRenderer(new ItemStack(this), name);
-        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.PICKAXE.meta), name);
-        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.AXE.meta), name);
-        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SHOVEL.meta), name);
-        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.SWORD.meta), name);
-        Rarmor.proxy.addSpecialRenderer(new ItemStack(this, 1, ToolTypes.HOE.meta), name);
         GameRegistry.register(this);
     }
 
@@ -122,7 +117,6 @@ public class ItemModularTool extends ItemEnergyContainer{
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand){
-        stack.setItemDamage(1);
         if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
             player.openGui(Rarmor.instance, GuiHandler.MODULARTOOL, world, (int) player.serverPosX, (int) player.serverPosY, (int) player.serverPosZ);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
@@ -172,17 +166,4 @@ public class ItemModularTool extends ItemEnergyContainer{
         return super.canHarvestBlock(state, stack);
     }
 
-    public enum ToolTypes{
-        PICKAXE(1),
-        AXE(2),
-        SHOVEL(3),
-        SWORD(4),
-        HOE(5);
-
-        public int meta;
-
-        ToolTypes(int meta){
-            this.meta = meta;
-        }
-    }
 }

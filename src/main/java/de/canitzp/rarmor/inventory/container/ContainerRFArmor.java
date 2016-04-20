@@ -45,35 +45,37 @@ public class ContainerRFArmor extends ContainerBase{
                 this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
             }
         }
-        //Player Inventory: 27-54
+        //Player Inventory: 27-53
         for (int j = 0; j < 3; ++j){
             for (int k = 0; k < 9; ++k){
                 this.addSlotToContainer(new Slot(inventoryPlayer, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
-        //Player Hotbar: 55-64
+        //Player Hotbar: 54-62
         for (int j = 0; j < 9; ++j){
             this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
         }
-        //Armor Crafting Grid: 65 + 66-75
+        //Armor Crafting Grid: 63 + 64-72
         this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
         for (int l = 0; l < 3; ++l){
             for (int i1 = 0; i1 < 3; ++i1){
                 this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
             }
         }
-        //Armor Furnace Input: 76
+        //Armor Furnace Input: 73
         this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
-        //Armor Furnace Output: 77
+        //Armor Furnace Output: 74
         this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
-        //Armor Module Slot: 78
+        //Armor Module Slot: 75
         this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
 
+        //Armor Slots: 76-79
         addSlotToContainer(new SlotUnmovable(player.inventory, 39, 44, 10));
         addSlotToContainer(new SlotUnmovable(player.inventory, 38, 44, 10 + 18));
         addSlotToContainer(new SlotUnmovable(player.inventory, 37, 44, 10 + 18 * 2));
         addSlotToContainer(new SlotUnmovable(player.inventory, 36, 44, 10 + 18 * 3));
 
+        //Generic Slot Single: 80
         this.addSlotToContainer(this.generatorSlot = new SlotUpdate(this.inventory, 30, 140, 18, player));
 
         addSlotToContainer(this.sideSlot1 = new SlotModuleSplitterInput(inventory, 31, -16, 14, player));
@@ -120,19 +122,25 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex){
-        int hotbarStart = 54;
-        int invStart = 27, invLength = 26;
-        int armorInvStart = 0, armorInvLength = 26;
+        int armorInvStart = 0, armorInvLength = 26; //0-26
+        int invStart = 27, invLength = 26; //27-53
+        int hotbarStart = 54, hotbarLength = 8; //54-62
+        int craftStart = 64, craftLength = 8, craftOut = 63; // 63 & 64-72
+        int furnaceInput = 73, furnaceOutput = 74; // 73 & 74
+        int mod0 = 75;
+
+
+
         Slot slot = this.inventorySlots.get(slotIndex);
         ItemStack stack = null;
         if (slot != null && slot.getHasStack()){
             stack = slot.getStack();
             ItemStack stack1 = stack.copy();
             if (slotIndex >= invStart && slotIndex <= invStart + invLength){
-                if (!this.mergeItemStack(stack, hotbarStart, hotbarStart + 9, false)){
+                if (!this.mergeItemStack(stack, hotbarStart, hotbarStart + hotbarLength, false)){
                     return null;
                 }
-            }else if (slotIndex >= hotbarStart && slotIndex <= hotbarStart + 8){
+            }else if (slotIndex >= hotbarStart && slotIndex <= hotbarStart + hotbarLength){
                 if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
                     return null;
                 }
@@ -140,11 +148,23 @@ public class ContainerRFArmor extends ContainerBase{
                 if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
                     return null;
                 }
-            }else if (slotIndex == 63){
+            }else if (slotIndex == craftOut){
                 if (!this.mergeItemStack(stack1, invStart, invStart + invLength, true)){
                     return null;
                 }
                 slot.onSlotChange(stack1, stack);
+            }else if(slotIndex >= craftStart && slotIndex <= craftStart + craftLength){
+                if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
+                    return null;
+                }
+            } else if(slotIndex == mod0){
+                if (!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
+                    return null;
+                }
+            } else if(slotIndex == furnaceInput || slotIndex == furnaceOutput){
+                if (!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
+                    return null;
+                }
             }
             if (stack1.stackSize == 0){
                 slot.putStack(null);
@@ -157,7 +177,7 @@ public class ContainerRFArmor extends ContainerBase{
             }
             slot.onPickupFromSlot(player, stack1);
         }
-        return stack;//ContainerUtil.transferStackInSlot(this.inventorySlots, player, slot);
+        return stack;
     }
 
     @Override

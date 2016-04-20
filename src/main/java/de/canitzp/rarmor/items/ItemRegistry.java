@@ -14,7 +14,7 @@ public class ItemRegistry{
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense, moduleModuleSplitter;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense, moduleModuleSplitter, moduleMovement;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
     public static Item modularTool;
     public static Item moduleIronPickaxe;
@@ -40,6 +40,7 @@ public class ItemRegistry{
         moduleLoader = new ItemModuleEnergeticLoader();
         moduleDefense = new ItemModuleDefense();
         moduleModuleSplitter = new ItemModuleModuleSplitter();
+        moduleMovement = new ItemModuleMovement();
 
         //ModularTool:
         //modularTool = new ItemModularTool(1000000, 8000, "modularTool");
