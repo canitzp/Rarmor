@@ -4,6 +4,7 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.NBTUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -70,13 +71,18 @@ public class PacketSendNBTBoolean implements IMessage{
         public IMessage onMessage(PacketSendNBTBoolean message, MessageContext ctx){
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-            ItemStack stack;
+            ItemStack stack = null;
             if (message.playerSlotID == 123456){
                 stack = NBTUtil.readSlots(player.inventory.getStackInSlot(38), ItemRFArmorBody.slotAmount).getStackInSlot(29);
-            }else{
+            }else if(message.playerSlotID <= 41){
                 stack = player.inventory.getStackInSlot(message.playerSlotID);
+            } else {
+                Container container = player.openContainer;
+                if(container != null){
+                    stack = container.getSlot(message.playerSlotID).getStack();
+                }
             }
-            NBTUtil.setBoolean(stack, message.nbt, message.b);
+            if(stack != null) NBTUtil.setBoolean(stack, message.nbt, message.b);
             return null;
         }
     }

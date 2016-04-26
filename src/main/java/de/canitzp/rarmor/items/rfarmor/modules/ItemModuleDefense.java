@@ -1,7 +1,8 @@
-package de.canitzp.rarmor.items.rfarmor;
+package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
+import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.JavaUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,8 +39,8 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
                 "the more energy is needed.",
                 TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
                 TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
-                TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.",
-                TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
+                TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.");
+                //TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
     }
 
     @Override
@@ -57,15 +58,22 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
      */
     @Override
     public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
+        /*
         if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld){
+            if(!world.provider.isSurfaceWorld() && !world.isRemote){
+                player.changeDimension(0);
+            }
             if (player.getBedLocation() != null){
+                player.setPosition(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
                 player.teleportTo_(player.getBedLocation().getX(), player.getBedLocation().getY() + 1, player.getBedLocation().getZ());
             }else{
+                player.setPosition(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
                 player.teleportTo_(world.getSpawnPoint().getX(), world.getSpawnPoint().getY() + 1, world.getSpawnPoint().getZ());
             }
             EnergyUtil.reduceEnergy(armorChestplate, 50000);
             return true;
         }
+        */
         int energyYouNeed = (int) (damage * this.damageMultiplier);
         if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed){
             if (damageSource == DamageSource.fall){

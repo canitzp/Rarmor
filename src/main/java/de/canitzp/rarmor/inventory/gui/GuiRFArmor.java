@@ -75,11 +75,10 @@ public class GuiRFArmor extends GuiContainerBase{
         //Draw Gui:
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
-        ItemRFArmorBody body = (ItemRFArmorBody) armor.getItem();
-        int energy = body.getEnergyStored(armor);
+        int energy = EnergyUtil.getEnergy(this.armor);
         int factorOfBurnTime = (int) (NBTUtil.getInteger(armor, "BurnTime") * 11.9 / 200);
         //Draw Batterie:
-        GuiUtil.drawBarHorizontal(normalGui, normalGui, this.guiLeft + 18, this.guiTop + 29, 55, 247, 10, 21, body.maxEnergy, energy);
+        GuiUtil.drawBarHorizontal(normalGui, normalGui, this.guiLeft + 18, this.guiTop + 29, 55, 247, 10, 21, this.armor.getMaxDamage(), energy);
         //Draw Furnace Burn Time:
         this.drawTexturedModalRect(this.guiLeft + 15, this.guiTop + 89 - factorOfBurnTime, 39, 237 - factorOfBurnTime, 16, factorOfBurnTime);
 
@@ -87,12 +86,15 @@ public class GuiRFArmor extends GuiContainerBase{
         this.drawTexturedModalRect(this.guiLeft + 33, this.guiTop + 33, 15, 0, 3, 7);
 
         //Draw Module things:
+
         ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if (module != null){
             if (module.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, par1, par2, par3, guiLeft, guiTop);
             }
         }
+
+
 
         if (this.isSettingsTab){
             this.mc.getTextureManager().bindTexture(modulesGui);
@@ -132,7 +134,7 @@ public class GuiRFArmor extends GuiContainerBase{
         }
 
         if (mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 && mouseY <= this.guiTop + 28){
-            int energy = ((ItemRFArmorBody) armor.getItem()).getEnergyStored(armor);
+            int energy = EnergyUtil.getEnergy(this.armor);
             int cap = ((ItemRFArmorBody) armor.getItem()).getMaxEnergyStored(armor);
             this.drawHoveringText(Lists.newArrayList(Integer.toString(energy) + "/" + Integer.toString(cap) + " RF"), mouseX, mouseY, this.fontRendererObj);
         }
@@ -178,7 +180,7 @@ public class GuiRFArmor extends GuiContainerBase{
             //Draw Module things:
             ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if (module != null){
-                if (module.getItem() instanceof IRarmorModule){
+                if(module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, type, mouseX, mouseY, this.guiLeft, this.guiTop);
                 }
             }
@@ -207,7 +209,6 @@ public class GuiRFArmor extends GuiContainerBase{
         mouseX -= k1;
         mouseY -= l1;
         boolean isAtCoordinates = mouseX >= slotX - 1 && mouseX < slotX + width + 1 && mouseY >= slotY - 1 && mouseY < slotY + height + 1;
-        Slot slot = SlotUtil.getSlotAtPosition(this, slotX, slotY);
         if (isAtCoordinates){
             for (Slot slotUpdate : deactivatedSlots){
                 if (slotUpdate != null){

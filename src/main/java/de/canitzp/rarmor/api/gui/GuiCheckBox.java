@@ -46,6 +46,10 @@ public class GuiCheckBox extends Gui implements IGuiRender{
         this(guiContainer, iconLocation, x, y, height, text, description, ColorUtil.BLACK);
     }
 
+    public GuiCheckBox(ResourceLocation iconLocation, int x, int y, int height, String text, List<String> description){
+        this(null, iconLocation, x, y, height, text, description);
+    }
+
     public static GuiCheckBox getCheckBoxAtCoordinates(int x, int y){
         for (GuiCheckBox checkBox : checkBoxList){
             if (checkBox.x == x && checkBox.y == y){

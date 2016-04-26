@@ -10,6 +10,8 @@ import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
+import de.canitzp.rarmor.util.EnergyUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -28,6 +30,7 @@ public class ContainerRFArmor extends ContainerBase{
     public SlotUpdate generatorSlot;
     public SlotModuleSplitterInput sideSlot1, sideSlot2, sideSlot3;
     public ItemStack armor;
+    public int currentArmorEnergy;
 
     public ContainerRFArmor(EntityPlayer player){
         if (player.worldObj.isRemote)
@@ -35,14 +38,13 @@ public class ContainerRFArmor extends ContainerBase{
         this.armor = RarmorUtil.getPlayersRarmorChestplate(player);
         InventoryPlayer inventoryPlayer = player.inventory;
         this.inventory = RarmorUtil.readRarmor(player);
-        RarmorUtil.saveRarmor(player, this.inventory);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
         //Armor Inventory: 0-26
         for (int i = 0; i < 3; ++i){
             for (int j = 0; j < 9; j++){
-                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
+                this.addSlotToContainer(new Slot(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18));
             }
         }
         //Player Inventory: 27-53
@@ -78,6 +80,7 @@ public class ContainerRFArmor extends ContainerBase{
         //Generic Slot Single: 80
         this.addSlotToContainer(this.generatorSlot = new SlotUpdate(this.inventory, 30, 140, 18, player));
 
+        //Side Slots: 81, 82, 83
         addSlotToContainer(this.sideSlot1 = new SlotModuleSplitterInput(inventory, 31, -16, 14, player));
         addSlotToContainer(this.sideSlot2 = new SlotModuleSplitterInput(inventory, 32, -16, 34, player));
         addSlotToContainer(this.sideSlot3 = new SlotModuleSplitterInput(inventory, 33, -16, 54, player));
@@ -87,14 +90,25 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public void detectAndSendChanges(){
-        InventoryBase inv = RarmorUtil.readRarmor(player);
-        this.inventory.slots = inv.slots;
         super.detectAndSendChanges();
-        ItemStack module = inv.getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if (module != null){
             if (module.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
             }
+        }
+        for(ICrafting crafting : this.listeners){
+            if(this.currentArmorEnergy != EnergyUtil.getEnergy(this.armor)){
+                crafting.sendProgressBarUpdate(this, 0, EnergyUtil.getEnergy(this.armor));
+            }
+        }
+        this.currentArmorEnergy = EnergyUtil.getEnergy(this.armor);
+    }
+
+    @Override
+    public void updateProgressBar(int id, int data){
+        if(id == 0){
+            EnergyUtil.setEnergy(this.armor, data);
         }
     }
 
@@ -105,6 +119,7 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public void onContainerClosed(EntityPlayer player){
+        NBTUtil.saveSlots(this.armor, this.inventory);
         dropCraftMatrix(player);
         super.onContainerClosed(player);
     }
@@ -128,9 +143,6 @@ public class ContainerRFArmor extends ContainerBase{
         int craftStart = 64, craftLength = 8, craftOut = 63; // 63 & 64-72
         int furnaceInput = 73, furnaceOutput = 74; // 73 & 74
         int mod0 = 75;
-
-
-
         Slot slot = this.inventorySlots.get(slotIndex);
         ItemStack stack = null;
         if (slot != null && slot.getHasStack()){

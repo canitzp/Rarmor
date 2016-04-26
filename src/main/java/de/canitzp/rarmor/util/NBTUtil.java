@@ -45,7 +45,7 @@ public class NBTUtil{
     public static InventoryBase readSlots(ItemStack stack, int slotAmo){
         NBTTagCompound compound = stack.getTagCompound();
         if (compound != null){
-            if (compound.getInteger("SlotAmount") != 0){
+            if (slotAmo != 0){
                 String name = compound.getString("InventoryName");
                 InventoryBase inv = new InventoryBase(name, slotAmo);
                 if (inv.getSizeInventory() > 0){

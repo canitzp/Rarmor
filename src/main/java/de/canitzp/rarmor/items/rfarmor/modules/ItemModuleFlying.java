@@ -1,9 +1,10 @@
-package de.canitzp.rarmor.items.rfarmor;
+package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
+import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;

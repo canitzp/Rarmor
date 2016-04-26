@@ -230,15 +230,15 @@ public class RarmorUtil{
     }
 
     public static void saveRarmor(EntityPlayer player, InventoryBase base){
-        NBTUtil.saveSlots(getPlayersRarmorChestplate(player), base);
+        saveRarmor(getPlayersRarmorChestplate(player), base);
     }
 
     public static void saveRarmor(ItemStack armor, InventoryBase base){
-        NBTUtil.saveSlots(armor, base);
+       NBTUtil.saveSlots(armor, base);
     }
 
     public static InventoryBase readRarmor(EntityPlayer player){
-        return NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount);
+        return readRarmor(getPlayersRarmorChestplate(player));
     }
 
     public static InventoryBase readRarmor(ItemStack armor){

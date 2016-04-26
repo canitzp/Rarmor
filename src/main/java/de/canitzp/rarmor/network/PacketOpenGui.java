@@ -2,6 +2,7 @@ package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.GuiHandler;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -15,17 +16,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketOpenGui implements IMessage{
 
-    public static Object instance;
     private int playerID, worldID, guiID;
 
     public PacketOpenGui(){
     }
 
-    public PacketOpenGui(EntityPlayer player, int guiID, Object instance){
+    public PacketOpenGui(EntityPlayer player, int guiID){
         this.playerID = player.getEntityId();
         this.worldID = player.getEntityWorld().provider.getDimension();
         this.guiID = guiID;
-        PacketOpenGui.instance = instance;
     }
 
     @Override
@@ -47,8 +46,14 @@ public class PacketOpenGui implements IMessage{
         @Override
         public IMessage onMessage(PacketOpenGui message, MessageContext ctx){
             World world = DimensionManager.getWorld(message.worldID);
-            EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-            player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+            if(!world.isRemote){
+                EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
+                if(player != null){
+                    player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+                } else {
+                    System.out.println(MinecraftUtil.getPlayer().dimension);
+                }
+            }
             return null;
         }
     }

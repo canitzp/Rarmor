@@ -204,7 +204,8 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getEnergyStored(ItemStack container){
-        return NBTUtil.getInteger(container, "Energy");
+        //return NBTUtil.getInteger(container, "Energy");
+        return EnergyUtil.getEnergy(container);
     }
 
     @Override

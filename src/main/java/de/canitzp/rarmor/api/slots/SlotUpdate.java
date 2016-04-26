@@ -8,9 +8,8 @@ import net.minecraft.inventory.Slot;
 /**
  * @author canitzp
  */
-public class SlotUpdate extends Slot implements ISpecialSlot{
+public class SlotUpdate extends Slot {
 
-    public boolean slotExist = true;
     public InventoryBase inv;
     public EntityPlayer player;
 
@@ -24,16 +23,6 @@ public class SlotUpdate extends Slot implements ISpecialSlot{
     public void onSlotChanged(){
         RarmorUtil.saveRarmor(this.player, this.inv);
         super.onSlotChanged();
-    }
-
-    @Override
-    public boolean doesSlotExist(){
-        return this.slotExist;
-    }
-
-    @Override
-    public void setSlotExist(boolean b){
-        this.slotExist = b;
     }
 
 }

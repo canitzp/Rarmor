@@ -5,18 +5,21 @@ import de.canitzp.rarmor.api.hudExtensions.RarmorHud;
 import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.integration.craftingTweaks.CraftingTweaksIntegration;
 import de.canitzp.rarmor.items.ItemRegistry;
+import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.util.ItemUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,6 +81,9 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
+        for(Potion potion : ForgeRegistries.POTIONS){
+            ItemModuleEffects.addPotionEffect(potion);
+        }
         proxy.postInit(event);
     }
 

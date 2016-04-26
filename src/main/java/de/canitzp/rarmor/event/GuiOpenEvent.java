@@ -1,6 +1,5 @@
 package de.canitzp.rarmor.event;
 
-import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.GuiHandler;
@@ -39,7 +38,7 @@ public class GuiOpenEvent{
                         NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "isFirstOpened", true));
                     }
                     event.setCanceled(true);
-                    NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player, GuiHandler.RFARMORGUI, Rarmor.instance));
+                    NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player, GuiHandler.RFARMORGUI));
                 }else if (body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                 if (RarmorUtil.isPlayerWearingRarmor(player)){
                     ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);

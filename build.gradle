@@ -13,12 +13,6 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
 
-/*
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
-
 repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
@@ -30,7 +24,7 @@ repositories {
 }
 
 version = "0.6.0RC3"
-group = "de.canitzp.rarmor" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
 sourceCompatibility = 1.8
@@ -39,7 +33,7 @@ targetCompatibility = 1.8
 minecraft {
     version = "1.9-12.16.0.1865-1.9"
     runDir = "run"
-    mappings = "snapshot_20160419"
+    mappings = "snapshot_20160425"
     makeObfSourceJar = false
     useDepAts = true
     replaceIn "Rarmor.java"
@@ -47,29 +41,22 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9:3.2.11.186"
-    deobfCompile 'net.blay09.mods:craftingtweaks:4.0.10' // or just api instead of dev
+    deobfCompile "mezz.jei:jei_1.9:3.2.14.190"
+    deobfCompile 'net.blay09.mods:craftingtweaks:4.0.10'
 }
 
-processResources
-        {
-            // this will ensure that this task is redone when the versions change.
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
 
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
-
-                // replace version and mcversion
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
-
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
 
 idea {
     module {

@@ -1,7 +1,10 @@
 package de.canitzp.rarmor.items;
 
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.items.rfarmor.*;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
+import de.canitzp.rarmor.items.rfarmor.modules.*;
 import de.canitzp.rarmor.util.items.ItemBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -14,7 +17,7 @@ public class ItemRegistry{
 
     public static ItemChainSaw ironChainsaw, diamondChainsaw;
     public static Item rfArmorBody, rfArmorHelmet, rfArmorLeggins, rfArmorBoots;
-    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense, moduleModuleSplitter, moduleMovement;
+    public static Item moduleGenerator, moduleFastFurnace, moduleFlying, moduleSolarPanel, moduleUnloader, moduleLoader, moduleDefense, moduleModuleSplitter, moduleMovement, moduleEffects;
     public static Item ribbonCable, electricalController, advancedEyeMatrix;
     public static Item modularTool;
     public static Item moduleIronPickaxe;
@@ -41,6 +44,7 @@ public class ItemRegistry{
         moduleDefense = new ItemModuleDefense();
         moduleModuleSplitter = new ItemModuleModuleSplitter();
         moduleMovement = new ItemModuleMovement();
+        moduleEffects = new ItemModuleEffects();
 
         //ModularTool:
         //modularTool = new ItemModularTool(1000000, 8000, "modularTool");

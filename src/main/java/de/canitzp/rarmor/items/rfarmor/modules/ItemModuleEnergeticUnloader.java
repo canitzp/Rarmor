@@ -1,4 +1,4 @@
-package de.canitzp.rarmor.items.rfarmor;
+package de.canitzp.rarmor.items.rfarmor.modules;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.RarmorUtil;
@@ -7,9 +7,10 @@ import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
+import de.canitzp.rarmor.items.rfarmor.ItemModule;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.SlotUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,21 +23,21 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModule{
+public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorModule{
 
-    public ItemModuleEnergeticLoader(){
-        super("moduleEnergeticLoader");
+    public ItemModuleEnergeticUnloader(){
+        super("moduleEnergeticUnloader");
     }
 
     @Override
     public String getUniqueName(){
-        return "EnergeticLoader";
+        return "EnergeticUnloader";
     }
 
     @Override
     public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("If you have some tools and they need some energy,",
-                "this module simply uses the energy of your Rarmor to power up the tool.");
+        return JavaUtil.newList("If you have some tools and your Rarmor needs more energy,",
+                "this module simply uses the energy of them to power up your Rarmor.");
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModu
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
         RarmorUtil.toggleSlotInGui(140, 18, true);
         RarmorUtil.dropSlot(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player);
-        SlotUtil.clearSlot(slot.inv, ItemRFArmorBody.GENERATORSLOT);
+        slot.inv.setInventorySlotContents(30, null);
     }
 
     @Override
@@ -70,8 +71,8 @@ public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModu
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         ItemStack chargeSlot = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
         if (chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem){
-            ((IEnergyContainerItem) chargeSlot.getItem()).receiveEnergy(chargeSlot, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
-            ((IEnergyContainerItem) armorChestplate.getItem()).extractEnergy(armorChestplate, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
+            ((IEnergyContainerItem) chargeSlot.getItem()).extractEnergy(chargeSlot, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
+            ((IEnergyContainerItem) armorChestplate.getItem()).receiveEnergy(armorChestplate, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
         }
     }
 }
