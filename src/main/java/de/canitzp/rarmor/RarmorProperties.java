@@ -17,6 +17,7 @@ public class RarmorProperties extends Properties{
     private static File propFile;
     private static Map<String, Boolean> booleanProperties = new HashMap<>();
     private static Map<String, Integer> integerProperties = new HashMap<>();
+    private static Map<String, String[]> stringArrayProperties = new HashMap<>();
 
     public RarmorProperties(File suggestedConfigurationFile){
         RarmorProperties.propFile = new File(suggestedConfigurationFile.getParent() + File.separator + "Rarmor.properties");
@@ -36,6 +37,10 @@ public class RarmorProperties extends Properties{
         return integerProperties.containsKey(key) ? integerProperties.get(key) : 0;
     }
 
+    public static String[] getStringArray(String key){
+        return stringArrayProperties.containsKey(key) ? stringArrayProperties.get(key) : new String[0];
+    }
+
     @Override
     public synchronized Enumeration<Object> keys(){
         return Collections.enumeration(new TreeSet<>(super.keySet()));
@@ -48,6 +53,9 @@ public class RarmorProperties extends Properties{
             }
             for (Map.Entry<String, Integer> entry : integerProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), String.valueOf(entry.getValue()));
+            }
+            for (Map.Entry<String, String[]> entry : stringArrayProperties.entrySet()){
+                rarmorProperties.put(entry.getKey(), Arrays.toString(entry.getValue()));
             }
             rarmorProperties.store(new FileOutputStream(propFile), "These are the Properties of Rarmor");
         } catch (Exception e){
@@ -65,6 +73,9 @@ public class RarmorProperties extends Properties{
                 if (this.isEntryInteger((String) entry.getValue())){
                     integerProperties.put((String) entry.getKey(), Integer.parseInt((String) entry.getValue()));
                 }
+                if (this.isEntryStringArray((String) entry.getValue())){
+                    stringArrayProperties.put((String) entry.getKey(), ((String) entry.getValue()).replace("[", "").replace("]", "").replace(" ", "").split(","));
+                }
             }
         } catch (IOException e){
             Rarmor.logger.info("Can't find Rarmor.properties creating new ones.");
@@ -78,6 +89,9 @@ public class RarmorProperties extends Properties{
         addInteger("moduleFlyingEnergyPerTick", 5);
         addInteger("moduleSolarEnergyPerTick", 5);
         addBoolean("AlwaysShowAdvancedInGameTooltip", false);
+        addBoolean("YouTubeMode", false);
+        addStringArray("ActivatedModulesWithEnergyPerTick", new String[]{"damageBoost@150", "heal@1500", "regeneration@150", "waterBreathing@200", "healthBoost@500", "absorption@250", "saturation@1000"});
+        addInteger("DefaultModuleEffectEnergyTick", 100);
 
         saveProperties();
     }
@@ -94,18 +108,28 @@ public class RarmorProperties extends Properties{
         }
     }
 
+    private void addStringArray(String key, String[] value){
+        if(!stringArrayProperties.containsKey(key)){
+            stringArrayProperties.put(key, value);
+        }
+    }
+
     private boolean isEntryBoolean(String entry){
         return entry.equals("true") || entry.equals("false");
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private boolean isEntryInteger(String entry){
+    public boolean isEntryInteger(String entry){
         try{
             Integer.parseInt(entry);
         } catch (NumberFormatException e){
             return false;
         }
         return true;
+    }
+
+    private boolean isEntryStringArray(String entry){
+        return entry.startsWith("[") && entry.endsWith("]");
     }
 
     private boolean parseBool(String bool){

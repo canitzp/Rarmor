@@ -10,7 +10,6 @@ import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.ItemStackUtil;
-import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -45,10 +44,9 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("The Generator Module produces some energy",
-                "for the Rarmor. It produces " + TextFormatting.RED + ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF per Tick.",
-                "One Coal adds " + TextFormatting.RED + TileEntityFurnace.getItemBurnTime(new ItemStack(Items.COAL)) * ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF to the Rarmor.");
+    public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+        return "The Generator Module produces some energy for the Rarmor. It produces " + TextFormatting.RED + ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF per Tick."+
+                "One Coal adds " + TextFormatting.RED + TileEntityFurnace.getItemBurnTime(new ItemStack(Items.COAL)) * ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF to the Rarmor.";
     }
 
     @Override

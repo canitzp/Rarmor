@@ -55,9 +55,8 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList(TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at your OWN risk!",
-                TextFormatting.DARK_RED + "Some strange bugs may happen!");
+    public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+        return TextFormatting.DARK_RED + "The ModuleSplitter is WIP and you use it at your OWN risk! " + TextFormatting.DARK_RED + "Some strange bugs may happen!";
     }
 
     private void toggleSlots(boolean value){

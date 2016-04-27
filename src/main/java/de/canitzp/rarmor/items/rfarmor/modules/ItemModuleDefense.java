@@ -4,14 +4,11 @@ import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
-import de.canitzp.rarmor.util.JavaUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 
 /**
@@ -32,14 +29,11 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("This module saves you from damage,",
-                "as long as you have enough energy.",
-                "The higher the damage multiplier",
-                "the more energy is needed.",
-                TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
-                TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.",
-                TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.");
+    public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+        return "This module saves you from damage, as long as you have enough energy. The higher the damage multiplier the more energy is needed.\n" +
+                TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.\n" +
+                TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.\n" +
+                TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.";
                 //TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
     }
 

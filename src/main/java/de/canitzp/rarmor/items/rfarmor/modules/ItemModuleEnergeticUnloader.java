@@ -9,7 +9,6 @@ import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
-import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * @author canitzp
@@ -35,9 +32,8 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("If you have some tools and your Rarmor needs more energy,",
-                "this module simply uses the energy of them to power up your Rarmor.");
+    public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+        return "If you have some tools and your Rarmor needs more energy, this module simply uses the energy of them to power up your Rarmor.";
     }
 
     @Override

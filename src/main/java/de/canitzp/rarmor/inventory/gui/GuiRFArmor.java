@@ -145,11 +145,13 @@ public class GuiRFArmor extends GuiContainerBase{
             this.drawHoveringText(Lists.newArrayList("Settings"), mouseX, mouseY, this.fontRendererObj);
         }
         if (mouseX >= this.guiLeft + 33 && mouseY >= this.guiTop + 33 && mouseX <= this.guiLeft + 36 && mouseY <= this.guiTop + 40){
-            IRarmorModule module = RarmorUtil.getRarmorModule(player);
-            if (module != null){
-                if (module.getGuiHelp() != null){
-                    this.drawHoveringText(module.getGuiHelp(), mouseX, mouseY);
-                }else{
+            ItemStack module = RarmorUtil.readRarmor(player).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+            if (module != null && module.getItem() instanceof IRarmorModule){
+                if (((IRarmorModule) module.getItem()).getGuiHelp() != null){
+                    this.drawHoveringText(((IRarmorModule) module.getItem()).getGuiHelp(), mouseX, mouseY);
+                } else if(((IRarmorModule) module.getItem()).getDescription(player, module, false) != null){
+                    this.drawHoveringText(fontRendererObj.listFormattedStringToWidth(((IRarmorModule) module.getItem()).getDescription(player, module, false), 350), mouseX, mouseY);
+                } else {
                     this.drawHoveringText(JavaUtil.newList("This Module doesn't provide", "a help page."), mouseX, mouseY);
                 }
             }

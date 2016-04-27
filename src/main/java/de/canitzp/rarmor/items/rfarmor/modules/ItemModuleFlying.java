@@ -6,14 +6,11 @@ import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
-import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * @author canitzp
@@ -28,9 +25,8 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return JavaUtil.newList("With this Module you can grab the stars in CreativeFlightMode.",
-                "It uses " + TextFormatting.RED + this.energyUsagePerTick + TextFormatting.GRAY + "RF per Tick while you're flying.");
+    public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+        return "With this Module you can grab the stars in CreativeFlightMode. It uses " + TextFormatting.RED + this.energyUsagePerTick + TextFormatting.GRAY + "RF per Tick while you're flying.";
     }
 
     @Override

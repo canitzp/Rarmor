@@ -9,6 +9,9 @@ import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.util.ItemUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,6 +26,9 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author canitzp
@@ -81,8 +87,14 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        for(Potion potion : ForgeRegistries.POTIONS){
-            ItemModuleEffects.addPotionEffect(potion);
+        initEffectsModule();
+        if(event.getSide().isClient()){
+            IResourceManager listener = Minecraft.getMinecraft().getResourceManager();
+            if(listener instanceof IReloadableResourceManager){
+                ((IReloadableResourceManager) listener).registerReloadListener(resourceManager -> {
+                    ItemModuleEffects.postInit();
+                });
+            }
         }
         proxy.postInit(event);
     }
@@ -94,5 +106,47 @@ public class Rarmor{
                 mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
             }
         }
+    }
+
+    private static void initEffectsModule(){
+        //Read Special Module energy costs:
+        Map<String, Integer> map = new HashMap<>();
+        for(String string : RarmorProperties.getStringArray("ActivatedModulesWithEnergyPerTick")){
+            String[] array = string.split("@");
+            if(array.length == 2){
+                if(RarmorProperties.rarmorProperties.isEntryInteger(array[1])){
+                    map.put(array[0], Integer.parseInt(array[1]));
+                } else {
+                    map.put(array[0], -1);
+                }
+            }
+        }
+        Map<Potion, Boolean> defaultAdd = new HashMap<>();
+        for(Potion potion : ForgeRegistries.POTIONS){
+            defaultAdd.put(potion, false);
+        }
+        if(RarmorProperties.getBoolean("YouTubeMode")){
+            map.put("nightVision", 0);
+        }
+        for(Potion potion : ForgeRegistries.POTIONS){
+            if(!defaultAdd.get(potion)){
+                for(Map.Entry<String, Integer> entry : map.entrySet()){
+                    if(potion.getName().substring(7).equals(entry.getKey())){
+                        if(entry.getValue() >= 0){
+                            ItemModuleEffects.addPotionEffect(potion, entry.getValue());
+                            defaultAdd.replace(potion, true);
+                        } else {
+                            defaultAdd.replace(potion, true);
+                        }
+                    }
+                }
+            }
+        }
+        for(Map.Entry<Potion, Boolean> entry : defaultAdd.entrySet()){
+            if(!entry.getValue()){
+                ItemModuleEffects.addPotionEffect(entry.getKey(), RarmorProperties.getInteger("DefaultModuleEffectEnergyTick"));
+            }
+        }
+        ItemModuleEffects.postInit();
     }
 }

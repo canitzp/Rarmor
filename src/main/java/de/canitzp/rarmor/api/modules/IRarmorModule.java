@@ -27,7 +27,7 @@ public interface IRarmorModule{
 
     String getUniqueName();
 
-    default List<String> getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
+    default String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return null;
     }
 

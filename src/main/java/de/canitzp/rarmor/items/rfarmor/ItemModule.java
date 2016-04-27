@@ -2,6 +2,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,9 +28,9 @@ public class ItemModule extends Item{
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         if (stack != null && stack.getItem() != null && stack.getItem() instanceof IRarmorModule){
-            List<String> desc = ((IRarmorModule) stack.getItem()).getDescription(playerIn, stack, advanced);
+            String desc = ((IRarmorModule) stack.getItem()).getDescription(playerIn, stack, advanced);
             if (desc != null){
-                tooltip.addAll(desc);
+                tooltip.addAll(Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(desc, 350));
             }else{
                 super.addInformation(stack, playerIn, tooltip, advanced);
             }

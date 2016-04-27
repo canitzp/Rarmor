@@ -1,8 +1,6 @@
 package de.canitzp.rarmor.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author canitzp
@@ -17,6 +15,16 @@ public class JavaUtil{
             return list;
         }
         return new ArrayList<>();
+    }
+
+    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByKeys(Map<K,V> map){
+        List<K> keys = new LinkedList<>(map.keySet());
+        Collections.sort(keys);
+        Map<K,V> sortedMap = new LinkedHashMap<>();
+        for(K key: keys){
+            sortedMap.put(key, map.get(key));
+        }
+        return sortedMap;
     }
 
 }
