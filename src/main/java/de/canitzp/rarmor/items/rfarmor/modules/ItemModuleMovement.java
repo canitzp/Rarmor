@@ -38,7 +38,7 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
 
     @Override
     public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return "The Movement Module increase your walk and fly speed and disables the fall damage.\n It costs " + TextFormatting.RED + energyPerTick + "RF" + TextFormatting.GRAY + " per Tick.";
+        return "The Movement Module increase your walk and fly speed and disables the fall damage.\nIt costs " + TextFormatting.RED + energyPerTick + "RF" + TextFormatting.GRAY + " per Tick.";
     }
 
     @Override

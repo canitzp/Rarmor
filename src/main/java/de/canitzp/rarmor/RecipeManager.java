@@ -48,6 +48,8 @@ public class RecipeManager{
         addRecipe(new ItemStack(ItemRegistry.moduleUnloader), "GGG", "GNG", "GIG", 'G', "dyeGreen", 'N', "nuggetGold", 'I', "ingotIron");
         addRecipe(new ItemStack(ItemRegistry.moduleDefense), "GSG", "GDG", "GGG", 'G', "dyeGreen", 'S', Items.SHIELD, 'D', "gemDiamond");
         addRecipe(new ItemStack(ItemRegistry.moduleModuleSplitter), "GCG", "CDC", "GCG", 'G', "dyeGreen", 'C', ItemRegistry.electricalController, 'D', ItemRegistry.ribbonCable);
+        addRecipe(new ItemStack(ItemRegistry.moduleMovement), "GDG", "BBB", "GGG", 'G', "dyeGreen", 'D', "gemDiamond", 'B', Items.DIAMOND_BOOTS);
+        addRecipe(new ItemStack(ItemRegistry.moduleEffects), "GDG", "PAH", "GDG", 'G', "dyeGreen", 'D', "blockDiamond", 'P', Items.PRISMARINE_CRYSTALS, 'A', Items.GOLDEN_APPLE, 'H', Items.RABBIT_FOOT);
     }
 
     public static void addRecipe(ItemStack output, Object... input){
