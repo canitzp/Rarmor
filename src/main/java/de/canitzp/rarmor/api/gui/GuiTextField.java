@@ -1,3 +1,11 @@
+/*
+ * This file 'GuiTextField.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.api.gui;
 
 import de.canitzp.rarmor.util.MinecraftUtil;
@@ -31,7 +39,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
 
     @Override
     public void render(GuiScreen gui, int guiLeft, int guiTop, int x, int y){
-        if (this.text != null){
+        if(this.text != null){
             fontRenderer.drawString(this.text, x, y, color);
         }
         this.xPosition = x + end;
@@ -42,7 +50,7 @@ public class GuiTextField extends net.minecraft.client.gui.GuiTextField implemen
     @Override
     public int getLength(FontRenderer fontRenderer){
         int i = 0;
-        if (this.text != null){
+        if(this.text != null){
             i += fontRenderer.getStringWidth(this.text) + 3;
         }
         return i + this.width;

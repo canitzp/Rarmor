@@ -1,3 +1,11 @@
+/*
+ * This file 'Rarmor.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
@@ -9,9 +17,6 @@ import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.util.ItemUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,62 +58,7 @@ public class Rarmor{
         GameRegistry.register(item);
     }
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
-        String javaVersion = System.getProperty("java.version");
-        javaVersion = javaVersion.substring(0, 3);
-        if (!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
-            logger.error("You aren't using a compatible Java version to use Rarmor. This may crash your Game. Required-minimum: Java 1.8.0 Yours: " + System.getProperty("java.version"));
-        }
-        logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
-        RarmorProperties.preInit(event);
-        rarmorTab = new CreativeTabs(NAME){
-            @Override
-            public Item getTabIconItem(){
-                return ItemRegistry.rfArmorBody;
-            }
-        };
-        ItemRegistry.preInit();
-        if (event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
-        logger.info("Finished PreInitialization");
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event){
-        logger.info("Starting Initialization");
-        NetworkHandler.init();
-        EventHandler.init();
-        proxy.registerRenderer();
-        proxy.init();
-        RecipeManager.init();
-        logger.info("Finished Initialization");
-        CraftingTweaksIntegration.init();
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event){
-        initEffectsModule();
-        if(event.getSide().isClient()){
-            IResourceManager listener = Minecraft.getMinecraft().getResourceManager();
-            if(listener instanceof IReloadableResourceManager){
-                ((IReloadableResourceManager) listener).registerReloadListener(resourceManager -> {
-                    ItemModuleEffects.postInit();
-                });
-            }
-        }
-        proxy.postInit(event);
-    }
-
-    @Mod.EventHandler
-    public void missingMapping(FMLMissingMappingsEvent event){
-        for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
-            if (mapping.name.startsWith("rarmor.")){
-                mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
-            }
-        }
-    }
-
-    private static void initEffectsModule(){
+    public static void initEffectsModule(){
         //Read Special Module energy costs:
         Map<String, Integer> map = new HashMap<>();
         for(String string : RarmorProperties.getStringArray("ActivatedModulesWithEnergyPerTick")){
@@ -131,7 +81,14 @@ public class Rarmor{
         for(Potion potion : ForgeRegistries.POTIONS){
             if(!defaultAdd.get(potion)){
                 for(Map.Entry<String, Integer> entry : map.entrySet()){
-                    if(potion.getName().substring(7).equals(entry.getKey())){
+                    if((potion.getName().startsWith("effect.") || potion.getName().startsWith("potion.")) && potion.getName().substring(7).equals(entry.getKey())){
+                        if(entry.getValue() >= 0){
+                            ItemModuleEffects.addPotionEffect(potion, entry.getValue());
+                            defaultAdd.replace(potion, true);
+                        } else {
+                            defaultAdd.replace(potion, true);
+                        }
+                    } else if(!potion.getName().contains(".") && potion.getName().equals(entry.getKey())) {
                         if(entry.getValue() >= 0){
                             ItemModuleEffects.addPotionEffect(potion, entry.getValue());
                             defaultAdd.replace(potion, true);
@@ -148,5 +105,53 @@ public class Rarmor{
             }
         }
         ItemModuleEffects.postInit();
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event){
+        String javaVersion = System.getProperty("java.version");
+        javaVersion = javaVersion.substring(0, 3);
+        if(!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
+            logger.error("You aren't using a compatible Java version to use Rarmor. This may crash your Game. Required-minimum: Java 1.8.0 Yours: " + System.getProperty("java.version"));
+        }
+        logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
+        RarmorProperties.preInit(event);
+        rarmorTab = new CreativeTabs(NAME){
+            @Override
+            public Item getTabIconItem(){
+                return ItemRegistry.rfArmorBody;
+            }
+        };
+        ItemRegistry.preInit();
+        if(event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
+        proxy.preInit(event);
+        logger.info("Finished PreInitialization");
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event){
+        logger.info("Starting Initialization");
+        NetworkHandler.init();
+        EventHandler.init();
+        proxy.registerRenderer();
+        proxy.init(event);
+        RecipeManager.init();
+        logger.info("Finished Initialization");
+        CraftingTweaksIntegration.init();
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event){
+        initEffectsModule();
+        proxy.postInit(event);
+    }
+
+    @Mod.EventHandler
+    public void missingMapping(FMLMissingMappingsEvent event){
+        for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
+            if(mapping.name.startsWith("rarmor.")){
+                mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
+            }
+        }
     }
 }

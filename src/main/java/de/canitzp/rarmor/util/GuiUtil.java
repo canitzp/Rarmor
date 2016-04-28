@@ -1,3 +1,11 @@
+/*
+ * This file 'GuiUtil.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.util;
 
 import net.minecraft.client.Minecraft;
@@ -21,28 +29,28 @@ public class GuiUtil{
     private static float zLevel;
 
     public static void drawHoveringText(GuiScreen guiScreen, List<String> textLines, int x, int y, FontRenderer font){
-        if (!textLines.isEmpty()){
+        if(!textLines.isEmpty()){
             GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             int i = 0;
-            for (String s : textLines){
+            for(String s : textLines){
                 int j = font.getStringWidth(s);
-                if (j > i){
+                if(j > i){
                     i = j;
                 }
             }
             int l1 = x + 12;
             int i2 = y - 12;
             int k = 8;
-            if (textLines.size() > 1){
+            if(textLines.size() > 1){
                 k += 2 + (textLines.size() - 1) * 10;
             }
-            if (l1 + i > guiScreen.width){
+            if(l1 + i > guiScreen.width){
                 l1 -= 28 + i;
             }
-            if (i2 + k + 6 > guiScreen.height){
+            if(i2 + k + 6 > guiScreen.height){
                 i2 = guiScreen.height - k - 6;
             }
             zLevel = 300.0F;
@@ -58,10 +66,10 @@ public class GuiUtil{
             drawGradientRect(l1 + i + 2, i2 - 3 + 1, l1 + i + 3, i2 + k + 3 - 1, i1, j1);
             drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 - 3 + 1, i1, i1);
             drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
-            for (int k1 = 0; k1 < textLines.size(); ++k1){
+            for(int k1 = 0; k1 < textLines.size(); ++k1){
                 String s1 = textLines.get(k1);
                 font.drawStringWithShadow(s1, (float) l1, (float) i2, -1);
-                if (k1 == 0){
+                if(k1 == 0){
                     i2 += 2;
                 }
                 i2 += 10;

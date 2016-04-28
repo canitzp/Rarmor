@@ -1,3 +1,11 @@
+/*
+ * This file 'SlotInputModule.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.RarmorUtil;
@@ -27,13 +35,14 @@ public class SlotInputModule extends SlotUpdate{
     @Override
     public void onSlotChanged(){
         ItemStack stack = RarmorUtil.getPlayersRarmorChestplate(player);
-        if (actualStack != null && !actualStack.isItemEqual(this.getStack())){
-            if (actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
+        if(actualStack != null && !actualStack.isItemEqual(this.getStack())){
+            if(actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
+                //((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
+                this.onPickupFromSlot(player, actualStack);
             }
         }
-        if (getStack() != null && getStack().getItem() != null){
-            if (getStack().getItem() instanceof IRarmorModule){
+        if(getStack() != null && getStack().getItem() != null){
+            if(getStack().getItem() instanceof IRarmorModule){
                 NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) getStack().getItem()).getUniqueName(), true);
             }
         }
@@ -43,7 +52,7 @@ public class SlotInputModule extends SlotUpdate{
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack){
-        if (stack.getItem() instanceof IRarmorModule){
+        if(stack.getItem() instanceof IRarmorModule){
             ((IRarmorModule) stack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
             NBTUtil.setBoolean(stack, "Module" + ((IRarmorModule) stack.getItem()).getUniqueName(), false);
             NBTUtil.setBoolean(stack, "FirstOpenedModule", true);

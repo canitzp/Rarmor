@@ -1,3 +1,11 @@
+/*
+ * This file 'ContainerModularTool.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.api.InventoryBase;
@@ -31,7 +39,7 @@ public class ContainerModularTool extends ContainerBase{
         this.tool = player.getHeldItemMainhand();
         this.inventory = NBTUtil.readSlots(this.tool, ItemModularTool.slots);
 
-        for (int j = 0; j < 3; j++){
+        for(int j = 0; j < 3; j++){
             this.addSlotToContainer(new SlotUpdate(this.inventory, j, 62 + j * 18, 8, player){
                 @Override
                 public boolean isItemValid(ItemStack stack){
@@ -41,13 +49,13 @@ public class ContainerModularTool extends ContainerBase{
         }
 
         //Player Inventory:
-        for (int j = 0; j < 3; ++j){
-            for (int k = 0; k < 9; ++k){
+        for(int j = 0; j < 3; ++j){
+            for(int k = 0; k < 9; ++k){
                 this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 8 + k * 18, 29 + j * 18));
             }
         }
         //Player Hotbar:
-        for (int j = 0; j < 9; ++j){
+        for(int j = 0; j < 9; ++j){
             this.addSlotToContainer(new Slot(player.inventory, j, 8 + j * 18, 87));
         }
     }

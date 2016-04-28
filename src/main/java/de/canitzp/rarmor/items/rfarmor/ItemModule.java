@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModule.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.Rarmor;
@@ -27,22 +35,22 @@ public class ItemModule extends Item{
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
-        if (stack != null && stack.getItem() != null && stack.getItem() instanceof IRarmorModule){
+        if(stack != null && stack.getItem() != null && stack.getItem() instanceof IRarmorModule){
             String desc = ((IRarmorModule) stack.getItem()).getDescription(playerIn, stack, advanced);
-            if (desc != null){
+            if(desc != null){
                 tooltip.addAll(Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(desc, 350));
-            }else{
+            } else {
                 super.addInformation(stack, playerIn, tooltip, advanced);
             }
             IRarmorModule.ModuleType moduleType = ((IRarmorModule) stack.getItem()).getModuleType();
-            if (moduleType != IRarmorModule.ModuleType.NONE){
-                if (moduleType == IRarmorModule.ModuleType.ACTIVE){
+            if(moduleType != IRarmorModule.ModuleType.NONE){
+                if(moduleType == IRarmorModule.ModuleType.ACTIVE){
                     tooltip.add(TextFormatting.GREEN + "Active" + TextFormatting.GRAY);
-                }else{
+                } else {
                     tooltip.add(TextFormatting.RED + "Passive" + TextFormatting.GRAY);
                 }
             }
-        }else{
+        } else {
             super.addInformation(stack, playerIn, tooltip, advanced);
         }
     }

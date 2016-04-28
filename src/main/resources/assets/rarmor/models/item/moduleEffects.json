@@ -1,6 +1,6 @@
 {
   "parent": "rarmor:item/module",
   "textures": {
-    "layer0": "rarmor:items/moduleFastFurnace"
+    "layer0": "rarmor:items/moduleEffects"
   }
 }

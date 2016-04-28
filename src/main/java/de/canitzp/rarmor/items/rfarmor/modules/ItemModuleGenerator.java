@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModuleGenerator.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import cofh.api.energy.IEnergyContainerItem;
@@ -26,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +52,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @Override
     public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return "The Generator Module produces some energy for the Rarmor. It produces " + TextFormatting.RED + ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF per Tick."+
+        return "The Generator Module produces some energy for the Rarmor. It produces " + TextFormatting.RED + ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF per Tick." +
                 "One Coal adds " + TextFormatting.RED + TileEntityFurnace.getItemBurnTime(new ItemStack(Items.COAL)) * ItemRFArmorBody.rfPerTick + TextFormatting.GRAY + "RF to the Rarmor.";
     }
 
@@ -73,9 +80,9 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        if (isGenerator(inventory, armorChestplate) || NBTUtil.getInteger(module, "GenBurnTime") > 0){
+        if(isGenerator(inventory, armorChestplate) || NBTUtil.getInteger(module, "GenBurnTime") > 0){
             this.generate(armorChestplate, module);
-        }else{
+        } else {
             NBTUtil.setInteger(module, "GenBurnTime", 0);
         }
     }
@@ -90,15 +97,15 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     @SideOnly(Side.CLIENT)
     @Override
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
-        if (!settingActivated){
+        if(!settingActivated){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             int i = 0;
-            if (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") != 0){
+            if(NBTUtil.getInteger(module, "CurrentItemGenBurnTime") != 0){
                 i = (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") - NBTUtil.getInteger(module, "GenBurnTime")) * 13 / NBTUtil.getInteger(module, "CurrentItemGenBurnTime");
             }
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
             gui.drawTexturedModalRect(gui.getGuiLeft() + 120, gui.getGuiTop() + 13, 57, 0, 56, 55);
-            if (NBTUtil.getInteger(module, "GenBurnTime") > 0){
+            if(NBTUtil.getInteger(module, "GenBurnTime") > 0){
                 gui.drawTexturedModalRect(gui.getGuiLeft() + 141, gui.getGuiTop() + 39 + 12 - i, 58, 57 + 12 - i, 14, i + 1);
             }
         }
@@ -111,7 +118,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     private boolean isGenerator(IInventory inv, ItemStack armor){
-        if (armor.getItem() instanceof IEnergyContainerItem){
+        if(armor.getItem() instanceof IEnergyContainerItem){
             int burnTime = TileEntityFurnace.getItemBurnTime(inv.getStackInSlot(ItemRFArmorBody.GENERATORSLOT));
             int energyToProduce = burnTime * NBTUtil.getInteger(armor, "rfPerTick");
             return burnTime > 0 && NBTUtil.getInteger(armor, "Energy") + (energyToProduce / 4) <= ((IEnergyContainerItem) armor.getItem()).getMaxEnergyStored(armor);
@@ -122,20 +129,19 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     private void generate(ItemStack armor, ItemStack module){
         InventoryBase inventory = RarmorUtil.readRarmor(armor);
         int burnTime = NBTUtil.getInteger(module, "GenBurnTime");
-        if (burnTime == 0){
+        if(burnTime == 0){
             NBTUtil.setInteger(module, "CurrentItemGenBurnTime", TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT)));
             ItemStack burnItem = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
             inventory = ItemStackUtil.reduceStackSize(inventory, ItemRFArmorBody.GENERATORSLOT);
-            System.out.println(Arrays.toString(inventory.slots));
-            if (burnItem.getItem().getContainerItem() != null){
+            if(burnItem.getItem().getContainerItem() != null){
                 inventory = ItemStackUtil.addStackToSlot(inventory, new ItemStack(burnItem.getItem().getContainerItem()), ItemRFArmorBody.GENERATORSLOT);
             }
             RarmorUtil.saveRarmor(armor, inventory);
         }
-        if (burnTime < NBTUtil.getInteger(module, "CurrentItemGenBurnTime")){
+        if(burnTime < NBTUtil.getInteger(module, "CurrentItemGenBurnTime")){
             burnTime++;
             ((IEnergyContainerItem) armor.getItem()).receiveEnergy(armor, NBTUtil.getInteger(armor, "rfPerTick"), false);
-        }else{
+        } else {
             burnTime = 0;
             NBTUtil.setInteger(module, "CurrentItemGenBurnTime", 0);
         }
@@ -143,8 +149,8 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     private void dropSlot(InventoryBase inventory, ItemStack stack, EntityPlayer player, ItemStack armor){
-        if (stack != null){
-            if (!player.worldObj.isRemote){
+        if(stack != null){
+            if(!player.worldObj.isRemote){
                 player.dropItem(stack, false);
             }
             inventory.setInventorySlotContents(30, null);
@@ -153,9 +159,9 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     private Slot getSlotAtPosition(GuiContainer gui, int x, int y){
-        for (int k = 0; k < gui.inventorySlots.inventorySlots.size(); ++k){
+        for(int k = 0; k < gui.inventorySlots.inventorySlots.size(); ++k){
             Slot slot = gui.inventorySlots.inventorySlots.get(k);
-            if (x >= slot.xDisplayPosition - 1 && x < slot.xDisplayPosition + 16 + 1 && slot.yDisplayPosition >= y - 1 && slot.yDisplayPosition < y + 16 + 1){
+            if(x >= slot.xDisplayPosition - 1 && x < slot.xDisplayPosition + 16 + 1 && slot.yDisplayPosition >= y - 1 && slot.yDisplayPosition < y + 16 + 1){
                 return slot;
             }
         }

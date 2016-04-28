@@ -1,3 +1,11 @@
+/*
+ * This file 'ContainerUtil.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.util;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,31 +25,31 @@ public class ContainerUtil{
         final int hotbarStart = inventoryEnd + 1;
         final int hotbarEnd = hotbarStart + 8;
         Slot theSlot = inventorySlots.get(slot);
-        if (theSlot != null && theSlot.getHasStack()){
+        if(theSlot != null && theSlot.getHasStack()){
             ItemStack newStack = theSlot.getStack();
             ItemStack currentStack = newStack.copy();
             //Other Slots in Inventory excluded
-            if (slot >= inventoryStart){
+            if(slot >= inventoryStart){
                 //Shift from Inventory
-                if (!mergeItemStack(newStack, 0, 9, false, inventorySlots)){
+                if(!mergeItemStack(newStack, 0, 9, false, inventorySlots)){
                     //
-                    if (slot >= inventoryStart && slot <= inventoryEnd){
-                        if (!mergeItemStack(newStack, hotbarStart, hotbarEnd + 1, false, inventorySlots)){
+                    if(slot >= inventoryStart && slot <= inventoryEnd){
+                        if(!mergeItemStack(newStack, hotbarStart, hotbarEnd + 1, false, inventorySlots)){
                             return null;
                         }
-                    }else if (slot >= inventoryEnd + 1 && slot < hotbarEnd + 1 && !mergeItemStack(newStack, inventoryStart, inventoryEnd + 1, false, inventorySlots)){
+                    } else if(slot >= inventoryEnd + 1 && slot < hotbarEnd + 1 && !mergeItemStack(newStack, inventoryStart, inventoryEnd + 1, false, inventorySlots)){
                         return null;
                     }
                 }
-            }else if (!mergeItemStack(newStack, inventoryStart, hotbarEnd + 1, false, inventorySlots)){
+            } else if(!mergeItemStack(newStack, inventoryStart, hotbarEnd + 1, false, inventorySlots)){
                 return null;
             }
-            if (newStack.stackSize == 0){
+            if(newStack.stackSize == 0){
                 theSlot.putStack(null);
-            }else{
+            } else {
                 theSlot.onSlotChanged();
             }
-            if (newStack.stackSize == currentStack.stackSize){
+            if(newStack.stackSize == currentStack.stackSize){
                 return null;
             }
             theSlot.onPickupFromSlot(player, newStack);
@@ -53,55 +61,55 @@ public class ContainerUtil{
     public static boolean mergeItemStack(ItemStack stack, int p_75135_2_, int p_75135_3_, boolean p_75135_4_, List<Slot> inventorySlots){
         boolean flag1 = false;
         int k = p_75135_2_;
-        if (p_75135_4_){
+        if(p_75135_4_){
             k = p_75135_3_ - 1;
         }
         Slot slot;
         ItemStack itemstack1;
-        if (stack.isStackable()){
-            while (stack.stackSize > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_)){
+        if(stack.isStackable()){
+            while(stack.stackSize > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_)){
                 slot = inventorySlots.get(k);
                 itemstack1 = slot.getStack();
-                if (itemstack1 != null && itemstack1.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, itemstack1)){
+                if(itemstack1 != null && itemstack1.getItem() == stack.getItem() && (!stack.getHasSubtypes() || stack.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(stack, itemstack1)){
                     int l = itemstack1.stackSize + stack.stackSize;
-                    if (l <= stack.getMaxStackSize()){
+                    if(l <= stack.getMaxStackSize()){
                         stack.stackSize = 0;
                         itemstack1.stackSize = l;
                         slot.onSlotChanged();
                         flag1 = true;
-                    }else if (itemstack1.stackSize < stack.getMaxStackSize()){
+                    } else if(itemstack1.stackSize < stack.getMaxStackSize()){
                         stack.stackSize -= stack.getMaxStackSize() - itemstack1.stackSize;
                         itemstack1.stackSize = stack.getMaxStackSize();
                         slot.onSlotChanged();
                         flag1 = true;
                     }
                 }
-                if (p_75135_4_){
+                if(p_75135_4_){
                     --k;
-                }else{
+                } else {
                     ++k;
                 }
             }
         }
-        if (stack.stackSize > 0){
-            if (p_75135_4_){
+        if(stack.stackSize > 0){
+            if(p_75135_4_){
                 k = p_75135_3_ - 1;
-            }else{
+            } else {
                 k = p_75135_2_;
             }
-            while (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_){
+            while(!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_){
                 slot = inventorySlots.get(k);
                 itemstack1 = slot.getStack();
-                if (itemstack1 == null){
+                if(itemstack1 == null){
                     slot.putStack(stack.copy());
                     slot.onSlotChanged();
                     stack.stackSize = 0;
                     flag1 = true;
                     break;
                 }
-                if (p_75135_4_){
+                if(p_75135_4_){
                     --k;
-                }else{
+                } else {
                     ++k;
                 }
             }

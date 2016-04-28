@@ -1,3 +1,11 @@
+/*
+ * This file 'PlayerEvents.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.event;
 
 import de.canitzp.rarmor.RarmorUtil;
@@ -20,12 +28,12 @@ public class PlayerEvents{
 
     @SubscribeEvent
     public void onPlayerLoggingIn(EntityJoinWorldEvent event){
-        if (event.getEntity() instanceof EntityPlayer){
+        if(event.getEntity() instanceof EntityPlayer){
             World world = event.getWorld();
             EntityPlayer player = (EntityPlayer) event.getEntity();
-            if (RarmorUtil.isPlayerWearingRarmor(player)){
+            if(RarmorUtil.isPlayerWearingRarmor(player)){
                 ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-                if (module != null && module.getItem() instanceof IRarmorModule){
+                if(module != null && module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onPlayerLoginEvent(world, player, RarmorUtil.getPlayersRarmorChestplate(player), module);
                 }
             }
@@ -34,10 +42,10 @@ public class PlayerEvents{
 
     @SubscribeEvent
     public void onPlayerTakeDamage(LivingHurtEvent event){
-        if (event.getEntity() instanceof EntityPlayer){
-            if (RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.getEntity())){
+        if(event.getEntity() instanceof EntityPlayer){
+            if(RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.getEntity())){
                 IRarmorModule module = RarmorUtil.getRarmorModule((EntityPlayer) event.getEntity());
-                if (module != null){
+                if(module != null){
                     event.setCanceled(module.onPlayerTakeDamage(event.getEntity().getEntityWorld(), (EntityPlayer) event.getEntity(), RarmorUtil.getPlayersRarmorChestplate((EntityPlayer) event.getEntity()), event.getSource(), event.getAmount()));
                 }
             }

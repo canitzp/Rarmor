@@ -16,3 +16,5 @@ item.rarmor:moduleEnergeticLoader.name=Energetic Loader Module
 item.rarmor:moduleEnergeticUnloader.name=Energetic Unloader Module
 item.rarmor:moduleDefense.name=Defense Module
 item.rarmor:moduleModuleSplitter.name=Module Splitter
+item.rarmor:moduleMovement.name=Movement Module
+item.rarmor:moduleEffects.name=Effects Module

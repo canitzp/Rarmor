@@ -1,3 +1,11 @@
+/*
+ * This file 'ClientEvents.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.event;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +26,7 @@ public class ClientEvents{
     @SubscribeEvent
     public void onPlayerRender(RenderPlayerEvent event){
         EntityPlayer player = event.getEntityPlayer();
-        if (player.getName().equals("canitzp")){
+        if(player.getName().equals("canitzp")){
             System.out.println("render");
         }
 

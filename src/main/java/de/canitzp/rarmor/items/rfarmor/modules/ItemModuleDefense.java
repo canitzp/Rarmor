@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModuleDefense.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
@@ -34,7 +42,7 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
                 TextFormatting.DARK_AQUA + "Fall Damage:  " + TextFormatting.GRAY + "Nearly full absorption.\n" +
                 TextFormatting.DARK_AQUA + "Fire Damage:  " + TextFormatting.GRAY + "Nearly full absorption.\n" +
                 TextFormatting.DARK_AQUA + "Lava Damage:  " + TextFormatting.GRAY + "Nearly full absorption. Double energy is required.";
-                //TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
+        //TextFormatting.DARK_AQUA + "Lost in Void: " + TextFormatting.GRAY + "Ports you back to Spawn Location if you have more than " + TextFormatting.RED + "50000" + TextFormatting.GRAY + "RF.");
     }
 
     @Override
@@ -69,17 +77,17 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
         }
         */
         int energyYouNeed = (int) (damage * this.damageMultiplier);
-        if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed){
-            if (damageSource == DamageSource.fall){
+        if(EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed){
+            if(damageSource == DamageSource.fall){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
-            if (damageSource == DamageSource.onFire){
+            if(damageSource == DamageSource.onFire){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed);
                 return true;
             }
-        }else if (EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed * 2){
-            if (damageSource == DamageSource.lava){
+        } else if(EnergyUtil.getEnergy(armorChestplate) >= energyYouNeed * 2){
+            if(damageSource == DamageSource.lava){
                 EnergyUtil.reduceEnergy(armorChestplate, energyYouNeed * 2);
                 return true;
             }

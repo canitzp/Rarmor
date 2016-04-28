@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModuleFlying.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
@@ -41,23 +49,23 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        if (!player.capabilities.isCreativeMode){
-            if (!NBTUtil.getBoolean(module, "deactivated")){
-                if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
+        if(!player.capabilities.isCreativeMode){
+            if(!NBTUtil.getBoolean(module, "deactivated")){
+                if(EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
                     player.capabilities.allowFlying = true;
-                    if (player.capabilities.isFlying){
+                    if(player.capabilities.isFlying){
                         EnergyUtil.reduceEnergy(armorChestplate, this.energyUsagePerTick);
                         NBTUtil.setBoolean(module, "deactivated", false);
-                    }else{
+                    } else {
                         NBTUtil.setBoolean(module, "deactivated", true);
                     }
-                }else{
+                } else {
                     player.capabilities.allowFlying = false;
                     player.capabilities.isFlying = false;
                     player.capabilities.disableDamage = false;
                     NBTUtil.setBoolean(module, "deactivated", true);
                 }
-            }else if (EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
+            } else if(EnergyUtil.getEnergy(armorChestplate) >= this.energyUsagePerTick){
                 NBTUtil.setBoolean(module, "deactivated", false);
             }
         }
@@ -65,7 +73,7 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     @Override
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
-        if (!player.capabilities.isCreativeMode){
+        if(!player.capabilities.isCreativeMode){
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
             player.capabilities.disableDamage = false;
@@ -75,7 +83,7 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     @Override
     public void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module){
-        if (!NBTUtil.getBoolean(module, "deactivated")){
+        if(!NBTUtil.getBoolean(module, "deactivated")){
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
             player.sendPlayerAbilities();

@@ -1,3 +1,11 @@
+/*
+ * This file 'PacketSendNBTBoolean.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
@@ -72,9 +80,9 @@ public class PacketSendNBTBoolean implements IMessage{
             World world = DimensionManager.getWorld(message.worldID);
             EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
             ItemStack stack = null;
-            if (message.playerSlotID == 123456){
+            if(message.playerSlotID == 123456){
                 stack = NBTUtil.readSlots(player.inventory.getStackInSlot(38), ItemRFArmorBody.slotAmount).getStackInSlot(29);
-            }else if(message.playerSlotID <= 41){
+            } else if(message.playerSlotID <= 41){
                 stack = player.inventory.getStackInSlot(message.playerSlotID);
             } else {
                 Container container = player.openContainer;

@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemChainSaw.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items;
 
 import cofh.api.energy.ItemEnergyContainer;
@@ -51,7 +59,7 @@ public class ItemChainSaw extends ItemEnergyContainer{
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker){
         int use = rfPerUse;
-        if (this.getEnergyStored(stack) >= use){
+        if(this.getEnergyStored(stack) >= use){
             this.extractEnergy(stack, use, false);
         }
         return true;
@@ -60,7 +68,7 @@ public class ItemChainSaw extends ItemEnergyContainer{
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
         Multimap<String, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        if (slot == EntityEquipmentSlot.MAINHAND){
+        if(slot == EntityEquipmentSlot.MAINHAND){
             map.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "ChainSaw Modifier", this.getEnergyStored(stack) >= rfPerUse ? 8.0F : 0.5F, 0));
             map.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool Modifier", -2.5F, 0));
         }
@@ -74,7 +82,7 @@ public class ItemChainSaw extends ItemEnergyContainer{
         int z = pos.getZ();
         World world = player.worldObj;
         final Block wood = WorldUtil.getBlock(world, pos);
-        if (!player.isSneaking() && (canHarvest(WorldUtil.getBlockState(world, pos)) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
+        if(!player.isSneaking() && (canHarvest(WorldUtil.getBlockState(world, pos)) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
             boolean b = RarmorUtil.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
             return b || super.onBlockStartBreak(stack, pos, player);
         }

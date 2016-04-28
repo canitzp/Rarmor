@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModuleSolarPanel.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
@@ -44,27 +52,27 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        if (NBTUtil.getInteger(module, "tick") >= 50){
-            if (canPlayerSeeSky(player)){
+        if(NBTUtil.getInteger(module, "tick") >= 50){
+            if(canPlayerSeeSky(player)){
                 EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
                 NBTUtil.setInteger(module, "tick", 0);
                 NBTUtil.setBoolean(module, "doWork", true);
-            }else{
+            } else {
                 NBTUtil.setBoolean(module, "doWork", false);
             }
-        }else{
+        } else {
             NBTUtil.setInteger(module, "tick", NBTUtil.getInteger(module, "tick") + 1);
-            if (NBTUtil.getBoolean(module, "doWork")){
+            if(NBTUtil.getBoolean(module, "doWork")){
                 EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
             }
         }
     }
 
     private boolean canPlayerSeeSky(EntityPlayer player){
-        if (!player.worldObj.isRaining() && player.worldObj.isDaytime()){
-            for (int i = (int) player.posY + 1; i < player.worldObj.getHeight(); i++){
+        if(!player.worldObj.isRaining() && player.worldObj.isDaytime()){
+            for(int i = (int) player.posY + 1; i < player.worldObj.getHeight(); i++){
                 IBlockState block = player.worldObj.getBlockState(new BlockPos(player.posX, i, player.posZ));
-                if (block != null && ((block.isFullBlock() || block instanceof BlockLiquid) && !player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ)))){
+                if(block != null && ((block.isFullBlock() || block instanceof BlockLiquid) && !player.worldObj.isAirBlock(new BlockPos(player.posX, i, player.posZ)))){
                     return false;
                 }
             }

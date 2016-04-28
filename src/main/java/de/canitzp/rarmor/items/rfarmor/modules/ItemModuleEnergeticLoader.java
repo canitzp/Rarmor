@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemModuleEnergeticLoader.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import cofh.api.energy.IEnergyContainerItem;
@@ -51,7 +59,7 @@ public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModu
 
     @Override
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
-        if (!settingActivated){
+        if(!settingActivated){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
             gui.drawTexturedModalRect(gui.getGuiLeft() + 120, gui.getGuiTop() + 13, 0, 73, 56, 55);
@@ -67,7 +75,7 @@ public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModu
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         ItemStack chargeSlot = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
-        if (chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem){
+        if(chargeSlot != null && chargeSlot.getItem() instanceof IEnergyContainerItem){
             ((IEnergyContainerItem) chargeSlot.getItem()).receiveEnergy(chargeSlot, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
             ((IEnergyContainerItem) armorChestplate.getItem()).extractEnergy(armorChestplate, NBTUtil.getInteger(armorChestplate, "rfPerTick"), false);
         }

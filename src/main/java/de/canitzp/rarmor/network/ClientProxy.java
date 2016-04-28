@@ -1,13 +1,28 @@
+/*
+ * This file 'ClientProxy.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -21,8 +36,14 @@ public class ClientProxy extends CommonProxy{
 
     public static Map<String, Pair<String, Integer>> specialPlayers = new HashMap<>();
 
+    @SuppressWarnings("Convert2Lambda")
     @Override
-    public void init(){
+    public void preInit(FMLPreInitializationEvent event){
+
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event){
         specialPlayers.put("Xogue", Pair.of("Thank you for your help to create a better mod.", ColorUtil.CYAN));
         specialPlayers.put("canitzp", Pair.of("Thank you Developer.", ColorUtil.RED));
         specialPlayers.put("Ellpeck", Pair.of("Thank you for helping with everything in all of my Mods", ColorUtil.GREEN));
@@ -31,26 +52,37 @@ public class ClientProxy extends CommonProxy{
     @Override
     public void postInit(FMLPostInitializationEvent event){
         //TODO Fix whatever is broken: EventHandler.postInitClient();
+        IResourceManager listener = Minecraft.getMinecraft().getResourceManager();
+        if(listener instanceof IReloadableResourceManager){
+            ((IReloadableResourceManager) listener).registerReloadListener(new IResourceManagerReloadListener(){
+                @Override
+                public void onResourceManagerReload(IResourceManager resourceManager){
+                    ItemModuleEffects.effectBoxes.clear();
+                    ItemModuleEffects.energyEffect.clear();
+                    Rarmor.initEffectsModule();
+                }
+            });
+        }
     }
 
     @Override
     public void registerRenderer(){
         Rarmor.logger.info("Register Renderer");
         //ModelBakery.registerItemVariants(ItemRegistry.modularTool, new ResourceLocation(Rarmor.MODID, "modularTool"));
-        for (Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
-            if (entry.getKey() != null && entry.getKey().getItem() != null){
-                if (entry.getKey().getItem() instanceof ItemBlock){
+        for(Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
+            if(entry.getKey() != null && entry.getKey().getItem() != null){
+                if(entry.getKey().getItem() instanceof ItemBlock){
                     registerBlock(entry.getKey().getItem(), entry.getValue());
-                }else{
+                } else {
                     registerItem(entry.getKey(), entry.getValue());
                 }
             }
         }
-        for (Map.Entry<ItemStack, String> entry : specialTextures.entrySet()){
-            if (entry.getKey() != null && entry.getKey().getItem() != null){
-                if (entry.getKey().getItem() instanceof ItemBlock){
+        for(Map.Entry<ItemStack, String> entry : specialTextures.entrySet()){
+            if(entry.getKey() != null && entry.getKey().getItem() != null){
+                if(entry.getKey().getItem() instanceof ItemBlock){
                     registerBlock(entry.getKey().getItem(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
-                }else{
+                } else {
                     registerItem(entry.getKey(), entry.getValue() + (entry.getKey().getMetadata() == 0 ? "" : entry.getKey().getMetadata()));
                 }
             }

@@ -1,3 +1,11 @@
+/*
+ * This file 'RarmorProperties.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -48,17 +56,17 @@ public class RarmorProperties extends Properties{
 
     public void saveProperties(){
         try{
-            for (Map.Entry<String, Boolean> entry : booleanProperties.entrySet()){
+            for(Map.Entry<String, Boolean> entry : booleanProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
-            for (Map.Entry<String, Integer> entry : integerProperties.entrySet()){
+            for(Map.Entry<String, Integer> entry : integerProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
-            for (Map.Entry<String, String[]> entry : stringArrayProperties.entrySet()){
+            for(Map.Entry<String, String[]> entry : stringArrayProperties.entrySet()){
                 rarmorProperties.put(entry.getKey(), Arrays.toString(entry.getValue()));
             }
             rarmorProperties.store(new FileOutputStream(propFile), "These are the Properties of Rarmor");
-        } catch (Exception e){
+        } catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -66,18 +74,18 @@ public class RarmorProperties extends Properties{
     public void readProperties(){
         try{
             rarmorProperties.load(new FileInputStream(propFile));
-            for (Map.Entry<Object, Object> entry : entrySet()){
-                if (this.isEntryBoolean((String) entry.getValue())){
+            for(Map.Entry<Object, Object> entry : entrySet()){
+                if(this.isEntryBoolean((String) entry.getValue())){
                     booleanProperties.put((String) entry.getKey(), parseBool((String) entry.getValue()));
                 }
-                if (this.isEntryInteger((String) entry.getValue())){
+                if(this.isEntryInteger((String) entry.getValue())){
                     integerProperties.put((String) entry.getKey(), Integer.parseInt((String) entry.getValue()));
                 }
-                if (this.isEntryStringArray((String) entry.getValue())){
+                if(this.isEntryStringArray((String) entry.getValue())){
                     stringArrayProperties.put((String) entry.getKey(), ((String) entry.getValue()).replace("[", "").replace("]", "").replace(" ", "").split(","));
                 }
             }
-        } catch (IOException e){
+        } catch(IOException e){
             Rarmor.logger.info("Can't find Rarmor.properties creating new ones.");
         }
         initProperties();
@@ -88,22 +96,24 @@ public class RarmorProperties extends Properties{
         addInteger("moduleDefenseDamageMultiplier", 2500);
         addInteger("moduleFlyingEnergyPerTick", 5);
         addInteger("moduleSolarEnergyPerTick", 5);
+        addInteger("moduleMovementEnergyPerTick", 5);
         addBoolean("AlwaysShowAdvancedInGameTooltip", false);
         addBoolean("YouTubeMode", false);
-        addStringArray("ActivatedModulesWithEnergyPerTick", new String[]{"damageBoost@150", "heal@1500", "regeneration@150", "waterBreathing@200", "healthBoost@500", "absorption@250", "saturation@1000"});
+        addStringArray("ActivatedModulesWithEnergyPerTick", new String[]{"damageBoost@150", "heal@1500", "regeneration@150", "waterBreathing@200", "healthBoost@500", "absorption@250", "saturation@1000",
+                "moveSlowdown@null", "digSlowDown@null", "damageBoost@null", "harm@null", "confusion@null", "blindness@null", "hunger@null", "weakness@null", "poison@null", "wither@null", "unluck@null"});
         addInteger("DefaultModuleEffectEnergyTick", 100);
 
         saveProperties();
     }
 
     private void addBoolean(String key, boolean value){
-        if (!booleanProperties.containsKey(key)){
+        if(!booleanProperties.containsKey(key)){
             booleanProperties.put(key, value);
         }
     }
 
     private void addInteger(String key, int value){
-        if (!integerProperties.containsKey(key)){
+        if(!integerProperties.containsKey(key)){
             integerProperties.put(key, value);
         }
     }
@@ -122,7 +132,7 @@ public class RarmorProperties extends Properties{
     public boolean isEntryInteger(String entry){
         try{
             Integer.parseInt(entry);
-        } catch (NumberFormatException e){
+        } catch(NumberFormatException e){
             return false;
         }
         return true;

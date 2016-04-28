@@ -1,3 +1,11 @@
+/*
+ * This file 'ArmorHud.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
@@ -41,36 +49,36 @@ public class ArmorHud{
         RayTraceResult trace = mc.objectMouseOver;
         FontRenderer fontRenderer = mc.fontRendererObj;
         World world = player.getEntityWorld();
-        if (trace != null){
-            if (trace.typeOfHit == RayTraceResult.Type.BLOCK || trace.typeOfHit == RayTraceResult.Type.MISS){
+        if(trace != null){
+            if(trace.typeOfHit == RayTraceResult.Type.BLOCK || trace.typeOfHit == RayTraceResult.Type.MISS){
                 IBlockState state = world.getBlockState(trace.getBlockPos());
                 TileEntity tile = world.getTileEntity(trace.getBlockPos());
-                if (state != null){
-                    if (state.getBlock() != null){
-                        if (tile != null){
+                if(state != null){
+                    if(state.getBlock() != null){
+                        if(tile != null){
                             y = displayBlock(state, x, y);
-                            for (IAdvancedHud hud : RarmorAPI.hudExtension){
+                            for(IAdvancedHud hud : RarmorAPI.hudExtension){
                                 y = hud.onShow(fontRenderer, resolution, world, trace, state, tile, x, y);
                             }
-                        }else if (state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
+                        } else if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
                             drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE);
-                        }else{
+                        } else {
                             y = displayBlock(state, x, y);
                         }
                     }
                 }
-            }else if (trace.typeOfHit == RayTraceResult.Type.ENTITY){
+            } else if(trace.typeOfHit == RayTraceResult.Type.ENTITY){
                 drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), ColorUtil.WHITE);
             }
         }
     }
 
     private static float displayBlock(IBlockState state, float x, float y){
-        if (state.getBlock() != Blocks.AIR){
+        if(state.getBlock() != Blocks.AIR){
             Item itemBlock = Item.getItemFromBlock(state.getBlock());
-            if (itemBlock != null){
+            if(itemBlock != null){
                 drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE);
-            }else{
+            } else {
                 drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE);
             }
         }

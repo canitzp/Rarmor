@@ -1,3 +1,11 @@
+/*
+ * This file 'GuiCheckBox.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.api.gui;
 
 import de.canitzp.rarmor.util.ColorUtil;
@@ -51,8 +59,8 @@ public class GuiCheckBox extends Gui implements IGuiRender{
     }
 
     public static GuiCheckBox getCheckBoxAtCoordinates(int x, int y){
-        for (GuiCheckBox checkBox : checkBoxList){
-            if (checkBox.x == x && checkBox.y == y){
+        for(GuiCheckBox checkBox : checkBoxList){
+            if(checkBox.x == x && checkBox.y == y){
                 return checkBox;
             }
         }
@@ -66,24 +74,24 @@ public class GuiCheckBox extends Gui implements IGuiRender{
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.blendFunc(770, 771);
-        if (!isActivated){
+        if(!isActivated){
             this.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 0, 0, 8, 8);
-        }else{
+        } else {
             this.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 0, 8, 8, 8);
         }
     }
 
     public void mouseOverEvent(int mouseX, int mouseY, int guiLeft, int guiTop, FontRenderer fontRenderer){
-        if (description != null && mouseX >= x + guiLeft && mouseY >= y + guiTop){
-            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
+        if(description != null && mouseX >= x + guiLeft && mouseY >= y + guiTop){
+            if(mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
                 GuiUtil.drawHoveringText(guiContainer, description, mouseX, mouseY, fontRenderer);
             }
         }
     }
 
     public boolean mouseClicked(int mouseX, int mouseY, int guiLeft, int guiTop){
-        if (mouseX >= x + guiLeft && mouseY >= y + guiTop){
-            if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
+        if(mouseX >= x + guiLeft && mouseY >= y + guiTop){
+            if(mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop){
                 this.isActivated = !this.isActivated;
                 return true;
             }

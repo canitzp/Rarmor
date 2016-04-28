@@ -1,3 +1,11 @@
+/*
+ * This file 'ContainerRFArmor.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.RarmorUtil;
@@ -33,7 +41,7 @@ public class ContainerRFArmor extends ContainerBase{
     public int currentArmorEnergy;
 
     public ContainerRFArmor(EntityPlayer player){
-        if (player.worldObj.isRemote)
+        if(player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = RarmorUtil.getPlayersRarmorChestplate(player);
         InventoryPlayer inventoryPlayer = player.inventory;
@@ -42,25 +50,25 @@ public class ContainerRFArmor extends ContainerBase{
         armor.getTagCompound().setBoolean("click", false);
 
         //Armor Inventory: 0-26
-        for (int i = 0; i < 3; ++i){
-            for (int j = 0; j < 9; j++){
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 9; j++){
                 this.addSlotToContainer(new Slot(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18));
             }
         }
         //Player Inventory: 27-53
-        for (int j = 0; j < 3; ++j){
-            for (int k = 0; k < 9; ++k){
+        for(int j = 0; j < 3; ++j){
+            for(int k = 0; k < 9; ++k){
                 this.addSlotToContainer(new Slot(inventoryPlayer, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
         //Player Hotbar: 54-62
-        for (int j = 0; j < 9; ++j){
+        for(int j = 0; j < 9; ++j){
             this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
         }
         //Armor Crafting Grid: 63 + 64-72
         this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
-        for (int l = 0; l < 3; ++l){
-            for (int i1 = 0; i1 < 3; ++i1){
+        for(int l = 0; l < 3; ++l){
+            for(int i1 = 0; i1 < 3; ++i1){
                 this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
             }
         }
@@ -92,8 +100,8 @@ public class ContainerRFArmor extends ContainerBase{
     public void detectAndSendChanges(){
         super.detectAndSendChanges();
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if (module != null){
-            if (module.getItem() instanceof IRarmorModule){
+        if(module != null){
+            if(module.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
             }
         }
@@ -125,10 +133,10 @@ public class ContainerRFArmor extends ContainerBase{
     }
 
     private void dropCraftMatrix(EntityPlayer player){
-        if (!player.worldObj.isRemote){
-            for (int i = 0; i < 9; ++i){
+        if(!player.worldObj.isRemote){
+            for(int i = 0; i < 9; ++i){
                 ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
-                if (itemstack != null){
+                if(itemstack != null){
                     player.dropItem(itemstack, false);
                 }
             }
@@ -145,46 +153,46 @@ public class ContainerRFArmor extends ContainerBase{
         int mod0 = 75;
         Slot slot = this.inventorySlots.get(slotIndex);
         ItemStack stack = null;
-        if (slot != null && slot.getHasStack()){
+        if(slot != null && slot.getHasStack()){
             stack = slot.getStack();
             ItemStack stack1 = stack.copy();
-            if (slotIndex >= invStart && slotIndex <= invStart + invLength){
-                if (!this.mergeItemStack(stack, hotbarStart, hotbarStart + hotbarLength, false)){
+            if(slotIndex >= invStart && slotIndex <= invStart + invLength){
+                if(!this.mergeItemStack(stack, hotbarStart, hotbarStart + hotbarLength, false)){
                     return null;
                 }
-            }else if (slotIndex >= hotbarStart && slotIndex <= hotbarStart + hotbarLength){
-                if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
+            } else if(slotIndex >= hotbarStart && slotIndex <= hotbarStart + hotbarLength){
+                if(!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
                     return null;
                 }
-            }else if (slotIndex >= armorInvStart && slotIndex <= armorInvStart + armorInvLength){
-                if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
+            } else if(slotIndex >= armorInvStart && slotIndex <= armorInvStart + armorInvLength){
+                if(!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
                     return null;
                 }
-            }else if (slotIndex == craftOut){
-                if (!this.mergeItemStack(stack1, invStart, invStart + invLength, true)){
+            } else if(slotIndex == craftOut){
+                if(!this.mergeItemStack(stack1, invStart, invStart + invLength, true)){
                     return null;
                 }
                 slot.onSlotChange(stack1, stack);
-            }else if(slotIndex >= craftStart && slotIndex <= craftStart + craftLength){
-                if (!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
+            } else if(slotIndex >= craftStart && slotIndex <= craftStart + craftLength){
+                if(!this.mergeItemStack(stack, invStart, invStart + invLength, false)){
                     return null;
                 }
             } else if(slotIndex == mod0){
-                if (!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
+                if(!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
                     return null;
                 }
             } else if(slotIndex == furnaceInput || slotIndex == furnaceOutput){
-                if (!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
+                if(!this.mergeItemStack(stack1, invStart, invStart + invLength, false)){
                     return null;
                 }
             }
-            if (stack1.stackSize == 0){
+            if(stack1.stackSize == 0){
                 slot.putStack(null);
-            }else{
+            } else {
                 slot.onSlotChanged();
             }
 
-            if (stack1.stackSize == stack.stackSize){
+            if(stack1.stackSize == stack.stackSize){
                 return null;
             }
             slot.onPickupFromSlot(player, stack1);
@@ -200,7 +208,7 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot){
-        if (slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
+        if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
             return slot.inventory != this.craftResult && super.canMergeSlot(stack, slot);
         }
         return super.canMergeSlot(stack, slot);

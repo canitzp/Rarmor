@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemRFArmor.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
@@ -50,11 +58,11 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand){
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
         ItemStack itemstack = PlayerUtil.getItemStackFromSlot(player, entityequipmentslot);
-        if (itemstack == null){
+        if(itemstack == null){
             player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;
             return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-        }else{
+        } else {
             return new ActionResult(EnumActionResult.FAIL, itemStackIn);
         }
     }
@@ -126,7 +134,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
      */
     protected int getAbsorptionRatio(){
 
-        switch (armorType){
+        switch(armorType){
             case FEET:
                 return 15;
             case LEGS:
@@ -153,7 +161,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot){
-        if (getEnergyStored(armor) >= getEnergyPerDamage(armor)){
+        if(getEnergyStored(armor) >= getEnergyPerDamage(armor)){
             return Math.min(getBaseAbsorption(), 20) * getAbsorptionRatio() / 100;
         }
         return 0;
@@ -161,9 +169,9 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void damageArmor(EntityLivingBase entity, ItemStack armor, DamageSource source, int damage, int slot){
-        if (armor.getItem() instanceof ItemRFArmorBody && entity instanceof EntityPlayer){
-            if (NBTUtil.getInteger(armor, "BurnTime") > 0 || NBTUtil.getInteger(armor, "GenBurnTime") > 0){
-                if (entity.getEntityWorld().rand.nextInt(10) == 1){
+        if(armor.getItem() instanceof ItemRFArmorBody && entity instanceof EntityPlayer){
+            if(NBTUtil.getInteger(armor, "BurnTime") > 0 || NBTUtil.getInteger(armor, "GenBurnTime") > 0){
+                if(entity.getEntityWorld().rand.nextInt(10) == 1){
                     entity.setFire(4);
                 }
             }
@@ -174,13 +182,13 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     /* IEnergyContainerItem */
     @Override
     public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate){
-        if (container.getTagCompound() == null){
+        if(container.getTagCompound() == null){
             container.setTagCompound(new NBTTagCompound());
         }
         int energy = container.getTagCompound().getInteger("Energy");
         int energyReceived = Math.min(maxEnergy - energy, Math.min(this.maxTransfer, maxReceive));
 
-        if (!simulate){
+        if(!simulate){
             energy += energyReceived;
             container.getTagCompound().setInteger("Energy", energy);
         }
@@ -189,13 +197,13 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int extractEnergy(ItemStack container, int maxExtract, boolean simulate){
-        if (container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")){
+        if(container.getTagCompound() == null || !container.getTagCompound().hasKey("Energy")){
             return 0;
         }
         int energy = container.getTagCompound().getInteger("Energy");
         int energyExtracted = Math.min(energy, Math.min(this.maxTransfer, maxExtract));
 
-        if (!simulate){
+        if(!simulate){
             energy -= energyExtracted;
             container.getTagCompound().setInteger("Energy", energy);
         }

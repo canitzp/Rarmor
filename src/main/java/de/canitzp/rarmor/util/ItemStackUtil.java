@@ -1,3 +1,11 @@
+/*
+ * This file 'ItemStackUtil.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.util;
 
 import de.canitzp.rarmor.api.InventoryBase;
@@ -9,10 +17,10 @@ import net.minecraft.item.ItemStack;
 public class ItemStackUtil{
 
     public static InventoryBase reduceStackSize(InventoryBase inventory, int slotId){
-        if (inventory.getStackInSlot(slotId) != null){
-            if (inventory.getStackInSlot(slotId).stackSize > 1){
+        if(inventory.getStackInSlot(slotId) != null){
+            if(inventory.getStackInSlot(slotId).stackSize > 1){
                 inventory.getStackInSlot(slotId).stackSize--;
-            }else{
+            } else {
                 inventory.setInventorySlotContents(slotId, null);
             }
         }
@@ -20,11 +28,11 @@ public class ItemStackUtil{
     }
 
     public static InventoryBase addStackToSlot(InventoryBase inventory, ItemStack stack, int slotId){
-        if (inventory.getStackInSlot(slotId) != null){
-            if (inventory.getStackInSlot(slotId).copy().isItemEqual(stack)){
+        if(inventory.getStackInSlot(slotId) != null){
+            if(inventory.getStackInSlot(slotId).copy().isItemEqual(stack)){
                 inventory.setInventorySlotContents(slotId, new ItemStack(stack.getItem(), inventory.getStackInSlot(slotId).copy().stackSize + stack.stackSize, stack.getItemDamage()));
             }
-        }else{
+        } else {
             inventory.setInventorySlotContents(slotId, stack);
         }
         return inventory;

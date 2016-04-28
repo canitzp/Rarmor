@@ -1,3 +1,11 @@
+/*
+ * This file 'GuiHandler.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.inventory;
 
 import de.canitzp.rarmor.inventory.container.ContainerModularTool;
@@ -17,7 +25,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
-        switch (ID){
+        switch(ID){
             case RFARMORGUI:
                 return new ContainerRFArmor(player);
             case MODULARTOOL:
@@ -29,7 +37,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
-        switch (ID){
+        switch(ID){
             case RFARMORGUI:
                 return new GuiRFArmor(player, new ContainerRFArmor(player));
             case MODULARTOOL:

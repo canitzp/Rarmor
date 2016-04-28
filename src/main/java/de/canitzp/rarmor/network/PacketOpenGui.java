@@ -1,8 +1,15 @@
+/*
+ * This file 'PacketOpenGui.java' is part of Rarmor by canitzp.
+ * It isn't allowed to use more than 15% of the code
+ * or redistribute the compiled jar file.
+ * The source code can be found here: https://github.com/canitzp/Rarmor
+ * © canitzp, 2016
+ */
+
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.GuiHandler;
-import de.canitzp.rarmor.util.MinecraftUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -51,7 +58,7 @@ public class PacketOpenGui implements IMessage{
                 if(player != null){
                     player.openGui(Rarmor.instance, GuiHandler.RFARMORGUI, world, (int) player.posX, (int) player.posY, (int) player.posZ);
                 } else {
-                    System.out.println(MinecraftUtil.getPlayer().dimension);
+                    Rarmor.logger.error("The World isn't synced correctly! Please reconnect!");
                 }
             }
             return null;
