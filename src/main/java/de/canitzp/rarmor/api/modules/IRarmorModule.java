@@ -35,14 +35,17 @@ public interface IRarmorModule{
 
     String getUniqueName();
 
+    @SideOnly(Side.CLIENT)
     default String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     default ModuleType getModuleType(){
         return ModuleType.NONE;
     }
 
+    @SideOnly(Side.CLIENT)
     default List<String> getGuiHelp(){
         return null;
     }
@@ -65,7 +68,6 @@ public interface IRarmorModule{
     default void drawScreen(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
     }
 
-    @SideOnly(Side.CLIENT)
     default void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
     }
 

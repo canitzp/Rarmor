@@ -116,7 +116,7 @@ public class ContainerRFArmor extends ContainerBase{
     @Override
     public void updateProgressBar(int id, int data){
         if(id == 0){
-            EnergyUtil.setEnergy(this.armor, data);
+            //EnergyUtil.setEnergy(this.armor, data);
         }
     }
 

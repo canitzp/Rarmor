@@ -56,6 +56,7 @@ public class GuiRFArmor extends GuiContainerBase{
         this.ySize = 226;
         this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         this.player = player;
+        this.allowUserInput = true;
     }
 
     @Override

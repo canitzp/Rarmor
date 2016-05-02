@@ -71,20 +71,22 @@ public class ItemRFArmorBody extends ItemRFArmor{
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor){
-        this.handleModules(world, player, armor);
-        if(NBTUtil.getBoolean(armor, "isFirstOpened")){
-            if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
-            if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0)
-                NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
-            ItemStack foot = PlayerUtil.getArmor(player, EntityEquipmentSlot.FEET);
-            ItemStack leggins = PlayerUtil.getArmor(player, EntityEquipmentSlot.LEGS);
-            ItemStack head = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
-            if(RarmorUtil.isPlayerWearingRarmor(player)){
-                if(isBurnable(armor)){
-                    burn(armor);
-                } else NBTUtil.setInteger(armor, "BurnTime", 0);
-                if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
-                    EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
+        if(!world.isRemote){
+            this.handleModules(world, player, armor);
+            if(NBTUtil.getBoolean(armor, "isFirstOpened")){
+                if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
+                if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0)
+                    NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
+                ItemStack foot = PlayerUtil.getArmor(player, EntityEquipmentSlot.FEET);
+                ItemStack leggins = PlayerUtil.getArmor(player, EntityEquipmentSlot.LEGS);
+                ItemStack head = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
+                if(RarmorUtil.isPlayerWearingRarmor(player)){
+                    if(isBurnable(armor)){
+                        burn(armor);
+                    } else NBTUtil.setInteger(armor, "BurnTime", 0);
+                    if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
+                        EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
+                    }
                 }
             }
         }
