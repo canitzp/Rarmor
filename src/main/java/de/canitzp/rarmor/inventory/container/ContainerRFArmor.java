@@ -18,7 +18,6 @@ import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
-import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -38,7 +37,6 @@ public class ContainerRFArmor extends ContainerBase{
     public SlotUpdate generatorSlot;
     public SlotModuleSplitterInput sideSlot1, sideSlot2, sideSlot3;
     public ItemStack armor;
-    public int currentArmorEnergy;
 
     public ContainerRFArmor(EntityPlayer player){
         if(player.worldObj.isRemote)
@@ -98,25 +96,23 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public void detectAndSendChanges(){
+        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+            ItemStack itemstack = this.inventorySlots.get(i).getStack();
+            ItemStack itemstack1 = this.inventory.getStackInSlot(i);
+            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
+                itemstack1 = itemstack == null ? null : itemstack.copy();
+                this.inventoryItemStacks.set(i, itemstack1);
+                for (ICrafting listener : this.listeners) {
+                    listener.sendSlotContents(this, i, itemstack1);
+                }
+            }
+        }
         super.detectAndSendChanges();
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
             }
-        }
-        for(ICrafting crafting : this.listeners){
-            if(this.currentArmorEnergy != EnergyUtil.getEnergy(this.armor)){
-                crafting.sendProgressBarUpdate(this, 0, EnergyUtil.getEnergy(this.armor));
-            }
-        }
-        this.currentArmorEnergy = EnergyUtil.getEnergy(this.armor);
-    }
-
-    @Override
-    public void updateProgressBar(int id, int data){
-        if(id == 0){
-            //EnergyUtil.setEnergy(this.armor, data);
         }
     }
 

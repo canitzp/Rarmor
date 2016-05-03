@@ -177,7 +177,7 @@ public class GuiRFArmor extends GuiContainerBase{
     protected void mouseClicked(int mouseX, int mouseY, int type){
         if(type == 0){
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161){
-                this.armor.getTagCompound().setBoolean("click", true);
+                NBTUtil.setBoolean(this.armor, "click", true);
                 this.onGuiClosed();
                 this.mc.thePlayer.sendQueue.addToSendQueue(new CPacketCloseWindow(this.mc.thePlayer.openContainer.windowId));
                 GuiInventory inventory = new GuiInventory(this.mc.thePlayer);

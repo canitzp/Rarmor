@@ -20,8 +20,12 @@ import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.rarmor.util.*;
+import de.canitzp.rarmor.util.ColorUtil;
+import de.canitzp.rarmor.util.EnergyUtil;
+import de.canitzp.rarmor.util.JavaUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -45,7 +49,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     public static ResourceLocation checkBox = RarmorResources.GUIELEMENTS.getNewLocation();
     public static HashMap<Potion, Integer> energyEffect = new LinkedHashMap<>();
     public static List<EffectCheckBox> effectBoxes = new ArrayList<>();
-    private static int ySize, yToTop;
+    private static int ySize;
 
     public ItemModuleEffects(){
         super("moduleEffects");
@@ -115,7 +119,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     @SideOnly(Side.CLIENT)
     @Override
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
-        yToTop = (gui.height / 2 - ySize / 2);
+        int yToTop = (gui.height / 2 - ySize / 2);
         ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
         minecraft.getTextureManager().bindTexture(ItemModuleEffects.checkBox);
         gui.drawTexturedModalRect(-150 + guiLeft, yToTop - 4, 18, 0, 144, 4);
@@ -138,9 +142,8 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
         if(mod != null){
             for(EffectCheckBox box : effectBoxes){
-                if(box.mouseClicked(mouseX, mouseY, guiLeft, gui.height / 2 - ySize / 2)){
+                if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, guiLeft, gui.height / 2 - ySize / 2)){
                     boolean b = NBTUtil.getBoolean(mod, box.effect.getName());
-                    System.out.println("Click " + box.effect.getName() + " " + b);
                     box.setState(minecraft.thePlayer, !b);
                 }
             }
@@ -149,16 +152,17 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack mod, InventoryBase inventory){
-        if(!player.worldObj.isRemote){
+        if(!world.isRemote){
             if(mod != null){
                 for(EffectCheckBox box : effectBoxes){
                     if(NBTUtil.getBoolean(mod, box.effect.getName())){
-                        if(NBTUtil.getBoolean(mod, box.effect.getName())){
-                            System.out.println(box.effect.getName());
-                        }
                         if(EnergyUtil.getEnergy(armorChestplate) >= box.energy){
-                            player.addPotionEffect(new PotionEffect(box.effect, Short.MAX_VALUE, 0, true, false));
+                            if(player.getActivePotionEffect(box.effect) == null){
+                                player.addPotionEffect(new PotionEffect(box.effect, Short.MAX_VALUE, 0, true, false));
+                            }
                             EnergyUtil.reduceEnergy(armorChestplate, box.energy);
+                        } else {
+                            player.removePotionEffect(box.effect);
                         }
                     } else {
                         player.removePotionEffect(box.effect);
@@ -215,9 +219,9 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         }
 
         @SideOnly(Side.CLIENT)
-        public boolean mouseClicked(int mouseX, int mouseY, int guiLeft, int guiTop){
+        public boolean mouseClicked(FontRenderer fontRenderer, int mouseX, int mouseY, int guiLeft, int guiTop){
             if(mouseX >= x + guiLeft && mouseY >= y + guiTop){
-                if(mouseX <= x + MinecraftUtil.getFontRenderer().getStringWidth(this.text) + 9 + guiLeft && mouseY <= y + height + guiTop){
+                if(mouseX <= x + fontRenderer.getStringWidth(this.text) + 9 + guiLeft && mouseY <= y + height + guiTop){
                     return true;
                 }
             }
@@ -234,7 +238,6 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         }
 
         public void setState(EntityPlayer player, boolean b){
-            NBTUtil.setBoolean(RarmorUtil.getPlayersRarmorChestplate(player), this.effect.getName(), b);
             NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, getModuleSlot(player), effect.getName(), b));
         }
     }

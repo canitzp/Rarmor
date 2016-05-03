@@ -23,7 +23,7 @@ repositories {
     }
 }
 
-version = "0.6.0"
+version = "0.6.0RC4"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
