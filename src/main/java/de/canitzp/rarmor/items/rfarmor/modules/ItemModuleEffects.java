@@ -35,6 +35,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,6 +54,14 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     public ItemModuleEffects(){
         super("moduleEffects");
+    }
+
+    @Override
+    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
+        for(Potion p : ForgeRegistries.POTIONS){
+            NBTUtil.setBoolean(stack, p.getName(), false);
+        }
+        super.onCreated(stack, worldIn, playerIn);
     }
 
     public static void addPotionEffect(Potion effect, int energyPerTick){
@@ -77,15 +86,6 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         }
     }
 
-    public static ItemStack getModule(EntityPlayer player){
-        InventoryBase inventory = RarmorUtil.readRarmor(player);
-        ItemStack stack = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
-        if((stack != null && stack.getItem() != ItemRegistry.moduleEffects) || stack == null){
-            stack = inventory.getStackInSlot(31);
-        }
-        return stack;
-    }
-
     public static int getModuleSlot(EntityPlayer player){
         InventoryBase inventory = RarmorUtil.readRarmor(player);
         ItemStack stack = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
@@ -107,7 +107,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         if(RarmorProperties.getBoolean("YouTubeMode")){
             s += "\n" + TextFormatting.DARK_GRAY + "You" + TextFormatting.RED + "Tube" + TextFormatting.GRAY + " Mode active. NightVision costs " + TextFormatting.RED + "0RF" + TextFormatting.GRAY;
         }
-        return s;
+        return s += "\n" + TextFormatting.RED + "WIP";
     }
 
     @SideOnly(Side.CLIENT)
@@ -168,14 +168,14 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
                         player.removePotionEffect(box.effect);
                     }
                 }
+                RarmorUtil.saveRarmor(player, inventory);
             }
         }
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack mod, InventoryBase inventory, SlotUpdate slot){
         if(!world.isRemote){
-            ItemStack mod = getModule(player);
             if(mod != null){
                 for(EffectCheckBox box : effectBoxes){
                     if(NBTUtil.getBoolean(mod, box.effect.getName())){

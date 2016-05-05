@@ -136,8 +136,11 @@ public class Rarmor{
         proxy.registerRenderer();
         proxy.init(event);
         RecipeManager.init();
-        logger.info("Finished Initialization");
         CraftingTweaksIntegration.init();
+        if (event.getSide().isClient()){
+            //this.registerColoring();
+        }
+        logger.info("Finished Initialization");
     }
 
     @Mod.EventHandler
@@ -154,4 +157,18 @@ public class Rarmor{
             }
         }
     }
+
+    /*
+    public void registerColoring(){
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+            @Override
+            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+                if(stack.getItem() instanceof ItemRFArmor){
+                    return ColorUtil.CYAN;
+                }
+                return ColorUtil.WHITE;
+            }
+        }, ItemRegistry.rfArmorBody);
+    }
+    */
 }

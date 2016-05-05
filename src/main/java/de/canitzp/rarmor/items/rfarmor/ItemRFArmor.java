@@ -221,10 +221,16 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
         return maxEnergy;
     }
 
-
     @Override
     public boolean showDurabilityBar(ItemStack stack){
         return !(NBTUtil.getInteger(stack, "Energy") == this.maxEnergy);
     }
 
+    @Override
+    public void setColor(ItemStack stack, int color) {
+        if(stack.getItem() instanceof ItemRFArmorBody){
+
+        }
+        super.setColor(stack, color);
+    }
 }

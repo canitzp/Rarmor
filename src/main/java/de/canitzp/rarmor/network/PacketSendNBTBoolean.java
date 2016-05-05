@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class PacketSendNBTBoolean implements IMessage{
 
     public String nbt;
-    public boolean b, stackInput;
+    public boolean b;
     public int playerID, worldID, playerSlotID;
     public ItemStack stack;
 
@@ -97,17 +97,14 @@ public class PacketSendNBTBoolean implements IMessage{
                     stack = container.getSlot(message.playerSlotID).getStack();
                 }
             }
-            System.out.println(stack + " " + message.nbt + "   " + NBTUtil.getBoolean(stack, message.nbt));
             if(stack != null){
                 if(message.nbt.endsWith("##")){
                     String s = message.nbt.substring(0, message.nbt.length()-2);
-                    System.out.println(s);
                     NBTUtil.setBoolean(stack, s, !NBTUtil.getBoolean(stack, s));
                 } else {
                     NBTUtil.setBoolean(stack, message.nbt, message.b);
                 }
             }
-            System.out.println(stack + " " + message.nbt + "   " + NBTUtil.getBoolean(stack, message.nbt));
             return null;
         }
     }

@@ -10,8 +10,12 @@ package de.canitzp.rarmor.integration.jei;
 
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.items.ItemRegistry;
-import mezz.jei.api.*;
+import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.IModRegistry;
+import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import net.minecraft.item.ItemStack;
 
 /**
  * @author canitzp
@@ -22,15 +26,10 @@ public class JEIIntegration implements IModPlugin{
 
     @Override
     public void register(IModRegistry iModRegistry){
-        INbtIgnoreList ignoreList = iModRegistry.getJeiHelpers().getNbtIgnoreList();
-        ignoreList.ignoreNbtTagNames(ItemRegistry.ironChainsaw, "Energy");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.diamondChainsaw, "Energy");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBody, "Energy", "isFirstOpened", "rfPerTick");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorBoots, "Energy", "isFirstOpened");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorHelmet, "Energy", "isFirstOpened");
-        ignoreList.ignoreNbtTagNames(ItemRegistry.rfArmorLeggins, "Energy", "isFirstOpened");
+        iModRegistry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames("Energy", "isFirstOpened", "rfPerTick");
         iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.CRAFTING, 64, 9, 27, 36);
         iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.SMELTING, 73, 1, 27, 36);
+        iModRegistry.addRecipeCategoryCraftingItem(new ItemStack(ItemRegistry.rfArmorBody), VanillaRecipeCategoryUid.CRAFTING, VanillaRecipeCategoryUid.SMELTING);
     }
 
     /**

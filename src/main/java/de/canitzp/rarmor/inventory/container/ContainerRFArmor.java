@@ -22,14 +22,18 @@ import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author canitzp
  */
 public class ContainerRFArmor extends ContainerBase{
 
+    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
     public InventoryBase inventory;
     public InventoryCrafting craftMatrix = new InventoryCrafting(this, 3, 3);
     public IInventory craftResult = new InventoryCraftResult();
@@ -50,7 +54,7 @@ public class ContainerRFArmor extends ContainerBase{
         //Armor Inventory: 0-26
         for(int i = 0; i < 3; ++i){
             for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new Slot(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18));
+                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
             }
         }
         //Player Inventory: 27-53
@@ -78,10 +82,23 @@ public class ContainerRFArmor extends ContainerBase{
         this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
 
         //Armor Slots: 76-79
-        addSlotToContainer(new SlotUnmovable(player.inventory, 39, 44, 10));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 38, 44, 10 + 18));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 37, 44, 10 + 18 * 2));
-        addSlotToContainer(new SlotUnmovable(player.inventory, 36, 44, 10 + 18 * 3));
+        for (int k = 0; k < 4; ++k) {
+            final EntityEquipmentSlot entityequipmentslot = VALID_EQUIPMENT_SLOTS[k];
+            this.addSlotToContainer(new SlotUnmovable(player.inventory, 36 + (3 - k), 44, 10 + k * 18) {
+                public int getSlotStackLimit()
+                {
+                    return 1;
+                }
+                public boolean isItemValid(ItemStack stack) {
+                    return stack != null && stack.getItem().isValidArmor(stack, entityequipmentslot, player);
+                }
+                @SideOnly(Side.CLIENT)
+                public String getSlotTexture()
+                {
+                    return ItemArmor.EMPTY_SLOT_NAMES[entityequipmentslot.getIndex()];
+                }
+            });
+        }
 
         //Generic Slot Single: 80
         this.addSlotToContainer(this.generatorSlot = new SlotUpdate(this.inventory, 30, 140, 18, player));
@@ -91,12 +108,27 @@ public class ContainerRFArmor extends ContainerBase{
         addSlotToContainer(this.sideSlot2 = new SlotModuleSplitterInput(inventory, 32, -16, 34, player));
         addSlotToContainer(this.sideSlot3 = new SlotModuleSplitterInput(inventory, 33, -16, 54, player));
 
+        //Shield Slot: 84
+        this.addSlotToContainer(new Slot(player.inventory, 40, 116, 64) {
+            public boolean isItemValid(ItemStack stack)
+            {
+                return super.isItemValid(stack);
+            }
+            @SideOnly(Side.CLIENT)
+            public String getSlotTexture()
+            {
+                return "minecraft:items/empty_armor_slot_shield";
+            }
+        });
+
         this.onCraftMatrixChanged(this.craftMatrix);
     }
 
     @Override
     public void detectAndSendChanges(){
-        for (int i = 0; i < this.inventorySlots.size(); ++i) {
+        this.inventory.slots = RarmorUtil.readRarmor(player).slots;
+        super.detectAndSendChanges();
+        /*for (int i = 0; i < this.inventorySlots.size(); ++i) {
             ItemStack itemstack = this.inventorySlots.get(i).getStack();
             ItemStack itemstack1 = this.inventory.getStackInSlot(i);
             if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
@@ -106,8 +138,8 @@ public class ContainerRFArmor extends ContainerBase{
                     listener.sendSlotContents(this, i, itemstack1);
                 }
             }
-        }
-        super.detectAndSendChanges();
+        }*/
+
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){

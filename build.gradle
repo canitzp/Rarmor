@@ -23,7 +23,7 @@ repositories {
     }
 }
 
-version = "0.6.0RC4"
+version = "0.6.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
@@ -31,9 +31,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.9-12.16.0.1865-1.9"
+    version = "1.9-12.16.1.1887"
     runDir = "run"
-    mappings = "snapshot_20160425"
+    mappings = "snapshot_20160505"
     makeObfSourceJar = false
     useDepAts = true
     replaceIn "Rarmor.java"
@@ -41,7 +41,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9:3.2.14.190"
+    deobfCompile "mezz.jei:jei_1.9:3.3.3.197"
     deobfCompile 'net.blay09.mods:craftingtweaks:4.0.10'
 }
 

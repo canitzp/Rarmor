@@ -89,9 +89,9 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @Override
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
-        RarmorUtil.toggleSlotInGui(140, 18, true);
         dropSlot(inventory, inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player, armorChestplate);
         NBTUtil.setInteger(module, "GenBurnTime", 0);
+        RarmorUtil.toggleSlotInGui(140, 18, true);
     }
 
     @SideOnly(Side.CLIENT)
@@ -127,16 +127,17 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     private void generate(ItemStack armor, ItemStack module){
-        InventoryBase inventory = RarmorUtil.readRarmor(armor);
         int burnTime = NBTUtil.getInteger(module, "GenBurnTime");
         if(burnTime == 0){
+            InventoryBase inventory = RarmorUtil.readRarmor(armor);
             NBTUtil.setInteger(module, "CurrentItemGenBurnTime", TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT)));
             ItemStack burnItem = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
-            inventory = ItemStackUtil.reduceStackSize(inventory, ItemRFArmorBody.GENERATORSLOT);
+            ItemStackUtil.reduceStackSize(inventory, ItemRFArmorBody.GENERATORSLOT);
             if(burnItem.getItem().getContainerItem() != null){
-                inventory = ItemStackUtil.addStackToSlot(inventory, new ItemStack(burnItem.getItem().getContainerItem()), ItemRFArmorBody.GENERATORSLOT);
+                ItemStackUtil.addStackToSlot(inventory, new ItemStack(burnItem.getItem().getContainerItem()), ItemRFArmorBody.GENERATORSLOT);
             }
             RarmorUtil.saveRarmor(armor, inventory);
+
         }
         if(burnTime < NBTUtil.getInteger(module, "CurrentItemGenBurnTime")){
             burnTime++;
