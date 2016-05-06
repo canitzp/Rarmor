@@ -49,11 +49,11 @@ public class GuiOpenEvent{
                         }
                         event.setCanceled(true);
                         NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player, GuiHandler.RFARMORGUI));
+                        ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                        if (module != null && module.getItem() instanceof IRarmorModule) {
+                            ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, body, module, (GuiContainer) event.getGui());
+                        }
                     } else if (body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
-                    ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
-                    if (module != null && module.getItem() instanceof IRarmorModule) {
-                        ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, body, module, (GuiContainer) event.getGui());
-                    }
                 }
             }
         }

@@ -245,8 +245,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getColor(ItemStack stack) {
-        int c = NBTUtil.getInteger(stack, "color");
-        return c == 0 ? Colors.WHITE.colorValue : c;
+        return NBTUtil.getInteger(stack, "color");
     }
 
     @Override
