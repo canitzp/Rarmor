@@ -9,14 +9,14 @@
 package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.modules.IToolModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
+import de.canitzp.rarmor.inventory.slots.SlotUpdate;
 import de.canitzp.rarmor.items.modularTool.ItemModularTool;
 import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 /**
  * @author canitzp
  */
-public class ContainerModularTool extends ContainerBase{
+public class ContainerModularTool extends Container{
 
     public EntityPlayer player;
     public World world;

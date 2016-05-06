@@ -21,9 +21,12 @@ repositories {
         name = "eiranet"
         url ="http://repo.blay09.net"
     }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
-version = "0.6.0"
+version = "0.7.0pre1"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
@@ -43,6 +46,7 @@ minecraft {
 dependencies {
     deobfCompile "mezz.jei:jei_1.9:3.3.3.197"
     deobfCompile 'net.blay09.mods:craftingtweaks:4.0.10'
+    compile files('libraries/ActuallyAdditions.jar')
 }
 
 processResources {
@@ -62,4 +66,16 @@ idea {
     module {
         inheritOutputDirs = true
     }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.java
+    classifier = 'api'
+    include 'de/canitzp/rarmor/api/**'
 }

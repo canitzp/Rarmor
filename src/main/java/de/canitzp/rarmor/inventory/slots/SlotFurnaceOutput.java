@@ -9,7 +9,6 @@
 package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

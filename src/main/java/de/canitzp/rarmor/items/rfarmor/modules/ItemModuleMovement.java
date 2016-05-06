@@ -11,7 +11,6 @@ package de.canitzp.rarmor.items.rfarmor.modules;
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +57,7 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         if(!world.isRemote){
             player.capabilities.disableDamage = false;
             player.capabilities.setPlayerWalkSpeed(0.1F);

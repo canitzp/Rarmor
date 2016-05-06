@@ -99,4 +99,13 @@ public class NBTUtil{
         return stack.getTagCompound() != null && stack.getTagCompound().hasKey(name) && stack.getTagCompound().getBoolean(name);
     }
 
+    public static void setString(ItemStack stack, String key, String value){
+        checkForNBT(stack);
+        stack.getTagCompound().setString(key, value);
+    }
+
+    public static String getString(ItemStack stack, String key){
+        return stack.getTagCompound() != null ? stack.getTagCompound().getString(key) : null;
+    }
+
 }

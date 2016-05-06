@@ -9,9 +9,9 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.api.hudExtensions.RarmorHud;
 import de.canitzp.rarmor.event.EventHandler;
-import de.canitzp.rarmor.integration.craftingTweaks.CraftingTweaksIntegration;
+import de.canitzp.rarmor.integration.ActuallyAdditionsIntegration;
+import de.canitzp.rarmor.integration.CraftingTweaksIntegration;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
@@ -21,6 +21,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -137,15 +138,15 @@ public class Rarmor{
         proxy.init(event);
         RecipeManager.init();
         CraftingTweaksIntegration.init();
-        if (event.getSide().isClient()){
-            //this.registerColoring();
-        }
         logger.info("Finished Initialization");
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
         initEffectsModule();
+        if(Loader.isModLoaded("actuallyadditions")){
+            ActuallyAdditionsIntegration.postInit(event);
+        }
         proxy.postInit(event);
     }
 
@@ -158,17 +159,4 @@ public class Rarmor{
         }
     }
 
-    /*
-    public void registerColoring(){
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
-            @Override
-            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-                if(stack.getItem() instanceof ItemRFArmor){
-                    return ColorUtil.CYAN;
-                }
-                return ColorUtil.WHITE;
-            }
-        }, ItemRegistry.rfArmorBody);
-    }
-    */
 }

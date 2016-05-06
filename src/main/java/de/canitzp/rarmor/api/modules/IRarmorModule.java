@@ -9,15 +9,14 @@
 package de.canitzp.rarmor.api.modules;
 
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
-import de.canitzp.rarmor.api.gui.GuiContainerBase;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -53,22 +52,22 @@ public interface IRarmorModule{
     default void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
     }
 
-    default void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+    default void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
     }
 
     @SideOnly(Side.CLIENT)
-    default void initGui(World world, EntityPlayer player, ItemStack armorChestplate, GuiContainerBase gui, List<GuiCheckBox> checkBoxes, ResourceLocation checkBoxResource){
+    default void initGui(World world, EntityPlayer player, ItemStack armorChestplate, GuiContainer gui, List<GuiCheckBox> checkBoxes, ResourceLocation checkBoxResource){
     }
 
     @SideOnly(Side.CLIENT)
-    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
     }
 
     @SideOnly(Side.CLIENT)
-    default void drawScreen(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
+    default void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
     }
 
-    default void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
     }
 
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module){
@@ -94,7 +93,7 @@ public interface IRarmorModule{
         return false;
     }
 
-    default void onContainerTick(ContainerBase container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
+    default void onContainerTick(Container container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
     }
 
     default void initModule(World world, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){

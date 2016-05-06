@@ -61,14 +61,14 @@ public class ArmorHud{
                                 y = hud.onShow(fontRenderer, resolution, world, trace, state, tile, x, y);
                             }
                         } else if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
-                            drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE);
+                            drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE.colorValue);
                         } else {
                             y = displayBlock(state, x, y);
                         }
                     }
                 }
             } else if(trace.typeOfHit == RayTraceResult.Type.ENTITY){
-                drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), ColorUtil.WHITE);
+                drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), ColorUtil.WHITE.colorValue);
             }
         }
     }
@@ -77,9 +77,9 @@ public class ArmorHud{
         if(state.getBlock() != Blocks.AIR){
             Item itemBlock = Item.getItemFromBlock(state.getBlock());
             if(itemBlock != null){
-                drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE);
+                drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE.colorValue);
             } else {
-                drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE);
+                drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE.colorValue);
             }
         }
         return y + 10;

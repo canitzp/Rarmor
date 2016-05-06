@@ -10,11 +10,9 @@ package de.canitzp.rarmor.inventory.container;
 
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.container.ContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
-import de.canitzp.rarmor.inventory.slots.*;
 import de.canitzp.rarmor.inventory.slots.SlotFurnaceOutput;
+import de.canitzp.rarmor.inventory.slots.*;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
@@ -31,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author canitzp
  */
-public class ContainerRFArmor extends ContainerBase{
+public class ContainerRFArmor extends Container{
 
     private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
     public InventoryBase inventory;
@@ -236,7 +234,7 @@ public class ContainerRFArmor extends ContainerBase{
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot){
-        if(slot instanceof SlotCrafting || slot instanceof SlotCraftingInput){
+        if(slot instanceof SlotCrafting){
             return slot.inventory != this.craftResult && super.canMergeSlot(stack, slot);
         }
         return super.canMergeSlot(stack, slot);

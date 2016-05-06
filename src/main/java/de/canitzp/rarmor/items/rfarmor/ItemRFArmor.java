@@ -74,6 +74,9 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
+        if(type != null && type.equals("overlay")){
+            return "rarmor:textures/models/armor/rfarmorOverlay.png";
+        }
         return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
@@ -91,6 +94,9 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @SuppressWarnings("unchecked")
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean check){
+        if(NBTUtil.getString(stack, "colorName") != null){
+            list.add(NBTUtil.getString(stack, "colorName"));
+        }
         list.add(this.getEnergyStored(stack) + "/" + this.getMaxEnergyStored(stack) + " RF");
     }
 
@@ -212,7 +218,6 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getEnergyStored(ItemStack container){
-        //return NBTUtil.getInteger(container, "Energy");
         return EnergyUtil.getEnergy(container);
     }
 
@@ -227,10 +232,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     }
 
     @Override
-    public void setColor(ItemStack stack, int color) {
-        if(stack.getItem() instanceof ItemRFArmorBody){
-
-        }
-        super.setColor(stack, color);
+    public int getColor(ItemStack stack) {
+        return NBTUtil.getInteger(stack, "color");
     }
 }

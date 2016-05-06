@@ -12,9 +12,7 @@ import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.RarmorResources;
-import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
@@ -26,6 +24,7 @@ import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -107,7 +106,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         if(RarmorProperties.getBoolean("YouTubeMode")){
             s += "\n" + TextFormatting.DARK_GRAY + "You" + TextFormatting.RED + "Tube" + TextFormatting.GRAY + " Mode active. NightVision costs " + TextFormatting.RED + "0RF" + TextFormatting.GRAY;
         }
-        return s += "\n" + TextFormatting.RED + "WIP";
+        return s += "\n" + TextFormatting.RED + "WIP If you want to help me with this Module\nthan look at https://github.com/canitzp/Rarmor";
     }
 
     @SideOnly(Side.CLIENT)
@@ -118,7 +117,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
         int yToTop = (gui.height / 2 - ySize / 2);
         ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
         minecraft.getTextureManager().bindTexture(ItemModuleEffects.checkBox);
@@ -131,15 +130,15 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawScreen(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
+    public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
         for(EffectCheckBox checkBox : effectBoxes){
-            checkBox.drawScreen(gui, mouseX, mouseY, gui.getGuiLeft(), gui.height / 2 - ySize / 2);
+            checkBox.drawScreen(gui, mouseX, mouseY, gui.guiLeft, gui.height / 2 - ySize / 2);
         }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
         if(mod != null){
             for(EffectCheckBox box : effectBoxes){
                 if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, guiLeft, gui.height / 2 - ySize / 2)){
@@ -174,7 +173,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack mod, InventoryBase inventory, SlotUpdate slot){
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack mod, InventoryBase inventory){
         if(!world.isRemote){
             if(mod != null){
                 for(EffectCheckBox box : effectBoxes){
@@ -203,9 +202,9 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         }
 
         @SideOnly(Side.CLIENT)
-        public void drawCheckBox(GuiContainerBase gui, int guiLeft, int guiTop, boolean isActive){
+        public void drawCheckBox(GuiContainer gui, int guiLeft, int guiTop, boolean isActive){
             gui.drawTexturedModalRect(guiLeft + x - 4, guiTop + y, 18, 5, 144, 10);
-            gui.mc.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, ColorUtil.BLACK);
+            gui.mc.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, ColorUtil.BLACK.colorValue);
             gui.mc.getTextureManager().bindTexture(this.loc);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableBlend();
@@ -229,7 +228,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         }
 
         @SideOnly(Side.CLIENT)
-        public void drawScreen(GuiContainerBase gui, int mouseX, int mouseY, int guiLeft, int guiTop){
+        public void drawScreen(GuiContainer gui, int mouseX, int mouseY, int guiLeft, int guiTop){
             if(description != null && mouseX >= x + guiLeft && mouseY >= y + guiTop){
                 if(mouseX <= x + gui.mc.fontRendererObj.getStringWidth(this.text) + 9 + guiLeft && mouseY <= y + height + guiTop){
                     gui.drawHoveringText(description, mouseX, mouseY);

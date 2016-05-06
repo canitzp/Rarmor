@@ -12,9 +12,8 @@ import com.google.common.collect.Lists;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
-import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.integration.craftingTweaks.CraftingTweaksIntegration;
+import de.canitzp.rarmor.integration.CraftingTweaksIntegration;
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.ClientProxy;
@@ -62,8 +61,11 @@ public class GuiRFArmor extends GuiContainerBase{
     @Override
     public void initGui(){
         GuiCheckBox setInWorldTooltip = new GuiCheckBox(this, this.checkBox, 117, 12, 10, "Show In-World Tooltips", JavaUtil.newList("Show Tooltips like", "the Amount of Fluid in Tanks"));
+        GuiCheckBox haveToSneak = new GuiCheckBox(this, this.checkBox, 117, 24, 10, "Sneak to open Gui", JavaUtil.newList("If this is activated", "you have to sneak (press shift)", "to open the Rarmor Gui."));
         setInWorldTooltip.setClicked(NBTUtil.getBoolean(armor, "SettingInWorldTooltip"));
+        haveToSneak.setClicked(NBTUtil.getBoolean(armor, "HaveToSneakToOpenGui"));
         checkBoxList.add(setInWorldTooltip);
+        checkBoxList.add(haveToSneak);
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
@@ -138,7 +140,7 @@ public class GuiRFArmor extends GuiContainerBase{
 
         if(this.isSettingsTab){
             for(GuiCheckBox checkBox : checkBoxList){
-                checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop, fontRendererObj);
+                checkBox.mouseOverEvent(mouseX, mouseY, this.guiLeft, this.guiTop);
             }
         }
 
@@ -169,7 +171,7 @@ public class GuiRFArmor extends GuiContainerBase{
         if(ClientProxy.specialPlayers.containsKey(player.getName())){
             Pair<String, Integer> pair = ClientProxy.specialPlayers.get(player.getName());
             this.drawCenteredString(fontRendererObj, pair.getKey(), this.guiLeft + (this.xSize / 2), this.guiTop - 18, pair.getValue());
-            this.drawCenteredString(fontRendererObj, player.getName(), this.guiLeft + (this.xSize / 2), this.guiTop - 8, pair.getValue());
+            this.drawCenteredString(fontRendererObj, "Thank you " + player.getName(), this.guiLeft + (this.xSize / 2), this.guiTop - 8, pair.getValue());
         }
     }
 
@@ -199,8 +201,13 @@ public class GuiRFArmor extends GuiContainerBase{
             if(this.isSettingsTab){
                 for(GuiCheckBox checkBox : checkBoxList){
                     if(checkBox.mouseClicked(mouseX, mouseY, this.guiLeft, this.guiTop)){
-                        NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "SettingInWorldTooltip", checkBox.isClicked()));
-                        NBTUtil.setBoolean(armor, "SettingInWorldTooltip", checkBox.isClicked());
+                        if(checkBox.text.equals("Show In-World Tooltips")){
+                            NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "SettingInWorldTooltip", checkBox.isClicked()));
+                            NBTUtil.setBoolean(armor, "SettingInWorldTooltip", checkBox.isClicked());
+                        } else if (checkBox.text.equals("Sneak to open Gui")){
+                            NetworkHandler.wrapper.sendToServer(new PacketSendNBTBoolean(player, 38, "HaveToSneakToOpenGui", checkBox.isClicked()));
+                            NBTUtil.setBoolean(armor, "HaveToSneakToOpenGui", checkBox.isClicked());
+                        }
                     }
                 }
             }
@@ -255,6 +262,7 @@ public class GuiRFArmor extends GuiContainerBase{
         toggleBtn(235, 14, activated);
         toggleBtn(235, 32, activated);
         toggleBtn(235, 50, activated);
+        RarmorUtil.toggleSlotInGui(116, 64, activated);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")

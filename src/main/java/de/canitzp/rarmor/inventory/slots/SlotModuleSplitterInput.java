@@ -11,7 +11,6 @@ package de.canitzp.rarmor.inventory.slots;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +51,7 @@ public class SlotModuleSplitterInput extends SlotUpdate{
 
     @Override
     public void onPickupFromSlot(EntityPlayer player, ItemStack stack){
-        ((IRarmorModule) stack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, inv, this);
+        ((IRarmorModule) stack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, inv);
         actualStack = null;
     }
 }

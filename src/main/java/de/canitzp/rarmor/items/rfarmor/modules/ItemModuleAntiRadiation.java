@@ -9,8 +9,7 @@
 package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.modules.IModuleIntegration;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
+import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +20,7 @@ import net.minecraftforge.fml.common.Loader;
 /**
  * @author canitzp
  */
-public class ItemModuleAntiRadiation extends ItemModule implements IModuleIntegration{
+public class ItemModuleAntiRadiation extends ItemModule implements IRarmorModule{
 
     private boolean isModuleLoaded;
 
@@ -31,17 +30,12 @@ public class ItemModuleAntiRadiation extends ItemModule implements IModuleIntegr
     }
 
     @Override
-    public boolean isModuleLoaded(){
-        return this.isModuleLoaded;
-    }
-
-    @Override
     public String getUniqueName(){
         return "AntiRadiation";
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         armorChestplate.getTagCompound().removeTag("AntiRadiationArmor");
     }
 

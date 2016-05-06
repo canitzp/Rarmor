@@ -11,9 +11,7 @@ package de.canitzp.rarmor.items.rfarmor.modules;
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.gui.GuiContainerBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
-import de.canitzp.rarmor.api.slots.SlotUpdate;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
@@ -88,7 +86,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     }
 
     @Override
-    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory, SlotUpdate slot){
+    public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         dropSlot(inventory, inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player, armorChestplate);
         NBTUtil.setInteger(module, "GenBurnTime", 0);
         RarmorUtil.toggleSlotInGui(140, 18, true);
@@ -96,7 +94,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
         if(!settingActivated){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             int i = 0;
@@ -104,16 +102,16 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
                 i = (NBTUtil.getInteger(module, "CurrentItemGenBurnTime") - NBTUtil.getInteger(module, "GenBurnTime")) * 13 / NBTUtil.getInteger(module, "CurrentItemGenBurnTime");
             }
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
-            gui.drawTexturedModalRect(gui.getGuiLeft() + 120, gui.getGuiTop() + 13, 57, 0, 56, 55);
+            gui.drawTexturedModalRect(gui.guiLeft + 120, gui.guiTop + 13, 57, 0, 56, 55);
             if(NBTUtil.getInteger(module, "GenBurnTime") > 0){
-                gui.drawTexturedModalRect(gui.getGuiLeft() + 141, gui.getGuiTop() + 39 + 12 - i, 58, 57 + 12 - i, 14, i + 1);
+                gui.drawTexturedModalRect(gui.guiLeft + 141, gui.guiTop + 39 + 12 - i, 58, 57 + 12 - i, 14, i + 1);
             }
         }
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainerBase gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
         RarmorUtil.toggleSlotInGui(140, 18, settingActivated);
     }
 

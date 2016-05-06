@@ -6,9 +6,8 @@
  * © canitzp, 2016
  */
 
-package de.canitzp.rarmor.api.gui;
+package de.canitzp.rarmor.inventory.gui;
 
-import de.canitzp.rarmor.api.slots.ISpecialSlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -221,17 +220,10 @@ public abstract class GuiContainerBase extends GuiContainer{
                 drawRect(i, j, i + 16, j + 16, -2130706433);
             }
             if(itemstack != null){
-                if(slotIn instanceof ISpecialSlot){
-                    if(((ISpecialSlot) slotIn).doesSlotExist()){
-                        GlStateManager.enableDepth();
-                        this.itemRender.renderItemAndEffectIntoGUI(itemstack, i, j);
-                        this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, itemstack, i, j, s);
-                    }
-                } else {
-                    GlStateManager.enableDepth();
-                    this.itemRender.renderItemAndEffectIntoGUI(itemstack, i, j);
-                    this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, itemstack, i, j, s);
-                }
+                GlStateManager.enableDepth();
+                this.itemRender.renderItemAndEffectIntoGUI(itemstack, i, j);
+                this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, itemstack, i, j, s);
+
             }
         }
         this.itemRender.zLevel = 0.0F;

@@ -20,6 +20,10 @@ import java.util.List;
  */
 public class RarmorAPI{
 
+    public static final String APIVERSION = "1";
+    public static final String OWNER = "rarmor";
+    public static final String PROVIDES = "rarmorapi";
+
     @SideOnly(Side.CLIENT)
     public static List<IAdvancedHud> hudExtension = new ArrayList<>();
 

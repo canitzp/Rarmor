@@ -6,7 +6,7 @@
  * © canitzp, 2016
  */
 
-package de.canitzp.rarmor.api.slots;
+package de.canitzp.rarmor.inventory.slots;
 
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;

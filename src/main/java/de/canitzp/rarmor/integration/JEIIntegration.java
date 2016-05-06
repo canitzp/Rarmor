@@ -6,7 +6,7 @@
  * © canitzp, 2016
  */
 
-package de.canitzp.rarmor.integration.jei;
+package de.canitzp.rarmor.integration;
 
 import de.canitzp.rarmor.inventory.container.ContainerRFArmor;
 import de.canitzp.rarmor.items.ItemRegistry;

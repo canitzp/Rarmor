@@ -9,11 +9,15 @@
 package de.canitzp.rarmor.network;
 
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.items.ItemRegistry;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -22,7 +26,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -36,22 +39,17 @@ public class ClientProxy extends CommonProxy{
 
     public static Map<String, Pair<String, Integer>> specialPlayers = new HashMap<>();
 
-    @SuppressWarnings("Convert2Lambda")
-    @Override
-    public void preInit(FMLPreInitializationEvent event){
-
-    }
-
     @Override
     public void init(FMLInitializationEvent event){
-        specialPlayers.put("Xogue", Pair.of("Thank you for your help to create a better mod.", ColorUtil.CYAN));
-        specialPlayers.put("canitzp", Pair.of("Thank you Developer.", ColorUtil.RED));
-        specialPlayers.put("Ellpeck", Pair.of("Thank you for helping with everything in all of my Mods", ColorUtil.GREEN));
+        specialPlayers.put("Xogue", Pair.of("You helped me to create a better Mod.", ColorUtil.CYAN.colorValue));
+        specialPlayers.put("canitzp", Pair.of("...", ColorUtil.RED.colorValue));
+        specialPlayers.put("Ellpeck", Pair.of("You helped me a lot with everything stuff I developed.", ColorUtil.GREEN.colorValue));
+        specialPlayers.put("DogBlesseD", Pair.of("'love the rarmor....rarmor is love...rarmor is life'", ColorUtil.DOGBLESSEDBLUE.colorValue));
+        registerColoring();
     }
 
     @Override
     public void postInit(FMLPostInitializationEvent event){
-        //TODO Fix whatever is broken: EventHandler.postInitClient();
         IResourceManager listener = Minecraft.getMinecraft().getResourceManager();
         if(listener instanceof IReloadableResourceManager){
             ((IReloadableResourceManager) listener).registerReloadListener(new IResourceManagerReloadListener(){
@@ -60,6 +58,8 @@ public class ClientProxy extends CommonProxy{
                     ItemModuleEffects.effectBoxes.clear();
                     ItemModuleEffects.energyEffect.clear();
                     Rarmor.initEffectsModule();
+
+                    registerColoring();
                 }
             });
         }
@@ -68,7 +68,6 @@ public class ClientProxy extends CommonProxy{
     @Override
     public void registerRenderer(){
         Rarmor.logger.info("Register Renderer");
-        //ModelBakery.registerItemVariants(ItemRegistry.modularTool, new ResourceLocation(Rarmor.MODID, "modularTool"));
         for(Map.Entry<ItemStack, String> entry : textureMap.entrySet()){
             if(entry.getKey() != null && entry.getKey().getItem() != null){
                 if(entry.getKey().getItem() instanceof ItemBlock){
@@ -95,6 +94,18 @@ public class ClientProxy extends CommonProxy{
 
     private void registerBlock(Item block, String blockName){
         MinecraftUtil.getMinecraft().getRenderItem().getItemModelMesher().register(block, 0, new ModelResourceLocation(Rarmor.MODID + ":" + blockName, "inventory"));
+    }
+
+    public void registerColoring(){
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+            @Override
+            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+                if(stack.getItem() instanceof ItemRFArmor){
+                    return NBTUtil.getInteger(stack, "color");
+                }
+                return ColorUtil.WHITE.colorValue;
+            }
+        }, ItemRegistry.rfArmorBody, ItemRegistry.rfArmorBoots, ItemRegistry.rfArmorLeggins, ItemRegistry.rfArmorHelmet);
     }
 
 }
