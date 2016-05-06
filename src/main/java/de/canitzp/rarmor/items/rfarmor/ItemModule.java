@@ -43,12 +43,10 @@ public class ItemModule extends Item{
                 super.addInformation(stack, playerIn, tooltip, advanced);
             }
             IRarmorModule.ModuleType moduleType = ((IRarmorModule) stack.getItem()).getModuleType();
-            if(moduleType != IRarmorModule.ModuleType.NONE){
-                if(moduleType == IRarmorModule.ModuleType.ACTIVE){
-                    tooltip.add(TextFormatting.GREEN + "Active" + TextFormatting.GRAY);
-                } else {
-                    tooltip.add(TextFormatting.RED + "Passive" + TextFormatting.GRAY);
-                }
+            switch (moduleType){
+                case ACTIVE: tooltip.add(TextFormatting.GREEN + "Active" + TextFormatting.GRAY); break;
+                case PASSIVE: tooltip.add(TextFormatting.RED + "Passive" + TextFormatting.GRAY); break;
+                case NONE: default: break;
             }
         } else {
             super.addInformation(stack, playerIn, tooltip, advanced);

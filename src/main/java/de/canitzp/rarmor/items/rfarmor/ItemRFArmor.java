@@ -10,6 +10,7 @@ package de.canitzp.rarmor.items.rfarmor;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
@@ -18,17 +19,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author canitzp
@@ -36,12 +43,13 @@ import java.util.List;
 @SuppressWarnings("unchecked")
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor{
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvent.REGISTRY.getObject(new ResourceLocation("block.anvil.break")));
+    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN);
 
     public int maxEnergy;
     public int maxTransfer;
     public double absorbRatio = 0.9D;
     public int energyPerDamage = 160;
+    public static Colors tabColor = Colors.values()[MathHelper.getRandomIntegerInRange(new Random(), 0, Colors.values().length-1)];
 
     public String[] textures = new String[2];
 
@@ -70,11 +78,13 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player){
         EnergyUtil.setEnergy(stack, 0);
+        NBTUtil.setInteger(stack, "color", tabColor.colorValue);
+        NBTUtil.setString(stack, "colorName", tabColor.getName());
     }
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
-        if(type != null && type.equals("overlay")){
+        if((type != null && type.equals("overlay")) || NBTUtil.getBoolean(stack, "isTransparent")){
             return "rarmor:textures/models/armor/rfarmorOverlay.png";
         }
         return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
@@ -102,7 +112,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void setDamage(ItemStack stack, int damage){
-        super.setDamage(stack, 0);
+        EnergyUtil.reduceEnergy(stack, damage);
     }
 
     @Override
@@ -122,13 +132,15 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list){
-        ItemStack stackFull = new ItemStack(this);
-        EnergyUtil.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
-        list.add(stackFull);
 
-        ItemStack stackEmpty = new ItemStack(this);
-        EnergyUtil.setEnergy(stackEmpty, 0);
-        list.add(stackEmpty);
+        ItemStack stack = new ItemStack(this);
+        NBTUtil.setInteger(stack, "color", tabColor.colorValue);
+        NBTUtil.setString(stack, "colorName", tabColor.getName());
+        EnergyUtil.setEnergy(stack, this.getMaxEnergyStored(stack));
+        list.add(stack);
+        ItemStack stack1 = stack.copy();
+        EnergyUtil.setEnergy(stack1, 0);
+        list.add(stack1);
     }
 
     protected int getBaseAbsorption(){
@@ -233,6 +245,12 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getColor(ItemStack stack) {
-        return NBTUtil.getInteger(stack, "color");
+        int c = NBTUtil.getInteger(stack, "color");
+        return c == 0 ? Colors.WHITE.colorValue : c;
+    }
+
+    @Override
+    public int getDamage(ItemStack stack) {
+        return EnergyUtil.getEnergy(stack);
     }
 }

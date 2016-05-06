@@ -94,7 +94,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
         if(!settingActivated){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             int i = 0;
@@ -111,8 +111,8 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
-        RarmorUtil.toggleSlotInGui(140, 18, settingActivated);
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringtab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+        RarmorUtil.toggleSlotInGui(140, 18, settingActivated || isColoringtab);
     }
 
     private boolean isGenerator(IInventory inv, ItemStack armor){

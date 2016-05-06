@@ -11,9 +11,9 @@ package de.canitzp.rarmor;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.api.hudExtensions.IAdvancedHud;
 import de.canitzp.rarmor.items.rfarmor.ArmorHud;
-import de.canitzp.rarmor.util.ColorUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -41,13 +41,13 @@ public class RarmorHud implements IAdvancedHud {
                 FluidStack fluidStack = fluid.getTankInfo(trace.sideHit)[i].fluid;
                 if(fluidStack != null){
                     if(y / 10 > 4){
-                        ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, "To many Fluids to show!", ColorUtil.WHITE.colorValue);
+                        ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, "To many Fluids to show!", Colors.WHITE.colorValue);
                         y += 10;
                         i = fluid.getTankInfo(trace.sideHit).length;
                         continue;
                     }
                     String fluidText = I18n.translateToLocal(fluidStack.getLocalizedName()) + " " + String.valueOf(fluidStack.amount) + "mB";
-                    ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, fluidText, ColorUtil.WHITE.colorValue);
+                    ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, fluidText, Colors.WHITE.colorValue);
                     ArmorHud.drawTank((x + fontRenderer.getStringWidth(fluidText)) / 2 + 1, y, fluidStack, fluid.getTankInfo(trace.sideHit)[i].capacity);
                     y += 10;
                 }
@@ -59,7 +59,7 @@ public class RarmorHud implements IAdvancedHud {
             IEnergyStorage energy = (IEnergyStorage) tileEntity;
             if(energy.getMaxEnergyStored() > 1){
                 String energyText = energy.getEnergyStored() + "/" + energy.getMaxEnergyStored() + "RF";
-                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE.colorValue);
+                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, Colors.WHITE.colorValue);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(), energy.getEnergyStored());
                 y += 10;
             }
@@ -67,7 +67,7 @@ public class RarmorHud implements IAdvancedHud {
             IEnergyReceiver energy = (IEnergyReceiver) tileEntity;
             if(energy.getMaxEnergyStored(trace.sideHit) > 1){
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
-                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE.colorValue);
+                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, Colors.WHITE.colorValue);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
                 y += 10;
             }
@@ -75,7 +75,7 @@ public class RarmorHud implements IAdvancedHud {
             IEnergyProvider energy = (IEnergyProvider) tileEntity;
             if(energy.getMaxEnergyStored(trace.sideHit) > 1){
                 String energyText = energy.getEnergyStored(trace.sideHit) + "/" + energy.getMaxEnergyStored(trace.sideHit) + "RF";
-                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, ColorUtil.WHITE.colorValue);
+                ArmorHud.drawCenteredTextInWorld(fontRenderer, x, y, energyText, Colors.WHITE.colorValue);
                 ArmorHud.drawBat((x + fontRenderer.getStringWidth(energyText)) / 2 + 1, y, energy.getMaxEnergyStored(trace.sideHit), energy.getEnergyStored(trace.sideHit));
                 y += 10;
             }

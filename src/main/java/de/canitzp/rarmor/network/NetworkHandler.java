@@ -27,6 +27,7 @@ public class NetworkHandler{
         wrapper.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);
         wrapper.registerMessage(PacketSendNBTBoolean.PacketHandler.class, PacketSendNBTBoolean.class, 1, Side.SERVER);
         wrapper.registerMessage(PacketSyncPlayerHotbar.Handler.class, PacketSyncPlayerHotbar.class, 2, Side.SERVER);
+        wrapper.registerMessage(PacketPaintRarmor.Handler.class, PacketPaintRarmor.class, 3, Side.SERVER);
         NetworkRegistry.INSTANCE.registerGuiHandler(Rarmor.MODID, new GuiHandler());
     }
 

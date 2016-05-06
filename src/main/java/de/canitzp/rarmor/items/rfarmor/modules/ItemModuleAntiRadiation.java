@@ -35,6 +35,11 @@ public class ItemModuleAntiRadiation extends ItemModule implements IRarmorModule
     }
 
     @Override
+    public ModuleType getModuleType() {
+        return ModuleType.PASSIVE;
+    }
+
+    @Override
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         armorChestplate.getTagCompound().removeTag("AntiRadiationArmor");
     }

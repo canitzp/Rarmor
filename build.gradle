@@ -21,12 +21,9 @@ repositories {
         name = "eiranet"
         url ="http://repo.blay09.net"
     }
-    flatDir {
-        dirs 'libs'
-    }
 }
 
-version = "0.7.0pre1"
+version = "0.7.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 

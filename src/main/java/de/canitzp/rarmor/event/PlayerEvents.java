@@ -44,9 +44,9 @@ public class PlayerEvents{
     public void onPlayerTakeDamage(LivingHurtEvent event){
         if(event.getEntity() instanceof EntityPlayer){
             if(RarmorUtil.isPlayerWearingRarmor((EntityPlayer) event.getEntity())){
-                IRarmorModule module = RarmorUtil.getRarmorModule((EntityPlayer) event.getEntity());
+                ItemStack module = RarmorUtil.getRarmorModule((EntityPlayer) event.getEntity());
                 if(module != null){
-                    event.setCanceled(module.onPlayerTakeDamage(event.getEntity().getEntityWorld(), (EntityPlayer) event.getEntity(), RarmorUtil.getPlayersRarmorChestplate((EntityPlayer) event.getEntity()), event.getSource(), event.getAmount()));
+                    event.setCanceled(((IRarmorModule)module.getItem()).onPlayerTakeDamage(event.getEntity().getEntityWorld(), (EntityPlayer) event.getEntity(), RarmorUtil.getPlayersRarmorChestplate((EntityPlayer) event.getEntity()), event.getSource(), event.getAmount()));
                 }
             }
         }

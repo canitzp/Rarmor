@@ -8,6 +8,7 @@
 
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
@@ -15,6 +16,8 @@ import de.canitzp.rarmor.items.ItemChainSaw;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
+import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.network.PacketPaintRarmor;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.SlotUtil;
@@ -28,6 +31,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Enchantments;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
@@ -175,10 +179,10 @@ public class RarmorUtil{
 
     public static boolean isPlayerWearingRarmor(EntityPlayer player){
         if(player != null){
-            ItemStack head = player.inventory.armorInventory[3];
-            ItemStack body = player.inventory.armorInventory[2];
-            ItemStack leggins = player.inventory.armorInventory[1];
-            ItemStack boots = player.inventory.armorInventory[0];
+            ItemStack head = getArmor(player, EntityEquipmentSlot.HEAD);
+            ItemStack body = getArmor(player, EntityEquipmentSlot.CHEST);
+            ItemStack leggins = getArmor(player, EntityEquipmentSlot.LEGS);
+            ItemStack boots = getArmor(player, EntityEquipmentSlot.FEET);
             if(head != null && body != null && leggins != null && boots != null){
                 if(head.getItem() instanceof ItemRFArmorHelmet && body.getItem() instanceof ItemRFArmorBody && leggins.getItem() instanceof ItemRFArmorGeneric && boots.getItem() instanceof ItemRFArmorGeneric){
                     return true;
@@ -188,12 +192,12 @@ public class RarmorUtil{
         return false;
     }
 
-    public static IRarmorModule getRarmorModule(EntityPlayer player){
+    public static ItemStack getRarmorModule(EntityPlayer player){
         if(isPlayerWearingRarmor(player)){
             ItemStack module = NBTUtil.readSlots(getPlayersRarmorChestplate(player), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if(module != null){
                 if(module.getItem() instanceof IRarmorModule){
-                    return (IRarmorModule) module.getItem();
+                    return module;
                 }
             }
         }
@@ -202,7 +206,7 @@ public class RarmorUtil{
 
     public static ItemStack getPlayersRarmorChestplate(EntityPlayer player){
         if(isPlayerWearingRarmor(player)){
-            return player.inventory.armorInventory[2];
+            return getArmor(player, EntityEquipmentSlot.CHEST);
         }
         return null;
     }
@@ -251,6 +255,26 @@ public class RarmorUtil{
 
     public static InventoryBase readRarmor(ItemStack armor){
         return NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount);
+    }
+
+    public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot){
+        switch (slot){
+            case HEAD: return player.inventory.armorInventory[3];
+            case CHEST: return player.inventory.armorInventory[2];
+            case LEGS: return player.inventory.armorInventory[1];
+            case FEET: return player.inventory.armorInventory[0];
+        }
+        return null;
+    }
+
+    public static void paintRarmor(EntityPlayer player, EntityEquipmentSlot slot, Colors color){
+        String s = color.colorName + " " + color.colorValueName;
+        if(player.worldObj.isRemote){
+            NetworkHandler.wrapper.sendToServer(new PacketPaintRarmor(player, slot.getIndex(), color.colorValue, s));
+            ItemStack stack = getArmor(player, slot);
+            NBTUtil.setInteger(stack, "color", color.colorValue);
+            NBTUtil.setString(stack, "colorName", s);
+        }
     }
 
 }

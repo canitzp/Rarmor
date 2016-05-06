@@ -8,10 +8,10 @@
 
 package de.canitzp.rarmor.items.rfarmor;
 
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.hudExtensions.IAdvancedHud;
-import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.GuiUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.block.BlockLiquid;
@@ -61,14 +61,14 @@ public class ArmorHud{
                                 y = hud.onShow(fontRenderer, resolution, world, trace, state, tile, x, y);
                             }
                         } else if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
-                            drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE.colorValue);
+                            drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), Colors.WHITE.colorValue);
                         } else {
                             y = displayBlock(state, x, y);
                         }
                     }
                 }
             } else if(trace.typeOfHit == RayTraceResult.Type.ENTITY){
-                drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), ColorUtil.WHITE.colorValue);
+                drawCenteredTextInWorld(fontRenderer, x, y, trace.entityHit.getName(), Colors.WHITE.colorValue);
             }
         }
     }
@@ -77,9 +77,9 @@ public class ArmorHud{
         if(state.getBlock() != Blocks.AIR){
             Item itemBlock = Item.getItemFromBlock(state.getBlock());
             if(itemBlock != null){
-                drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), ColorUtil.WHITE.colorValue);
+                drawCenteredTextInWorld(fontRenderer, x, y, itemBlock.getItemStackDisplayName(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state))), Colors.WHITE.colorValue);
             } else {
-                drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), ColorUtil.WHITE.colorValue);
+                drawCenteredTextInWorld(fontRenderer, x, y, state.getBlock().getLocalizedName(), Colors.WHITE.colorValue);
             }
         }
         return y + 10;

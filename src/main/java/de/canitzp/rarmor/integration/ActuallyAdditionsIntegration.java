@@ -8,8 +8,9 @@
 
 package de.canitzp.rarmor.integration;
 
+import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.items.ItemRegistry;
-import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI;
 import de.ellpeck.actuallyadditions.api.internal.IAtomicReconstructor;
@@ -22,27 +23,31 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 public class ActuallyAdditionsIntegration {
 
     public static void postInit(FMLPostInitializationEvent event){
-        IColorLensChanger lensChanger = new IColorLensChanger() {
-            @Override
-            public ItemStack modifyItem(ItemStack itemStack, IBlockState iBlockState, BlockPos blockPos, IAtomicReconstructor iAtomicReconstructor) {
-                ItemStack stack = itemStack.copy();
-                int i = NBTUtil.getInteger(stack, "colorIndex");
-                if(i >= ColorUtil.values().length){
-                    i = 1;
-                } else {
-                    i++;
+        if(Integer.parseInt(ActuallyAdditionsAPI.API_VERSION) >= 10){
+            IColorLensChanger lensChanger = new IColorLensChanger() {
+                @Override
+                public ItemStack modifyItem(ItemStack itemStack, IBlockState iBlockState, BlockPos blockPos, IAtomicReconstructor iAtomicReconstructor) {
+                    ItemStack stack = itemStack.copy();
+                    int i = NBTUtil.getInteger(stack, "colorIndex");
+                    if(i >= Colors.values().length){
+                        i = 1;
+                    } else {
+                        i++;
+                    }
+                    Colors c = Colors.values()[i-1];
+                    NBTUtil.setInteger(stack, "color", c.colorValue);
+                    NBTUtil.setInteger(stack, "colorIndex", i);
+                    NBTUtil.setString(stack, "colorName", c.colorName + " " + c.colorValueName);
+                    return stack;
                 }
-                ColorUtil c = ColorUtil.values()[i-1];
-                NBTUtil.setInteger(stack, "color", c.colorValue);
-                NBTUtil.setInteger(stack, "colorIndex", i);
-                NBTUtil.setString(stack, "colorName", c.colorName + " " + c.colorValueName);
-                return stack;
-            }
-        };
-        ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBody, lensChanger);
-        ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBoots, lensChanger);
-        ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorLeggins, lensChanger);
-        ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorHelmet, lensChanger);
+            };
+            ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBody, lensChanger);
+            ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBoots, lensChanger);
+            ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorLeggins, lensChanger);
+            ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorHelmet, lensChanger);
+        } else {
+            Rarmor.logger.info("Your ActuallyAdditions version is to low. The Integration isn't activated!");
+        }
     }
 
 }

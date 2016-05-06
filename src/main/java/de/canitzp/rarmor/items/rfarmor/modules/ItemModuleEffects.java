@@ -10,6 +10,7 @@ package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
@@ -18,7 +19,6 @@ import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
-import de.canitzp.rarmor.util.ColorUtil;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -117,7 +117,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
         int yToTop = (gui.height / 2 - ySize / 2);
         ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
         minecraft.getTextureManager().bindTexture(ItemModuleEffects.checkBox);
@@ -130,7 +130,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
+    public void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         for(EffectCheckBox checkBox : effectBoxes){
             checkBox.drawScreen(gui, mouseX, mouseY, gui.guiLeft, gui.height / 2 - ySize / 2);
         }
@@ -138,7 +138,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
         if(mod != null){
             for(EffectCheckBox box : effectBoxes){
                 if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, guiLeft, gui.height / 2 - ySize / 2)){
@@ -204,7 +204,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         @SideOnly(Side.CLIENT)
         public void drawCheckBox(GuiContainer gui, int guiLeft, int guiTop, boolean isActive){
             gui.drawTexturedModalRect(guiLeft + x - 4, guiTop + y, 18, 5, 144, 10);
-            gui.mc.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, ColorUtil.BLACK.colorValue);
+            gui.mc.fontRendererObj.drawString(text, guiLeft + x + 9, guiTop + y + 1, Colors.BLACK.colorValue);
             gui.mc.getTextureManager().bindTexture(this.loc);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableBlend();

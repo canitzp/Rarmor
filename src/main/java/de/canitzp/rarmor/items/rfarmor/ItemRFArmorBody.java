@@ -45,21 +45,22 @@ public class ItemRFArmorBody extends ItemRFArmor{
         EnergyUtil.setEnergy(stack, 0);
         NBTUtil.setBoolean(stack, "isFirstOpened", false);
         NBTUtil.setInteger(stack, "rfPerTick", rfPerTick);
+        NBTUtil.setInteger(stack, "color", tabColor.colorValue);
+        NBTUtil.setString(stack, "colorName", tabColor.getName());
     }
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list){
-        ItemStack stackFull = new ItemStack(this);
-        EnergyUtil.setEnergy(stackFull, this.getMaxEnergyStored(stackFull));
-        NBTUtil.setBoolean(stackFull, "isFirstOpened", false);
-        NBTUtil.setInteger(stackFull, "rfPerTick", rfPerTick);
-        list.add(stackFull);
-
-        ItemStack stackEmpty = new ItemStack(this);
-        EnergyUtil.setEnergy(stackEmpty, 0);
-        NBTUtil.setBoolean(stackEmpty, "isFirstOpened", false);
-        NBTUtil.setInteger(stackEmpty, "rfPerTick", rfPerTick);
-        list.add(stackEmpty);
+        ItemStack stack = new ItemStack(this);
+        NBTUtil.setInteger(stack, "color", tabColor.colorValue);
+        NBTUtil.setString(stack, "colorName", tabColor.getName());
+        EnergyUtil.setEnergy(stack, this.getMaxEnergyStored(stack));
+        NBTUtil.setBoolean(stack, "isFirstOpened", false);
+        NBTUtil.setInteger(stack, "rfPerTick", rfPerTick);
+        list.add(stack);
+        ItemStack stack1 = stack.copy();
+        EnergyUtil.setEnergy(stack1, 0);
+        list.add(stack1);
     }
 
     @Override

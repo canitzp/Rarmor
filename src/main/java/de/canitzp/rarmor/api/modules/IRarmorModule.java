@@ -32,18 +32,29 @@ import java.util.List;
  */
 public interface IRarmorModule{
 
+    /**
+     * @return The unique name of the module. Example Generator: Name = 'moduleGenerator' UniqueName = 'Generator'
+     */
     String getUniqueName();
 
+    /**
+     * @param player The player
+     * @param stack The current stack/your module
+     * @param advancedTooltips
+     * @return This is addInformation in Item and only works if your module extends ItemModule
+     */
     @SideOnly(Side.CLIENT)
     default String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
         return null;
     }
 
     @SideOnly(Side.CLIENT)
-    default ModuleType getModuleType(){
-        return ModuleType.NONE;
-    }
+    ModuleType getModuleType();
 
+    /**
+     * This is what get displayed while hovering over the question mark in the Rarmor Gui.
+     * @return The hovering text.
+     */
     @SideOnly(Side.CLIENT)
     default List<String> getGuiHelp(){
         return null;
@@ -60,14 +71,14 @@ public interface IRarmorModule{
     }
 
     @SideOnly(Side.CLIENT)
-    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
     }
 
     @SideOnly(Side.CLIENT)
-    default void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, float partialTicks, int mouseX, int mouseY){
+    default void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
     }
 
-    default void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
     }
 
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module){
