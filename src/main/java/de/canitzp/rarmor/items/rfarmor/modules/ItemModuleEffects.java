@@ -117,14 +117,14 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         int yToTop = (gui.height / 2 - ySize / 2);
         ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
         minecraft.getTextureManager().bindTexture(ItemModuleEffects.checkBox);
-        gui.drawTexturedModalRect(-150 + guiLeft, yToTop - 4, 18, 0, 144, 4);
-        gui.drawTexturedModalRect(-150 + guiLeft, yToTop + ySize - 1, 18, 15, 144, 4);
+        gui.drawTexturedModalRect(-150 + gui.guiLeft, yToTop - 4, 18, 0, 144, 4);
+        gui.drawTexturedModalRect(-150 + gui.guiLeft, yToTop + ySize - 1, 18, 15, 144, 4);
         for(EffectCheckBox checkBox : effectBoxes){
-            checkBox.drawCheckBox(gui, guiLeft, yToTop, NBTUtil.getBoolean(mod, checkBox.effect.getName()));
+            checkBox.drawCheckBox(gui, gui.guiLeft, yToTop, NBTUtil.getBoolean(mod, checkBox.effect.getName()));
         }
     }
 
@@ -138,10 +138,10 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack mod, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY){
         if(mod != null){
             for(EffectCheckBox box : effectBoxes){
-                if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, guiLeft, gui.height / 2 - ySize / 2)){
+                if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, gui.guiLeft, gui.height / 2 - ySize / 2)){
                     boolean b = NBTUtil.getBoolean(mod, box.effect.getName());
                     box.setState(minecraft.thePlayer, !b);
                 }

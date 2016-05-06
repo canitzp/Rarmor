@@ -141,7 +141,7 @@ public class ContainerRFArmor extends Container{
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) module.getItem()).onContainerTick(this, player, inventory, this.armor, module);
+                ((IRarmorModule) module.getItem()).onContainerTick(this, player, this.armor, module, inventory);
             }
         }
     }

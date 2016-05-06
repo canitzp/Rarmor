@@ -96,7 +96,7 @@ public class GuiRFArmor extends GuiContainerBase{
         ItemStack module = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) module.getItem()).initGui(player.getEntityWorld(), player, armor, this, checkBoxList, checkBox);
+                ((IRarmorModule) module.getItem()).initGui(this.mc, armor, this);
             }
         }
 
@@ -128,7 +128,7 @@ public class GuiRFArmor extends GuiContainerBase{
         ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
-                ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, par1, par2, par3, guiLeft, guiTop);
+                ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, par1, par2, par3);
             }
         }
 
@@ -265,7 +265,7 @@ public class GuiRFArmor extends GuiContainerBase{
             ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if(module != null){
                 if(module.getItem() instanceof IRarmorModule){
-                    ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, type, mouseX, mouseY, this.guiLeft, this.guiTop);
+                    ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, type, mouseX, mouseY);
                 }
             }
 

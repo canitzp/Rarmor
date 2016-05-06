@@ -10,7 +10,6 @@ package de.canitzp.rarmor.items.rfarmor.modules;
 
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.gui.GuiCheckBox;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
@@ -18,21 +17,17 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * @author canitzp
@@ -68,19 +63,19 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     }
 
     @Override
-    public void onContainerTick(Container container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
+    public void onContainerTick(Container container, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         if(player.worldObj.isRemote) toggleSlots(false);
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).onContainerTick(container, player, inventory, armorChestplate, mod1);
+            ((IRarmorModule) mod1.getItem()).onContainerTick(container, player, armorChestplate, mod1, inventory);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).onContainerTick(container, player, inventory, armorChestplate, mod2);
+            ((IRarmorModule) mod2.getItem()).onContainerTick(container, player, armorChestplate, mod2, inventory);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).onContainerTick(container, player, inventory, armorChestplate, mod3);
+            ((IRarmorModule) mod3.getItem()).onContainerTick(container, player, armorChestplate, mod3, inventory);
         }
     }
 
@@ -111,13 +106,13 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         toggleSlots(false);
         minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
         gui.drawTexturedModalRect(gui.guiLeft - 22, gui.guiTop + 7, 0, 129, 25, 71);
         ItemStack mod1 = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).drawGuiContainerBackgroundLayer(minecraft, gui, armor, mod1, settingActivated, isColoringTab, partialTicks, mouseX, mouseY, guiLeft, guiTop);
+            ((IRarmorModule) mod1.getItem()).drawGuiContainerBackgroundLayer(minecraft, gui, armor, mod1, settingActivated, isColoringTab, partialTicks, mouseX, mouseY);
         }
     }
 
@@ -130,34 +125,34 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     }
 
     @Override
-    public void initGui(World world, EntityPlayer player, ItemStack armorChestplate, GuiContainer gui, List<GuiCheckBox> checkBoxes, ResourceLocation checkBoxResource){
+    public void initGui(Minecraft minecraft, ItemStack armorChestplate, GuiContainer gui){
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).initGui(world, player, armorChestplate, gui, checkBoxes, checkBoxResource);
+            ((IRarmorModule) mod1.getItem()).initGui(minecraft, armorChestplate, gui);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).initGui(world, player, armorChestplate, gui, checkBoxes, checkBoxResource);
+            ((IRarmorModule) mod2.getItem()).initGui(minecraft, armorChestplate, gui);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).initGui(world, player, armorChestplate, gui, checkBoxes, checkBoxResource);
+            ((IRarmorModule) mod3.getItem()).initGui(minecraft, armorChestplate, gui);
         }
     }
 
     @Override
-    public void onGuiOpenEvent(World worldObj, EntityPlayer player, GuiScreen gui, ItemStack armorChestplate, ItemStack module){
+    public void onGuiOpenEvent(World worldObj, EntityPlayer player, ItemStack armorChestplate, ItemStack module, GuiContainer gui){
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).onGuiOpenEvent(worldObj, player, gui, armorChestplate, mod1);
+            ((IRarmorModule) mod1.getItem()).onGuiOpenEvent(worldObj, player, armorChestplate, mod1, gui);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).onGuiOpenEvent(worldObj, player, gui, armorChestplate, mod2);
+            ((IRarmorModule) mod2.getItem()).onGuiOpenEvent(worldObj, player, armorChestplate, mod2, gui);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).onGuiOpenEvent(worldObj, player, gui, armorChestplate, mod3);
+            ((IRarmorModule) mod3.getItem()).onGuiOpenEvent(worldObj, player, armorChestplate, mod3, gui);
         }
     }
 
@@ -178,18 +173,18 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     }
 
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY){
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod1, settingActivated, isColoringTab, type, mouseX, mouseY, guiLeft, guiTop);
+            ((IRarmorModule) mod1.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod1, settingActivated, isColoringTab, type, mouseX, mouseY);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod2, settingActivated, isColoringTab, type, mouseX, mouseY, guiLeft, guiTop);
+            ((IRarmorModule) mod2.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod2, settingActivated, isColoringTab, type, mouseX, mouseY);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod3, settingActivated, isColoringTab, type, mouseX, mouseY, guiLeft, guiTop);
+            ((IRarmorModule) mod3.getItem()).onMouseClicked(minecraft, gui, armorChestplate, mod3, settingActivated, isColoringTab, type, mouseX, mouseY);
         }
     }
 
@@ -210,52 +205,52 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     }
 
     @Override
-    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
+    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, DamageSource damageSource, float damage){
         boolean[] b = new boolean[3];
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            b[0] = ((IRarmorModule) mod1.getItem()).onPlayerTakeDamage(world, player, armorChestplate, damageSource, damage);
+            b[0] = ((IRarmorModule) mod1.getItem()).onPlayerTakeDamage(world, player, armorChestplate, module, damageSource, damage);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            b[1] = ((IRarmorModule) mod2.getItem()).onPlayerTakeDamage(world, player, armorChestplate, damageSource, damage);
+            b[1] = ((IRarmorModule) mod2.getItem()).onPlayerTakeDamage(world, player, armorChestplate, module, damageSource, damage);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            b[2] = ((IRarmorModule) mod3.getItem()).onPlayerTakeDamage(world, player, armorChestplate, damageSource, damage);
+            b[2] = ((IRarmorModule) mod3.getItem()).onPlayerTakeDamage(world, player, armorChestplate, module, damageSource, damage);
         }
         return b[0] || b[1] || b[2];
     }
 
     @Override
-    public void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack playersRarmorChestplate, ItemStack module, float partialTicks){
+    public void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ItemStack playersRarmorChestplate, ItemStack module, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, float partialTicks){
         ItemStack mod1 = NBTUtil.readSlots(playersRarmorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).renderWorldScreen(minecraft, player, resolution, fontRendererObj, type, playersRarmorChestplate, mod1, partialTicks);
+            ((IRarmorModule) mod1.getItem()).renderWorldScreen(minecraft, player, playersRarmorChestplate, mod1, resolution, fontRendererObj, type, partialTicks);
         }
         ItemStack mod2 = NBTUtil.readSlots(playersRarmorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).renderWorldScreen(minecraft, player, resolution, fontRendererObj, type, playersRarmorChestplate, mod2, partialTicks);
+            ((IRarmorModule) mod2.getItem()).renderWorldScreen(minecraft, player, playersRarmorChestplate, mod2, resolution, fontRendererObj, type, partialTicks);
         }
         ItemStack mod3 = NBTUtil.readSlots(playersRarmorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).renderWorldScreen(minecraft, player, resolution, fontRendererObj, type, playersRarmorChestplate, mod3, partialTicks);
+            ((IRarmorModule) mod3.getItem()).renderWorldScreen(minecraft, player, playersRarmorChestplate, mod3, resolution, fontRendererObj, type, partialTicks);
         }
     }
 
     @Override
-    public void initModule(World world, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
+    public void initModule(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         ItemStack mod1 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod1.getItem()).initModule(world, player, inventory, armorChestplate, mod1);
+            ((IRarmorModule) mod1.getItem()).initModule(world, player, armorChestplate, mod1, inventory);
         }
         ItemStack mod2 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(32);
         if(mod2 != null && mod2.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod2.getItem()).initModule(world, player, inventory, armorChestplate, mod2);
+            ((IRarmorModule) mod2.getItem()).initModule(world, player, armorChestplate, mod2, inventory);
         }
         ItemStack mod3 = NBTUtil.readSlots(armorChestplate, ItemRFArmorBody.slotAmount).getStackInSlot(33);
         if(mod3 != null && mod3.getItem() instanceof IRarmorModule){
-            ((IRarmorModule) mod3.getItem()).initModule(world, player, inventory, armorChestplate, mod3);
+            ((IRarmorModule) mod3.getItem()).initModule(world, player, armorChestplate, mod3, inventory);
         }
     }
 

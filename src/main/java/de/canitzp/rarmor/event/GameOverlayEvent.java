@@ -45,7 +45,7 @@ public class GameOverlayEvent{
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
                     ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
-                        ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), RarmorUtil.getPlayersRarmorChestplate(player), module, event.getPartialTicks());
+                        ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, RarmorUtil.getPlayersRarmorChestplate(player), module, event.getResolution(), fontRenderer, event.getType(), event.getPartialTicks());
                     }
                 }
             } else {

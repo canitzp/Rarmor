@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class RarmorAPI{
 
-    public static final String APIVERSION = "2";
+    public static final String APIVERSION = "3";
     public static final String OWNER = "rarmor";
     public static final String PROVIDES = "rarmorapi";
 

@@ -9,17 +9,14 @@
 package de.canitzp.rarmor.api.modules;
 
 import de.canitzp.rarmor.api.InventoryBase;
-import de.canitzp.rarmor.api.gui.GuiCheckBox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -67,29 +64,29 @@ public interface IRarmorModule{
     }
 
     @SideOnly(Side.CLIENT)
-    default void initGui(World world, EntityPlayer player, ItemStack armorChestplate, GuiContainer gui, List<GuiCheckBox> checkBoxes, ResourceLocation checkBoxResource){
+    default void initGui(Minecraft minecraft, ItemStack armorChestplate, GuiContainer gui){
     }
 
     @SideOnly(Side.CLIENT)
-    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
     }
 
     @SideOnly(Side.CLIENT)
     default void drawScreen(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
     }
 
-    default void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    default void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY){
     }
 
     default void onPlayerLoginEvent(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module){
     }
 
     @SideOnly(Side.CLIENT)
-    default void onGuiOpenEvent(World worldObj, EntityPlayer player, GuiScreen gui, ItemStack armorChestplate, ItemStack module){
+    default void onGuiOpenEvent(World worldObj, EntityPlayer player, ItemStack armorChestplate, ItemStack module, GuiContainer gui){
     }
 
     @SideOnly(Side.CLIENT)
-    default void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, ItemStack playersRarmorChestplate, ItemStack module, float partialTicks){
+    default void renderWorldScreen(Minecraft minecraft, EntityPlayer player, ItemStack armorChestplate, ItemStack module, ScaledResolution resolution, FontRenderer fontRendererObj, RenderGameOverlayEvent.ElementType type, float partialTicks){
     }
 
     /**
@@ -100,14 +97,14 @@ public interface IRarmorModule{
      * @param damage          The Amount of Damage th Player take
      * @return true if you want to cancel the Damage
      */
-    default boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
+    default boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, DamageSource damageSource, float damage){
         return false;
     }
 
-    default void onContainerTick(Container container, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
+    default void onContainerTick(Container container, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
     }
 
-    default void initModule(World world, EntityPlayer player, InventoryBase inventory, ItemStack armorChestplate, ItemStack module){
+    default void initModule(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
     }
 
     enum ModuleType{

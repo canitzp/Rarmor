@@ -98,7 +98,7 @@ public class ItemRFArmorBody extends ItemRFArmor{
         ItemStack module = inventory.getStackInSlot(MODULESLOT);
         if(module != null && module.getItem() instanceof IRarmorModule){
             if(NBTUtil.getBoolean(module, "FirstOpenedModule")){
-                ((IRarmorModule) module.getItem()).initModule(world, player, inventory, armor, module);
+                ((IRarmorModule) module.getItem()).initModule(world, player, armor, module, inventory);
                 NBTUtil.setBoolean(module, "FirstOpenedModule", false);
             }
             IRarmorModule mod = (IRarmorModule) module.getItem();

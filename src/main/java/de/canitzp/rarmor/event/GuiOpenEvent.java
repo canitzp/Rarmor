@@ -18,6 +18,7 @@ import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.PlayerUtil;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -51,7 +52,7 @@ public class GuiOpenEvent{
                     } else if (body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                     ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if (module != null && module.getItem() instanceof IRarmorModule) {
-                        ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, event.getGui(), body, module);
+                        ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, body, module, (GuiContainer) event.getGui());
                     }
                 }
             }

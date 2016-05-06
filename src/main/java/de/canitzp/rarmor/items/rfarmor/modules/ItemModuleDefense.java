@@ -59,7 +59,7 @@ public class ItemModuleDefense extends ItemModule implements IRarmorModule{
      * @return true if you want to cancel the Damage
      */
     @Override
-    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, DamageSource damageSource, float damage){
+    public boolean onPlayerTakeDamage(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, DamageSource damageSource, float damage){
         /*
         if (EnergyUtil.getEnergy(armorChestplate) >= 50000 && damageSource == DamageSource.outOfWorld){
             if(!world.provider.isSurfaceWorld() && !world.isRemote){

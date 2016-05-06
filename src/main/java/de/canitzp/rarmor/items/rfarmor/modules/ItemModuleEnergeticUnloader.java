@@ -56,7 +56,7 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
     }
 
     @Override
-    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         if(!settingActivated && !isColoringTab){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
@@ -66,7 +66,7 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY, int guiLeft, int guiTop){
+    public void onMouseClicked(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, int type, int mouseX, int mouseY){
         RarmorUtil.toggleSlotInGui(140, 18, settingActivated || isColoringTab);
     }
 
