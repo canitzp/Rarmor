@@ -33,10 +33,10 @@ public class RecipeManager{
     public static void loadVanilla(){
         addRecipe(new ItemStack(ItemRegistry.ribbonCable, 12), "WIW", "WIW", "WIW", 'W', Blocks.WOOL, 'I', "nuggetGold");
         addRecipe(new ItemStack(ItemRegistry.electricalController, 1), " G ", "GIG", "CGC", 'C', ItemRegistry.ribbonCable, 'G', "dyeGreen", 'I', "ingotIron");
-        addRecipe(new ItemStack(ItemRegistry.rfArmorBoots), "   ", "DCD", "IRI", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
-        addRecipe(new ItemStack(ItemRegistry.rfArmorLeggins), "DCD", "IRI", "I I", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
-        addRecipe(new ItemStack(ItemRegistry.rfArmorBody), "DDD", "CDC", "IRI", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
-        addRecipe(new ItemStack(ItemRegistry.rfArmorHelmet), "DAD", "ICI", "R R", 'A', ItemRegistry.advancedEyeMatrix, 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
+        addRecipe(new ItemStack(ItemRegistry.rarmorBoots), "   ", "DCD", "IRI", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
+        addRecipe(new ItemStack(ItemRegistry.rarmorLeggins), "DCD", "IRI", "I I", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
+        addRecipe(new ItemStack(ItemRegistry.rarmorChestplate), "DDD", "CDC", "IRI", 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
+        addRecipe(new ItemStack(ItemRegistry.rarmorHelmet), "DAD", "ICI", "R R", 'A', ItemRegistry.advancedEyeMatrix, 'C', ItemRegistry.electricalController, 'D', "gemDiamond", 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
         addRecipe(new ItemStack(ItemRegistry.ironChainsaw), "I  ", "II ", "CRI", 'C', ItemRegistry.electricalController, 'I', "ingotIron", 'R', ItemRegistry.ribbonCable);
         addRecipe(new ItemStack(ItemRegistry.diamondChainsaw), "I  ", "II ", "CRI", 'C', ItemRegistry.electricalController, 'I', "gemDiamond", 'R', ItemRegistry.ribbonCable);
         addRecipe(new ItemStack(ItemRegistry.moduleGenerator), " C ", "RFR", "R R", 'C', ItemRegistry.electricalController, 'F', Blocks.FURNACE, 'R', ItemRegistry.ribbonCable);

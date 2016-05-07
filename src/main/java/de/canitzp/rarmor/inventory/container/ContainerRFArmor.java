@@ -18,7 +18,6 @@ import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -44,42 +43,21 @@ public class ContainerRFArmor extends Container{
         if(player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = RarmorUtil.getPlayersRarmorChestplate(player);
-        InventoryPlayer inventoryPlayer = player.inventory;
         this.inventory = RarmorUtil.readRarmor(player);
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
-        //Armor Inventory: 0-26
-        for(int i = 0; i < 3; ++i){
-            for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
-            }
+        //Player Hotbar: 0-8
+        for(int j = 0; j < 9; ++j){
+            this.addSlotToContainer(new Slot(player.inventory, j, 44 + j * 18, 202));
         }
-        //Player Inventory: 27-53
+        //Player Inventory: 9-35
         for(int j = 0; j < 3; ++j){
             for(int k = 0; k < 9; ++k){
-                this.addSlotToContainer(new Slot(inventoryPlayer, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
+                this.addSlotToContainer(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
-        //Player Hotbar: 54-62
-        for(int j = 0; j < 9; ++j){
-            this.addSlotToContainer(new Slot(inventoryPlayer, j, 44 + j * 18, 202));
-        }
-        //Armor Crafting Grid: 63 + 64-72
-        this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
-        for(int l = 0; l < 3; ++l){
-            for(int i1 = 0; i1 < 3; ++i1){
-                this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
-            }
-        }
-        //Armor Furnace Input: 73
-        this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
-        //Armor Furnace Output: 74
-        this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
-        //Armor Module Slot: 75
-        this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
-
-        //Armor Slots: 76-79
+        //Armor Slots: 36-39
         for (int k = 0; k < 4; ++k) {
             final EntityEquipmentSlot entityequipmentslot = VALID_EQUIPMENT_SLOTS[k];
             this.addSlotToContainer(new SlotUnmovable(player.inventory, 36 + (3 - k), 44, 10 + k * 18) {
@@ -97,16 +75,7 @@ public class ContainerRFArmor extends Container{
                 }
             });
         }
-
-        //Generic Slot Single: 80
-        this.addSlotToContainer(this.generatorSlot = new SlotUpdate(this.inventory, 30, 140, 18, player));
-
-        //Side Slots: 81, 82, 83
-        addSlotToContainer(this.sideSlot1 = new SlotModuleSplitterInput(inventory, 31, -16, 14, player));
-        addSlotToContainer(this.sideSlot2 = new SlotModuleSplitterInput(inventory, 32, -16, 34, player));
-        addSlotToContainer(this.sideSlot3 = new SlotModuleSplitterInput(inventory, 33, -16, 54, player));
-
-        //Shield Slot: 84
+        //Shield Slot: 40
         this.addSlotToContainer(new Slot(player.inventory, 40, 116, 64) {
             public boolean isItemValid(ItemStack stack)
             {
@@ -119,24 +88,58 @@ public class ContainerRFArmor extends Container{
             }
         });
 
+        //Armor Inventory: 41-67
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 9; j++){
+                this.addSlotToContainer(new SlotUpdate(this.inventory, j + i * 9, 44 + j * 18, 87 + i * 18, player));
+            }
+        }
+
+        //Armor Crafting Grid: 68 + 69-77
+        this.addSlotToContainer(new SlotCrafting(player, this.craftMatrix, this.craftResult, 0, 217, 99));
+        for(int l = 0; l < 3; ++l){
+            for(int i1 = 0; i1 < 3; ++i1){
+                this.addSlotToContainer(new Slot(this.craftMatrix, i1 + l * 3, 180 + i1 * 18, 14 + l * 18));
+            }
+        }
+        //Armor Furnace Input: 78
+        this.addSlotToContainer(new SlotUpdate(this.inventory, 27, 15, 57, player));
+        //Armor Furnace Output: 79
+        this.addSlotToContainer(new SlotFurnaceOutput(this.inventory, 28, 15, 98, player));
+        //Armor Module Slot: 80
+        this.addSlotToContainer(new SlotInputModule(this.inventory, 29, 15, 34, player));
+        //Generic Slot Single: 81
+        this.addSlotToContainer(this.generatorSlot = new SlotUpdate(this.inventory, 30, 140, 18, player));
+        //Side Slots: 82, 83, 84
+        addSlotToContainer(this.sideSlot1 = new SlotModuleSplitterInput(inventory, 31, -16, 14, player));
+        addSlotToContainer(this.sideSlot2 = new SlotModuleSplitterInput(inventory, 32, -16, 34, player));
+        addSlotToContainer(this.sideSlot3 = new SlotModuleSplitterInput(inventory, 33, -16, 54, player));
+
         this.onCraftMatrixChanged(this.craftMatrix);
     }
 
     @Override
     public void detectAndSendChanges(){
         this.inventory.slots = RarmorUtil.readRarmor(player).slots;
-        super.detectAndSendChanges();
-        /*for (int i = 0; i < this.inventorySlots.size(); ++i) {
+        //super.detectAndSendChanges();
+        for (int i = 0; i < this.inventorySlots.size(); ++i)
+        {
             ItemStack itemstack = this.inventorySlots.get(i).getStack();
-            ItemStack itemstack1 = this.inventory.getStackInSlot(i);
-            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack)) {
+            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
+
+            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
+            {
+
                 itemstack1 = itemstack == null ? null : itemstack.copy();
                 this.inventoryItemStacks.set(i, itemstack1);
-                for (ICrafting listener : this.listeners) {
-                    listener.sendSlotContents(this, i, itemstack1);
+
+                for (int j = 0; j < this.listeners.size(); ++j)
+                {
+                    System.out.println(itemstack + " =" + i + "=> " + itemstack);
+                    this.listeners.get(j).sendSlotContents(this, i, itemstack1);
                 }
             }
-        }*/
+        }
 
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){

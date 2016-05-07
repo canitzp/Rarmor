@@ -36,10 +36,10 @@ public class ActuallyAdditionsIntegration {
                 return stack;
             }
         };
-        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBody, lensChanger);
-        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorBoots, lensChanger);
-        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorLeggins, lensChanger);
-        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rfArmorHelmet, lensChanger);
+        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorChestplate, lensChanger);
+        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorBoots, lensChanger);
+        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorLeggins, lensChanger);
+        de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorHelmet, lensChanger);
     }
 
 }

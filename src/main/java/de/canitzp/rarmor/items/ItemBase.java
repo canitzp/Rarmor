@@ -6,22 +6,18 @@
  * © canitzp, 2016
  */
 
-package de.canitzp.rarmor.util.items;
+package de.canitzp.rarmor.items;
 
-import net.minecraft.creativetab.CreativeTabs;
+import de.canitzp.rarmor.Rarmor;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * @author canitzp
  */
 public class ItemBase extends Item{
 
-    public ItemBase(String modid, String name, CreativeTabs tabs){
-        setUnlocalizedName(modid + ":" + name);
-        setCreativeTab(tabs);
-        setRegistryName(name);
-        GameRegistry.register(this);
+    public ItemBase(String name){
+        Rarmor.registerItem(this, name);
     }
 
 }

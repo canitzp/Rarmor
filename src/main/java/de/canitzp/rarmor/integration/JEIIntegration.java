@@ -29,7 +29,7 @@ public class JEIIntegration implements IModPlugin{
         iModRegistry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames("Energy", "isFirstOpened", "rfPerTick");
         iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.CRAFTING, 64, 9, 27, 36);
         iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.SMELTING, 73, 1, 27, 36);
-        iModRegistry.addRecipeCategoryCraftingItem(new ItemStack(ItemRegistry.rfArmorBody), VanillaRecipeCategoryUid.CRAFTING, VanillaRecipeCategoryUid.SMELTING);
+        iModRegistry.addRecipeCategoryCraftingItem(new ItemStack(ItemRegistry.rarmorChestplate), VanillaRecipeCategoryUid.CRAFTING, VanillaRecipeCategoryUid.SMELTING);
     }
 
     /**

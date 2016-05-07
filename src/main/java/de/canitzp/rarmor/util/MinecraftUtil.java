@@ -21,13 +21,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SuppressWarnings("ConstantConditions")
 public class MinecraftUtil{
 
+    public static Side side;
+
     public static Side getMinecraftSide(){
-        try{
-            ClassLoader.getSystemClassLoader().loadClass("net.minecraft.client.main.Main");
-            return Side.CLIENT;
-        } catch(ClassNotFoundException e){
-            return Side.SERVER;
-        }
+        return side;
     }
 
     @SideOnly(Side.CLIENT)

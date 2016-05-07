@@ -36,7 +36,6 @@ public class SlotInputModule extends SlotUpdate{
         ItemStack stack = RarmorUtil.getPlayersRarmorChestplate(player);
         if(actualStack != null && !actualStack.isItemEqual(this.getStack())){
             if(actualStack.getItem() != null && actualStack.getItem() instanceof IRarmorModule){
-                //((IRarmorModule) actualStack.getItem()).onPickupFromSlot(player.getEntityWorld(), player, RarmorUtil.getPlayersRarmorChestplate(player), stack, this.inv, this);
                 this.onPickupFromSlot(player, actualStack);
             }
         }

@@ -17,6 +17,7 @@ import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.util.ItemUtil;
+import de.canitzp.rarmor.util.MinecraftUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,6 +31,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,6 +112,12 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
+        try{
+            ClassLoader.getSystemClassLoader().loadClass("net.minecraft.client.main.Main");
+            MinecraftUtil.side = Side.CLIENT;
+        } catch(ClassNotFoundException e){
+            MinecraftUtil.side = Side.SERVER;
+        }
         String javaVersion = System.getProperty("java.version");
         javaVersion = javaVersion.substring(0, 3);
         if(!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
@@ -120,7 +128,7 @@ public class Rarmor{
         rarmorTab = new CreativeTabs(NAME){
             @Override
             public Item getTabIconItem(){
-                return ItemRegistry.rfArmorBody;
+                return ItemRegistry.rarmorChestplate;
             }
         };
         ItemRegistry.preInit();
@@ -158,6 +166,18 @@ public class Rarmor{
         for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
             if(mapping.name.startsWith("rarmor.")){
                 mapping.remap(ItemUtil.getItemFromName(mapping.name.replace('.', ':')));
+            }
+            if(mapping.name.equals("rarmor:rfArmorBoots")){
+                mapping.remap(ItemRegistry.rarmorBoots);
+            }
+            if(mapping.name.equals("rarmor:rfArmorHelmet")){
+                mapping.remap(ItemRegistry.rarmorHelmet);
+            }
+            if(mapping.name.equals("rarmor:rfArmorBody")){
+                mapping.remap(ItemRegistry.rarmorChestplate);
+            }
+            if(mapping.name.equals("rarmor:rfArmorLeggins")){
+                mapping.remap(ItemRegistry.rarmorLeggins);
             }
         }
     }

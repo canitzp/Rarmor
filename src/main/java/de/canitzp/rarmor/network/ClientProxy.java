@@ -105,7 +105,7 @@ public class ClientProxy extends CommonProxy{
                 }
                 return Colors.WHITE.colorValue;
             }
-        }, ItemRegistry.rfArmorBody, ItemRegistry.rfArmorBoots, ItemRegistry.rfArmorLeggins, ItemRegistry.rfArmorHelmet);
+        }, ItemRegistry.rarmorChestplate, ItemRegistry.rarmorBoots, ItemRegistry.rarmorLeggins, ItemRegistry.rarmorHelmet);
     }
 
 }

@@ -12,7 +12,6 @@ import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ public class PlayerEvents{
             World world = event.getWorld();
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if(RarmorUtil.isPlayerWearingRarmor(player)){
-                ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                ItemStack module = NBTUtil.readSlots(RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                 if(module != null && module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onPlayerLoginEvent(world, player, RarmorUtil.getPlayersRarmorChestplate(player), module);
                 }

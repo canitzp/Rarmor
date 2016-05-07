@@ -8,13 +8,12 @@
 
 package de.canitzp.rarmor.inventory.container;
 
+import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IToolModule;
 import de.canitzp.rarmor.inventory.slots.SlotUpdate;
 import de.canitzp.rarmor.items.modularTool.ItemModularTool;
-import de.canitzp.rarmor.util.ContainerUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -35,7 +34,7 @@ public class ContainerModularTool extends Container{
     public ContainerModularTool(EntityPlayer player){
         this.player = player;
         this.world = player.worldObj;
-        this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
+        this.armor = RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         this.tool = player.getHeldItemMainhand();
         this.inventory = NBTUtil.readSlots(this.tool, ItemModularTool.slots);
 
@@ -74,7 +73,7 @@ public class ContainerModularTool extends Container{
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot){
-        return ContainerUtil.transferStackInSlot(this.inventorySlots, player, slot);
+        return null;
     }
 
 }

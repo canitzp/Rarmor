@@ -21,7 +21,6 @@ import de.canitzp.rarmor.network.PacketPaintRarmor;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.SlotUtil;
-import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -74,7 +73,7 @@ public class RarmorUtil{
             for(int xPos = x - 1; xPos <= x + 1; xPos++){
                 for(int yPos = height - 1; yPos <= height + 1; yPos++){
                     for(int zPos = z - 1; zPos <= z + 1; zPos++){
-                        IBlockState leaves = WorldUtil.getBlockState(world, xPos, yPos, zPos);
+                        IBlockState leaves = world.getBlockState(new BlockPos(xPos, yPos, zPos));
                         if(leaves != null && leaves.getBlock().isLeaves(leaves, world, new BlockPos(xPos, yPos, zPos)))
                             numLeaves++;
                     }
@@ -92,7 +91,7 @@ public class RarmorUtil{
         for(int xPos = x - 1; xPos <= x + 1; xPos++){
             for(int yPos = y; yPos <= y + 1; yPos++){
                 for(int zPos = z - 1; zPos <= z + 1; zPos++){
-                    Block localBlock = WorldUtil.getBlock(world, xPos, yPos, zPos);
+                    Block localBlock = world.getBlockState(new BlockPos(xPos, yPos, zPos)).getBlock();
                     if(bID == localBlock){
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
                         float localHardness = localBlock.getBlockHardness(localMeta, world, new BlockPos(xPos, yPos, zPos));
@@ -258,13 +257,7 @@ public class RarmorUtil{
     }
 
     public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot){
-        switch (slot){
-            case HEAD: return player.inventory.armorInventory[3];
-            case CHEST: return player.inventory.armorInventory[2];
-            case LEGS: return player.inventory.armorInventory[1];
-            case FEET: return player.inventory.armorInventory[0];
-        }
-        return null;
+        return player.inventory.armorInventory[slot.getIndex()];
     }
 
     public static void paintRarmor(EntityPlayer player, EntityEquipmentSlot slot, Colors color){

@@ -13,7 +13,6 @@ import com.google.common.collect.Multimap;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.util.EnergyUtil;
-import de.canitzp.rarmor.util.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.material.Material;
@@ -81,8 +80,8 @@ public class ItemChainSaw extends ItemEnergyContainer{
         int y = pos.getY();
         int z = pos.getZ();
         World world = player.worldObj;
-        final Block wood = WorldUtil.getBlock(world, pos);
-        if(!player.isSneaking() && (canHarvest(WorldUtil.getBlockState(world, pos)) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
+        final Block wood = world.getBlockState(pos).getBlock();
+        if(!player.isSneaking() && (canHarvest(world.getBlockState(pos)) || wood == Blocks.BROWN_MUSHROOM_BLOCK || wood == Blocks.RED_MUSHROOM_BLOCK) && RarmorUtil.detectTree(world, pos.getX(), pos.getY(), pos.getZ(), wood) && this.getEnergyStored(stack) >= rfPerUse){
             boolean b = RarmorUtil.breakTree(world, x, y, z, x, y, z, stack, wood, player, rfPerUse);
             return b || super.onBlockStartBreak(stack, pos, player);
         }

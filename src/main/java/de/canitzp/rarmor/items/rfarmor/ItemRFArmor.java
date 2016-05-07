@@ -13,7 +13,6 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -65,7 +64,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand){
         EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
-        ItemStack itemstack = PlayerUtil.getItemStackFromSlot(player, entityequipmentslot);
+        ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
         if(itemstack == null){
             player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
             itemStackIn.stackSize = 0;

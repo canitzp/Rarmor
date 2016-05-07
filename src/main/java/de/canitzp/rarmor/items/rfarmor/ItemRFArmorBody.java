@@ -15,7 +15,6 @@ import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.ItemStackUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -36,7 +35,7 @@ public class ItemRFArmorBody extends ItemRFArmor{
     public static int rfPerTick = 20, slotAmount = 34;
 
     public ItemRFArmorBody(){
-        super(ItemRFArmor.RFARMOR, EntityEquipmentSlot.CHEST, 250000, 1500, "rfArmorBody");
+        super(ItemRFArmor.RFARMOR, EntityEquipmentSlot.CHEST, 250000, 1500, "rarmorChestplate");
         rfPerTick = RarmorProperties.getInteger("maxRarmorTransferPerTick");
     }
 
@@ -78,9 +77,9 @@ public class ItemRFArmorBody extends ItemRFArmor{
                 if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
                 if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0)
                     NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
-                ItemStack foot = PlayerUtil.getArmor(player, EntityEquipmentSlot.FEET);
-                ItemStack leggins = PlayerUtil.getArmor(player, EntityEquipmentSlot.LEGS);
-                ItemStack head = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
+                ItemStack foot = RarmorUtil.getArmor(player, EntityEquipmentSlot.FEET);
+                ItemStack leggins = RarmorUtil.getArmor(player, EntityEquipmentSlot.LEGS);
+                ItemStack head = RarmorUtil.getArmor(player, EntityEquipmentSlot.HEAD);
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
                     if(isBurnable(armor)){
                         burn(armor);

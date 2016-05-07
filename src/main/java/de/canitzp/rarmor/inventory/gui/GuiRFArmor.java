@@ -62,7 +62,7 @@ public class GuiRFArmor extends GuiContainerBase{
         super(containerRFArmor);
         this.xSize = 247;
         this.ySize = 226;
-        this.armor = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
+        this.armor = RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST);
         this.player = player;
         this.allowUserInput = true;
     }
@@ -125,13 +125,12 @@ public class GuiRFArmor extends GuiContainerBase{
         this.drawTexturedModalRect(this.guiLeft + 33, this.guiTop + 33, 15, 0, 3, 7);
 
         //Draw Module things:
-        ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        ItemStack module = RarmorUtil.getRarmorModule(player);
         if(module != null){
             if(module.getItem() instanceof IRarmorModule){
                 ((IRarmorModule) module.getItem()).drawGuiContainerBackgroundLayer(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, par1, par2, par3);
             }
         }
-
 
         if(this.isSettingsTab){
             this.mc.getTextureManager().bindTexture(modulesGui);
@@ -187,10 +186,8 @@ public class GuiRFArmor extends GuiContainerBase{
             }
         }
 
-
-
         if(mouseX >= this.guiLeft + 18 && mouseY >= this.guiTop + 8 && mouseX <= this.guiLeft + 27 && mouseY <= this.guiTop + 28){
-            int energy = EnergyUtil.getEnergy(this.armor);
+            int energy = ((ItemRFArmorBody) armor.getItem()).getEnergyStored(armor);
             int cap = ((ItemRFArmorBody) armor.getItem()).getMaxEnergyStored(armor);
             this.drawHoveringText(Lists.newArrayList(Integer.toString(energy * 4) + "/" + Integer.toString(cap * 4) + " RF"), mouseX, mouseY);
         } else if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161){

@@ -49,8 +49,8 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         if(!world.isRemote){
             player.capabilities.disableDamage = true;
-            player.capabilities.setPlayerWalkSpeed(0.4F);
         } else {
+            player.capabilities.setPlayerWalkSpeed(0.4F);
             player.capabilities.setFlySpeed(0.1F);
         }
         EnergyUtil.reduceEnergy(armorChestplate, energyPerTick);
@@ -60,8 +60,8 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         if(!world.isRemote){
             player.capabilities.disableDamage = false;
-            player.capabilities.setPlayerWalkSpeed(0.1F);
         } else {
+            player.capabilities.setPlayerWalkSpeed(0.1F);
             player.capabilities.setFlySpeed(0.05F);
         }
         player.sendPlayerAbilities();

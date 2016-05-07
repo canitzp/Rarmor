@@ -16,7 +16,6 @@ import de.canitzp.rarmor.items.rfarmor.ArmorHud;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -37,13 +36,13 @@ public class GameOverlayEvent{
         if(event.getType() == RenderGameOverlayEvent.ElementType.ALL && MinecraftUtil.getCurrentScreen() == null){
             EntityPlayer player = MinecraftUtil.getPlayer();
             FontRenderer fontRenderer = MinecraftUtil.getFontRenderer();
-            ItemStack helmet = PlayerUtil.getArmor(player, EntityEquipmentSlot.HEAD);
+            ItemStack helmet = RarmorUtil.getArmor(player, EntityEquipmentSlot.HEAD);
             if(!RarmorProperties.getBoolean("AlwaysShowAdvancedInGameTooltip")){
                 if(helmet != null && helmet.getItem() instanceof IIngameTooltipHandler){
                     ((IIngameTooltipHandler) helmet.getItem()).doRender(MinecraftUtil.getMinecraft(), player, event.getResolution(), fontRenderer, event.getType(), helmet, event.getPartialTicks());
                 }
                 if(RarmorUtil.isPlayerWearingRarmor(player)){
-                    ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                    ItemStack module = NBTUtil.readSlots(RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                     if(module != null && module.getItem() instanceof IRarmorModule){
                         ((IRarmorModule) module.getItem()).renderWorldScreen(MinecraftUtil.getMinecraft(), player, RarmorUtil.getPlayersRarmorChestplate(player), module, event.getResolution(), fontRenderer, event.getType(), event.getPartialTicks());
                     }

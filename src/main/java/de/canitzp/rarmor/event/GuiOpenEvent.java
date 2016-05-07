@@ -17,7 +17,6 @@ import de.canitzp.rarmor.network.PacketOpenGui;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
-import de.canitzp.rarmor.util.PlayerUtil;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +39,7 @@ public class GuiOpenEvent{
         if (player != null) {
             if (RarmorUtil.isPlayerWearingRarmor(player)) {
                 if (!NBTUtil.getBoolean(RarmorUtil.getPlayersRarmorChestplate(player), "HaveToSneakToOpenGui") || player.isSneaking()) {
-                    ItemStack body = PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST);
+                    ItemStack body = RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST);
                     if (event.getGui() instanceof GuiInventory && (body.getTagCompound() == null || !body.getTagCompound().getBoolean("click"))) {
                         if (body.getTagCompound() != null) body.getTagCompound().setBoolean("click", false);
                         if (!NBTUtil.getBoolean(body, "isFirstOpened")) {
@@ -49,7 +48,7 @@ public class GuiOpenEvent{
                         }
                         event.setCanceled(true);
                         NetworkHandler.wrapper.sendToServer(new PacketOpenGui(player, GuiHandler.RFARMORGUI));
-                        ItemStack module = NBTUtil.readSlots(PlayerUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+                        ItemStack module = NBTUtil.readSlots(RarmorUtil.getArmor(player, EntityEquipmentSlot.CHEST), ItemRFArmorBody.slotAmount).getStackInSlot(ItemRFArmorBody.MODULESLOT);
                         if (module != null && module.getItem() instanceof IRarmorModule) {
                             ((IRarmorModule) module.getItem()).onGuiOpenEvent(player.worldObj, player, body, module, (GuiContainer) event.getGui());
                         }
