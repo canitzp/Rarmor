@@ -10,7 +10,6 @@ package de.canitzp.rarmor.util;
 
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.InventoryBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,14 +27,12 @@ public class NBTUtil{
             }
         } else {
             Rarmor.logger.error("An Error occurred while writing/reading a ItemStack");
-            stack = new ItemStack(Blocks.FIRE);
-            stack.setTagCompound(new NBTTagCompound());
         }
     }
 
     public static void saveSlots(ItemStack stack, IInventory inventory){
         checkForNBT(stack);
-        if(inventory != null && inventory.getSizeInventory() > 0){
+        if(stack != null && inventory != null && inventory.getSizeInventory() > 0){
             stack.getTagCompound().setString("InventoryName", inventory.getName());
             NBTTagList tagList = new NBTTagList();
             for(int currentIndex = 0; currentIndex < inventory.getSizeInventory(); currentIndex++){

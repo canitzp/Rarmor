@@ -144,8 +144,11 @@ public class Rarmor{
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
         initEffectsModule();
-        if(Loader.isModLoaded("actuallyadditions")){
-            ActuallyAdditionsIntegration.postInit(event);
+        if(Loader.isModLoaded("actuallyadditions")) {
+            try {
+                ClassLoader.getSystemClassLoader().loadClass("de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger");
+                ActuallyAdditionsIntegration.postInit(event);
+            } catch (ClassNotFoundException ignored) {}
         }
         proxy.postInit(event);
     }

@@ -13,7 +13,6 @@ import de.canitzp.rarmor.api.Colors;
 import de.canitzp.rarmor.items.ItemRegistry;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmor;
 import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
-import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
@@ -22,13 +21,11 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -44,10 +41,6 @@ public class ClientProxy extends CommonProxy{
 
     @Override
     public void init(FMLInitializationEvent event){
-        ItemStack stack = new ItemStack(ItemRegistry.rfArmorBody);
-        NBTUtil.setInteger(stack, "color", Colors.WHITE.colorValue);
-        EnergyUtil.setEnergy(stack, ItemRegistry.rfArmorBody.getMaxDamage());
-        ReflectionHelper.setPrivateValue(CreativeTabs.class, Rarmor.rarmorTab, stack, "iconItemStack");
         specialPlayers.put("Xogue", Pair.of("You helped me to create a better Mod.", Colors.CYAN));
         specialPlayers.put("canitzp", Pair.of("...", Colors.RED));
         specialPlayers.put("Ellpeck", Pair.of("You helped me a lot with everything stuff I developed.", Colors.ELLPECKGREEN));

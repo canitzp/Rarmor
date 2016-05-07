@@ -72,7 +72,7 @@ public class ItemRFArmorBody extends ItemRFArmor{
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor){
-        if(!world.isRemote){
+        if(!world.isRemote && RarmorUtil.isPlayerWearingRarmor(player)){
             this.handleModules(world, player, armor);
             if(NBTUtil.getBoolean(armor, "isFirstOpened")){
                 if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
