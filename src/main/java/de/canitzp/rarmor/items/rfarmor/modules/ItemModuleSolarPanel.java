@@ -52,7 +52,8 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        if(NBTUtil.getInteger(module, "tick") >= 50){
+        int tick = NBTUtil.getInteger(module, "tick");
+        if(tick >= 50){
             if(canPlayerSeeSky(player)){
                 EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
                 NBTUtil.setInteger(module, "tick", 0);
@@ -61,11 +62,12 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
                 NBTUtil.setBoolean(module, "doWork", false);
             }
         } else {
-            NBTUtil.setInteger(module, "tick", NBTUtil.getInteger(module, "tick") + 1);
+            NBTUtil.setInteger(module, "tick", ++tick);
             if(NBTUtil.getBoolean(module, "doWork")){
                 EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
             }
         }
+        System.out.println(tick);
     }
 
     private boolean canPlayerSeeSky(EntityPlayer player){

@@ -131,7 +131,6 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list){
-
         ItemStack stack = new ItemStack(this);
         NBTUtil.setInteger(stack, "color", tabColor.colorValue);
         NBTUtil.setString(stack, "colorName", tabColor.getName());
@@ -244,7 +243,7 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
 
     @Override
     public int getColor(ItemStack stack) {
-        return NBTUtil.getInteger(stack, "color");
+        return stack.getTagCompound() != null && stack.getTagCompound().hasKey("color") ? NBTUtil.getInteger(stack, "color") : super.getColor(stack);
     }
 
     @Override

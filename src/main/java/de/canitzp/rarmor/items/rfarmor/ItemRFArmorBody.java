@@ -71,25 +71,28 @@ public class ItemRFArmorBody extends ItemRFArmor{
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack armor){
-        if(!world.isRemote && RarmorUtil.isPlayerWearingRarmor(player)){
+        if(RarmorUtil.isPlayerWearingRarmor(player)){
             this.handleModules(world, player, armor);
-            if(NBTUtil.getBoolean(armor, "isFirstOpened")){
-                if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
-                if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0)
-                    NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
-                ItemStack foot = RarmorUtil.getArmor(player, EntityEquipmentSlot.FEET);
-                ItemStack leggins = RarmorUtil.getArmor(player, EntityEquipmentSlot.LEGS);
-                ItemStack head = RarmorUtil.getArmor(player, EntityEquipmentSlot.HEAD);
-                if(RarmorUtil.isPlayerWearingRarmor(player)){
-                    if(isBurnable(armor)){
-                        burn(armor);
-                    } else NBTUtil.setInteger(armor, "BurnTime", 0);
-                    if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
-                        EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
+            if(!world.isRemote){
+                if(NBTUtil.getBoolean(armor, "isFirstOpened")){
+                    if(NBTUtil.getInteger(armor, "rfPerTick") == 0) NBTUtil.setInteger(armor, "rfPerTick", rfPerTick);
+                    if(NBTUtil.getInteger(armor, "BurnTimeMultiplier") == 0)
+                        NBTUtil.setInteger(armor, "BurnTimeMultiplier", 1);
+                    ItemStack foot = RarmorUtil.getArmor(player, EntityEquipmentSlot.FEET);
+                    ItemStack leggins = RarmorUtil.getArmor(player, EntityEquipmentSlot.LEGS);
+                    ItemStack head = RarmorUtil.getArmor(player, EntityEquipmentSlot.HEAD);
+                    if(RarmorUtil.isPlayerWearingRarmor(player)){
+                        if(isBurnable(armor)){
+                            burn(armor);
+                        } else NBTUtil.setInteger(armor, "BurnTime", 0);
+                        if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
+                            EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
+                        }
                     }
                 }
             }
         }
+
     }
 
     private void handleModules(World world, EntityPlayer player, ItemStack armor){
@@ -102,6 +105,7 @@ public class ItemRFArmorBody extends ItemRFArmor{
             }
             IRarmorModule mod = (IRarmorModule) module.getItem();
             mod.onModuleTickInArmor(world, player, armor, module, inventory);
+            RarmorUtil.saveRarmor(armor, inventory);
         }
     }
 

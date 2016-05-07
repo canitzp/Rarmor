@@ -26,9 +26,9 @@ public class JEIIntegration implements IModPlugin{
 
     @Override
     public void register(IModRegistry iModRegistry){
-        iModRegistry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames("Energy", "isFirstOpened", "rfPerTick");
-        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.CRAFTING, 64, 9, 27, 36);
-        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.SMELTING, 73, 1, 27, 36);
+        iModRegistry.getJeiHelpers().getNbtIgnoreList().ignoreNbtTagNames("Energy", "isFirstOpened", "rfPerTick", "color", "colorIndex", "colorName");
+        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.CRAFTING, 69, 9, 0, 36);
+        iModRegistry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerRFArmor.class, VanillaRecipeCategoryUid.SMELTING, 78, 1, 0, 36);
         iModRegistry.addRecipeCategoryCraftingItem(new ItemStack(ItemRegistry.rarmorChestplate), VanillaRecipeCategoryUid.CRAFTING, VanillaRecipeCategoryUid.SMELTING);
     }
 

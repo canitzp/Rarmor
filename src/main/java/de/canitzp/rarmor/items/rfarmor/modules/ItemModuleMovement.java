@@ -37,7 +37,7 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
 
     @Override
     public String getDescription(EntityPlayer player, ItemStack stack, boolean advancedTooltips){
-        return "The Movement Module increase your walk and fly speed and disables the fall damage.\nIt costs " + TextFormatting.RED + energyPerTick + "RF" + TextFormatting.GRAY + " per Tick.";
+        return "The Movement Module increase your walk and fly speed and disables the fall damage.\nIt costs " + TextFormatting.RED + energyPerTick + "RF" + TextFormatting.GRAY + " per Tick.\n" + TextFormatting.RED + "WIP";
     }
 
     @Override
@@ -47,12 +47,15 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
 
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
+        //TODO sync
         if(!world.isRemote){
             player.capabilities.disableDamage = true;
         } else {
-            player.capabilities.setPlayerWalkSpeed(0.4F);
-            player.capabilities.setFlySpeed(0.1F);
+            //player.capabilities.setPlayerWalkSpeed(0.4F);
+            //player.capabilities.setFlySpeed(0.2F);
+            player.sendPlayerAbilities();
         }
+        System.out.println("" + player.capabilities.getFlySpeed());
         EnergyUtil.reduceEnergy(armorChestplate, energyPerTick);
     }
 
@@ -63,7 +66,8 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
         } else {
             player.capabilities.setPlayerWalkSpeed(0.1F);
             player.capabilities.setFlySpeed(0.05F);
+            player.sendPlayerAbilities();
         }
-        player.sendPlayerAbilities();
+
     }
 }

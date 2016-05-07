@@ -25,7 +25,7 @@ public class CraftingTweaksIntegration{
         isActive = Loader.isModLoaded("craftingtweaks");
         if(isActive){
             SimpleTweakProvider providerRarmor = CraftingTweaksAPI.registerSimpleProvider(Rarmor.MODID, ContainerRFArmor.class);
-            providerRarmor.setGrid(64, 9);
+            providerRarmor.setGrid(69, 9);
             providerRarmor.setTweakRotate(true, true, 235, 14);
             providerRarmor.setTweakBalance(true, true, 235, 32);
             providerRarmor.setTweakClear(true, true, 235, 50);

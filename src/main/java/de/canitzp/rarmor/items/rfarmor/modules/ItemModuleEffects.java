@@ -89,9 +89,9 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         InventoryBase inventory = RarmorUtil.readRarmor(player);
         ItemStack stack = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if((stack != null && stack.getItem() != ItemRegistry.moduleEffects) || stack == null){
-            return 81;
+            return 80;
         }
-        return 75;
+        return 82;
     }
 
     @Override
@@ -119,12 +119,12 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     @Override
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armorChestplate, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         int yToTop = (gui.height / 2 - ySize / 2);
-        ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
+        //ItemStack mod = gui.inventorySlots.getSlot(75).getStack().getItem() == ItemRegistry.moduleEffects ? gui.inventorySlots.getSlot(75).getStack() : gui.inventorySlots.getSlot(81).getStack();
         minecraft.getTextureManager().bindTexture(ItemModuleEffects.checkBox);
         gui.drawTexturedModalRect(-150 + gui.guiLeft, yToTop - 4, 18, 0, 144, 4);
         gui.drawTexturedModalRect(-150 + gui.guiLeft, yToTop + ySize - 1, 18, 15, 144, 4);
         for(EffectCheckBox checkBox : effectBoxes){
-            checkBox.drawCheckBox(gui, gui.guiLeft, yToTop, NBTUtil.getBoolean(mod, checkBox.effect.getName()));
+            checkBox.drawCheckBox(gui, gui.guiLeft, yToTop, NBTUtil.getBoolean(module, checkBox.effect.getName()));
         }
     }
 

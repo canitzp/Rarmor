@@ -22,9 +22,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -123,7 +121,7 @@ public class Rarmor{
         if(!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
             logger.error("You aren't using a compatible Java version to use Rarmor. This may crash your Game. Required-minimum: Java 1.8.0 Yours: " + System.getProperty("java.version"));
         }
-        logger.info("Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
+        logger.info("[Rarmor] Starting " + NAME + " " + VERSION + ". Thanks for using this Mod :)");
         RarmorProperties.preInit(event);
         rarmorTab = new CreativeTabs(NAME){
             @Override
@@ -134,31 +132,37 @@ public class Rarmor{
         ItemRegistry.preInit();
         if(event.getSide().isClient()) RarmorAPI.addAdvancedHud(new RarmorHud());
         proxy.preInit(event);
-        logger.info("Finished PreInitialization");
+        logger.info("[Rarmor] Finished PreInitialization");
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
-        logger.info("Starting Initialization");
+        logger.info("[Rarmor] Starting Initialization");
         NetworkHandler.init();
         EventHandler.init();
         proxy.registerRenderer();
         proxy.init(event);
         RecipeManager.init();
         CraftingTweaksIntegration.init();
-        logger.info("Finished Initialization");
+        logger.info("[Rarmor] Finished Initialization");
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
+        logger.info("[Rarmor] Starting PostInitialization");
         initEffectsModule();
         if(Loader.isModLoaded("actuallyadditions")) {
-            try {
-                ClassLoader.getSystemClassLoader().loadClass("de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger");
-                ActuallyAdditionsIntegration.postInit(event);
-            } catch (ClassNotFoundException ignored) {}
+            for(ModContainer mod : ModAPIManager.INSTANCE.getAPIList()){
+                if(mod.getModId().equals("actuallyadditionsapi")){
+                    if(Integer.parseInt(mod.getVersion()) >= 11){
+                        ActuallyAdditionsIntegration.postInit(event);
+                        logger.info("Loaded ActuallyAdditions Integration");
+                    }
+                }
+            }
         }
         proxy.postInit(event);
+        logger.info("[Rarmor] Finished PostInitialization");
     }
 
     @Mod.EventHandler

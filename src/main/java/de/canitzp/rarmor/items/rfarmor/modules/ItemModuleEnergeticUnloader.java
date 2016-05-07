@@ -52,7 +52,7 @@ public class ItemModuleEnergeticUnloader extends ItemModule implements IRarmorMo
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         RarmorUtil.toggleSlotInGui(140, 18, true);
         RarmorUtil.dropSlot(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT), player);
-        //slot.inv.setInventorySlotContents(30, null);
+        inventory.setInventorySlotContents(30, null);
     }
 
     @Override

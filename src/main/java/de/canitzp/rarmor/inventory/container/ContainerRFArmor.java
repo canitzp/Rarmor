@@ -121,25 +121,7 @@ public class ContainerRFArmor extends Container{
     @Override
     public void detectAndSendChanges(){
         this.inventory.slots = RarmorUtil.readRarmor(player).slots;
-        //super.detectAndSendChanges();
-        for (int i = 0; i < this.inventorySlots.size(); ++i)
-        {
-            ItemStack itemstack = this.inventorySlots.get(i).getStack();
-            ItemStack itemstack1 = this.inventoryItemStacks.get(i);
-
-            if (!ItemStack.areItemStacksEqual(itemstack1, itemstack))
-            {
-
-                itemstack1 = itemstack == null ? null : itemstack.copy();
-                this.inventoryItemStacks.set(i, itemstack1);
-
-                for (int j = 0; j < this.listeners.size(); ++j)
-                {
-                    System.out.println(itemstack + " =" + i + "=> " + itemstack);
-                    this.listeners.get(j).sendSlotContents(this, i, itemstack1);
-                }
-            }
-        }
+        super.detectAndSendChanges();
 
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if(module != null){
@@ -174,12 +156,12 @@ public class ContainerRFArmor extends Container{
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex){
-        int armorInvStart = 0, armorInvLength = 26; //0-26
-        int invStart = 27, invLength = 26; //27-53
-        int hotbarStart = 54, hotbarLength = 8; //54-62
-        int craftStart = 64, craftLength = 8, craftOut = 63; // 63 & 64-72
-        int furnaceInput = 73, furnaceOutput = 74; // 73 & 74
-        int mod0 = 75;
+        int hotbarStart = 0, hotbarLength = 8; //0-8
+        int invStart = 9, invLength = 26; //9-35
+        int armorInvStart = 41, armorInvLength = 26; //41-67
+        int craftStart = 69, craftLength = 8, craftOut = 68; // 68 & 69-77
+        int furnaceInput = 78, furnaceOutput = 79; // 78 & 79
+        int mod0 = 80; //80
         Slot slot = this.inventorySlots.get(slotIndex);
         ItemStack stack = null;
         if(slot != null && slot.getHasStack()){
