@@ -67,7 +67,6 @@ public class ItemModuleSolarPanel extends ItemModule implements IRarmorModule{
                 EnergyUtil.addEnergy(armorChestplate, this.energyPerTick, armorChestplate.getMaxDamage());
             }
         }
-        System.out.println(tick);
     }
 
     private boolean canPlayerSeeSky(EntityPlayer player){

@@ -55,7 +55,6 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
             //player.capabilities.setFlySpeed(0.2F);
             player.sendPlayerAbilities();
         }
-        System.out.println("" + player.capabilities.getFlySpeed());
         EnergyUtil.reduceEnergy(armorChestplate, energyPerTick);
     }
 

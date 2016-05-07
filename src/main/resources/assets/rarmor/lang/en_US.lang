@@ -1,10 +1,10 @@
 itemGroup.Rarmor=Rarmor
 item.rarmor:ironChainsaw.name=Iron Chainsaw
 item.rarmor:diamondChainsaw.name=Diamond Chainsaw
-item.rarmor:rfArmorBody.name=Rarmor Body
-item.rarmor:rfArmorHelmet.name=Rarmor Helmet
-item.rarmor:rfArmorLeggins.name=Rarmor Leggins
-item.rarmor:rfArmorBoots.name=Rarmor Boots
+item.rarmor:rarmorChestplate.name=Rarmor Chestplate
+item.rarmor:rarmorHelmet.name=Rarmor Helmet
+item.rarmor:rarmorLeggins.name=Rarmor Leggins
+item.rarmor:rarmorBoots.name=Rarmor Boots
 item.rarmor:moduleGenerator.name=Generator Module
 item.rarmor:ribbonCable.name=Ribbon Cable
 item.rarmor:electricalController.name=Electrical Controller

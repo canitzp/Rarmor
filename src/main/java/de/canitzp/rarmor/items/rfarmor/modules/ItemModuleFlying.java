@@ -72,7 +72,6 @@ public class ItemModuleFlying extends ItemModule implements IRarmorModule{
 
     @Override
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        System.out.println("pick up");
         if(!player.capabilities.isCreativeMode){
             player.capabilities.allowFlying = false;
             player.capabilities.isFlying = false;
