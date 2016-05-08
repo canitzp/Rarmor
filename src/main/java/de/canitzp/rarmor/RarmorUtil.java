@@ -39,8 +39,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 
 /**
  * @author canitzp
@@ -87,36 +85,27 @@ public class RarmorUtil{
     /**
      * Author: mDiyo, boni-xx
      */
-    public static boolean breakTree(World world, int x, int y, int z, int xStart, int yStart, int zStart, ItemStack stack, Block bID, EntityPlayer player, int rfPerUse){
-        for(int xPos = x - 1; xPos <= x + 1; xPos++){
-            for(int yPos = y; yPos <= y + 1; yPos++){
-                for(int zPos = z - 1; zPos <= z + 1; zPos++){
+    public static boolean breakTree(World world, int x, int y, int z, int xStart, int yStart, int zStart, ItemStack stack, Block bID, EntityPlayer player, int rfPerUse) {
+        for (int xPos = x - 1; xPos <= x + 1; xPos++) {
+            for (int yPos = y; yPos <= y + 1; yPos++) {
+                for (int zPos = z - 1; zPos <= z + 1; zPos++) {
                     Block localBlock = world.getBlockState(new BlockPos(xPos, yPos, zPos)).getBlock();
-                    if(bID == localBlock){
+                    if (bID == localBlock) {
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
                         float localHardness = localBlock.getBlockHardness(localMeta, world, new BlockPos(xPos, yPos, zPos));
-                        if(!(localHardness < 0)){
-                            boolean cancelHarvest;
-                            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, new BlockPos(x, y, z), localMeta, player);
-                            MinecraftForge.EVENT_BUS.post(event);
-                            cancelHarvest = event.isCanceled();
+                        if (!(localHardness < 0)) {
                             int xDist = xPos - xStart;
                             int yDist = yPos - yStart;
                             int zDist = zPos - zStart;
-                            if(9 * xDist * xDist + yDist * yDist + 9 * zDist * zDist < 2500){
-                                if(cancelHarvest){
-                                    breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
+                            if (9 * xDist * xDist + yDist * yDist + 9 * zDist * zDist < 2500) {
+                                if (stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse) {
+                                    playerHarvestBlock(world, new BlockPos(xPos, yPos, zPos), player, stack);
+                                    ((ItemChainSaw) stack.getItem()).extractEnergy(stack, rfPerUse, false);
                                 } else {
-                                    if(stack.getItem() instanceof ItemChainSaw && ((ItemChainSaw) stack.getItem()).getEnergyStored(stack) >= rfPerUse){
-                                        playerHarvestBlock(world, new BlockPos(xPos, yPos, zPos), player, stack);
-                                        ((ItemChainSaw) stack.getItem()).extractEnergy(stack, rfPerUse, false);
-                                    } else {
-                                        playerHarvestBlock(world, new BlockPos(x, y, z), player, stack);
-                                        return false;
-                                    }
-                                    if(!world.isRemote)
-                                        breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
+                                    playerHarvestBlock(world, new BlockPos(x, y, z), player, stack);
+                                    return false;
                                 }
+                                if (!world.isRemote) breakTree(world, xPos, yPos, zPos, xStart, yStart, zStart, stack, bID, player, rfPerUse);
                             }
                         }
                     }

@@ -13,11 +13,13 @@ import de.canitzp.rarmor.event.EventHandler;
 import de.canitzp.rarmor.integration.ActuallyAdditionsIntegration;
 import de.canitzp.rarmor.integration.CraftingTweaksIntegration;
 import de.canitzp.rarmor.items.ItemRegistry;
+import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.util.ItemUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
+import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -127,6 +129,13 @@ public class Rarmor{
             @Override
             public Item getTabIconItem(){
                 return ItemRegistry.rarmorChestplate;
+            }
+
+            @Override
+            public ItemStack getIconItemStack(){
+                ItemStack stack = new ItemStack(ItemRegistry.rarmorChestplate);
+                NBTUtil.setInteger(stack, "color", ItemRFArmorBody.tabColor.colorValue);
+                return stack;
             }
         };
         ItemRegistry.preInit();
