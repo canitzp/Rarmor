@@ -148,7 +148,7 @@ public class Rarmor{
     public void init(FMLInitializationEvent event){
         logger.info("[Rarmor] Starting Initialization");
         NetworkHandler.init();
-        EventHandler.init();
+        EventHandler.init(event);
         proxy.registerRenderer();
         proxy.init(event);
         RecipeManager.init();
