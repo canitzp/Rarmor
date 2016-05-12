@@ -61,7 +61,7 @@ public class ItemModuleEnergeticLoader extends ItemModule implements IRarmorModu
         if(!settingActivated && !isColoringTab){
             RarmorUtil.toggleSlotInGui(140, 18, false);
             minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
-            gui.drawTexturedModalRect(gui.guiLeft + 120, gui.guiTop + 13, 0, 73, 56, 55);
+            gui.drawTexturedModalRect(((GuiRFArmor) gui).getGuiLeft() + 120, ((GuiRFArmor) gui).getGuiTop() + 13, 0, 73, 56, 55);
         }
     }
 

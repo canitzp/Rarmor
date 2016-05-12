@@ -109,7 +109,7 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
     public void drawGuiContainerBackgroundLayer(Minecraft minecraft, GuiContainer gui, ItemStack armor, ItemStack module, boolean settingActivated, boolean isColoringTab, float partialTicks, int mouseX, int mouseY){
         toggleSlots(false);
         minecraft.getTextureManager().bindTexture(((GuiRFArmor) gui).modulesGui);
-        gui.drawTexturedModalRect(gui.guiLeft - 22, gui.guiTop + 7, 0, 129, 25, 71);
+        gui.drawTexturedModalRect(((GuiRFArmor) gui).getGuiLeft() - 22, ((GuiRFArmor) gui).getGuiTop() + 7, 0, 129, 25, 71);
         ItemStack mod1 = NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount).getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
             ((IRarmorModule) mod1.getItem()).drawGuiContainerBackgroundLayer(minecraft, gui, armor, mod1, settingActivated, isColoringTab, partialTicks, mouseX, mouseY);

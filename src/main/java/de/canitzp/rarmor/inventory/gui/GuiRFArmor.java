@@ -309,7 +309,7 @@ public class GuiRFArmor extends GuiContainerBase{
     }
 
     public int getGuiLeft(){
-        return this.guiLeft;
+        return super.guiLeft;
     }
 
     public int getGuiTop(){

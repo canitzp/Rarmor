@@ -13,6 +13,7 @@ import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.util.EnergyUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -51,11 +52,13 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
         if(!world.isRemote){
             player.capabilities.disableDamage = true;
         } else {
-            //player.capabilities.setPlayerWalkSpeed(0.4F);
-            //player.capabilities.setFlySpeed(0.2F);
+            player.capabilities.setPlayerWalkSpeed(0.4F);
+            player.capabilities.setFlySpeed(0.2F);
             player.sendPlayerAbilities();
+            Minecraft.getMinecraft().playerController.setPlayerCapabilities(player);
         }
         EnergyUtil.reduceEnergy(armorChestplate, energyPerTick);
+        System.out.println(player.capabilities.getFlySpeed());
     }
 
     @Override

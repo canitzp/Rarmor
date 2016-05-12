@@ -230,6 +230,10 @@ public class RarmorUtil{
     }
 
     public static void saveRarmor(EntityPlayer player, InventoryBase base){
+        ItemStack mod = getRarmorModule(player);
+        if(mod != null && mod.getItem() instanceof IRarmorModule){
+            ((IRarmorModule) mod.getItem()).onRarmorSave(player.getEntityWorld(), player, getPlayersRarmorChestplate(player), mod);
+        }
         saveRarmor(getPlayersRarmorChestplate(player), base);
     }
 

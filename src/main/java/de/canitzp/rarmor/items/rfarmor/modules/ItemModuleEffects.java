@@ -106,7 +106,7 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
         if(RarmorProperties.getBoolean("YouTubeMode")){
             s += "\n" + TextFormatting.DARK_GRAY + "You" + TextFormatting.RED + "Tube" + TextFormatting.GRAY + " Mode active. NightVision costs " + TextFormatting.RED + "0RF" + TextFormatting.GRAY;
         }
-        return s += "\n" + TextFormatting.RED + "WIP If you want to help me with this Module\nthan look at https://github.com/canitzp/Rarmor";
+        return s + "\n" + TextFormatting.RED + "WIP If you want to help me with this Module\nthan look at https://github.com/canitzp/Rarmor";
     }
 
     @SideOnly(Side.CLIENT)
@@ -143,7 +143,9 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
             for(EffectCheckBox box : effectBoxes){
                 if(box.mouseClicked(minecraft.fontRendererObj, mouseX, mouseY, gui.guiLeft, gui.height / 2 - ySize / 2)){
                     boolean b = NBTUtil.getBoolean(mod, box.effect.getName());
+                    NBTUtil.setBoolean(mod, box.effect.getName(), !b);
                     box.setState(minecraft.thePlayer, !b);
+                    //minecraft.playerController.setPlayerCapabilities();thePlayer.sendPlayerAbilities();
                 }
             }
         }

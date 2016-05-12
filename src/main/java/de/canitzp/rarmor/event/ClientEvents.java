@@ -64,10 +64,16 @@ public class ClientEvents{
         EntityPlayer player = event.getEntityPlayer();
         if(!player.isPlayerSleeping()){
             GlStateManager.pushMatrix();
+
             GlStateManager.rotate(-player.renderYawOffset, 0, 1, 0);
             GlStateManager.translate(-0.19, 0.97, -0.2);
+
             GlStateManager.scale(0.12, 0.12, 0.12);
-            renderLetter(new ItemStack(Blocks.QUARTZ_BLOCK), Letters.X);
+            if(player.isSneaking()){
+                GlStateManager.rotate(25, 1, 0, 0);
+                GlStateManager.translate(0, -1.25, -1.25);
+            }
+            renderLetter(new ItemStack(Blocks.WOOL, 1, 11), Letters.X);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.popMatrix();
         }

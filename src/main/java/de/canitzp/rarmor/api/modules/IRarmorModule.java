@@ -107,6 +107,8 @@ public interface IRarmorModule{
     default void initModule(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
     }
 
+    default void onRarmorSave(World world, EntityPlayer player, ItemStack rarmorChestplate, ItemStack module){}
+
     enum ModuleType{
         ACTIVE,
         PASSIVE,
