@@ -59,7 +59,7 @@ public class ClientEvents{
         }
     }
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public void onGameRenderEvent(RenderPlayerEvent.Post event){
         EntityPlayer player = event.getEntityPlayer();
         if(!player.isPlayerSleeping()){
