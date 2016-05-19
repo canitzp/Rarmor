@@ -24,10 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
@@ -42,7 +39,7 @@ import java.util.Random;
 @SuppressWarnings("unchecked")
 public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpecialArmor{
 
-    public static final ArmorMaterial RFARMOR = EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN);
+    public static final ArmorMaterial RFARMOR = EnumHelper.addEnum(ArmorMaterial.class, Rarmor.MODID + ":RFARMOR", new Class[]{String.class, int.class, int[].class, int.class, SoundEvent.class, float.class}, "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 2.0F);//EnumHelper.addArmorMaterial(Rarmor.MODID + ":RFARMOR", "", 100, new int[]{4, 9, 7, 4}, 0, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN);
 
     public int maxEnergy;
     public int maxTransfer;

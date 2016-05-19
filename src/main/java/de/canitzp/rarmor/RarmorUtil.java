@@ -92,7 +92,7 @@ public class RarmorUtil{
                     Block localBlock = world.getBlockState(new BlockPos(xPos, yPos, zPos)).getBlock();
                     if (bID == localBlock) {
                         IBlockState localMeta = world.getBlockState(new BlockPos(xPos, yPos, zPos));
-                        float localHardness = localBlock.getBlockHardness(localMeta, world, new BlockPos(xPos, yPos, zPos));
+                        float localHardness = localMeta.getBlockHardness(world, new BlockPos(xPos, yPos, zPos));
                         if (!(localHardness < 0)) {
                             int xDist = xPos - xStart;
                             int yDist = yPos - yStart;
@@ -140,7 +140,7 @@ public class RarmorUtil{
         if(!world.isRemote){
             block.onBlockHarvested(world, pos, state, player);
         } else {
-            world.playAuxSFX(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
+            world.playBroadcastSound(2001, pos, Block.getIdFromBlock(block) + (meta << 12));
         }
         boolean removed = block.removedByPlayer(state, world, pos, player, canHarvest);
         if(removed){
@@ -157,10 +157,10 @@ public class RarmorUtil{
         }
         if(!world.isRemote){
             if(player instanceof EntityPlayerMP){
-                ((EntityPlayerMP) player).playerNetServerHandler.sendPacket(new SPacketBlockChange(world, pos));
+                ((EntityPlayerMP) player).connection.sendPacket(new SPacketBlockChange(world, pos));
             }
         } else {
-            Minecraft.getMinecraft().getNetHandler().addToSendQueue(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
+            Minecraft.getMinecraft().getConnection().sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, pos, Minecraft.getMinecraft().objectMouseOver.sideHit));
         }
         return removed;
     }

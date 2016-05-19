@@ -58,7 +58,7 @@ public class ItemModuleMovement extends ItemModule implements IRarmorModule{
             Minecraft.getMinecraft().playerController.setPlayerCapabilities(player);
         }
         EnergyUtil.reduceEnergy(armorChestplate, energyPerTick);
-        System.out.println(player.capabilities.getFlySpeed());
+        //System.out.println(player.capabilities.getFlySpeed());
     }
 
     @Override

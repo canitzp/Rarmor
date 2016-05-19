@@ -10,6 +10,7 @@ package de.canitzp.rarmor.api;
 
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.hudExtensions.IAdvancedHud;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -48,4 +49,5 @@ public class RarmorAPI{
     public static Colors addColor(String name, String colorValueName, int colorValue){
         return EnumHelper.addEnum(Colors.class, name, new Class[]{String.class, String.class, int.class}, name, colorValueName, colorValue);
     }
+
 }

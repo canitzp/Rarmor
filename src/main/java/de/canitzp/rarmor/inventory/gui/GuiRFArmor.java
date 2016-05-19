@@ -29,6 +29,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketCloseWindow;
+import net.minecraft.network.play.server.SPacketCloseWindow;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
@@ -222,7 +223,7 @@ public class GuiRFArmor extends GuiContainerBase{
             if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 140 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 161){
                 NBTUtil.setBoolean(this.armor, "click", true);
                 this.onGuiClosed();
-                this.mc.thePlayer.sendQueue.addToSendQueue(new CPacketCloseWindow(this.mc.thePlayer.openContainer.windowId));
+                this.mc.thePlayer.connection.handleCloseWindow(new SPacketCloseWindow(this.mc.thePlayer.openContainer.windowId));
                 GuiInventory inventory = new GuiInventory(this.mc.thePlayer);
                 this.mc.displayGuiScreen(inventory);
             }
