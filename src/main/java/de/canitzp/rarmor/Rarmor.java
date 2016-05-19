@@ -112,12 +112,6 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        try{
-            ClassLoader.getSystemClassLoader().loadClass("net.minecraft.client.main.Main");
-            MinecraftUtil.side = Side.CLIENT;
-        } catch(ClassNotFoundException e){
-            MinecraftUtil.side = Side.SERVER;
-        }
         String javaVersion = System.getProperty("java.version");
         javaVersion = javaVersion.substring(0, 3);
         if(!(javaVersion.equals("1.8") || javaVersion.equals("1.9"))){
@@ -162,7 +156,7 @@ public class Rarmor{
         initEffectsModule();
         if(Loader.isModLoaded("actuallyadditions")) {
             for(ModContainer mod : ModAPIManager.INSTANCE.getAPIList()){
-                if(mod.getModId().equals("actuallyadditionsapi")){
+                if("actuallyadditionsapi".equals(mod.getModId())){
                     if(Integer.parseInt(mod.getVersion()) >= 11){
                         ActuallyAdditionsIntegration.postInit(event);
                         logger.info("Loaded ActuallyAdditions Integration");

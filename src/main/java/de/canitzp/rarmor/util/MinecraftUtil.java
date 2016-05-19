@@ -21,42 +21,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SuppressWarnings("ConstantConditions")
 public class MinecraftUtil{
 
-    public static Side side;
-
-    public static Side getMinecraftSide(){
-        return side;
-    }
-
     @SideOnly(Side.CLIENT)
     public static Minecraft getMinecraft(){
-        if(getMinecraftSide().isClient()){
-            return Minecraft.getMinecraft();
-        }
-        return null;
+        return Minecraft.getMinecraft();
     }
 
     @SideOnly(Side.CLIENT)
     public static FontRenderer getFontRenderer(){
-        if(getMinecraftSide().isClient()){
-            return getMinecraft().fontRendererObj;
-        }
-        return null;
+        return getMinecraft().fontRendererObj;
     }
 
     @SideOnly(Side.CLIENT)
     public static EntityPlayer getPlayer(){
-        if(getMinecraftSide().isClient()){
-            return getMinecraft().thePlayer;
-        }
-        return null;
+        return getMinecraft().thePlayer;
     }
 
     @SideOnly(Side.CLIENT)
     public static GuiScreen getCurrentScreen(){
-        if(MinecraftUtil.getMinecraftSide().isClient()){
-            return getMinecraft().currentScreen;
-        }
-        return null;
+        return getMinecraft().currentScreen;
     }
 
 }

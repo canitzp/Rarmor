@@ -208,23 +208,21 @@ public class RarmorUtil{
     }
 
     public static Slot toggleSlotInGui(int slotX, int slotY, boolean value){
-        if(MinecraftUtil.getMinecraftSide().isClient()){
-            GuiScreen gui = MinecraftUtil.getCurrentScreen();
-            if(gui instanceof GuiRFArmor){
-                Slot slot = SlotUtil.getSlotAtPosition((GuiContainer) gui, slotX, slotY);
-                if(slot != null){
-                    if(!value){
-                        if(((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
-                            ((GuiRFArmor) gui).deactivatedSlots.remove(slot);
-                        }
-                    } else {
-                        if(!((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
-                            ((GuiRFArmor) gui).deactivatedSlots.add(slot);
-                        }
+        GuiScreen gui = MinecraftUtil.getCurrentScreen();
+        if(gui instanceof GuiRFArmor){
+            Slot slot = SlotUtil.getSlotAtPosition((GuiContainer) gui, slotX, slotY);
+            if(slot != null){
+                if(!value){
+                    if(((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                        ((GuiRFArmor) gui).deactivatedSlots.remove(slot);
+                    }
+                } else {
+                    if(!((GuiRFArmor) gui).deactivatedSlots.contains(slot)){
+                        ((GuiRFArmor) gui).deactivatedSlots.add(slot);
                     }
                 }
-                return slot;
             }
+            return slot;
         }
         return null;
     }
