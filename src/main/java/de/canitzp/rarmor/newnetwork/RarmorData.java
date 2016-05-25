@@ -42,17 +42,21 @@ public class RarmorData{
         }
         NBTTagCompound compound = stack.getTagCompound();
 
+        UUID rarmorID = null;
         if(compound.hasKey("RarmorIDLeast")){
-            RarmorData data = WorldData.getRarmorData(client).get(compound.getUniqueId("RarmorID"));
+            rarmorID = compound.getUniqueId("RarmorID");
+            RarmorData data = WorldData.getRarmorData(client).get(rarmorID);
             if(data != null){
                 return data;
             }
         }
 
+        if(rarmorID == null){
+            rarmorID = UUID.randomUUID();
+        }
         RarmorData newData = new RarmorData();
-        UUID newID = UUID.randomUUID();
-        compound.setUniqueId("RarmorID", newID);
-        WorldData.getRarmorData(client).put(newID, newData);
+        compound.setUniqueId("RarmorID", rarmorID);
+        WorldData.getRarmorData(client).put(rarmorID, newData);
         return newData;
     }
 
