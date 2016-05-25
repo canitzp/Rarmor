@@ -11,6 +11,10 @@ package de.canitzp.rarmor.items.rfarmor;
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.Colors;
+import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.newnetwork.PacketUpdateRarmorData;
+import de.canitzp.rarmor.newnetwork.RarmorData;
+import de.canitzp.rarmor.newnetwork.WorldData;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -29,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.common.util.EnumHelper;
+import sun.nio.ch.Net;
 
 import java.util.List;
 import java.util.Random;
@@ -60,14 +66,40 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @SuppressWarnings("unchecked")
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand){
-        EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
-        ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
-        if(itemstack == null){
-            player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
-            itemStackIn.stackSize = 0;
+        //TODO Remove - test code!!
+        if(player.isSneaking()){
+            RarmorData data = RarmorData.getDataForRarmor(itemStackIn, world.isRemote);
+            if(itemStackIn.hasTagCompound()){
+                System.out.println(itemStackIn.getTagCompound().getUniqueId("RarmorID"));
+            }
+            System.out.println("Before changing vars: "+data);
+            if(!world.isRemote){
+                System.out.println("Changing vars");
+                data.saveAndSyncInt = world.rand.nextInt(100);
+                data.onlySaveInt = world.rand.nextInt(100);
+                WorldData.makeDirty();
+            }
+            System.out.println("Before syncing: "+data);
+            if(!world.isRemote && player instanceof EntityPlayerMP){
+                NetworkHandler.wrapper.sendToAll(data.getSyncMessage());
+                System.out.println("SYNCING!");
+            }
+            System.out.println("After syncing: "+RarmorData.getDataForRarmor(itemStackIn, world.isRemote) + " (If on client, this obviously won't have changed right after the syncing, so right-click the item again to see the changes worked!)");
+
             return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-        } else {
-            return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+        }
+
+        else{
+            EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
+            ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
+            if(itemstack == null){
+                player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
+                itemStackIn.stackSize = 0;
+                return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+            }
+            else{
+                return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+            }
         }
     }
 
