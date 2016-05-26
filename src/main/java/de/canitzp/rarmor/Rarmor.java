@@ -17,6 +17,7 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.items.rfarmor.modules.ItemModuleEffects;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
+import de.canitzp.rarmor.newnetwork.WorldData;
 import de.canitzp.rarmor.util.ItemUtil;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -25,10 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -187,6 +185,11 @@ public class Rarmor{
                 mapping.remap(ItemRegistry.rarmorLeggins);
             }
         }
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event){
+        WorldData.init(event.getServer());
     }
 
 }

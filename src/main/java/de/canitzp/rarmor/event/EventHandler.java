@@ -9,6 +9,7 @@
 package de.canitzp.rarmor.event;
 
 import de.canitzp.rarmor.Rarmor;
+import de.canitzp.rarmor.newnetwork.WorldEvents;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
@@ -27,6 +28,8 @@ public class EventHandler{
             ClientEvents client = new ClientEvents();
             MinecraftForge.EVENT_BUS.register(client);
         }
+
+        MinecraftForge.EVENT_BUS.register(new WorldEvents());
     }
 
 }
