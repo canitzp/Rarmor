@@ -66,40 +66,15 @@ public class ItemRFArmor extends ItemArmor implements IEnergyContainerItem, ISpe
     @SuppressWarnings("unchecked")
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World world, EntityPlayer player, EnumHand hand){
-        //TODO Remove - test code!!
-        if(player.isSneaking()){
-            RarmorData data = RarmorData.getDataForRarmor(itemStackIn, world.isRemote);
-            if(itemStackIn.hasTagCompound()){
-                System.out.println(itemStackIn.getTagCompound().getUniqueId("RarmorID"));
-            }
-            System.out.println("Before changing vars: "+data);
-            if(!world.isRemote){
-                System.out.println("Changing vars");
-                data.saveAndSyncInt = world.rand.nextInt(100);
-                data.onlySaveInt = world.rand.nextInt(100);
-                WorldData.makeDirty();
-            }
-            System.out.println("Before syncing: "+data);
-            if(!world.isRemote && player instanceof EntityPlayerMP){
-                NetworkHandler.wrapper.sendToAll(data.getSyncMessage());
-                System.out.println("SYNCING!");
-            }
-            System.out.println("After syncing: "+RarmorData.getDataForRarmor(itemStackIn, world.isRemote) + " (If on client, this obviously won't have changed right after the syncing, so right-click the item again to see the changes worked!)");
-
+        EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
+        ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
+        if(itemstack == null){
+            player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
+            itemStackIn.stackSize = 0;
             return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
         }
-
         else{
-            EntityEquipmentSlot entityequipmentslot = EntityLiving.getSlotForItemStack(itemStackIn);
-            ItemStack itemstack = player.getItemStackFromSlot(entityequipmentslot);
-            if(itemstack == null){
-                player.setItemStackToSlot(entityequipmentslot, itemStackIn.copy());
-                itemStackIn.stackSize = 0;
-                return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
-            }
-            else{
-                return new ActionResult(EnumActionResult.FAIL, itemStackIn);
-            }
+            return new ActionResult(EnumActionResult.FAIL, itemStackIn);
         }
     }
 

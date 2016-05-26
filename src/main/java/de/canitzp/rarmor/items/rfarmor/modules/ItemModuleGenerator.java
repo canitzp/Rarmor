@@ -15,6 +15,7 @@ import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.ItemStackUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
@@ -79,7 +80,7 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
     @Override
     public void onModuleTickInArmor(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
         if(isGenerator(inventory, armorChestplate) || NBTUtil.getInteger(module, "GenBurnTime") > 0){
-            this.generate(armorChestplate, module);
+            this.generate(armorChestplate, module, world);
         } else {
             NBTUtil.setInteger(module, "GenBurnTime", 0);
         }
@@ -124,10 +125,10 @@ public class ItemModuleGenerator extends ItemModule implements IRarmorModule{
         return false;
     }
 
-    private void generate(ItemStack armor, ItemStack module){
+    private void generate(ItemStack armor, ItemStack module, World world){
         int burnTime = NBTUtil.getInteger(module, "GenBurnTime");
         if(burnTime == 0){
-            InventoryBase inventory = RarmorUtil.readRarmor(armor);
+            InventoryBase inventory = RarmorData.getDataForRarmor(armor, world.isRemote).inventory;
             NBTUtil.setInteger(module, "CurrentItemGenBurnTime", TileEntityFurnace.getItemBurnTime(inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT)));
             ItemStack burnItem = inventory.getStackInSlot(ItemRFArmorBody.GENERATORSLOT);
             ItemStackUtil.reduceStackSize(inventory, ItemRFArmorBody.GENERATORSLOT);

@@ -11,6 +11,7 @@ package de.canitzp.rarmor.inventory.gui;
 import com.google.common.collect.Lists;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.Colors;
+import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.RarmorResources;
 import de.canitzp.rarmor.api.gui.GuiButton;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
@@ -22,6 +23,7 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.ClientProxy;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.*;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -164,7 +166,7 @@ public class GuiRFArmor extends GuiContainerBase{
         this.xSizeFloat = (float) mouseX;
         this.ySizeFloat = (float) mouseY;
         super.drawScreen(mouseX, mouseY, renderPartialTicks);
-        ItemStack stack = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+        ItemStack stack = RarmorData.getDataForRarmor(this.armor, this.player.worldObj.isRemote).inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
 
         //Draw Module things:
         if(stack != null){
@@ -198,7 +200,8 @@ public class GuiRFArmor extends GuiContainerBase{
         } else if(mouseX >= this.guiLeft + 15 && mouseY >= this.guiTop + 192 && mouseX <= this.guiLeft + 35 && mouseY <= this.guiTop + 213){
             this.drawHoveringText(JavaUtil.newList("Rarmor painter.", "Click on your Armor parts to start."), mouseX, mouseY);
         } else if(mouseX >= this.guiLeft + 33 && mouseY >= this.guiTop + 33 && mouseX <= this.guiLeft + 36 && mouseY <= this.guiTop + 40){
-            ItemStack module = RarmorUtil.readRarmor(player).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+            InventoryBase inventory = RarmorData.getDataForRarmor(RarmorUtil.getPlayersRarmorChestplate(player), player.worldObj.isRemote).inventory;
+            ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if(module != null && module.getItem() instanceof IRarmorModule){
                 if(((IRarmorModule) module.getItem()).getGuiHelp() != null){
                     this.drawHoveringText(((IRarmorModule) module.getItem()).getGuiHelp(), mouseX, mouseY);
@@ -260,7 +263,8 @@ public class GuiRFArmor extends GuiContainerBase{
             craftingSlot(this.isSettingsTab);
 
             //Draw Module things:
-            ItemStack module = RarmorUtil.readRarmor(armor).getStackInSlot(ItemRFArmorBody.MODULESLOT);
+            InventoryBase inventory = RarmorData.getDataForRarmor(RarmorUtil.getPlayersRarmorChestplate(player), player.worldObj.isRemote).inventory;
+            ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
             if(module != null){
                 if(module.getItem() instanceof IRarmorModule){
                     ((IRarmorModule) module.getItem()).onMouseClicked(mc, this, this.armor, module, this.isSettingsTab, this.isColoringTab, type, mouseX, mouseY);

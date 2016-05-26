@@ -12,6 +12,7 @@ import de.canitzp.rarmor.RarmorProperties;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.InventoryBase;
 import de.canitzp.rarmor.api.modules.IRarmorModule;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.ItemStackUtil;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -82,8 +83,8 @@ public class ItemRFArmorBody extends ItemRFArmor{
                     ItemStack leggins = RarmorUtil.getArmor(player, EntityEquipmentSlot.LEGS);
                     ItemStack head = RarmorUtil.getArmor(player, EntityEquipmentSlot.HEAD);
                     if(RarmorUtil.isPlayerWearingRarmor(player)){
-                        if(isBurnable(armor)){
-                            burn(armor);
+                        if(isBurnable(armor, world)){
+                            burn(armor, world);
                         } else NBTUtil.setInteger(armor, "BurnTime", 0);
                         if(NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") >= 4 || NBTUtil.getInteger(armor, "Energy") - NBTUtil.getInteger(foot, "Energy") <= 4){
                             EnergyUtil.balanceEnergy(new ItemStack[]{foot, armor, leggins, head});
@@ -96,7 +97,7 @@ public class ItemRFArmorBody extends ItemRFArmor{
     }
 
     private void handleModules(World world, EntityPlayer player, ItemStack armor){
-        InventoryBase inventory = RarmorUtil.readRarmor(armor);
+        InventoryBase inventory = RarmorData.getDataForRarmor(armor, player.worldObj.isRemote).inventory;
         ItemStack module = inventory.getStackInSlot(MODULESLOT);
         if(module != null && module.getItem() instanceof IRarmorModule){
             if(NBTUtil.getBoolean(module, "FirstOpenedModule")){
@@ -109,8 +110,8 @@ public class ItemRFArmorBody extends ItemRFArmor{
         }
     }
 
-    private boolean isBurnable(ItemStack armor){
-        InventoryBase inventory = RarmorUtil.readRarmor(armor);
+    private boolean isBurnable(ItemStack armor, World world){
+        InventoryBase inventory = RarmorData.getDataForRarmor(armor, world.isRemote).inventory;
         if(inventory != null){
             ItemStack input = inventory.getStackInSlot(FURNACEINPUT);
             if(input != null && FurnaceRecipes.instance().getSmeltingResult(input) != null){
@@ -130,20 +131,20 @@ public class ItemRFArmorBody extends ItemRFArmor{
         return false;
     }
 
-    public void burn(ItemStack body){
+    public void burn(ItemStack body, World world){
         int burnTime = NBTUtil.getInteger(body, "BurnTime");
         if(burnTime < 200){
             burnTime += NBTUtil.getInteger(body, "BurnTimeMultiplier");
             this.extractEnergy(body, NBTUtil.getInteger(body, "rfPerTick"), false);
         } else {
-            smeltItem(body);
+            smeltItem(body, world);
             burnTime = 0;
         }
         NBTUtil.setInteger(body, "BurnTime", burnTime);
     }
 
-    public void smeltItem(ItemStack body){
-        InventoryBase inventory = RarmorUtil.readRarmor(body);
+    public void smeltItem(ItemStack body, World world){
+        InventoryBase inventory = RarmorData.getDataForRarmor(body, world.isRemote).inventory;
         ItemStack input = inventory.getStackInSlot(FURNACEINPUT);
         ItemStack output = inventory.getStackInSlot(FURNACEOUTPUT);
         if(input != null){
