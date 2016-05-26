@@ -10,21 +10,18 @@ import java.util.UUID;
 
 public class RarmorData{
 
-    public int saveAndSyncInt;
-    public int onlySaveInt;
+    private NBTTagCompound compound;
 
     public void writeToNBT(NBTTagCompound compound, boolean forSync){
-        if(!forSync){
-            compound.setInteger("Save", this.onlySaveInt);
-        }
-        compound.setInteger("Sync", this.saveAndSyncInt);
+
     }
 
     public void readFromNBT(NBTTagCompound compound, boolean forSync){
-        if(!forSync){
-            this.onlySaveInt = compound.getInteger("Save");
-        }
-        this.saveAndSyncInt = compound.getInteger("Sync");
+
+    }
+
+    public static NBTTagCompound getSaved(World world, ItemStack stack){
+        return RarmorData.getDataForRarmor(stack, world.isRemote).compound;
     }
 
     public IMessage getSyncMessage(){
@@ -60,8 +57,4 @@ public class RarmorData{
         return newData;
     }
 
-    @Override
-    public String toString(){
-        return this.saveAndSyncInt + " "+this.onlySaveInt;
-    }
 }

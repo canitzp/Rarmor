@@ -18,6 +18,8 @@ import de.canitzp.rarmor.items.rfarmor.ItemRFArmorGeneric;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorHelmet;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketPaintRarmor;
+import de.canitzp.rarmor.newnetwork.PacketUpdateRarmorData;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.MinecraftUtil;
 import de.canitzp.rarmor.util.NBTUtil;
 import de.canitzp.rarmor.util.SlotUtil;
@@ -33,6 +35,7 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.tileentity.TileEntity;
@@ -228,17 +231,20 @@ public class RarmorUtil{
     }
 
     public static void saveRarmor(EntityPlayer player, InventoryBase base){
+        /*
         ItemStack mod = getRarmorModule(player);
         if(mod != null && mod.getItem() instanceof IRarmorModule){
             ((IRarmorModule) mod.getItem()).onRarmorSave(player.getEntityWorld(), player, getPlayersRarmorChestplate(player), mod);
         }
         saveRarmor(getPlayersRarmorChestplate(player), base);
+        */
     }
 
     public static void saveRarmor(ItemStack armor, InventoryBase base){
-        NBTUtil.saveSlots(armor, base);
+        //NBTUtil.saveSlots(armor, base);
     }
 
+    /*
     public static InventoryBase readRarmor(EntityPlayer player){
         return readRarmor(getPlayersRarmorChestplate(player));
     }
@@ -246,6 +252,7 @@ public class RarmorUtil{
     public static InventoryBase readRarmor(ItemStack armor){
         return NBTUtil.readSlots(armor, ItemRFArmorBody.slotAmount);
     }
+    */
 
     public static ItemStack getArmor(EntityPlayer player, EntityEquipmentSlot slot){
         return player.inventory.armorInventory[slot.getIndex()];
