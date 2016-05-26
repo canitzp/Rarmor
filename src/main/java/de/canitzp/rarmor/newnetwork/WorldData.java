@@ -72,9 +72,7 @@ public class WorldData extends WorldSavedData{
         NBTTagList list = compound.getTagList("RarmorData", 10);
         for(int i = 0; i < list.tagCount(); i++){
             NBTTagCompound dataComp = list.getCompoundTagAt(i);
-            RarmorData data = new RarmorData();
-            data.readFromNBT(dataComp, false);
-            rarmorServerData.put(dataComp.getUniqueId("ID"), data);
+            rarmorServerData.put(dataComp.getUniqueId("ID"), RarmorData.readFromNBT(dataComp, false));
         }
     }
 

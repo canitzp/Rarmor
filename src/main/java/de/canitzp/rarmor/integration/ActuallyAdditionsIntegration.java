@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 public class ActuallyAdditionsIntegration {
 
     public static void postInit(FMLPostInitializationEvent event) {
-        de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger lensChanger = new de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger() {
+        /*de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger lensChanger = new de.ellpeck.actuallyadditions.api.recipe.IColorLensChanger() {
             @Override
             public ItemStack modifyItem(ItemStack itemStack, IBlockState iBlockState, BlockPos blockPos, de.ellpeck.actuallyadditions.api.internal.IAtomicReconstructor iAtomicReconstructor) {
                 ItemStack stack = itemStack.copy();
@@ -40,6 +40,6 @@ public class ActuallyAdditionsIntegration {
         de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorBoots, lensChanger);
         de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorLeggins, lensChanger);
         de.ellpeck.actuallyadditions.api.ActuallyAdditionsAPI.addReconstructorLensColorChangeItem(ItemRegistry.rarmorHelmet, lensChanger);
-    }
+    */}
 
 }
