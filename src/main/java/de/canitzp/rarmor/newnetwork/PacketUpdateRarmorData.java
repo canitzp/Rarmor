@@ -30,8 +30,7 @@ public class PacketUpdateRarmorData implements IMessage{
     public void fromBytes(ByteBuf buf){
         PacketBuffer buffer = new PacketBuffer(buf);
         try{
-            this.data = new RarmorData();
-            data.readFromNBT(buffer.readNBTTagCompoundFromBuffer(), true);
+            this.data = RarmorData.readFromNBT(buffer.readNBTTagCompoundFromBuffer(), true);
             this.id = buffer.readUuid();
         }
         catch(Exception e){

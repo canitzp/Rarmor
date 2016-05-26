@@ -2,7 +2,6 @@ package de.canitzp.rarmor.newnetwork;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.Map;
@@ -10,21 +9,35 @@ import java.util.UUID;
 
 public class RarmorData{
 
+    private ItemStack myStack;
+
     public int saveAndSyncInt;
     public int onlySaveInt;
+
+    //Don't create any instance of this elsewhere!
+    private RarmorData(){
+
+    }
 
     public void writeToNBT(NBTTagCompound compound, boolean forSync){
         if(!forSync){
             compound.setInteger("Save", this.onlySaveInt);
         }
         compound.setInteger("Sync", this.saveAndSyncInt);
+
+        compound.setTag("Item", this.myStack.writeToNBT(new NBTTagCompound()));
     }
 
-    public void readFromNBT(NBTTagCompound compound, boolean forSync){
+    public static RarmorData readFromNBT(NBTTagCompound compound, boolean forSync){
+        RarmorData data = new RarmorData();
+
         if(!forSync){
-            this.onlySaveInt = compound.getInteger("Save");
+            data.onlySaveInt = compound.getInteger("Save");
         }
-        this.saveAndSyncInt = compound.getInteger("Sync");
+        data.saveAndSyncInt = compound.getInteger("Sync");
+
+        data.myStack = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("Item"));
+        return data;
     }
 
     public IMessage getSyncMessage(){
@@ -55,6 +68,7 @@ public class RarmorData{
             rarmorID = UUID.randomUUID();
         }
         RarmorData newData = new RarmorData();
+        newData.myStack = stack;
         compound.setUniqueId("RarmorID", rarmorID);
         WorldData.getRarmorData(client).put(rarmorID, newData);
         return newData;
