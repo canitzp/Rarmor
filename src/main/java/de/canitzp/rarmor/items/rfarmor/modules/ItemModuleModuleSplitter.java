@@ -14,6 +14,7 @@ import de.canitzp.rarmor.api.modules.IRarmorModule;
 import de.canitzp.rarmor.inventory.gui.GuiRFArmor;
 import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -48,7 +49,7 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
         return TextFormatting.GRAY + "The ModuleSplitter lets you activate three Modules " + TextFormatting.GRAY + "instead of one. All Modules are categorised in '" +
                 TextFormatting.GREEN + "Active" + TextFormatting.GRAY + "' or '" + TextFormatting.RED + "Passive" + TextFormatting.GRAY + "'." +
                 TextFormatting.GRAY + "The Active Modules have special abilities and they have to stay" + TextFormatting.GRAY + "in the top slot." +
-                "The passive ones can be stored in all three slots." + TextFormatting.GRAY + "Two modules of the same type don't work.";
+                "The passive ones can be stored in all three inventory." + TextFormatting.GRAY + "Two modules of the same type don't work.";
     }
 
     @Override
@@ -81,7 +82,7 @@ public class ItemModuleModuleSplitter extends ItemModule implements IRarmorModul
 
     @Override
     public void onPickupFromSlot(World world, EntityPlayer player, ItemStack armorChestplate, ItemStack module, InventoryBase inventory){
-        InventoryBase base = RarmorUtil.readRarmor(player);
+        InventoryBase base = RarmorData.getDataForRarmor(armorChestplate, world.isRemote).inventory;
         ItemStack mod1 = base.getStackInSlot(31);
         if(mod1 != null && mod1.getItem() instanceof IRarmorModule){
             ((IRarmorModule) mod1.getItem()).onPickupFromSlot(world, player, armorChestplate, mod1, inventory);

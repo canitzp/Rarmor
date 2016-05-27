@@ -19,6 +19,7 @@ import de.canitzp.rarmor.items.rfarmor.ItemModule;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSendNBTBoolean;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.EnergyUtil;
 import de.canitzp.rarmor.util.JavaUtil;
 import de.canitzp.rarmor.util.NBTUtil;
@@ -86,7 +87,8 @@ public class ItemModuleEffects extends ItemModule implements IRarmorModule{
     }
 
     public static int getModuleSlot(EntityPlayer player){
-        InventoryBase inventory = RarmorUtil.readRarmor(player);
+        ItemStack armor = RarmorUtil.getPlayersRarmorChestplate(player);
+        InventoryBase inventory = RarmorData.getDataForRarmor(armor, player.worldObj.isRemote).inventory;
         ItemStack stack = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
         if((stack != null && stack.getItem() != ItemRegistry.moduleEffects) || stack == null){
             return 80;

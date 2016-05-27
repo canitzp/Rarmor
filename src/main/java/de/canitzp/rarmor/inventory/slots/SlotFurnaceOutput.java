@@ -22,7 +22,7 @@ public class SlotFurnaceOutput extends SlotUpdate{
     }
 
     /**
-     * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
+     * Check if the stack is a valid item for this slot. Always true beside for the armor inventory.
      */
     public boolean isItemValid(ItemStack p_75214_1_){
         return false;

@@ -16,6 +16,7 @@ import de.canitzp.rarmor.inventory.slots.*;
 import de.canitzp.rarmor.items.rfarmor.ItemRFArmorBody;
 import de.canitzp.rarmor.network.NetworkHandler;
 import de.canitzp.rarmor.network.PacketSyncPlayerHotbar;
+import de.canitzp.rarmor.newnetwork.RarmorData;
 import de.canitzp.rarmor.util.NBTUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
@@ -43,7 +44,7 @@ public class ContainerRFArmor extends Container{
         if(player.worldObj.isRemote)
             NetworkHandler.wrapper.sendToServer(new PacketSyncPlayerHotbar(player));
         this.armor = RarmorUtil.getPlayersRarmorChestplate(player);
-        this.inventory = RarmorUtil.readRarmor(player);
+        this.inventory = RarmorData.getDataForRarmor(this.armor, player.worldObj.isRemote).inventory;
         this.player = player;
         armor.getTagCompound().setBoolean("click", false);
 
@@ -120,7 +121,7 @@ public class ContainerRFArmor extends Container{
 
     @Override
     public void detectAndSendChanges(){
-        this.inventory.slots = RarmorUtil.readRarmor(player).slots;
+        this.inventory.slots = RarmorData.getDataForRarmor(this.armor, this.player.worldObj.isRemote).inventory.slots;
         super.detectAndSendChanges();
 
         ItemStack module = inventory.getStackInSlot(ItemRFArmorBody.MODULESLOT);
