@@ -1,1 +1,0 @@
-Welcome to Rarmor a Mod that adds Electrical Armor to Minecraft

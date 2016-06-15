@@ -1,42 +1,22 @@
-/*
- * This file 'CommonProxy.java' is part of Rarmor by canitzp.
- * It isn't allowed to use more than 15% of the code
- * or redistribute the compiled jar file.
- * The source code can be found here: https://github.com/canitzp/Rarmor
- * © canitzp, 2016
- */
-
 package de.canitzp.rarmor.network;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import de.canitzp.rarmor.Rarmor;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-import java.util.HashMap;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author canitzp
  */
 public class CommonProxy{
 
-    protected HashMap<ItemStack, String> textureMap = new HashMap<>();
-    protected HashMap<ItemStack, String> specialTextures = new HashMap<>();
+    public SimpleNetworkWrapper network;
 
-    public void preInit(FMLPreInitializationEvent event){}
-
-    public void init(FMLInitializationEvent event){}
-
-    public void postInit(FMLPostInitializationEvent event){}
-
-    public void registerRenderer(){}
-
-    public void addRenderer(ItemStack stack, String name){
-        textureMap.put(stack, name);
-    }
-
-    public void addSpecialRenderer(ItemStack stack, String name){
-        specialTextures.put(stack, name);
+    public void preInit(FMLPreInitializationEvent event){
+        NetworkRegistry.INSTANCE.registerGuiHandler(Rarmor.instance, new GuiHandler());
+        network = NetworkRegistry.INSTANCE.newSimpleChannel(Rarmor.NAME);
+        network.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);
     }
 
 }
