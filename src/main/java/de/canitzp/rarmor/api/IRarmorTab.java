@@ -24,8 +24,7 @@ public interface IRarmorTab{
 
     default ItemStack getTabIcon(){return null;}
 
-    //TODO
-    default void drawTab(){}
+    default void drawTab(GuiContainer gui, int guiLeft, int guiTop){}
 
     default String getTabHoveringText(){return null;}
 
@@ -35,7 +34,7 @@ public interface IRarmorTab{
 
     default void initContainer(Container container, EntityPlayer player){}
 
-    default List<Slot> manipulateSlots(Container container, List<Slot> slotList){return null;}
+    default List<Slot> manipulateSlots(Container container, List<Slot> slotList){return slotList;}
 
     /**
      * Just Gui things

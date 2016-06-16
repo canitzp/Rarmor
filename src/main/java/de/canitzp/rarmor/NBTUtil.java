@@ -34,4 +34,20 @@ public class NBTUtil{
         return getInteger(stack, "Energy");
     }
 
+    public static NBTTagCompound getTagFromStack(ItemStack stack){
+        if(stack != null){
+            if(!stack.hasTagCompound()){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            return stack.getTagCompound();
+        }
+        return null;
+    }
+
+    public static void setTagFromStack(ItemStack stack, NBTTagCompound nbt){
+        if(stack != null && nbt != null){
+            stack.setTagCompound(nbt);
+        }
+    }
+
 }

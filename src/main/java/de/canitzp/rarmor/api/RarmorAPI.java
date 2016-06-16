@@ -21,4 +21,13 @@ public class RarmorAPI{
         return registeredTabs.get(0);
     }
 
+    public static int getIRarmorTabID(IRarmorTab tab){
+        for(int i = 0; i < registeredTabs.size(); i++){
+            if(registeredTabs.get(i).equals(tab)){
+                return i;
+            }
+        }
+        return 0;
+    }
+
 }

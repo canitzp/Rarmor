@@ -5,15 +5,22 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.network.PacketSetTab;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,15 +31,56 @@ import java.util.List;
 public class GuiContainerRarmor extends Container{
 
     private IRarmorTab activeTab;
+    private EntityPlayer player;
 
     public GuiContainerRarmor(EntityPlayer player){
-        this.activeTab = RarmorAPI.getTab(NBTUtil.getInteger(RarmorUtil.getRarmorChestplate(player), "RarmorTabID"));
+        this.player = player;
+        this.readFromNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
         this.activeTab.initContainer(this, player);
+        List<Slot> slots = new ArrayList<>();
+        //Player Hotbar: 0-8
+        for(int j = 0; j < 9; ++j){
+            slots.add(new Slot(player.inventory, j, 44 + j * 18, 202));
+        }
+        //Player Inventory: 9-35
+        for(int j = 0; j < 3; ++j){
+            for(int k = 0; k < 9; ++k){
+                slots.add(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
+            }
+        }
+        slots.addAll(this.activeTab.manipulateSlots(this, new ArrayList<>()));
+        for(Slot slot : slots){
+            this.addSlotToContainer(slot);
+        }
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn){
         return true;
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player){
+        this.writeToNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
+        super.onContainerClosed(player);
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+        nbt.setInteger("RarmorTabID", RarmorAPI.getIRarmorTabID(this.activeTab));
+        return nbt;
+    }
+
+    public void readFromNBT(NBTTagCompound nbt){
+        this.activeTab = RarmorAPI.getTab(nbt.getInteger("RarmorTabID"));
+    }
+
+    public void setTabPacket(int tabID){
+        ItemStack stack = RarmorUtil.getRarmorChestplate(this.player);
+        NBTTagCompound nbt = this.writeToNBT(NBTUtil.getTagFromStack(stack));
+        nbt.setInteger("RarmorTabID", tabID);
+        NBTUtil.setTagFromStack(stack, nbt);
+        ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
+        this.player.openGui(Rarmor.instance, 0, this.player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
     }
 
     @SideOnly(Side.CLIENT)
@@ -68,7 +116,8 @@ public class GuiContainerRarmor extends Container{
             this.mc.getTextureManager().bindTexture(guiLoc);
             this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
             for(RarmorTab tab : tabs){
-                tab.draw(this.guiLeft, this.guiTop);
+                tab.draw(this, this.guiLeft, this.guiTop);
+                this.mc.getTextureManager().bindTexture(guiLoc);
             }
             this.tab.drawGui(this, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
         }
@@ -79,6 +128,18 @@ public class GuiContainerRarmor extends Container{
             for(RarmorTab tab : tabs){
                 tab.drawText(this, this.guiLeft, this.guiTop, mouseX, mouseY);
             }
+        }
+        @Override
+        protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
+            if(mouseButton == 0){
+                for(RarmorTab tab : this.tabs){
+                    tab.onMouseClick(this, this.guiLeft, this.guiTop, mouseX, mouseY);
+                }
+            }
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+        public void setTab(IRarmorTab tab){
+            Rarmor.proxy.network.sendToServer(new PacketSetTab(this.player, tab));
         }
     }
 
@@ -95,17 +156,22 @@ public class GuiContainerRarmor extends Container{
             this.active = active;
             this.i = i;
         }
-        public void draw(int guiLeft, int guiTop){
-            this.drawTexturedModalRect(guiLeft + 2, guiTop - this.height, (this.i * this.width - 1) + (this.active ? this.width+1 : 0), 226, this.width, this.height);
+        public void draw(GuiContainer gui, int guiLeft, int guiTop){
+            gui.drawTexturedModalRect((this.i * this.width + 2) + guiLeft, guiTop - this.height, this.active ? 0 : this.width, 226, this.width, this.height);
             if(this.tab.getTabIcon() != null){
-                RarmorUtil.renderStackToGui(this.tab.getTabIcon(), (this.i * width + 2) + 4 + guiLeft, guiTop - this.height + 3, 1.0F);
+                RarmorUtil.renderStackToGui(this.tab.getTabIcon(), (this.i * width + 2) + 4 + guiLeft, guiTop - this.height + 4, 1.0F);
             } else {
-                this.tab.drawTab();
+                this.tab.drawTab(gui, guiLeft, guiTop);
             }
         }
         public void drawText(GuiRarmor gui, int guiLeft, int guiTop, int mouseX, int mouseY){
             if(isMouseOver(guiLeft, guiTop, mouseX, mouseY) && this.hoveringText != null){
                 gui.drawHoveringText(Collections.singletonList(this.hoveringText), mouseX, mouseY);
+            }
+        }
+        public void onMouseClick(GuiRarmor gui, int guiLeft, int guiTop, int mouseX, int mouseY){
+            if(isMouseOver(guiLeft, guiTop, mouseX, mouseY) && this.hoveringText != null){
+                gui.setTab(this.tab);
             }
         }
         public boolean isMouseOver(int guiLeft, int guiTop, int mouseX, int mouseY){

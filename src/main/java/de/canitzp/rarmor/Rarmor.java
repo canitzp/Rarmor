@@ -2,6 +2,7 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.RarmorInventoryTab;
+import de.canitzp.rarmor.armor.RarmorOverviewTab;
 import de.canitzp.rarmor.network.CommonProxy;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemArmor;
@@ -43,6 +44,7 @@ public class Rarmor{
         proxy.preInit(event);
 
         RarmorAPI.registeredTabs.add(new RarmorInventoryTab());
+        RarmorAPI.registeredTabs.add(new RarmorOverviewTab());
     }
 
 }

@@ -22,7 +22,7 @@ public class ClientProxy extends CommonProxy{
     @SubscribeEvent
     public void openGui(GuiOpenEvent event){
         if(event.getGui() instanceof GuiInventory){
-            if(RarmorUtil.isPlayerWearingArmor(Minecraft.getMinecraft().thePlayer)){
+            if(!Minecraft.getMinecraft().thePlayer.isSneaking() && RarmorUtil.isPlayerWearingArmor(Minecraft.getMinecraft().thePlayer)){
                 event.setCanceled(true);
                 network.sendToServer(new PacketOpenGui(Minecraft.getMinecraft().thePlayer, 0));
             }
