@@ -42,9 +42,6 @@ public class Rarmor{
         logger.info("Registering Items.");
         Registry.initItems(event);
         proxy.preInit(event);
-
-        RarmorAPI.registeredTabs.add(new RarmorInventoryTab());
-        RarmorAPI.registeredTabs.add(new RarmorOverviewTab());
     }
 
 }

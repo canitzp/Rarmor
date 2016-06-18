@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,9 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author canitzp
@@ -32,6 +31,7 @@ public class GuiContainerRarmor extends Container{
 
     private IRarmorTab activeTab;
     private EntityPlayer player;
+    public Map<String, Boolean> dep = new HashMap<>();
 
     public GuiContainerRarmor(EntityPlayer player){
         this.player = player;
@@ -48,7 +48,7 @@ public class GuiContainerRarmor extends Container{
                 slots.add(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
-        slots.addAll(this.activeTab.manipulateSlots(this, new ArrayList<>()));
+        slots.addAll(this.activeTab.manipulateSlots(this, this.player, new ArrayList<>(), 4, 4));
         for(Slot slot : slots){
             this.addSlotToContainer(slot);
         }
@@ -66,12 +66,18 @@ public class GuiContainerRarmor extends Container{
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-        nbt.setInteger("RarmorTabID", RarmorAPI.getIRarmorTabID(this.activeTab));
+        nbt.setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(this.activeTab.getClass()));
+        nbt.setTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player), this.activeTab.writeToNBT(new NBTTagCompound()));
         return nbt;
     }
 
     public void readFromNBT(NBTTagCompound nbt){
-        this.activeTab = RarmorAPI.getTab(nbt.getInteger("RarmorTabID"));
+        try{
+            this.activeTab = RarmorAPI.getTab(nbt.getInteger("RarmorTabID")).newInstance();
+        } catch(InstantiationException | IllegalAccessException e){
+            e.printStackTrace();
+        }
+        this.activeTab.readFromNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player)));
     }
 
     public void setTabPacket(int tabID){
@@ -79,6 +85,10 @@ public class GuiContainerRarmor extends Container{
         NBTTagCompound nbt = this.writeToNBT(NBTUtil.getTagFromStack(stack));
         nbt.setInteger("RarmorTabID", tabID);
         NBTUtil.setTagFromStack(stack, nbt);
+        this.reopenRarmorWithoutCut(stack);
+    }
+
+    public void reopenRarmorWithoutCut(ItemStack stack){
         ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
         this.player.openGui(Rarmor.instance, 0, this.player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
     }
@@ -89,15 +99,17 @@ public class GuiContainerRarmor extends Container{
         private IRarmorTab tab;
         private List<RarmorTab> tabs = new ArrayList<>();
         public EntityPlayer player;
+        private List<IRarmorTab> registeredTabs;
         public GuiRarmor(EntityPlayer player){
             super(new GuiContainerRarmor(player));
             this.player = player;
-            this.tab = RarmorAPI.getTab(NBTUtil.getInteger(RarmorUtil.getRarmorChestplate(player), "RarmorTabID"));
-            List<IRarmorTab> registeredTabs = RarmorAPI.registeredTabs;
-            for(int i = 0; i < registeredTabs.size(); i++){
-                IRarmorTab tab = registeredTabs.get(i);
-                tabs.add(new RarmorTab(i, tab, tab.equals(this.tab)));
+            try{
+                this.tab = RarmorAPI.getTab(NBTUtil.getInteger(RarmorUtil.getRarmorChestplate(player), "RarmorTabID")).newInstance();
+            } catch(InstantiationException | IllegalAccessException e){
+                e.printStackTrace();
             }
+            registeredTabs = RarmorAPI.getNewTabs();
+            sortTabs();
             this.xSize = 247;
             this.ySize = 226;
         }
@@ -105,6 +117,14 @@ public class GuiContainerRarmor extends Container{
         public void initGui(){
             super.initGui();
             tab.initGui(this, this.player);
+        }
+        public void sortTabs(){
+            for(int i = 0; i < registeredTabs.size(); i++){
+                IRarmorTab tab = registeredTabs.get(i);
+                if(tab.canBeVisible(inventory, RarmorUtil.getRarmorChestplate(player), player)){
+                    tabs.add(new RarmorTab(i, tab, tab.getClass().equals(this.tab.getClass())));
+                }
+            }
         }
         @Override
         public void drawHoveringText(List<String> textLines, int x, int y){
@@ -119,15 +139,15 @@ public class GuiContainerRarmor extends Container{
                 tab.draw(this, this.guiLeft, this.guiTop);
                 this.mc.getTextureManager().bindTexture(guiLoc);
             }
-            this.tab.drawGui(this, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
+            this.tab.drawGui(this, this.player, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
         }
-
         @Override
         public void drawScreen(int mouseX, int mouseY, float partialTicks){
             super.drawScreen(mouseX, mouseY, partialTicks);
             for(RarmorTab tab : tabs){
                 tab.drawText(this, this.guiLeft, this.guiTop, mouseX, mouseY);
             }
+            this.tab.drawForeground(this, this.player, this.guiLeft, this.guiTop, mouseX, mouseY, partialTicks);
         }
         @Override
         protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
@@ -161,7 +181,7 @@ public class GuiContainerRarmor extends Container{
             if(this.tab.getTabIcon() != null){
                 RarmorUtil.renderStackToGui(this.tab.getTabIcon(), (this.i * width + 2) + 4 + guiLeft, guiTop - this.height + 4, 1.0F);
             } else {
-                this.tab.drawTab(gui, guiLeft, guiTop);
+                this.tab.drawTab(gui, gui.mc.thePlayer, guiLeft, guiTop);
             }
         }
         public void drawText(GuiRarmor gui, int guiLeft, int guiTop, int mouseX, int mouseY){

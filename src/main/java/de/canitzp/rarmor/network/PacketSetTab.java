@@ -28,7 +28,7 @@ public class PacketSetTab implements IMessage{
     public PacketSetTab(EntityPlayer player, IRarmorTab tab){
         this.worldID = player.worldObj.provider.getDimension();
         this.playerID = player.getEntityId();
-        this.tabID = RarmorAPI.getIRarmorTabID(tab);
+        this.tabID = RarmorAPI.registeredTabs.indexOf(tab.getClass());
     }
 
     @Override
