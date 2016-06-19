@@ -20,7 +20,7 @@ archivesBaseName = "${name}"
 minecraft {
     version = "${forge}"
     runDir = "run"
-    mappings = "snapshot_20160611"
+    mappings = "snapshot_20160619"
 }
 
 dependencies {}

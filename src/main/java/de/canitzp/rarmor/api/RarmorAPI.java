@@ -1,8 +1,8 @@
 package de.canitzp.rarmor.api;
 
-import com.google.common.collect.Lists;
-import de.canitzp.rarmor.armor.RarmorInventoryTab;
-import de.canitzp.rarmor.armor.RarmorOverviewTab;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class RarmorAPI{
     public static final String PROVIDES = "rarmorAPI";
     public static final String VERSION = "2.0.0";
 
-    public static List<Class<? extends IRarmorTab>> registeredTabs = Lists.newArrayList(RarmorOverviewTab.class, RarmorInventoryTab.class);
+    public static List<Class<? extends IRarmorTab>> registeredTabs = new ArrayList<>();
 
     public static void registerRarmorTab(Class<? extends IRarmorTab> classToRegister){
         if(!registeredTabs.contains(classToRegister)){
@@ -41,6 +41,16 @@ public class RarmorAPI{
             }
         }
         return tabs;
+    }
+
+    public static IRarmorTab getPossibleActiveTab(EntityPlayer player, ItemStack rarmor, NBTTagCompound rarmorNBT){
+        try{
+            IRarmorTab tab = getTab(rarmorNBT.getInteger("RarmorTabID")).newInstance();
+            return tab.canBeVisible(rarmor, player) ? tab : RarmorAPI.getTab(0).newInstance();
+        } catch(InstantiationException | IllegalAccessException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

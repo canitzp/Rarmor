@@ -45,14 +45,9 @@ public class RarmorInventoryTab implements IRarmorTab{
     }
 
     @Override
-    public boolean canBeVisible(IInventory inventory, ItemStack rarmor, EntityPlayer player){
-        if(inventory != null){
-            ItemStack stack = inventory.getStackInSlot(0);
-            if(stack != null && stack.isItemEqual(new ItemStack(Blocks.CHEST))){
-                return true;
-            }
-        }
-        return false;
+    public boolean canBeVisible(ItemStack rarmor, EntityPlayer player){
+        NBTTagCompound nbt = NBTUtil.getTagFromStack(rarmor);
+        return nbt.hasKey("DependencyChest") && nbt.getBoolean("DependencyChest");
     }
 
     @Override

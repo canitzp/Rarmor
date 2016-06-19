@@ -24,13 +24,11 @@ public interface IRarmorTab{
      */
     @NotNull String getTabIdentifier(ItemStack rarmor, EntityPlayer player);
 
-    default boolean canBeVisible(@Nullable IInventory overviewInv, ItemStack rarmor, EntityPlayer player){return true;}
+    default boolean canBeVisible(ItemStack rarmor, EntityPlayer player){return true;}
 
     default NBTTagCompound writeToNBT(NBTTagCompound nbt){return nbt;}
 
     default void readFromNBT(NBTTagCompound nbt){}
-
-    default IInventory getInventoryForDependencies(){return null;}
 
     @SideOnly(Side.CLIENT)
     default ItemStack getTabIcon(){return null;}
@@ -59,5 +57,8 @@ public interface IRarmorTab{
 
     @SideOnly(Side.CLIENT)
     default void drawForeground(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){}
+
+    @SideOnly(Side.CLIENT)
+    default void onMouseClick(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int btnID){}
 
 }

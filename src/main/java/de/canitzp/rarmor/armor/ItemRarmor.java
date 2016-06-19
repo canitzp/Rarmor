@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.ISpecialArmor;
 
@@ -17,13 +18,13 @@ import java.util.List;
 /**
  * @author canitzp
  */
-public class ItemRarmor extends ItemArmor implements ISpecialArmor, IEnergyContainerItem{
+public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEnergyContainerItem{
 
     private int maxEnergy = 250000;
 
     public ItemRarmor(EntityEquipmentSlot equipmentSlotIn){
-        super(Rarmor.rarmorMaterial, 0, equipmentSlotIn);
-        Registry.registerItem(this, "rarmor" + equipmentSlotIn.getName());
+        super(equipmentSlotIn);
+        this.setMaxDamage(Rarmor.rarmorMaterial.getDurability(equipmentSlotIn));
     }
 
     @Override
