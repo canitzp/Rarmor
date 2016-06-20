@@ -36,7 +36,7 @@ public class ItemGenericRarmor extends ItemArmor{
         super.addInformation(stack, playerIn, tooltip, advanced);
         NBTTagCompound nbt = NBTUtil.getTagFromStack(stack);
         if(nbt.hasKey("ColorCode")){
-            tooltip.add("Color: #" + nbt.getInteger("ColorCode"));
+            tooltip.add(nbt.getString("ColorName"));
         }
     }
 }

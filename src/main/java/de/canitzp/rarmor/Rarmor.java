@@ -58,6 +58,8 @@ public class Rarmor{
         logger.info("Registering Items.");
         Registry.initItems(event);
         proxy.preInit(event);
+
+        RarmorAPI.registerColor(0xFFFFFF, "White");
     }
 
     @Mod.EventHandler

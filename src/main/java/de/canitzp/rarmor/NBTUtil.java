@@ -1,5 +1,7 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.armor.RarmorColoringTab;
+import de.canitzp.rarmor.network.PacketSetColor;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
@@ -97,6 +99,27 @@ public class NBTUtil{
             return inv;
         }
         return new InventoryBasic(invName, false, invAmount);
+    }
+
+    public static void setColor(ItemStack stack, RarmorColoringTab.Color color){
+        if(stack != null){
+            if(!stack.hasTagCompound()){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            stack.getTagCompound().setInteger("ColorCode", color.hexValue);
+            stack.getTagCompound().setString("ColorName", color.showName);
+        }
+    }
+
+    public static int getColor(ItemStack stack){
+        if(stack != null){
+            if(stack.hasTagCompound()){
+                if(stack.getTagCompound().hasKey("ColorCode")){
+                    return stack.getTagCompound().getInteger("ColorCode");
+                }
+            }
+        }
+        return 0xFFFFFF; // White/No Color
     }
 
 }

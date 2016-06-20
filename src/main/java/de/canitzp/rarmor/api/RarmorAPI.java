@@ -5,7 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author canitzp
@@ -17,6 +19,7 @@ public class RarmorAPI{
     public static final String VERSION = "2.0.0";
 
     public static List<Class<? extends IRarmorTab>> registeredTabs = new ArrayList<>();
+    public static Map<Integer, String> registerColor = new HashMap<>();
 
     public static void registerRarmorTab(Class<? extends IRarmorTab> classToRegister){
         if(!registeredTabs.contains(classToRegister)){
@@ -51,6 +54,12 @@ public class RarmorAPI{
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void registerColor(int hexValue, String name){
+        if(!registerColor.keySet().contains(hexValue)){
+            registerColor.put(hexValue, name);
+        }
     }
 
 }

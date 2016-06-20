@@ -48,10 +48,7 @@ public class ClientProxy extends CommonProxy{
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
             @Override
             public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-                if(stack.getItem() instanceof ItemGenericRarmor){
-                    return NBTUtil.getInteger(stack, "ColorCode");
-                }
-                return 0;
+                return NBTUtil.getColor(stack);
             }
         }, Registry.rarmorChestplate, Registry.rarmorBoots, Registry.rarmorLeggins, Registry.rarmorHelmet);
     }
