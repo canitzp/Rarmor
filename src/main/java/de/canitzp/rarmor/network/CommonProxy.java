@@ -25,7 +25,7 @@ public class CommonProxy{
         network = NetworkRegistry.INSTANCE.newSimpleChannel(Rarmor.NAME);
         network.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);
         network.registerMessage(PacketSetTab.Handler.class, PacketSetTab.class, 1, Side.SERVER);
-        network.registerMessage(PacketSetColor.Handler.class, PacketSetColor.class, 2, Side.SERVER);
+        network.registerMessage(PacketSetCOlor.Handler.class, PacketSetCOlor.class, 2, Side.SERVER);
     }
 
     public void init(FMLInitializationEvent event){}

@@ -1,7 +1,6 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.armor.RarmorColoringTab;
-import de.canitzp.rarmor.network.PacketSetColor;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;

@@ -5,7 +5,7 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.network.PacketSetColor;
+import de.canitzp.rarmor.network.PacketSetCOlor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -107,7 +107,7 @@ public class RarmorColoringTab implements IRarmorTab{
                 ItemStack part = RarmorUtil.getPlayerArmorPart(player, this.clickedSlot.slot);
                 if(part != null){
                     NBTUtil.setColor(part, color);
-                    Rarmor.proxy.network.sendToServer(new PacketSetColor(player, this.clickedSlot.slot, color));
+                    Rarmor.proxy.network.sendToServer(new PacketSetCOlor(player, this.clickedSlot.slot, color));
                 }
             }
         }
