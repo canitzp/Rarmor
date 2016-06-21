@@ -5,7 +5,6 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.network.PacketOpenGui;
 import de.canitzp.rarmor.network.PacketSetColor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -40,8 +39,9 @@ public class RarmorColoringTab implements IRarmorTab{
         for(Map.Entry<Integer, String> entry : RarmorAPI.registerColor.entrySet()){
             availabeColors.add(new ColorButton(new Color(entry.getKey(), entry.getValue()), x * 10 + 29 + 28, y * 10 + 17 + 16));
             x++;
-            if((x * 10) >= 10){
+            if(x >= 16){
                 y++;
+                x = 0;
             }
         }
     }
@@ -83,7 +83,7 @@ public class RarmorColoringTab implements IRarmorTab{
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         gui.mc.getTextureManager().bindTexture(this.tabLoc);
-        gui.drawTexturedModalRect(guiLeft + 28, guiTop + 16, 0, 0, 188, 112);
+        gui.drawTexturedModalRect(guiLeft + 28, guiTop + 16, 0, 0, 191, 112);
         if(this.clickedSlot != null){
             gui.drawTexturedModalRect(guiLeft + 28 + 5, guiTop + 16 + this.clickedSlot.yValue, 0, 138, 16, 16);
         }

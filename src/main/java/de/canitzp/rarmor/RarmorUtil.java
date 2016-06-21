@@ -5,8 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -51,6 +56,34 @@ public class RarmorUtil{
         mc.fontRendererObj.setUnicodeFlag(flagBefore);
         RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
+    }
+
+    public static void tryToRemap(EntityPlayer player){
+        if(!player.getEntityWorld().isRemote){
+            ItemStack stack = getRarmorChestplate(player);
+            NBTTagCompound nbt = NBTUtil.getTagFromStack(stack);
+            if(nbt.hasKey("isFirstOpened")){
+                System.out.println("remap");
+                NBTTagList list = nbt.getTagList("Items", 10);
+                if(!list.hasNoTags()){
+                    InventoryBasic inventoryBasic = new InventoryBasic("Rarmor Inventory Tab", false, 63);
+                    for(int i = 0; i < list.tagCount(); i++){
+                        NBTTagCompound tagCompound = list.getCompoundTagAt(i);
+                        byte slotIndex = tagCompound.getByte("Slot");
+                        if(slotIndex >= 0 && slotIndex < inventoryBasic.getSizeInventory()){
+                            inventoryBasic.setInventorySlotContents(slotIndex, ItemStack.loadItemStackFromNBT(tagCompound));
+                        }
+                    }
+                    nbt.removeTag("Items");
+                    nbt.removeTag("isFirstOpened");
+                    NBTTagCompound invNBT;
+                    NBTUtil.writeInventory(invNBT = new NBTTagCompound(), inventoryBasic);
+                    nbt.merge(invNBT);
+                    NBTUtil.setTagFromStack(stack, nbt);
+                    ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
+                }
+            }
+        }
     }
 
 }

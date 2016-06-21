@@ -39,4 +39,14 @@ public class ItemGenericRarmor extends ItemArmor{
             tooltip.add(nbt.getString("ColorName"));
         }
     }
+
+    @Override
+    public boolean hasColor(ItemStack stack){
+        return NBTUtil.getTagFromStack(stack).hasKey("ColorCode");
+    }
+
+    @Override
+    public int getColor(ItemStack stack){
+        return NBTUtil.getColor(stack);
+    }
 }

@@ -9,14 +9,17 @@ import de.canitzp.rarmor.armor.RarmorOverviewTab;
 import de.canitzp.rarmor.network.CommonProxy;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,17 +57,36 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorOverviewTab.class);
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
+        registerColors();
         this.launchSide = event.getSide();
         logger.info("Registering Items.");
         Registry.initItems(event);
         proxy.preInit(event);
 
-        RarmorAPI.registerColor(0xFFFFFF, "White");
+        GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CHEST, Blocks.CHEST, Blocks.CHEST));
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         proxy.init(event);
+    }
+
+    public void missingMapping(FMLMissingMappingsEvent event){
+        for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
+            if(mapping.name.startsWith("rarmor:")){
+                switch(mapping.name){
+                    case "rarmor:rarmorChestplate":{
+                        mapping.remap(Registry.rarmorChestplate);
+                    }
+                }
+            }
+        }
+    }
+
+    private void registerColors(){
+        for(EnumDyeColor color : EnumDyeColor.values()){
+            RarmorAPI.registerColor(color.getMapColor().colorValue, StringUtils.capitalize(color.getName().replace("_", " ")));
+        }
     }
 
 }

@@ -33,6 +33,7 @@ public class GuiContainerRarmor extends Container{
     private EntityPlayer player;
 
     public GuiContainerRarmor(EntityPlayer player){
+        RarmorUtil.tryToRemap(player);
         this.player = player;
         this.readFromNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
         this.activeTab.initContainer(this, player);
