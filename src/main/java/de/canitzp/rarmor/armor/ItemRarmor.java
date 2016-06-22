@@ -4,6 +4,8 @@ import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.Registry;
+import de.canitzp.rarmor.api.ITabTickable;
+import de.canitzp.rarmor.api.RarmorAPI;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -11,9 +13,12 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author canitzp
@@ -21,6 +26,7 @@ import java.util.List;
 public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEnergyContainerItem{
 
     private int maxEnergy = 250000;
+    private Map<ItemStack, List<ITabTickable>> tickMap = new HashMap<>();
 
     public ItemRarmor(EntityEquipmentSlot equipmentSlotIn){
         super(equipmentSlotIn);
@@ -31,6 +37,19 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         super.addInformation(stack, playerIn, tooltip, advanced);
         tooltip.add(NBTUtil.getEnergy(stack) + "/" + this.maxEnergy + " RF");
+    }
+
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
+        if(!this.tickMap.containsKey(stack)){
+            this.tickMap.put(stack, RarmorAPI.getNewTickTabs());
+        } else {
+            for(List<ITabTickable> tabList : this.tickMap.values()){
+                for(ITabTickable tabTickable : tabList){
+                    tabTickable.tick(world, player, stack);
+                }
+            }
+        }
     }
 
     @Override

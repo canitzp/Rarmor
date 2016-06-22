@@ -2,10 +2,7 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.armor.RarmorColoringTab;
-import de.canitzp.rarmor.armor.RarmorDependencyCrafting;
-import de.canitzp.rarmor.armor.RarmorInventoryTab;
-import de.canitzp.rarmor.armor.RarmorOverviewTab;
+import de.canitzp.rarmor.armor.*;
 import de.canitzp.rarmor.network.CommonProxy;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -57,6 +54,7 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorOverviewTab.class);
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
+        RarmorAPI.registerITabTickable(RarmorCoalGeneratorTab.class);
         registerColors();
         this.launchSide = event.getSide();
         logger.info("Registering Items.");

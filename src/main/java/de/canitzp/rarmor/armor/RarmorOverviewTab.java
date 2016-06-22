@@ -3,6 +3,7 @@ package de.canitzp.rarmor.armor;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.ITabTickable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,6 +11,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,4 +72,5 @@ public class RarmorOverviewTab implements IRarmorTab{
         gui.drawTexturedModalRect(guiLeft + 4, guiTop + 4, 0, 0, 239, 138);
         GuiInventory.drawEntityOnScreen(guiLeft + 137, guiTop + 125, 55, guiLeft + 133 - mouseX, guiTop + 37 - mouseY, gui.mc.thePlayer);
     }
+
 }

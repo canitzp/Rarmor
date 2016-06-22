@@ -100,6 +100,14 @@ public class NBTUtil{
         return new InventoryBasic(invName, false, invAmount);
     }
 
+    public static InventoryBasic readInventory(NBTTagCompound toReadFrom, InventoryBasic inv){
+        InventoryBasic inv1 = readInventory(toReadFrom);
+        if(inv1 != null){
+            return inv1;
+        }
+        return inv;
+    }
+
     public static void setColor(ItemStack stack, RarmorColoringTab.Color color){
         if(stack != null){
             if(!stack.hasTagCompound()){

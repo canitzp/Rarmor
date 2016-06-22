@@ -1,11 +1,8 @@
 package de.canitzp.rarmor.api;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +19,7 @@ public interface IRarmorTab{
     /**
      * Tab stuff:
      */
-    @NotNull String getTabIdentifier(ItemStack rarmor, EntityPlayer player);
+    String getTabIdentifier(ItemStack rarmor, EntityPlayer player);
 
     default boolean canBeVisible(ItemStack rarmor, EntityPlayer player){return true;}
 
