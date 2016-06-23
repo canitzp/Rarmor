@@ -24,9 +24,23 @@ minecraft {
     version = "${forge}"
     runDir = "run"
     mappings = "snapshot_20160619"
+    replaceIn "Rarmor.java"
+    replace "@VERSION@", project.version.toString()
 }
 
-dependencies {}
+repositories {
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        name = "eiranet"
+        url ="http://repo.blay09.net"
+    }
+}
+
+dependencies {
+    deobfCompile "mezz.jei:jei_${mcversion}:${jei_version}"
+}
 
 processResources
 {

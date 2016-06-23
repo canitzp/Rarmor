@@ -54,7 +54,7 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorOverviewTab.class);
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
-        RarmorAPI.registerITabTickable(RarmorCoalGeneratorTab.class);
+        //RarmorAPI.registerITabTickable(RarmorCoalGeneratorTab.class);
         registerColors();
         this.launchSide = event.getSide();
         logger.info("Registering Items.");
@@ -75,6 +75,19 @@ public class Rarmor{
                 switch(mapping.name){
                     case "rarmor:rarmorChestplate":{
                         mapping.remap(Registry.rarmorChestplate);
+                        break;
+                    }
+                    case "rarmor:rarmorHelmet":{
+                        mapping.remap(Registry.rarmorHelmet);
+                        break;
+                    }
+                    case "rarmor:rarmorLeggins":{
+                        mapping.remap(Registry.rarmorLeggins);
+                        break;
+                    }
+                    case "rarmor:rarmorBoots":{
+                        mapping.remap(Registry.rarmorBoots);
+                        break;
                     }
                 }
             }
