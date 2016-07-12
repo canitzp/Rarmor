@@ -30,7 +30,6 @@ import java.util.Map;
 public class RarmorColoringTab implements IRarmorTab{
 
     private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabColoring.png");
-    private final ResourceLocation iconLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRarmor.png");
     private ArmorSlot clickedSlot = ArmorSlot.CHEST;
     private List<ColorButton> availabeColors = new ArrayList<>();
 
@@ -71,8 +70,8 @@ public class RarmorColoringTab implements IRarmorTab{
 
     @Override
     public void drawTab(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop){
-        gui.mc.getTextureManager().bindTexture(this.iconLoc);
-        gui.drawTexturedModalRect(guiLeft + 1, guiTop, 91, 226, 16, 16);
+        gui.mc.getTextureManager().bindTexture(this.tabLoc);
+        gui.drawTexturedModalRect(guiLeft, guiTop, 24, 138, 16, 16);
     }
 
     @Override

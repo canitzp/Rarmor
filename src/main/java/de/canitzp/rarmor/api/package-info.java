@@ -1,6 +1,6 @@
 /**
  * @author canitzp
  */
-@API(owner = RarmorAPI.OWNER, provides = RarmorAPI.PROVIDES, apiVersion = RarmorAPI.VERSION)
+@API(owner = RarmorValues.APIOWNER, provides = RarmorValues.APIPROVIDER, apiVersion = RarmorValues.APIVERSION)
 package de.canitzp.rarmor.api;
 import net.minecraftforge.fml.common.API;

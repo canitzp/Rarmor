@@ -1,15 +1,11 @@
 package de.canitzp.rarmor.network;
 
-import de.canitzp.rarmor.NBTUtil;
-import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.GuiContainerRarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

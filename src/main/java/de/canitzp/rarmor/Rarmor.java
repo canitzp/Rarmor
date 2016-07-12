@@ -2,20 +2,29 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.armor.*;
 import de.canitzp.rarmor.network.CommonProxy;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
@@ -47,6 +56,9 @@ public class Rarmor{
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         logger.info("Rarmor: The way to a peaceful world. Version:" + VERSION);
+
+        initConfigValues(event);
+
         List<Class<? extends IRarmorTab>> tabs = RarmorAPI.registeredTabs;
         if(!tabs.isEmpty()){
             RarmorAPI.registeredTabs.clear();
@@ -54,7 +66,7 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorOverviewTab.class);
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
-        //RarmorAPI.registerITabTickable(RarmorCoalGeneratorTab.class);
+        RarmorAPI.registerRarmorTab(RarmorCoalGeneratorTab.class);
         registerColors();
         this.launchSide = event.getSide();
         logger.info("Registering Items.");
@@ -62,6 +74,8 @@ public class Rarmor{
         proxy.preInit(event);
 
         GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CHEST, Blocks.CHEST, Blocks.CHEST));
+
+        RecipeSorter.register("RarmorDependencyCrafting", RarmorDependencyCrafting.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
     }
 
     @Mod.EventHandler
@@ -98,6 +112,12 @@ public class Rarmor{
         for(EnumDyeColor color : EnumDyeColor.values()){
             RarmorAPI.registerColor(color.getMapColor().colorValue, StringUtils.capitalize(color.getName().replace("_", " ")));
         }
+    }
+
+    private void initConfigValues(FMLPreInitializationEvent event){
+        RarmorValues.rarmorMaxEnergy = 250000;
+        RarmorValues.rarmorMaxTransfer = 25000;
+        RarmorValues.generatorTabTickValue = 40;
     }
 
 }

@@ -2,22 +2,26 @@ package de.canitzp.rarmor.armor;
 
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.api.ITabTickable;
+import de.canitzp.rarmor.api.GuiUtils;
+import de.canitzp.rarmor.api.IRarmorTab;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 /**
  * @author canitzp
  */
-public abstract class RarmorOneSlotTab implements ITabTickable{
+public abstract class RarmorOneSlotTab implements IRarmorTab{
 
-    private String tabName;
-    private InventoryBasic inventory = new InventoryBasic(this.tabName + " Inventory", false, 1);
-    private static final ResourceLocation guiLoc = new ResourceLocation(Rarmor.MODID, "");
+    protected String tabName;
+    protected InventoryBasic inventory = new InventoryBasic("", false, 1);
 
     public RarmorOneSlotTab(String tabName){
         this.tabName = tabName;
@@ -29,13 +33,19 @@ public abstract class RarmorOneSlotTab implements ITabTickable{
     }
 
     @Override
+    public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){
+        slotList.add(new Slot(inventory, 0, containerOffsetLeft + 111, containerOffsetTop + 56));
+        return slotList;
+    }
+
+    @Override
     public String getTabHoveringText(){
         return this.tabName;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt){
-        this.inventory = NBTUtil.readInventory(nbt, this.inventory);
+        this.inventory = NBTUtil.readInventory(nbt, this.tabName + "tab", 1);
     }
 
     @Override
@@ -45,7 +55,11 @@ public abstract class RarmorOneSlotTab implements ITabTickable{
 
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
-        gui.mc.getTextureManager().bindTexture(guiLoc);
-        gui.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 0, 0);
+        GuiUtils.drawBigSlot(gui, guiLeft + 110, guiTop + 55);
+    }
+
+    @Override
+    public void addListener(Container container, EntityPlayer player, IContainerListener listener){
+        //listener.sendAllWindowProperties(container, this.inventory);
     }
 }

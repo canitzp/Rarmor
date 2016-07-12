@@ -23,9 +23,10 @@ archivesBaseName = "${name}"
 minecraft {
     version = "${forge}"
     runDir = "run"
-    mappings = "snapshot_20160619"
-    replaceIn "Rarmor.java"
-    replace "@VERSION@", project.version.toString()
+    mappings = "snapshot_20160705"
+    replaceIn "RarmorValues.java"
+    replace "@Version@", project.version.toString()
+    replace "@APIVersion@", "${apiversion}"
 }
 
 repositories {

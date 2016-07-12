@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +22,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author canitzp
@@ -37,6 +39,7 @@ public class GuiContainerRarmor extends Container{
         this.player = player;
         this.readFromNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
         this.activeTab.initContainer(this, player);
+
         List<Slot> slots = new ArrayList<>();
         //Player Hotbar: 0-8
         for(int j = 0; j < 9; ++j){
@@ -65,15 +68,28 @@ public class GuiContainerRarmor extends Container{
         super.onContainerClosed(player);
     }
 
+    @Override
+    public void addListener(IContainerListener listener){
+        super.addListener(listener);
+        this.activeTab.addListener(this, this.player, listener);
+    }
+
     public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+        if(!this.player.getEntityWorld().isRemote){
+            nbt.setTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player), this.activeTab.writeToNBT(new NBTTagCompound()));
+        }
         nbt.setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(this.activeTab.getClass()));
-        nbt.setTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player), this.activeTab.writeToNBT(new NBTTagCompound()));
         return nbt;
     }
 
     public void readFromNBT(NBTTagCompound nbt){
         this.activeTab = RarmorAPI.getPossibleActiveTab(this.player, RarmorUtil.getRarmorChestplate(this.player), nbt);
-        this.activeTab.readFromNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player)));
+        /*
+        if(!this.player.getEntityWorld().isRemote){
+            this.activeTab.writeToNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), player)));
+            this.activeTab.readFromNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player)));
+        }
+        */
     }
 
     public void setTabPacket(int tabID){
@@ -95,8 +111,9 @@ public class GuiContainerRarmor extends Container{
         public GuiRarmor(EntityPlayer player){
             super(new GuiContainerRarmor(player));
             this.player = player;
-            this.tab = RarmorAPI.getPossibleActiveTab(player, RarmorUtil.getRarmorChestplate(player), NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
-            registeredTabs = RarmorAPI.getNewTabs();
+            ItemStack stack = RarmorUtil.getRarmorChestplate(player);
+            registeredTabs = RarmorAPI.getNewTabs(stack);
+            this.tab = RarmorAPI.getPossibleActiveTab(player, stack, NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
             sortTabs();
             this.xSize = 247;
             this.ySize = 226;

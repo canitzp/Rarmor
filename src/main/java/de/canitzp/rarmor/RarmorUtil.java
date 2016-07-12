@@ -34,6 +34,14 @@ public class RarmorUtil{
         return getPlayerArmorPart(player, EntityEquipmentSlot.CHEST);
     }
 
+    public static ItemStack reduceStacksize(ItemStack stack){
+        if(stack.stackSize > 1){
+            return new ItemStack(stack.getItem(), stack.getMetadata(), --stack.stackSize);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Thanks to Ellpeck who allowed me to use this method.
      * https://github.com/Ellpeck/ActuallyAdditions/blob/master/src/main/java/de/ellpeck/actuallyadditions/mod/util/AssetUtil.java#L71

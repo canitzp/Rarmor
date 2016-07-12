@@ -3,15 +3,15 @@ package de.canitzp.rarmor.armor;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.IRarmorTab;
-import de.canitzp.rarmor.api.ITabTickable;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

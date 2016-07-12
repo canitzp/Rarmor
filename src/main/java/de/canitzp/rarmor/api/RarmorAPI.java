@@ -14,13 +14,9 @@ import java.util.Map;
  */
 public class RarmorAPI{
 
-    public static final String OWNER = "rarmor";
-    public static final String PROVIDES = "rarmorAPI";
-    public static final String VERSION = "2.0.0";
-
     public static List<Class<? extends IRarmorTab>> registeredTabs = new ArrayList<>();
-    public static List<Class<? extends ITabTickable>> registeredTickTabs = new ArrayList<>();
     public static Map<Integer, String> registerColor = new HashMap<>();
+    public static Map<ItemStack, List<IRarmorTab>> tickMap = new HashMap<>();
 
     public static void registerRarmorTab(Class<? extends IRarmorTab> classToRegister){
         if(!registeredTabs.contains(classToRegister)){
@@ -28,40 +24,21 @@ public class RarmorAPI{
         }
     }
 
-    public static void registerITabTickable(Class<? extends ITabTickable> classToRegister){
-        if(!registeredTickTabs.contains(classToRegister)){
-            registeredTickTabs.add(classToRegister);
-        }
-        registerRarmorTab(classToRegister);
-    }
-
-    public static Class<? extends IRarmorTab> getTab(int id){
-        if(registeredTabs.size() >= id){
-            return registeredTabs.get(id);
-        }
-        return registeredTabs.get(0);
-    }
-
-    public static List<IRarmorTab> getNewTabs(){
-        List<IRarmorTab> tabs = new ArrayList<>();
-        for(Class<? extends IRarmorTab> clazz : registeredTabs){
-            try{
-                tabs.add(clazz.newInstance());
-            } catch(InstantiationException | IllegalAccessException e){
-                e.printStackTrace();
-            }
-        }
-        return tabs;
+    public static List<IRarmorTab> getNewTabs(ItemStack stack){
+        return tickMap.get(stack);
     }
 
     public static IRarmorTab getPossibleActiveTab(EntityPlayer player, ItemStack rarmor, NBTTagCompound rarmorNBT){
-        try{
-            IRarmorTab tab = getTab(rarmorNBT.getInteger("RarmorTabID")).newInstance();
-            return tab.canBeVisible(rarmor, player) ? tab : RarmorAPI.getTab(0).newInstance();
-        } catch(InstantiationException | IllegalAccessException e){
-            e.printStackTrace();
+        List<IRarmorTab> tabs = getNewTabs(rarmor);
+        if(RarmorAPI.tickMap.get(rarmor) == null){
+            RarmorAPI.tickMap.put(rarmor, createNewTabs());
+            tabs = getNewTabs(rarmor);
         }
-        return null;
+        if(!tabs.isEmpty()){
+            IRarmorTab tab = tabs.get(rarmorNBT.getInteger("RarmorTabID"));
+            return tab.canBeVisible(rarmor, player) ? tab : tabs.get(0);
+        }
+        return getNewTabs(rarmor).get(0);
     }
 
     public static void registerColor(int hexValue, String name){
@@ -70,9 +47,9 @@ public class RarmorAPI{
         }
     }
 
-    public static List<ITabTickable> getNewTickTabs(){
-        List<ITabTickable> tickables = new ArrayList<>();
-        for(Class<? extends ITabTickable> tab : registeredTickTabs){
+    public static List<IRarmorTab> createNewTabs(){
+        List<IRarmorTab> tickables = new ArrayList<>();
+        for(Class<? extends IRarmorTab> tab : registeredTabs){
             try{
                 tickables.add(tab.newInstance());
             } catch(InstantiationException | IllegalAccessException e){
@@ -82,4 +59,29 @@ public class RarmorAPI{
         return tickables;
     }
 
+    public static int receiveEnergy(ItemStack container, int receive, boolean simulate){
+        NBTTagCompound nbt = container.getTagCompound();
+        if(nbt != null){
+            int currentEnergy = nbt.getInteger("Energy");
+            int energyReceived = Math.min(RarmorValues.rarmorMaxEnergy - currentEnergy, receive);
+            if(!simulate){
+                nbt.setInteger("Energy", currentEnergy + energyReceived);
+            }
+            return energyReceived;
+        }
+        return 0;
+    }
+
+    public static int extractEnergy(ItemStack container, int extract, boolean simulate){
+        NBTTagCompound nbt = container.getTagCompound();
+        if(nbt != null){
+            int currentEnergy = nbt.getInteger("Energy");
+            int energyExtracted = Math.min(currentEnergy, extract);
+            if(!simulate){
+                nbt.setInteger("Energy", currentEnergy + energyExtracted);
+            }
+            return energyExtracted;
+        }
+        return 0;
+    }
 }

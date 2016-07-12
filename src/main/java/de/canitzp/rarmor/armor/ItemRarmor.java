@@ -3,30 +3,26 @@ package de.canitzp.rarmor.armor;
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.Registry;
-import de.canitzp.rarmor.api.ITabTickable;
+import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.RarmorValues;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author canitzp
  */
 public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEnergyContainerItem{
-
-    private int maxEnergy = 250000;
-    private Map<ItemStack, List<ITabTickable>> tickMap = new HashMap<>();
 
     public ItemRarmor(EntityEquipmentSlot equipmentSlotIn){
         super(equipmentSlotIn);
@@ -36,19 +32,22 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         super.addInformation(stack, playerIn, tooltip, advanced);
-        tooltip.add(NBTUtil.getEnergy(stack) + "/" + this.maxEnergy + " RF");
+        tooltip.add(NBTUtil.getEnergy(stack) + "/" + RarmorValues.rarmorMaxEnergy + " RF");
     }
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
-        if(!this.tickMap.containsKey(stack)){
-            this.tickMap.put(stack, RarmorAPI.getNewTickTabs());
-        } else {
-            for(List<ITabTickable> tabList : this.tickMap.values()){
-                for(ITabTickable tabTickable : tabList){
-                    tabTickable.tick(world, player, stack);
+        if(!RarmorAPI.tickMap.containsKey(stack)){
+            RarmorAPI.tickMap.put(stack, RarmorAPI.createNewTabs());
+            if(!world.isRemote){
+                for(IRarmorTab tabTickable : RarmorAPI.tickMap.get(stack)){
+                    tabTickable.readFromNBT(NBTUtil.getTagFromStack(stack).getCompoundTag(tabTickable.getTabIdentifier(RarmorUtil.getRarmorChestplate(player), player)));
                 }
+                ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
             }
+        }
+        for(IRarmorTab tabTickable : RarmorAPI.tickMap.get(stack)){
+            tabTickable.tick(world, player, stack);
         }
     }
 
@@ -79,22 +78,12 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
 
     @Override
     public int receiveEnergy(ItemStack container, int maxReceive, boolean simulate){
-        int currentEnergy = NBTUtil.getEnergy(container);
-        int energyReceived = Math.min(this.maxEnergy - NBTUtil.getEnergy(container), maxReceive);
-        if(!simulate){
-            NBTUtil.setEnergy(container, currentEnergy + energyReceived);
-        }
-        return energyReceived;
+        return RarmorAPI.receiveEnergy(container, maxReceive, simulate);
     }
 
     @Override
     public int extractEnergy(ItemStack container, int maxExtract, boolean simulate){
-        int currentEnergy = NBTUtil.getEnergy(container);
-        int energyExtracted = Math.min(currentEnergy, maxExtract);
-        if(!simulate){
-            NBTUtil.setEnergy(container, currentEnergy - energyExtracted);
-        }
-        return energyExtracted;
+        return RarmorAPI.extractEnergy(container, maxExtract, simulate);
     }
 
     @Override
@@ -104,6 +93,6 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
 
     @Override
     public int getMaxEnergyStored(ItemStack container){
-        return this.maxEnergy;
+        return RarmorValues.rarmorMaxEnergy;
     }
 }

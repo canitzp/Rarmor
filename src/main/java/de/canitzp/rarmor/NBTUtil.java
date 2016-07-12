@@ -57,19 +57,21 @@ public class NBTUtil{
     public static NBTTagCompound writeInventory(NBTTagCompound toWriteOn, IInventory invToWrite){
         NBTTagCompound compound = new NBTTagCompound();
         NBTTagList nbttaglist = new NBTTagList();
-        for (int i = 0; i < invToWrite.getSizeInventory(); ++i){
-            ItemStack stack = invToWrite.getStackInSlot(i);
-            if (stack != null){
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setByte("Slot", (byte)i);
-                stack.writeToNBT(nbttagcompound);
-                nbttaglist.appendTag(nbttagcompound);
+        if(invToWrite != null){
+            for (int i = 0; i < invToWrite.getSizeInventory(); ++i){
+                ItemStack stack = invToWrite.getStackInSlot(i);
+                if (stack != null){
+                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    nbttagcompound.setByte("Slot", (byte)i);
+                    stack.writeToNBT(nbttagcompound);
+                    nbttaglist.appendTag(nbttagcompound);
+                }
             }
+            compound.setTag("Items", nbttaglist);
+            compound.setString("InvName", invToWrite.getName());
+            compound.setInteger("InvAmount", invToWrite.getSizeInventory());
+            toWriteOn.setTag("Inventory", compound);
         }
-        compound.setTag("Items", nbttaglist);
-        compound.setString("InvName", invToWrite.getName());
-        compound.setInteger("InvAmount", invToWrite.getSizeInventory());
-        toWriteOn.setTag("Inventory", compound);
         return toWriteOn;
     }
 
@@ -98,14 +100,6 @@ public class NBTUtil{
             return inv;
         }
         return new InventoryBasic(invName, false, invAmount);
-    }
-
-    public static InventoryBasic readInventory(NBTTagCompound toReadFrom, InventoryBasic inv){
-        InventoryBasic inv1 = readInventory(toReadFrom);
-        if(inv1 != null){
-            return inv1;
-        }
-        return inv;
     }
 
     public static void setColor(ItemStack stack, RarmorColoringTab.Color color){

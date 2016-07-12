@@ -2,21 +2,16 @@ package de.canitzp.rarmor.armor;
 
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.GuiUtils;
 import de.canitzp.rarmor.api.IRarmorTab;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
@@ -27,7 +22,7 @@ import java.util.List;
 public class RarmorInventoryTab implements IRarmorTab{
 
     private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabInventory.png");
-    private InventoryBasic inventory;
+    private InventoryBasic inventory = new InventoryBasic("Rarmor Inventory Tab", false, 63);
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player){
@@ -38,7 +33,7 @@ public class RarmorInventoryTab implements IRarmorTab{
     public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){
         for (int j = 0; j < 7; ++j){
             for (int k = 0; k < 9; ++k){
-                slotList.add(new Slot(inventory, k + j * 9, 5 + containerOffsetLeft + k * 18, 6 + containerOffsetTop + j * 18));
+                slotList.add(new Slot(inventory, k + j * 9, 5 + containerOffsetLeft + k * 18, 5 + containerOffsetTop + j * 18));
             }
         }
         return slotList;
@@ -72,8 +67,10 @@ public class RarmorInventoryTab implements IRarmorTab{
 
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
-        gui.mc.getTextureManager().bindTexture(this.tabLoc);
-        gui.drawTexturedModalRect(guiLeft + 4, guiTop + 4, 0, 0, 239, 138);
+        GuiUtils.drawSlotField(gui, guiLeft + 8, guiTop + 8, 9, 7);
+        GuiUtils.drawSlotField(gui, guiLeft + 180, guiTop + 19, 3, 3);
+        GuiUtils.drawSlot(gui, guiLeft + 199, guiTop + 105);
+        GuiUtils.drawCraftingArrow(gui, guiLeft + 200, guiTop + 78);
     }
 
 }

@@ -3,9 +3,11 @@ package de.canitzp.rarmor.api;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,12 +38,16 @@ public interface IRarmorTab{
     @SideOnly(Side.CLIENT)
     default String getTabHoveringText(){return null;}
 
+    default void tick(World world, EntityPlayer player, ItemStack stack){}
+
     /**
      * Container Manipulation
      */
     default void initContainer(Container container, EntityPlayer player){}
 
     default List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){return slotList;}
+
+    default void addListener(Container container, EntityPlayer player, IContainerListener listener){}
 
     /**
      * Just Gui things
