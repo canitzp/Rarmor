@@ -70,14 +70,14 @@ public class NBTUtil{
             compound.setTag("Items", nbttaglist);
             compound.setString("InvName", invToWrite.getName());
             compound.setInteger("InvAmount", invToWrite.getSizeInventory());
-            toWriteOn.setTag("Inventory", compound);
+            toWriteOn.setTag("Inventory " + invToWrite.getName(), compound);
         }
         return toWriteOn;
     }
 
-    public static InventoryBasic readInventory(NBTTagCompound toReadFrom){
-        if(toReadFrom.hasKey("Inventory")){
-            NBTTagCompound compound = toReadFrom.getCompoundTag("Inventory");
+    private static InventoryBasic readInventory(NBTTagCompound toReadFrom, String invName){
+        if(toReadFrom.hasKey("Inventory " + invName)){
+            NBTTagCompound compound = toReadFrom.getCompoundTag("Inventory " + invName);
             if(compound.hasKey("InvName")){
                 NBTTagList nbttaglist = compound.getTagList("Items", 10);
                 InventoryBasic inv = new InventoryBasic(compound.getString("InvName"), false, compound.getInteger("InvAmount"));
@@ -94,12 +94,12 @@ public class NBTUtil{
         return null;
     }
 
-    public static InventoryBasic readInventory(NBTTagCompound toReadFrom, String invName, int invAmount){
-        InventoryBasic inv = readInventory(toReadFrom);
+    public static InventoryBasic readInventory(NBTTagCompound toReadFrom, InventoryBasic oldInv){
+        InventoryBasic inv = readInventory(toReadFrom, oldInv.getName());
         if(inv != null){
             return inv;
         }
-        return new InventoryBasic(invName, false, invAmount);
+        return new InventoryBasic(oldInv.getName(), oldInv.hasCustomName(), oldInv.getSizeInventory());
     }
 
     public static void setColor(ItemStack stack, RarmorColoringTab.Color color){

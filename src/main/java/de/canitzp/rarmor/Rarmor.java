@@ -44,8 +44,6 @@ public class Rarmor{
 
     public static final Logger logger = LogManager.getLogger(NAME);
 
-    public Side launchSide;
-
     public static final ItemArmor.ArmorMaterial rarmorMaterial = EnumHelper.addArmorMaterial("rarmor", "", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
     @Mod.Instance
@@ -56,9 +54,6 @@ public class Rarmor{
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         logger.info("Rarmor: The way to a peaceful world. Version:" + VERSION);
-
-        initConfigValues(event);
-
         List<Class<? extends IRarmorTab>> tabs = RarmorAPI.registeredTabs;
         if(!tabs.isEmpty()){
             RarmorAPI.registeredTabs.clear();
@@ -67,15 +62,11 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
         RarmorAPI.registerRarmorTab(RarmorCoalGeneratorTab.class);
-        registerColors();
-        this.launchSide = event.getSide();
-        logger.info("Registering Items.");
+        initConfigValues(event);
         Registry.initItems(event);
+        registerColors();
+        initCraftingRecipes();
         proxy.preInit(event);
-
-        GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CHEST, Blocks.CHEST, Blocks.CHEST));
-
-        RecipeSorter.register("RarmorDependencyCrafting", RarmorDependencyCrafting.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
     }
 
     @Mod.EventHandler
@@ -112,6 +103,11 @@ public class Rarmor{
         for(EnumDyeColor color : EnumDyeColor.values()){
             RarmorAPI.registerColor(color.getMapColor().colorValue, StringUtils.capitalize(color.getName().replace("_", " ")));
         }
+    }
+
+    private void initCraftingRecipes(){
+        RecipeSorter.register("RarmorDependencyCrafting", RarmorDependencyCrafting.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+        GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CHEST, Blocks.CHEST, Blocks.CHEST));
     }
 
     private void initConfigValues(FMLPreInitializationEvent event){

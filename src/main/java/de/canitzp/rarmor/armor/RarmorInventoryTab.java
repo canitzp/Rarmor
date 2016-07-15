@@ -21,7 +21,6 @@ import java.util.List;
  */
 public class RarmorInventoryTab implements IRarmorTab{
 
-    private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabInventory.png");
     private InventoryBasic inventory = new InventoryBasic("Rarmor Inventory Tab", false, 63);
 
     @Override
@@ -30,7 +29,7 @@ public class RarmorInventoryTab implements IRarmorTab{
     }
 
     @Override
-    public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){
+    public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop){
         for (int j = 0; j < 7; ++j){
             for (int k = 0; k < 9; ++k){
                 slotList.add(new Slot(inventory, k + j * 9, 5 + containerOffsetLeft + k * 18, 5 + containerOffsetTop + j * 18));
@@ -52,7 +51,7 @@ public class RarmorInventoryTab implements IRarmorTab{
 
     @Override
     public void readFromNBT(NBTTagCompound nbt){
-        this.inventory = NBTUtil.readInventory(nbt, "Rarmor Inventory Tab", 63);
+        this.inventory = NBTUtil.readInventory(nbt, this.inventory);
     }
 
     @Override

@@ -2,8 +2,10 @@ package de.canitzp.rarmor.api;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,12 +42,17 @@ public interface IRarmorTab{
 
     default void tick(World world, EntityPlayer player, ItemStack stack){}
 
+    default NBTTagCompound getPacketData(EntityPlayerMP player, ItemStack stack){return new NBTTagCompound();}
+
+    @SideOnly(Side.CLIENT)
+    default void onPacketData(NBTTagCompound nbt){}
+
     /**
      * Container Manipulation
      */
     default void initContainer(Container container, EntityPlayer player){}
 
-    default List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){return slotList;}
+    default List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop){return slotList;}
 
     default void addListener(Container container, EntityPlayer player, IContainerListener listener){}
 
@@ -63,5 +70,8 @@ public interface IRarmorTab{
 
     @SideOnly(Side.CLIENT)
     default void onMouseClick(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int btnID){}
+
+    @SideOnly(Side.CLIENT)
+    default void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){}
 
 }

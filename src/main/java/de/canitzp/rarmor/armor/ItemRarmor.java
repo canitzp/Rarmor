@@ -1,6 +1,7 @@
 package de.canitzp.rarmor.armor;
 
 import cofh.api.energy.IEnergyContainerItem;
+import com.google.common.base.Predicate;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
@@ -12,11 +13,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,22 +35,31 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         super.addInformation(stack, playerIn, tooltip, advanced);
+        List<IRarmorTab> tabs = RarmorAPI.getTabsFromStack(playerIn.getEntityWorld(), stack);
+        if(tabs != null){
+            for(IRarmorTab tab : tabs){
+                if(tab != null && tab.canBeVisible(stack, playerIn)){
+                    tab.addInformation(stack, playerIn, tooltip, advanced);
+                }
+            }
+        }
         tooltip.add(NBTUtil.getEnergy(stack) + "/" + RarmorValues.rarmorMaxEnergy + " RF");
     }
 
     @Override
-    public void onArmorTick(World world, EntityPlayer player, ItemStack stack){
-        if(!RarmorAPI.tickMap.containsKey(stack)){
-            RarmorAPI.tickMap.put(stack, RarmorAPI.createNewTabs());
-            if(!world.isRemote){
-                for(IRarmorTab tabTickable : RarmorAPI.tickMap.get(stack)){
-                    tabTickable.readFromNBT(NBTUtil.getTagFromStack(stack).getCompoundTag(tabTickable.getTabIdentifier(RarmorUtil.getRarmorChestplate(player), player)));
+    public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
+        if (!RarmorAPI.hasRarmorTabs(world, stack)) {
+            RarmorAPI.setNewTabsToStack(world, stack);
+            if (!world.isRemote) {
+                for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {
+                    NBTTagCompound tabNBT = NBTUtil.getTagFromStack(stack).getCompoundTag(tab.getTabIdentifier(stack, player));
+                    tab.readFromNBT(tabNBT);
                 }
-                ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
+                //((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
             }
         }
-        for(IRarmorTab tabTickable : RarmorAPI.tickMap.get(stack)){
-            tabTickable.tick(world, player, stack);
+        for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {
+            tab.tick(world, player, stack);
         }
     }
 
@@ -63,7 +75,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
 
     @Override
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot){
-        this.receiveEnergy(stack, 500, false);
+        this.extractEnergy(stack, 500, false);
     }
 
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,8 +35,9 @@ public class GuiContainerRarmor extends Container{
 
     private IRarmorTab activeTab;
     private EntityPlayer player;
+    private InventoryBasic energyField = new InventoryBasic("Energy Field", false, 2);
 
-    public GuiContainerRarmor(EntityPlayer player){
+    public GuiContainerRarmor(EntityPlayer player) {
         RarmorUtil.tryToRemap(player);
         this.player = player;
         this.readFromNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
@@ -42,17 +45,17 @@ public class GuiContainerRarmor extends Container{
 
         List<Slot> slots = new ArrayList<>();
         //Player Hotbar: 0-8
-        for(int j = 0; j < 9; ++j){
+        for (int j = 0; j < 9; ++j) {
             slots.add(new Slot(player.inventory, j, 44 + j * 18, 202));
         }
         //Player Inventory: 9-35
-        for(int j = 0; j < 3; ++j){
-            for(int k = 0; k < 9; ++k){
+        for (int j = 0; j < 3; ++j) {
+            for (int k = 0; k < 9; ++k) {
                 slots.add(new Slot(player.inventory, k + j * 9 + 9, 44 + k * 18, 144 + j * 18));
             }
         }
-        slots.addAll(this.activeTab.manipulateSlots(this, this.player, new ArrayList<>(), 4, 4));
-        for(Slot slot : slots){
+        slots.addAll(this.activeTab.manipulateSlots(this, this.player, new ArrayList<>(), this.energyField, 4, 4));
+        for (Slot slot : slots) {
             this.addSlotToContainer(slot);
         }
     }
@@ -75,21 +78,23 @@ public class GuiContainerRarmor extends Container{
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt){
-        if(!this.player.getEntityWorld().isRemote){
-            nbt.setTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player), this.activeTab.writeToNBT(new NBTTagCompound()));
-        }
         nbt.setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(this.activeTab.getClass()));
+        if(!this.player.worldObj.isRemote){
+            NBTUtil.writeInventory(nbt, this.energyField);
+            for(IRarmorTab tab : RarmorAPI.getTabsFromStack(this.player.getEntityWorld(), RarmorUtil.getRarmorChestplate(player))){
+                ItemStack stack = RarmorUtil.getRarmorChestplate(this.player);
+                NBTTagCompound tabNBT = nbt.getCompoundTag(tab.getTabIdentifier(stack, this.player));
+                nbt.setTag(tab.getTabIdentifier(stack, this.player), tab.writeToNBT(tabNBT));
+            }
+        }
         return nbt;
     }
 
     public void readFromNBT(NBTTagCompound nbt){
-        this.activeTab = RarmorAPI.getPossibleActiveTab(this.player, RarmorUtil.getRarmorChestplate(this.player), nbt);
-        /*
-        if(!this.player.getEntityWorld().isRemote){
-            this.activeTab.writeToNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), player)));
-            this.activeTab.readFromNBT(nbt.getCompoundTag(this.activeTab.getTabIdentifier(RarmorUtil.getRarmorChestplate(this.player), this.player)));
+        this.activeTab = RarmorAPI.getTabsFromStack(this.player.worldObj, RarmorUtil.getRarmorChestplate(this.player)).get(nbt.getInteger("RarmorTabID"));
+        if(!player.worldObj.isRemote){
+            this.energyField = NBTUtil.readInventory(nbt, this.energyField);
         }
-        */
     }
 
     public void setTabPacket(int tabID){
@@ -97,8 +102,13 @@ public class GuiContainerRarmor extends Container{
         NBTTagCompound nbt = this.writeToNBT(NBTUtil.getTagFromStack(stack));
         nbt.setInteger("RarmorTabID", tabID);
         NBTUtil.setTagFromStack(stack, nbt);
-        ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
         this.player.openGui(Rarmor.instance, 0, this.player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+    }
+
+    @Nullable
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
@@ -112,8 +122,8 @@ public class GuiContainerRarmor extends Container{
             super(new GuiContainerRarmor(player));
             this.player = player;
             ItemStack stack = RarmorUtil.getRarmorChestplate(player);
-            registeredTabs = RarmorAPI.getNewTabs(stack);
-            this.tab = RarmorAPI.getPossibleActiveTab(player, stack, NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
+            registeredTabs = RarmorAPI.getTabsFromStack(player.getEntityWorld(), stack);
+            this.tab = registeredTabs.get(NBTUtil.getTagFromStack(stack).getInteger("RarmorTabID"));
             sortTabs();
             this.xSize = 247;
             this.ySize = 226;
@@ -169,7 +179,10 @@ public class GuiContainerRarmor extends Container{
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
         public void setTab(IRarmorTab tab){
-            Rarmor.proxy.network.sendToServer(new PacketSetTab(this.player, tab));
+            if(tab != null){
+                NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(this.player)).setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(tab.getClass()));
+                Rarmor.proxy.network.sendToServer(new PacketSetTab(this.player, tab));
+            }
         }
     }
 

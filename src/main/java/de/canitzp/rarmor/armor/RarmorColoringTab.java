@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -46,7 +47,7 @@ public class RarmorColoringTab implements IRarmorTab{
     }
 
     @Override
-    public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, int containerOffsetLeft, int containerOffsetTop){
+    public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop){
         for (int k = 0; k < 4; ++k) {
             final EntityEquipmentSlot entityequipmentslot = RarmorOverviewTab.VALID_EQUIPMENT_SLOTS[k];
             slotList.add(new Slot(player.inventory, 36 + (3 - k),containerOffsetLeft + 29, containerOffsetTop + 30 + k * 20) {

@@ -1,6 +1,9 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.ItemRarmor;
+import de.canitzp.rarmor.network.PacketRarmorPacketData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -12,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketSetSlot;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -71,27 +75,24 @@ public class RarmorUtil{
             ItemStack stack = getRarmorChestplate(player);
             NBTTagCompound nbt = NBTUtil.getTagFromStack(stack);
             if(nbt.hasKey("isFirstOpened")){
-                System.out.println("remap");
+                Rarmor.logger.info(player.getName() + " has opened the new Rarmor. All of them Items of the old, are dropped to the ground.");
                 NBTTagList list = nbt.getTagList("Items", 10);
                 if(!list.hasNoTags()){
-                    InventoryBasic inventoryBasic = new InventoryBasic("Rarmor Inventory Tab", false, 63);
                     for(int i = 0; i < list.tagCount(); i++){
                         NBTTagCompound tagCompound = list.getCompoundTagAt(i);
                         byte slotIndex = tagCompound.getByte("Slot");
-                        if(slotIndex >= 0 && slotIndex < inventoryBasic.getSizeInventory()){
-                            inventoryBasic.setInventorySlotContents(slotIndex, ItemStack.loadItemStackFromNBT(tagCompound));
+                        if(slotIndex >= 0 && slotIndex < 63){
+                            player.dropItem(ItemStack.loadItemStackFromNBT(tagCompound), true);
                         }
                     }
-                    nbt.removeTag("Items");
-                    nbt.removeTag("isFirstOpened");
-                    NBTTagCompound invNBT;
-                    NBTUtil.writeInventory(invNBT = new NBTTagCompound(), inventoryBasic);
-                    nbt.merge(invNBT);
-                    NBTUtil.setTagFromStack(stack, nbt);
-                    ((EntityPlayerMP)player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
+                    player.addChatComponentMessage(new TextComponentString("Rarmor has updated. All of you Items are dropped to the ground, to avoid the loss of them."));
                 }
             }
         }
+    }
+
+    public static void syncTab(EntityPlayerMP player, IRarmorTab tab){
+        Rarmor.proxy.network.sendTo(new PacketRarmorPacketData(player, tab.getPacketData(player, getRarmorChestplate(player)), RarmorAPI.registeredTabs.indexOf(tab.getClass())), player);
     }
 
 }

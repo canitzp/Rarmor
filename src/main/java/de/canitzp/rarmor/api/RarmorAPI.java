@@ -1,13 +1,10 @@
 package de.canitzp.rarmor.api;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author canitzp
@@ -16,7 +13,8 @@ public class RarmorAPI{
 
     public static List<Class<? extends IRarmorTab>> registeredTabs = new ArrayList<>();
     public static Map<Integer, String> registerColor = new HashMap<>();
-    public static Map<ItemStack, List<IRarmorTab>> tickMap = new HashMap<>();
+    public static Map<UUID, List<IRarmorTab>> tabListServer = new HashMap<>();
+    public static Map<UUID, List<IRarmorTab>> tabListClient = new HashMap<>();
 
     public static void registerRarmorTab(Class<? extends IRarmorTab> classToRegister){
         if(!registeredTabs.contains(classToRegister)){
@@ -24,21 +22,35 @@ public class RarmorAPI{
         }
     }
 
-    public static List<IRarmorTab> getNewTabs(ItemStack stack){
-        return tickMap.get(stack);
+    public static Map<UUID, List<IRarmorTab>> getSidedTabs(World world){
+        return world.isRemote ? tabListClient : tabListServer;
     }
 
-    public static IRarmorTab getPossibleActiveTab(EntityPlayer player, ItemStack rarmor, NBTTagCompound rarmorNBT){
-        List<IRarmorTab> tabs = getNewTabs(rarmor);
-        if(RarmorAPI.tickMap.get(rarmor) == null){
-            RarmorAPI.tickMap.put(rarmor, createNewTabs());
-            tabs = getNewTabs(rarmor);
+    public static boolean hasRarmorTabs(World world, ItemStack stack){
+        return getTabsFromStack(world, stack) != null;
+    }
+
+    public static List<IRarmorTab> getTabsFromStack(World world, ItemStack stack){
+        NBTTagCompound nbt = stack.getTagCompound();
+        if(nbt != null){
+            UUID uuid = nbt.getUniqueId("RarmorUUID");
+            return getSidedTabs(world).containsKey(uuid) ? getSidedTabs(world).get(uuid) : null;
         }
-        if(!tabs.isEmpty()){
-            IRarmorTab tab = tabs.get(rarmorNBT.getInteger("RarmorTabID"));
-            return tab.canBeVisible(rarmor, player) ? tab : tabs.get(0);
+        return null;
+    }
+
+    public static void setNewTabsToStack(World world, ItemStack stack){
+        UUID uuid = UUID.randomUUID();
+        if(!RarmorAPI.getSidedTabs(world).containsKey(uuid)){
+            NBTTagCompound nbt = stack.getTagCompound();
+            if(nbt == null){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            stack.getTagCompound().setUniqueId("RarmorUUID", uuid);
+            RarmorAPI.getSidedTabs(world).put(uuid, createNewTabs());
+        } else {
+            setNewTabsToStack(world, stack);
         }
-        return getNewTabs(rarmor).get(0);
     }
 
     public static void registerColor(int hexValue, String name){
@@ -47,7 +59,7 @@ public class RarmorAPI{
         }
     }
 
-    public static List<IRarmorTab> createNewTabs(){
+    private static List<IRarmorTab> createNewTabs(){
         List<IRarmorTab> tickables = new ArrayList<>();
         for(Class<? extends IRarmorTab> tab : registeredTabs){
             try{
