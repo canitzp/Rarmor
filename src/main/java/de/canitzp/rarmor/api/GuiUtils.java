@@ -1,7 +1,13 @@
 package de.canitzp.rarmor.api;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.Stitcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
@@ -44,6 +50,11 @@ public class GuiUtils{
         gui.drawTexturedModalRect(x, y, 62, 0, 16, 16);
     }
 
+    public static void drawCheckBox(GuiScreen gui, int x, int y, boolean state){
+        gui.mc.getTextureManager().bindTexture(utilsLoc);
+        gui.drawTexturedModalRect(x, y, 91, state ? 9 : 0, 9, 9);
+    }
+
     public static void drawBattery(GuiScreen gui, int x, int y, int maxEnergy, int currentEnergy){
         gui.mc.getTextureManager().bindTexture(utilsLoc);
         int factor = currentEnergy * 21 / maxEnergy;
@@ -78,6 +89,7 @@ public class GuiUtils{
 
     public static IInventory addEnergyField(List<Slot> slots, IInventory inventory, int x, int y){
         slots.add(new Slot(inventory, 0, x + 14, y + 46));
+        slots.add(new Slot(inventory, 1, x + 14, y + 46 + 18));
         return inventory;
     }
 
@@ -99,6 +111,86 @@ public class GuiUtils{
         public void draw(GuiScreen gui, int x, int y){
             gui.drawTexturedModalRect(x, y, this.x, this.y, this.width, this.height);
         }
+    }
+
+    public static void drawHoveringText(GuiScreen gui, int x, int y, List<String> textLines){
+        if (!textLines.isEmpty()) {
+            GlStateManager.disableRescaleNormal();
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            int i = 0;
+            for (String s : textLines) {
+                int j = gui.mc.fontRendererObj.getStringWidth(s);
+                if (j > i) {
+                    i = j;
+                }
+            }
+            int l1 = x + 12;
+            int i2 = y - 12;
+            int k = 8;
+            if (textLines.size() > 1) {
+                k += 2 + (textLines.size() - 1) * 10;
+            }
+            if (l1 + i > gui.width) {
+                l1 -= 28 + i;
+            }
+            if (i2 + k + 6 > gui.height) {
+                i2 = gui.height - k - 6;
+            }
+            int l = -267386864;
+            drawGradientRect(l1 - 3, i2 - 4, l1 + i + 3, i2 - 3, l, l);
+            drawGradientRect(l1 - 3, i2 + k + 3, l1 + i + 3, i2 + k + 4, l, l);
+            drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 + k + 3, l, l);
+            drawGradientRect(l1 - 4, i2 - 3, l1 - 3, i2 + k + 3, l, l);
+            drawGradientRect(l1 + i + 3, i2 - 3, l1 + i + 4, i2 + k + 3, l, l);
+            int i1 = 1347420415;
+            int j1 = (i1 & 16711422) >> 1 | i1 & -16777216;
+            drawGradientRect(l1 - 3, i2 - 3 + 1, l1 - 3 + 1, i2 + k + 3 - 1, i1, j1);
+            drawGradientRect(l1 + i + 2, i2 - 3 + 1, l1 + i + 3, i2 + k + 3 - 1, i1, j1);
+            drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 - 3 + 1, i1, i1);
+            drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
+            for (int k1 = 0; k1 < textLines.size(); ++k1) {
+                String s1 = textLines.get(k1);
+                gui.mc.fontRendererObj.drawStringWithShadow(s1, (float)l1, (float)i2, -1);
+                if (k1 == 0) {
+                    i2 += 2;
+                }
+                i2 += 10;
+            }
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
+            RenderHelper.enableStandardItemLighting();
+            GlStateManager.enableRescaleNormal();
+        }
+    }
+
+    public static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+        float f = (float)(startColor >> 24 & 255) / 255.0F;
+        float f1 = (float)(startColor >> 16 & 255) / 255.0F;
+        float f2 = (float)(startColor >> 8 & 255) / 255.0F;
+        float f3 = (float)(startColor & 255) / 255.0F;
+        float f4 = (float)(endColor >> 24 & 255) / 255.0F;
+        float f5 = (float)(endColor >> 16 & 255) / 255.0F;
+        float f6 = (float)(endColor >> 8 & 255) / 255.0F;
+        float f7 = (float)(endColor & 255) / 255.0F;
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+        vertexbuffer.pos((double)right, (double)top, 0).color(f1, f2, f3, f).endVertex();
+        vertexbuffer.pos((double)left, (double)top, 0).color(f1, f2, f3, f).endVertex();
+        vertexbuffer.pos((double)left, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+        vertexbuffer.pos((double)right, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+        tessellator.draw();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
     }
 
 }

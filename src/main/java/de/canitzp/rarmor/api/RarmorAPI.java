@@ -1,9 +1,12 @@
 package de.canitzp.rarmor.api;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -26,6 +29,10 @@ public class RarmorAPI{
         return world.isRemote ? tabListClient : tabListServer;
     }
 
+    public static UUID getUUIDFromStack(ItemStack stack){
+        return stack.getTagCompound().getUniqueId("RarmorUUID");
+    }
+
     public static boolean hasRarmorTabs(World world, ItemStack stack){
         return getTabsFromStack(world, stack) != null;
     }
@@ -39,17 +46,17 @@ public class RarmorAPI{
         return null;
     }
 
-    public static void setNewTabsToStack(World world, ItemStack stack){
+    public static void setNewTabsToStack(EntityPlayer player, ItemStack stack){
         UUID uuid = UUID.randomUUID();
-        if(!RarmorAPI.getSidedTabs(world).containsKey(uuid)){
+        if(!RarmorAPI.getSidedTabs(player.getEntityWorld()).containsKey(uuid)){
             NBTTagCompound nbt = stack.getTagCompound();
             if(nbt == null){
                 stack.setTagCompound(new NBTTagCompound());
             }
             stack.getTagCompound().setUniqueId("RarmorUUID", uuid);
-            RarmorAPI.getSidedTabs(world).put(uuid, createNewTabs());
+            RarmorAPI.getSidedTabs(player.getEntityWorld()).put(uuid, createNewTabs(player, stack));
         } else {
-            setNewTabsToStack(world, stack);
+            setNewTabsToStack(player, stack);
         }
     }
 
@@ -59,16 +66,28 @@ public class RarmorAPI{
         }
     }
 
-    private static List<IRarmorTab> createNewTabs(){
+    private static List<IRarmorTab> createNewTabs(EntityPlayer player, ItemStack stack){
         List<IRarmorTab> tickables = new ArrayList<>();
         for(Class<? extends IRarmorTab> tab : registeredTabs){
             try{
-                tickables.add(tab.newInstance());
-            } catch(InstantiationException | IllegalAccessException e){
+                try{
+                    tickables.add(tab.getConstructor(EntityPlayer.class, ItemStack.class).newInstance(player, stack));
+                } catch (NoSuchMethodException e){
+                    tickables.add(tab.newInstance());
+                }
+            } catch(InstantiationException | IllegalAccessException | InvocationTargetException e){
                 e.printStackTrace();
             }
         }
         return tickables;
+    }
+
+    public static IRarmorTab getTabFromClass(World world, ItemStack stack, Class<? extends IRarmorTab> c){
+        List<IRarmorTab> tabs = getTabsFromStack(world, stack);
+        if(tabs != null && !tabs.isEmpty()){
+            return tabs.get(registeredTabs.indexOf(c));
+        }
+        return null;
     }
 
     public static int receiveEnergy(ItemStack container, int receive, boolean simulate){

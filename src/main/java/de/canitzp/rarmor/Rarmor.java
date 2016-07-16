@@ -62,6 +62,7 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorInventoryTab.class);
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
         RarmorAPI.registerRarmorTab(RarmorCoalGeneratorTab.class);
+        RarmorAPI.registerRarmorTab(RarmorSettingsTab.class);
         initConfigValues(event);
         Registry.initItems(event);
         registerColors();

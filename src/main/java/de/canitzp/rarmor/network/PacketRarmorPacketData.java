@@ -21,13 +21,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class PacketRarmorPacketData implements IMessage, IMessageHandler<PacketRarmorPacketData, IMessage> {
 
     private NBTTagCompound nbtTagCompound;
-    private EntityPlayer player;
     private int tabID;
 
     public PacketRarmorPacketData(){}
 
-    public PacketRarmorPacketData(EntityPlayer player, NBTTagCompound nbt, int tabID){
-        this.player = player;
+    public PacketRarmorPacketData(NBTTagCompound nbt, int tabID){
         this.nbtTagCompound = nbt;
         this.tabID = tabID;
     }
@@ -53,7 +51,7 @@ public class PacketRarmorPacketData implements IMessage, IMessageHandler<PacketR
                 if(stack != null){
                     if(RarmorAPI.hasRarmorTabs(player.worldObj, stack)){
                         IRarmorTab tab = RarmorAPI.getTabsFromStack(player.worldObj, stack).get(message.tabID);
-                        tab.onPacketData(message.nbtTagCompound);
+                        tab.onPacketData(player, stack, message.nbtTagCompound);
                     }
                 }
             }

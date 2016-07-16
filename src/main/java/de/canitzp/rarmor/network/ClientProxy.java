@@ -4,17 +4,23 @@ import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.Registry;
+import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.RarmorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +31,7 @@ public class ClientProxy extends CommonProxy{
     @Override
     public void preInit(FMLPreInitializationEvent event){
         super.preInit(event);
+        network.registerMessage(PacketRarmorPacketData.class, PacketRarmorPacketData.class, 3, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -55,9 +62,18 @@ public class ClientProxy extends CommonProxy{
     @SubscribeEvent
     public void openGui(GuiOpenEvent event){
         if(event.getGui() instanceof GuiInventory){
-            if(!Minecraft.getMinecraft().thePlayer.isSneaking() && RarmorUtil.isPlayerWearingArmor(Minecraft.getMinecraft().thePlayer)){
-                event.setCanceled(true);
-                network.sendToServer(new PacketOpenGui(Minecraft.getMinecraft().thePlayer, 0));
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            if(RarmorUtil.isPlayerWearingArmor(player)){
+                List<IRarmorTab> tabs = RarmorAPI.getTabsFromStack(Minecraft.getMinecraft().theWorld, RarmorUtil.getRarmorChestplate(player));
+                if(tabs != null && !tabs.isEmpty()){
+                    for(IRarmorTab tab : tabs){
+                        tab.preOpen(player, RarmorUtil.getRarmorChestplate(player));
+                    }
+                }
+                if(player.isSneaking() == RarmorSettings.getSettingBoolean(RarmorUtil.getRarmorChestplate(player), RarmorSettings.Settings.INVERTED_OPENING)){//RarmorSettings.getSettingBoolean(RarmorSettings.Settings.INVERTED_OPENING)){
+                    event.setCanceled(true);
+                    network.sendToServer(new PacketOpenGui(player, 0));
+                }
             }
         }
     }

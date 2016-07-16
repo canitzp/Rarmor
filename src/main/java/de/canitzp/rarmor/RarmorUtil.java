@@ -4,6 +4,7 @@ import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.ItemRarmor;
 import de.canitzp.rarmor.network.PacketRarmorPacketData;
+import de.canitzp.rarmor.network.PacketSendBoolean;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -92,7 +93,15 @@ public class RarmorUtil{
     }
 
     public static void syncTab(EntityPlayerMP player, IRarmorTab tab){
-        Rarmor.proxy.network.sendTo(new PacketRarmorPacketData(player, tab.getPacketData(player, getRarmorChestplate(player)), RarmorAPI.registeredTabs.indexOf(tab.getClass())), player);
+        Rarmor.proxy.network.sendTo(new PacketRarmorPacketData(tab.getPacketData(player, getRarmorChestplate(player)), RarmorAPI.registeredTabs.indexOf(tab.getClass())), player);
+    }
+
+    public static void syncBoolToServer(EntityPlayer player, IRarmorTab tab, int key, boolean bool){
+        Rarmor.proxy.network.sendToServer(new PacketSendBoolean(player, tab, key, bool));
+    }
+
+    public static NBTTagCompound getTabNBT(IRarmorTab tab, EntityPlayer player){
+        return NBTUtil.getTagFromStack(getRarmorChestplate(player)).getCompoundTag(tab.getTabIdentifier(getRarmorChestplate(player), player));
     }
 
 }

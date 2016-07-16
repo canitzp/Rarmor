@@ -45,7 +45,12 @@ public interface IRarmorTab{
     default NBTTagCompound getPacketData(EntityPlayerMP player, ItemStack stack){return new NBTTagCompound();}
 
     @SideOnly(Side.CLIENT)
-    default void onPacketData(NBTTagCompound nbt){}
+    default void onPacketData(EntityPlayer player, ItemStack stack, NBTTagCompound nbt){}
+
+    @SideOnly(Side.CLIENT)
+    default void preOpen(EntityPlayer player, ItemStack stack){}
+
+    default void onPacketBool(EntityPlayer player, int id, boolean bool){}
 
     /**
      * Container Manipulation

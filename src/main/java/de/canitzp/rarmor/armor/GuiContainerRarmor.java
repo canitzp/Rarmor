@@ -213,7 +213,7 @@ public class GuiContainerRarmor extends Container{
             }
         }
         public void onMouseClick(GuiRarmor gui, int guiLeft, int guiTop, int mouseX, int mouseY){
-            if(isMouseOver(guiLeft, guiTop, mouseX, mouseY) && this.hoveringText != null){
+            if(isMouseOver(guiLeft, guiTop, mouseX, mouseY)){
                 gui.setTab(this.tab);
             }
         }

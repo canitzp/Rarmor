@@ -49,7 +49,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
         if (!RarmorAPI.hasRarmorTabs(world, stack)) {
-            RarmorAPI.setNewTabsToStack(world, stack);
+            RarmorAPI.setNewTabsToStack(player, stack);
             if (!world.isRemote) {
                 for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {
                     NBTTagCompound tabNBT = NBTUtil.getTagFromStack(stack).getCompoundTag(tab.getTabIdentifier(stack, player));
@@ -61,6 +61,11 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
         for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {
             tab.tick(world, player, stack);
         }
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return (RarmorValues.rarmorMaxEnergy-NBTUtil.getEnergy(stack))/RarmorValues.rarmorMaxEnergy;
     }
 
     @Override

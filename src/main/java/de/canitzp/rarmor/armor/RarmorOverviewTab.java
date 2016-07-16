@@ -1,11 +1,14 @@
 package de.canitzp.rarmor.armor;
 
+import cofh.api.energy.IEnergyContainerItem;
+import cofh.api.energy.IEnergyProvider;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.GuiUtils;
 import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -14,7 +17,9 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,6 +33,7 @@ public class RarmorOverviewTab implements IRarmorTab{
 
     private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabOverview.png");
     public static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+    private InventoryBasic energyField;
 
     @Override
     public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop){
@@ -52,7 +58,24 @@ public class RarmorOverviewTab implements IRarmorTab{
             }
         });
         GuiUtils.addEnergyField(slotList, energyField, 6, 6);
+        this.energyField = energyField;
         return slotList;
+    }
+
+    @Override
+    public void tick(World world, EntityPlayer player, ItemStack stack) {
+        if (!world.isRemote && this.energyField != null) {
+            ItemStack input1 = this.energyField.getStackInSlot(0);
+            ItemStack input2 = this.energyField.getStackInSlot(1);
+            if (input1 != null) {
+                if (input1.getItem() instanceof IEnergyContainerItem) {
+                    if(NBTUtil.getEnergy(stack) + RarmorValues.rarmorMaxTransfer <= RarmorAPI.extractEnergy(input1, RarmorValues.rarmorMaxTransfer, true)){
+                        RarmorAPI.receiveEnergy(stack, RarmorValues.rarmorMaxTransfer, true);
+                        ((IEnergyContainerItem) input1.getItem()).extractEnergy(input1, RarmorValues.rarmorMaxTransfer, false);
+                    }
+                }
+            }
+        }
     }
 
     @Override

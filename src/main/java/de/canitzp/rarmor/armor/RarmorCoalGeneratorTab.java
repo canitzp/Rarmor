@@ -103,7 +103,7 @@ public class RarmorCoalGeneratorTab extends RarmorOneSlotTab{
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void onPacketData(NBTTagCompound nbt) {
+    public void onPacketData(EntityPlayer player, ItemStack stack, NBTTagCompound nbt) {
         this.currentMaxBurnTime = nbt.getInteger("CurrentMaxBurnTime");
         this.currentBurnTime = nbt.getInteger("CurrentBurnTime");
         this.energy = nbt.getInteger("Energy");
