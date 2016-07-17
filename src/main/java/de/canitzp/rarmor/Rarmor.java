@@ -5,6 +5,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.armor.*;
 import de.canitzp.rarmor.network.CommonProxy;
+import de.canitzp.rarmor.network.PacketHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -72,9 +74,11 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
+        PacketHandler.init();
         proxy.init(event);
     }
 
+    @Mod.EventHandler
     public void missingMapping(FMLMissingMappingsEvent event){
         for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
             if(mapping.name.startsWith("rarmor:")){
@@ -108,7 +112,7 @@ public class Rarmor{
 
     private void initCraftingRecipes(){
         RecipeSorter.register("RarmorDependencyCrafting", RarmorDependencyCrafting.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
-        GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CHEST, Blocks.CHEST, Blocks.CHEST));
+        GameRegistry.addRecipe(new RarmorDependencyCrafting(Pair.of("DependencyChest", true), Blocks.CRAFTING_TABLE, Blocks.CHEST, Blocks.CHEST));
     }
 
     private void initConfigValues(FMLPreInitializationEvent event){

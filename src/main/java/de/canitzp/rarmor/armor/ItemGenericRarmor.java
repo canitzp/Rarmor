@@ -9,6 +9,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class ItemGenericRarmor extends ItemArmor{
         Registry.registerItem(this, "rarmor" + equipmentSlotIn.getName());
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
         if((type != null && type.equals("overlay")) || NBTUtil.getTagFromStack(stack).getBoolean("isTransparent")){
@@ -31,6 +34,7 @@ public class ItemGenericRarmor extends ItemArmor{
         return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         super.addInformation(stack, playerIn, tooltip, advanced);

@@ -11,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
@@ -21,13 +23,20 @@ public class RarmorSettingsTab implements IRarmorTab {
 
     private Map<GuiCheckBox, RarmorSettings.Settings> checks = new HashMap<>();
 
-    public RarmorSettingsTab(){
-        this.checks.put(new GuiCheckBox(15, 15, "Invert Rarmor/Inventory Opening", Collections.singletonList("")), RarmorSettings.Settings.INVERTED_OPENING);
+    public RarmorSettingsTab(EntityPlayer player, ItemStack stack){
+        if(!player.worldObj.isRemote){
+            this.checks.put(new GuiCheckBox(15, 15, "Invert Rarmor/Inventory Opening", Collections.singletonList("")), RarmorSettings.Settings.INVERTED_OPENING);
+        }
     }
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player) {
         return Rarmor.MODID + ":settingsTab";
+    }
+
+    @Override
+    public String getTabHoveringText() {
+        return "Settings [Not Implemented]";
     }
 
     @Override
@@ -37,6 +46,7 @@ public class RarmorSettingsTab implements IRarmorTab {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks) {
         for(GuiCheckBox box : this.checks.keySet()){
@@ -44,6 +54,7 @@ public class RarmorSettingsTab implements IRarmorTab {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawForeground(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks) {
         for(GuiCheckBox box : this.checks.keySet()){
@@ -51,6 +62,7 @@ public class RarmorSettingsTab implements IRarmorTab {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onMouseClick(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int btnID) {
         if(btnID == 0){
@@ -86,6 +98,7 @@ public class RarmorSettingsTab implements IRarmorTab {
         return nbt;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onPacketData(EntityPlayer player, ItemStack stack, NBTTagCompound nbt) {
         this.readFromNBT(nbt);

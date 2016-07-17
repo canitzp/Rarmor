@@ -3,8 +3,10 @@ package de.canitzp.rarmor.armor;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.GuiUtils;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketPaintRarmor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -34,14 +36,18 @@ public class RarmorColoringTab implements IRarmorTab{
     private ArmorSlot clickedSlot = ArmorSlot.CHEST;
     private List<ColorButton> availabeColors = new ArrayList<>();
 
-    public RarmorColoringTab(){
-        int x = 0, y = 0;
-        for(Map.Entry<Integer, String> entry : RarmorAPI.registerColor.entrySet()){
-            availabeColors.add(new ColorButton(new Color(entry.getKey(), entry.getValue()), x * 10 + 29 + 28, y * 10 + 17 + 16));
-            x++;
-            if(x >= 16){
-                y++;
-                x = 0;
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void initGui(GuiContainer gui, EntityPlayer player) {
+        if(availabeColors.isEmpty()){
+            int x = 0, y = 0;
+            for(Map.Entry<Integer, String> entry : RarmorAPI.registerColor.entrySet()){
+                availabeColors.add(new ColorButton(new Color(entry.getKey(), entry.getValue()), x * 10 + 29 + 28, y * 10 + 17 + 16));
+                x++;
+                if(x >= 16){
+                    y++;
+                    x = 0;
+                }
             }
         }
     }
@@ -69,17 +75,20 @@ public class RarmorColoringTab implements IRarmorTab{
         return Rarmor.MODID + ":coloringTab";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawTab(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop){
         gui.mc.getTextureManager().bindTexture(this.tabLoc);
         gui.drawTexturedModalRect(guiLeft, guiTop, 24, 138, 16, 16);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public String getTabHoveringText(){
         return "Rarmor Color";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         gui.mc.getTextureManager().bindTexture(this.tabLoc);
@@ -92,6 +101,7 @@ public class RarmorColoringTab implements IRarmorTab{
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onMouseClick(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, int btnID){
         if(guiLeft + 32 <= mouseX && guiLeft + 48 >= mouseX){
@@ -107,12 +117,13 @@ public class RarmorColoringTab implements IRarmorTab{
                 ItemStack part = RarmorUtil.getPlayerArmorPart(player, this.clickedSlot.slot);
                 if(part != null){
                     NBTUtil.setColor(part, color);
-                    Rarmor.proxy.network.sendToServer(new PacketPaintRarmor(player, this.clickedSlot.slot, color));
+                    PacketHandler.network.sendToServer(new PacketPaintRarmor(player, this.clickedSlot.slot, color));
                 }
             }
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawForeground(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         for(ColorButton button : this.availabeColors){
@@ -133,7 +144,7 @@ public class RarmorColoringTab implements IRarmorTab{
         }
     }
 
-    public static class ColorButton extends Gui{
+    public static class ColorButton {
         public Color color;
         public int x, y, width = 8, height = 8;
         private ResourceLocation iconLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabColoring.png");
@@ -142,6 +153,8 @@ public class RarmorColoringTab implements IRarmorTab{
             this.x = x;
             this.y = y;
         }
+
+        @SideOnly(Side.CLIENT)
         public void render(GuiContainer gui, int guiLeft, int guiTop){
             GlStateManager.pushMatrix();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -151,16 +164,19 @@ public class RarmorColoringTab implements IRarmorTab{
             float f2 = (float)(i & 255) / 255.0F;
             GlStateManager.color(1.0F * f, 1.0F * f1, 1.0F * f2, 1.0F);
             gui.mc.getTextureManager().bindTexture(iconLoc);
-            this.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 16, 138, 8, 8);
+            GuiUtils.drawTexturedModalRect(this.x + guiLeft, this.y + guiTop, 16, 138, 8, 8);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.popMatrix();
         }
+
+        @SideOnly(Side.CLIENT)
         public void drawScreen(GuiContainerRarmor.GuiRarmor gui, int guiLeft, int guiTop, int mouseX, int mouseY){
             if(isMouseOver(guiLeft, guiTop, mouseX, mouseY)){
                 gui.drawHoveringText(Collections.singletonList(this.color.showName), mouseX, mouseY);
             }
         }
 
+        @SideOnly(Side.CLIENT)
         public boolean isMouseOver(int guiLeft, int guiTop, int mouseX, int mouseY){
             if(mouseX >= x + guiLeft && mouseY >= y + guiTop) {
                 if (mouseX <= x + width + guiLeft && mouseY <= y + height + guiTop) {
@@ -170,6 +186,7 @@ public class RarmorColoringTab implements IRarmorTab{
             return false;
         }
 
+        @SideOnly(Side.CLIENT)
         public Color onClick(int guiLeft, int guiTop, int mouseX, int mouseY){
             if(isMouseOver(guiLeft, guiTop, mouseX, mouseY)) {
                 return this.color;

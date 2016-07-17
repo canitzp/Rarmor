@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,12 @@ import java.util.Map;
 /**
  * @author canitzp
  */
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy{
 
     @Override
     public void preInit(FMLPreInitializationEvent event){
         super.preInit(event);
-        network.registerMessage(PacketRarmorPacketData.class, PacketRarmorPacketData.class, 3, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -72,7 +73,7 @@ public class ClientProxy extends CommonProxy{
                 }
                 if(player.isSneaking() == RarmorSettings.getSettingBoolean(RarmorUtil.getRarmorChestplate(player), RarmorSettings.Settings.INVERTED_OPENING)){//RarmorSettings.getSettingBoolean(RarmorSettings.Settings.INVERTED_OPENING)){
                     event.setCanceled(true);
-                    network.sendToServer(new PacketOpenGui(player, 0));
+                    PacketHandler.network.sendToServer(new PacketOpenGui(player, 0));
                 }
             }
         }

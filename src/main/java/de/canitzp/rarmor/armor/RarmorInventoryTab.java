@@ -13,6 +13,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -54,16 +56,19 @@ public class RarmorInventoryTab implements IRarmorTab{
         this.inventory = NBTUtil.readInventory(nbt, this.inventory);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getTabIcon(){
         return new ItemStack(Blocks.CHEST);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public String getTabHoveringText(){
         return "Inventory";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         GuiUtils.drawSlotField(gui, guiLeft + 8, guiTop + 8, 9, 7);

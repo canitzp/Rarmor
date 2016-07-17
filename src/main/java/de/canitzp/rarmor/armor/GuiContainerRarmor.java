@@ -5,6 +5,7 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketSetTab;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -69,12 +70,6 @@ public class GuiContainerRarmor extends Container{
     public void onContainerClosed(EntityPlayer player){
         this.writeToNBT(NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(player)));
         super.onContainerClosed(player);
-    }
-
-    @Override
-    public void addListener(IContainerListener listener){
-        super.addListener(listener);
-        this.activeTab.addListener(this, this.player, listener);
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound nbt){
@@ -181,7 +176,7 @@ public class GuiContainerRarmor extends Container{
         public void setTab(IRarmorTab tab){
             if(tab != null){
                 NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(this.player)).setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(tab.getClass()));
-                Rarmor.proxy.network.sendToServer(new PacketSetTab(this.player, tab));
+                PacketHandler.network.sendToServer(new PacketSetTab(this.player, tab));
             }
         }
     }

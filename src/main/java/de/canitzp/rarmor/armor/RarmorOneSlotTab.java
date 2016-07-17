@@ -12,6 +12,8 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ public abstract class RarmorOneSlotTab implements IRarmorTab{
         return slotList;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public String getTabHoveringText(){
         return this.tabName;
@@ -54,6 +57,7 @@ public abstract class RarmorOneSlotTab implements IRarmorTab{
         return NBTUtil.writeInventory(nbt, this.inventory);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         GuiUtils.drawBigSlot(gui, guiLeft + 110, guiTop + 55);

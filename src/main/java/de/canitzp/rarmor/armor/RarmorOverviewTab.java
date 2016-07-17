@@ -83,16 +83,19 @@ public class RarmorOverviewTab implements IRarmorTab{
         return Rarmor.MODID + ":overviewTab";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getTabIcon(){
         return new ItemStack(Registry.rarmorChestplate);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public String getTabHoveringText(){
         return "Overview";
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks){
         gui.mc.getTextureManager().bindTexture(this.tabLoc);

@@ -60,7 +60,7 @@ public class RarmorCoalGeneratorTab extends RarmorOneSlotTab{
 
     @Override
     public List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop) {
-        if(!player.worldObj.isRemote) RarmorUtil.syncTab((EntityPlayerMP) player, this);
+        if(player instanceof EntityPlayerMP) RarmorUtil.syncTab((EntityPlayerMP) player, this);
         GuiUtils.addEnergyField(slotList, energyField, 6, 6);
         return super.manipulateSlots(container, player, slotList, energyField, containerOffsetLeft, containerOffsetTop);
     }
@@ -87,6 +87,7 @@ public class RarmorCoalGeneratorTab extends RarmorOneSlotTab{
         return super.writeToNBT(nbt);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getTabIcon(){
         return new ItemStack(Items.COAL);

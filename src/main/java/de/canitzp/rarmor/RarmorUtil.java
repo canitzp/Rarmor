@@ -3,6 +3,7 @@ package de.canitzp.rarmor;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.ItemRarmor;
+import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketRarmorPacketData;
 import de.canitzp.rarmor.network.PacketSendBoolean;
 import net.minecraft.client.Minecraft;
@@ -15,8 +16,10 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -93,11 +96,15 @@ public class RarmorUtil{
     }
 
     public static void syncTab(EntityPlayerMP player, IRarmorTab tab){
-        Rarmor.proxy.network.sendTo(new PacketRarmorPacketData(tab.getPacketData(player, getRarmorChestplate(player)), RarmorAPI.registeredTabs.indexOf(tab.getClass())), player);
+        ItemStack stack = getRarmorChestplate(player);
+        int id = RarmorAPI.registeredTabs.indexOf(tab.getClass());
+        IMessage p = new PacketRarmorPacketData(player, tab.getPacketData(player, stack), id);
+        PacketHandler.network.sendTo(p, player);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void syncBoolToServer(EntityPlayer player, IRarmorTab tab, int key, boolean bool){
-        Rarmor.proxy.network.sendToServer(new PacketSendBoolean(player, tab, key, bool));
+        PacketHandler.network.sendToServer(new PacketSendBoolean(player, tab, key, bool));
     }
 
     public static NBTTagCompound getTabNBT(IRarmorTab tab, EntityPlayer player){

@@ -18,6 +18,8 @@ import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,6 +34,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
         this.setMaxDamage(Rarmor.rarmorMaterial.getDurability(equipmentSlotIn));
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
         super.addInformation(stack, playerIn, tooltip, advanced);
@@ -63,6 +66,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         return (RarmorValues.rarmorMaxEnergy-NBTUtil.getEnergy(stack))/RarmorValues.rarmorMaxEnergy;
@@ -88,6 +92,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public boolean showDurabilityBar(ItemStack stack){
         return true;
