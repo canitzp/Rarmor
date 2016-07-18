@@ -98,13 +98,13 @@ public class RarmorUtil{
     public static void syncTab(EntityPlayerMP player, IRarmorTab tab){
         ItemStack stack = getRarmorChestplate(player);
         int id = RarmorAPI.registeredTabs.indexOf(tab.getClass());
-        IMessage p = new PacketRarmorPacketData(player, tab.getPacketData(player, stack), id);
+        IMessage p = new PacketRarmorPacketData(tab.getPacketData(player, stack), id);
         PacketHandler.network.sendTo(p, player);
     }
 
     @SideOnly(Side.CLIENT)
     public static void syncBoolToServer(EntityPlayer player, IRarmorTab tab, int key, boolean bool){
-        PacketHandler.network.sendToServer(new PacketSendBoolean(player, tab, key, bool));
+        PacketHandler.network.sendToServer(new PacketSendBoolean(tab, key, bool));
     }
 
     public static NBTTagCompound getTabNBT(IRarmorTab tab, EntityPlayer player){

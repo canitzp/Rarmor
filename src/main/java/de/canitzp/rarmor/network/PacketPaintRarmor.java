@@ -16,51 +16,42 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author canitzp
  */
-public class PacketPaintRarmor implements IMessage{
+public class PacketPaintRarmor implements IMessage {
 
-    public int worldID, playerID, armorSlot;
-    public RarmorColoringTab.Color color;
+	public int armorSlot;
+	public RarmorColoringTab.Color color;
 
-    public PacketPaintRarmor(){
+	public PacketPaintRarmor() {
 
-    }
+	}
 
-    public PacketPaintRarmor(EntityPlayer player, EntityEquipmentSlot armor, RarmorColoringTab.Color color){
-        this.worldID = player.getEntityWorld().provider.getDimension();
-        this.playerID = player.getEntityId();
-        this.armorSlot = armor.getIndex();
-        this.color = color;
-    }
+	public PacketPaintRarmor(EntityEquipmentSlot armor, RarmorColoringTab.Color color) {
+		this.armorSlot = armor.getIndex();
+		this.color = color;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-        this.playerID = buf.readInt();
-        this.worldID = buf.readInt();
-        this.armorSlot = buf.readInt();
-        int colorHex = buf.readInt();
-        this.color = new RarmorColoringTab.Color(colorHex, RarmorAPI.registerColor.get(colorHex));
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.armorSlot = buf.readInt();
+		int colorHex = buf.readInt();
+		this.color = new RarmorColoringTab.Color(colorHex, RarmorAPI.registerColor.get(colorHex));
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf){
-        buf.writeInt(this.playerID);
-        buf.writeInt(this.worldID);
-        buf.writeInt(this.armorSlot);
-        buf.writeInt(this.color.hexValue);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(this.armorSlot);
+		buf.writeInt(this.color.hexValue);
+	}
 
-    public static class Handler implements IMessageHandler<PacketPaintRarmor, IMessage>{
-        @Override
-        public IMessage onMessage(PacketPaintRarmor message, MessageContext ctx){
-            World world = DimensionManager.getWorld(message.worldID);
-            if(world != null){
-                EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-                if(player != null){
-                    ItemStack stack = player.inventory.armorInventory[message.armorSlot];
-                    NBTUtil.setColor(stack, message.color);
-                }
-            }
-            return null;
-        }
-    }
+	public static class Handler implements IMessageHandler<PacketPaintRarmor, IMessage> {
+		@Override
+		public IMessage onMessage(PacketPaintRarmor message, MessageContext ctx) {
+			EntityPlayer player = ctx.getServerHandler().playerEntity;
+			if (player != null) {
+				ItemStack stack = player.inventory.armorInventory[message.armorSlot];
+				NBTUtil.setColor(stack, message.color);
+			}
+			return null;
+		}
+	}
 }
