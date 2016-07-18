@@ -69,7 +69,8 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     @SideOnly(Side.CLIENT)
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return (RarmorValues.rarmorMaxEnergy-NBTUtil.getEnergy(stack))/RarmorValues.rarmorMaxEnergy;
+    	return 1d - ((double) NBTUtil.getEnergy(stack) / (double) RarmorValues.rarmorMaxEnergy);
+//        return (RarmorValues.rarmorMaxEnergy-NBTUtil.getEnergy(stack))/RarmorValues.rarmorMaxEnergy;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     @SideOnly(Side.CLIENT)
     @Override
     public boolean showDurabilityBar(ItemStack stack){
-        return true;
+        return NBTUtil.getEnergy(stack) != RarmorValues.rarmorMaxEnergy;
     }
 
     @Override
