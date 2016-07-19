@@ -1,6 +1,10 @@
 package de.canitzp.rarmor.api;
 
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -10,6 +14,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -78,5 +83,8 @@ public interface IRarmorTab{
 
     @SideOnly(Side.CLIENT)
     default void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){}
+
+    @SideOnly(Side.CLIENT)
+    default void onInWorldRendering(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet){}
 
 }

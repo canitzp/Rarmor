@@ -26,6 +26,7 @@ public class RarmorSettingsTab implements IRarmorTab {
     public RarmorSettingsTab(EntityPlayer player, ItemStack stack){
         if(!player.worldObj.isRemote){
             this.checks.put(new GuiCheckBox(15, 15, "Invert Rarmor/Inventory Opening", Collections.singletonList("")), RarmorSettings.Settings.INVERTED_OPENING);
+            this.checks.put(new GuiCheckBox(15, 30, "In-World Settings", Collections.singletonList("")), RarmorSettings.Settings.INWORLDTOOLTIPS);
         }
     }
 

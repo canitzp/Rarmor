@@ -1,11 +1,11 @@
 package de.canitzp.rarmor.api;
 
+import de.canitzp.rarmor.api.tooltip.IInWorldTooltip;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
@@ -18,6 +18,17 @@ public class RarmorAPI{
     public static Map<Integer, String> registerColor = new HashMap<>();
     public static Map<UUID, List<IRarmorTab>> tabListServer = new HashMap<>();
     public static Map<UUID, List<IRarmorTab>> tabListClient = new HashMap<>();
+    private static List<IInWorldTooltip> registeredTooltips = new ArrayList<>();
+
+    public static void registerInWorldTooltip(IInWorldTooltip tooltip){
+        if(!registeredTooltips.contains(tooltip)){
+            registeredTooltips.add(tooltip);
+        }
+    }
+
+    public static List<IInWorldTooltip> getInWorldTooltips(){
+        return registeredTooltips;
+    }
 
     public static void registerRarmorTab(Class<? extends IRarmorTab> classToRegister){
         if(!registeredTabs.contains(classToRegister)){
@@ -27,10 +38,6 @@ public class RarmorAPI{
 
     public static Map<UUID, List<IRarmorTab>> getSidedTabs(World world){
         return world.isRemote ? tabListClient : tabListServer;
-    }
-
-    public static UUID getUUIDFromStack(ItemStack stack){
-        return stack.getTagCompound().getUniqueId("RarmorUUID");
     }
 
     public static boolean hasRarmorTabs(World world, ItemStack stack){
@@ -80,14 +87,6 @@ public class RarmorAPI{
             }
         }
         return tickables;
-    }
-
-    public static IRarmorTab getTabFromClass(World world, ItemStack stack, Class<? extends IRarmorTab> c){
-        List<IRarmorTab> tabs = getTabsFromStack(world, stack);
-        if(tabs != null && !tabs.isEmpty()){
-            return tabs.get(registeredTabs.indexOf(c));
-        }
-        return null;
     }
 
     public static int receiveEnergy(ItemStack container, int receive, boolean simulate){

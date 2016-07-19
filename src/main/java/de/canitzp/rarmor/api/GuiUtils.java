@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.api;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -210,6 +212,7 @@ public class GuiUtils{
         GlStateManager.enableTexture2D();
     }
 
+    @SideOnly(Side.CLIENT)
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
@@ -221,6 +224,12 @@ public class GuiUtils{
         vertexbuffer.pos((double)(x + width), (double)(y), 0).tex((double)((float)(textureX + width) * f), (double)((float)(textureY) * f1)).endVertex();
         vertexbuffer.pos((double)(x), (double)(y), 0).tex((double)((float)(textureX) * f), (double)((float)(textureY) * f1)).endVertex();
         tessellator.draw();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void drawFluid(Fluid fluid, int x, int y, int width, int height){
+        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill().getResourcePath() + ".png"));
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, 16, 512);
     }
 
 }

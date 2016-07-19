@@ -65,6 +65,7 @@ public class Rarmor{
         RarmorAPI.registerRarmorTab(RarmorColoringTab.class);
         RarmorAPI.registerRarmorTab(RarmorCoalGeneratorTab.class);
         RarmorAPI.registerRarmorTab(RarmorSettingsTab.class);
+        RarmorAPI.registerInWorldTooltip(new InWorldTooltips());
         initConfigValues(event);
         Registry.initItems(event);
         registerColors();

@@ -7,13 +7,20 @@ import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorSettings;
+import de.canitzp.rarmor.armor.ItemGenericRarmor;
+import de.canitzp.rarmor.armor.ItemRarmor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -71,10 +78,24 @@ public class ClientProxy extends CommonProxy{
                         tab.preOpen(player, RarmorUtil.getRarmorChestplate(player));
                     }
                 }
-                if(player.isSneaking() == RarmorSettings.getSettingBoolean(RarmorUtil.getRarmorChestplate(player), RarmorSettings.Settings.INVERTED_OPENING)){//RarmorSettings.getSettingBoolean(RarmorSettings.Settings.INVERTED_OPENING)){
+                if(player.isSneaking() == RarmorSettings.getSettingBoolean(RarmorUtil.getRarmorChestplate(player), RarmorSettings.Settings.INVERTED_OPENING)){
                     event.setCanceled(true);
                     PacketHandler.network.sendToServer(new PacketOpenGui(player, 0));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onGameOverlay(RenderGameOverlayEvent.Post event){
+        if(event.getType().equals(RenderGameOverlayEvent.ElementType.ALL) && Minecraft.getMinecraft().currentScreen == null){
+            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+            WorldClient world = Minecraft.getMinecraft().theWorld;
+            ItemStack stack = RarmorUtil.getRarmorChestplate(player);
+            if(stack != null && stack.getItem() instanceof ItemRarmor){
+                ItemStack stack1 = RarmorUtil.getPlayerArmorPart(player, EntityEquipmentSlot.HEAD);
+                boolean isHelmet = stack1 != null && stack1.getItem() instanceof ItemGenericRarmor;
+                ((ItemRarmor) stack.getItem()).renderInWorld(world, player, stack, event.getResolution(), Minecraft.getMinecraft().fontRendererObj, event.getType(), event.getPartialTicks(), isHelmet);
             }
         }
     }

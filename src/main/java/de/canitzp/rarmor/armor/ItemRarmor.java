@@ -1,27 +1,28 @@
 package de.canitzp.rarmor.armor;
 
 import cofh.api.energy.IEnergyContainerItem;
-import com.google.common.base.Predicate;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.tooltip.IInWorldTooltip;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -117,4 +118,20 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     public int getMaxEnergyStored(ItemStack container){
         return RarmorValues.rarmorMaxEnergy;
     }
+
+    @SideOnly(Side.CLIENT)
+    public void renderInWorld(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet){
+        List<IRarmorTab> tabs = RarmorAPI.getTabsFromStack(world, stack);
+        if(tabs != null){
+            for(IRarmorTab tab : tabs){
+                if(tab != null && tab.canBeVisible(stack, player)){
+                    tab.onInWorldRendering(world, player, stack, resolution, fontRenderer, type, partialTicks, isHelmet);
+                }
+            }
+        }
+        for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
+            tooltip.showTooltip(world, player, stack, resolution, fontRenderer, type, partialTicks, isHelmet);
+        }
+    }
+
 }

@@ -56,7 +56,8 @@ public class RarmorSettings {
     }
 
     public enum Settings{
-        INVERTED_OPENING("InvertedGuiOpening", SettingType.BOOLEAN, false);
+        INVERTED_OPENING("InvertedGuiOpening", SettingType.BOOLEAN, false),
+        INWORLDTOOLTIPS("InWorldSettings", SettingType.BOOLEAN, false);
 
         public String name;
         public SettingType type;
