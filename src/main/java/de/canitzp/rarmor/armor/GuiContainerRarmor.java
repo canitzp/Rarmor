@@ -5,6 +5,7 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketSetTab;
 import net.minecraft.client.gui.Gui;
@@ -108,7 +109,7 @@ public class GuiContainerRarmor extends Container{
 
     @SideOnly(Side.CLIENT)
     public static class GuiRarmor extends GuiContainer{
-        final ResourceLocation guiLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiRarmor.png");
+        final ResourceLocation guiLoc = new ResourceLocation(RarmorValues.MODID, "textures/gui/guiRarmor.png");
         private IRarmorTab tab;
         private List<RarmorTab> tabs = new ArrayList<>();
         public EntityPlayer player;

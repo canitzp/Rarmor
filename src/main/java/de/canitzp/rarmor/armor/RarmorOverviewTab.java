@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class RarmorOverviewTab implements IRarmorTab{
 
-    private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabOverview.png");
+    private final ResourceLocation tabLoc = new ResourceLocation(RarmorValues.MODID, "textures/gui/guiTabOverview.png");
     public static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
     private InventoryBasic energyField;
 
@@ -80,7 +80,7 @@ public class RarmorOverviewTab implements IRarmorTab{
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player){
-        return Rarmor.MODID + ":overviewTab";
+        return RarmorValues.MODID + ":overviewTab";
     }
 
     @SideOnly(Side.CLIENT)

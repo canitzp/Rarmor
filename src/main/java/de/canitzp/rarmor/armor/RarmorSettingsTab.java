@@ -4,7 +4,10 @@ import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorSettings;
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.api.gui.GuiCheckBox;
+import de.canitzp.rarmor.api.gui.GuiRarmorButton;
+import de.canitzp.rarmor.api.gui.IGuiRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,17 +25,17 @@ import java.util.*;
 public class RarmorSettingsTab implements IRarmorTab {
 
     private Map<GuiCheckBox, RarmorSettings.Settings> checks = new HashMap<>();
+    private List<IGuiRenderer> specialRenderer = new ArrayList<>();
 
     public RarmorSettingsTab(EntityPlayer player, ItemStack stack){
-        if(!player.worldObj.isRemote){
-            this.checks.put(new GuiCheckBox(15, 15, "Invert Rarmor/Inventory Opening", Collections.singletonList("")), RarmorSettings.Settings.INVERTED_OPENING);
-            this.checks.put(new GuiCheckBox(15, 30, "In-World Settings", Collections.singletonList("")), RarmorSettings.Settings.INWORLDTOOLTIPS);
-        }
+        this.checks.put(new GuiCheckBox(15, 15, "Invert Rarmor/Inventory Opening", Collections.singletonList("")), RarmorSettings.Settings.INVERTED_OPENING);
+        this.checks.put(new GuiCheckBox(15, 30, "In-World Settings", Collections.singletonList("")), RarmorSettings.Settings.INWORLDTOOLTIPS);
+        //this.specialRenderer.add(new GuiRarmorButton(15, 30, 150, 12, "In-World Settings", 0x000000, 0x000000));
     }
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player) {
-        return Rarmor.MODID + ":settingsTab";
+        return RarmorValues.MODID + ":settingsTab";
     }
 
     @Override
@@ -52,6 +55,9 @@ public class RarmorSettingsTab implements IRarmorTab {
     public void drawGui(GuiContainer gui, EntityPlayer player, int guiLeft, int guiTop, int mouseX, int mouseY, float partialTicks) {
         for(GuiCheckBox box : this.checks.keySet()){
             box.draw(gui, guiLeft, guiTop);
+        }
+        for(IGuiRenderer renderer : this.specialRenderer){
+            renderer.render(gui, guiLeft, guiTop);
         }
     }
 

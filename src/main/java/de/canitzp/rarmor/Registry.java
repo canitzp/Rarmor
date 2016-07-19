@@ -1,5 +1,6 @@
 package de.canitzp.rarmor;
 
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.armor.ItemGenericRarmor;
 import de.canitzp.rarmor.armor.ItemRarmor;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -25,8 +26,8 @@ public class Registry{
 
 
     public static void registerItem(Item item, String name){
-        item.setUnlocalizedName(Rarmor.MODID + ":" + name);
-        item.setRegistryName(Rarmor.MODID, name);
+        item.setUnlocalizedName(RarmorValues.MODID + ":" + name);
+        item.setRegistryName(RarmorValues.MODID, name);
         Rarmor.proxy.registerTexture(new ItemStack(item), name);
         GameRegistry.register(item);
     }

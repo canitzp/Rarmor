@@ -20,4 +20,7 @@ public class RarmorValues {
     /** Tab values for Rarmor own tabs: */
     public static int generatorTabTickValue;
 
+    /** InWorld-Tooltips Values */
+    public static boolean tooltipsAlwaysActive;
+
 }

@@ -3,6 +3,7 @@ package de.canitzp.rarmor.armor;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.Registry;
+import de.canitzp.rarmor.api.RarmorValues;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -31,7 +32,7 @@ public class ItemGenericRarmor extends ItemArmor{
         if((type != null && type.equals("overlay")) || NBTUtil.getTagFromStack(stack).getBoolean("isTransparent")){
             return "rarmor:textures/models/armor/rfarmorOverlay.png";
         }
-        return Rarmor.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
+        return RarmorValues.MODID + ":textures/models/armor/rfarmorLayer" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
     }
 
     @SideOnly(Side.CLIENT)

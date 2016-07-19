@@ -129,9 +129,6 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
                 }
             }
         }
-        for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
-            tooltip.showTooltip(world, player, stack, resolution, fontRenderer, type, partialTicks, isHelmet);
-        }
     }
 
 }

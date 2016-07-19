@@ -4,6 +4,7 @@ import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.GuiUtils;
 import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorValues;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -32,7 +33,7 @@ public abstract class RarmorOneSlotTab implements IRarmorTab{
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player){
-        return Rarmor.MODID + ":" + this.tabName.replace(" ", "").toLowerCase() + "tab";
+        return RarmorValues.MODID + ":" + this.tabName.replace(" ", "").toLowerCase() + "tab";
     }
 
     @Override

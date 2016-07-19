@@ -7,6 +7,8 @@ import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorSettings;
+import de.canitzp.rarmor.api.RarmorValues;
+import de.canitzp.rarmor.api.tooltip.IInWorldTooltip;
 import de.canitzp.rarmor.armor.ItemGenericRarmor;
 import de.canitzp.rarmor.armor.ItemRarmor;
 import net.minecraft.client.Minecraft;
@@ -53,7 +55,7 @@ public class ClientProxy extends CommonProxy{
     private void registerRenderer(){
         for(Map.Entry<ItemStack, String> entry : this.textures.entrySet()){
             if(entry.getKey() != null){
-                Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(entry.getKey().getItem(), 0, new ModelResourceLocation(Rarmor.MODID + ":" + entry.getValue(), "inventory"));
+                Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(entry.getKey().getItem(), 0, new ModelResourceLocation(RarmorValues.MODID + ":" + entry.getValue(), "inventory"));
             }
         }
     }
@@ -92,10 +94,13 @@ public class ClientProxy extends CommonProxy{
             EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
             WorldClient world = Minecraft.getMinecraft().theWorld;
             ItemStack stack = RarmorUtil.getRarmorChestplate(player);
+            ItemStack stack1 = RarmorUtil.getPlayerArmorPart(player, EntityEquipmentSlot.HEAD);
+            boolean isHelmet = stack1 != null && stack1.getItem() instanceof ItemGenericRarmor;
             if(stack != null && stack.getItem() instanceof ItemRarmor){
-                ItemStack stack1 = RarmorUtil.getPlayerArmorPart(player, EntityEquipmentSlot.HEAD);
-                boolean isHelmet = stack1 != null && stack1.getItem() instanceof ItemGenericRarmor;
                 ((ItemRarmor) stack.getItem()).renderInWorld(world, player, stack, event.getResolution(), Minecraft.getMinecraft().fontRendererObj, event.getType(), event.getPartialTicks(), isHelmet);
+            }
+            for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
+                tooltip.showTooltip(world, player, stack, event.getResolution(), Minecraft.getMinecraft().fontRendererObj, event.getType(), event.getPartialTicks(), isHelmet);
             }
         }
     }

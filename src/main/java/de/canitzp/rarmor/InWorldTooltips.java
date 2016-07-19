@@ -3,6 +3,8 @@ package de.canitzp.rarmor;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
+import de.canitzp.rarmor.api.RarmorSettings;
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.api.tooltip.*;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.RarmorColoringTab;
@@ -43,31 +45,33 @@ public class InWorldTooltips implements IInWorldTooltip {
     @SideOnly(Side.CLIENT)
     @Override
     public void showTooltip(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet) {
-        Minecraft mc = Minecraft.getMinecraft();
-        RayTraceResult trace = mc.objectMouseOver;
-        if(trace != null){
-            if(trace.typeOfHit.equals(RayTraceResult.Type.BLOCK) || trace.typeOfHit.equals(RayTraceResult.Type.MISS)){
-                IBlockState state = world.getBlockState(trace.getBlockPos());
-                TileEntity tileEntity = world.getTileEntity(trace.getBlockPos());
-                if(state.getBlock() != Blocks.AIR){
-                    List<TooltipComponent> toShow = new ArrayList<>();
-                    if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
-                        toShow.add(new TooltipComponent().addText(state.getBlock().getLocalizedName()));
-                    } else {
-                        for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
-                            toShow.add(tooltip.showTooltipAtBlock(world, player, stack, resolution, fontRenderer, state, tileEntity, partialTicks, isHelmet));
+        if((isHelmet && RarmorSettings.getSettingBoolean(stack, RarmorSettings.Settings.INWORLDTOOLTIPS)) || RarmorValues.tooltipsAlwaysActive){
+            Minecraft mc = Minecraft.getMinecraft();
+            RayTraceResult trace = mc.objectMouseOver;
+            if(trace != null){
+                if(trace.typeOfHit.equals(RayTraceResult.Type.BLOCK) || trace.typeOfHit.equals(RayTraceResult.Type.MISS)){
+                    IBlockState state = world.getBlockState(trace.getBlockPos());
+                    TileEntity tileEntity = world.getTileEntity(trace.getBlockPos());
+                    if(state.getBlock() != Blocks.AIR){
+                        List<TooltipComponent> toShow = new ArrayList<>();
+                        if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
+                            toShow.add(new TooltipComponent().addText(state.getBlock().getLocalizedName()));
+                        } else {
+                            for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
+                                toShow.add(tooltip.showTooltipAtBlock(world, player, stack, resolution, fontRenderer, state, tileEntity, partialTicks, isHelmet));
+                            }
                         }
+                        this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
                     }
-                    this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
-                }
-            } else if (trace.typeOfHit.equals(RayTraceResult.Type.ENTITY)){
-                Entity entity = trace.entityHit;
-                if(entity != null){
-                    List<TooltipComponent> toShow = new ArrayList<>();
-                    for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
-                        toShow.add(tooltip.showTooltipAtEntity(world, player, stack, resolution, fontRenderer, entity, partialTicks, isHelmet));
+                } else if (trace.typeOfHit.equals(RayTraceResult.Type.ENTITY)){
+                    Entity entity = trace.entityHit;
+                    if(entity != null){
+                        List<TooltipComponent> toShow = new ArrayList<>();
+                        for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
+                            toShow.add(tooltip.showTooltipAtEntity(world, player, stack, resolution, fontRenderer, entity, partialTicks, isHelmet));
+                        }
+                        this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
                     }
-                    this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
                 }
             }
         }
@@ -129,6 +133,7 @@ public class InWorldTooltips implements IInWorldTooltip {
         return new TooltipComponent().addText(entity.getName()).newLine().addText(entity instanceof EntityLivingBase ? TextFormatting.RED.toString() + ((EntityLivingBase) entity).getHealth() + "/" + ((EntityLivingBase) entity).getMaxHealth() : null);
     }
 
+    @SideOnly(Side.CLIENT)
     public static String getBlockName(IBlockState state){
         Item itemBlock = Item.getItemFromBlock(state.getBlock());
         if(itemBlock != null){
@@ -138,6 +143,7 @@ public class InWorldTooltips implements IInWorldTooltip {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     private void showList(FontRenderer fontRenderer, int x, int y, List<TooltipComponent> lines){
         for(TooltipComponent tooltipComponent : lines){
             if(tooltipComponent != null){
@@ -158,6 +164,4 @@ public class InWorldTooltips implements IInWorldTooltip {
             }
         }
     }
-
-
 }

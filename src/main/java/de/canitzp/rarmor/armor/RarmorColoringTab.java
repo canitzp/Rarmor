@@ -6,6 +6,7 @@ import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.api.GuiUtils;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketPaintRarmor;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 public class RarmorColoringTab implements IRarmorTab{
 
-    private final ResourceLocation tabLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabColoring.png");
+    private final ResourceLocation tabLoc = new ResourceLocation(RarmorValues.MODID, "textures/gui/guiTabColoring.png");
     private ArmorSlot clickedSlot = ArmorSlot.CHEST;
     private List<ColorButton> availabeColors = new ArrayList<>();
 
@@ -72,7 +73,7 @@ public class RarmorColoringTab implements IRarmorTab{
 
     @Override
     public String getTabIdentifier(ItemStack rarmor, EntityPlayer player){
-        return Rarmor.MODID + ":coloringTab";
+        return RarmorValues.MODID + ":coloringTab";
     }
 
     @SideOnly(Side.CLIENT)
@@ -147,7 +148,7 @@ public class RarmorColoringTab implements IRarmorTab{
     public static class ColorButton {
         public Color color;
         public int x, y, width = 8, height = 8;
-        private ResourceLocation iconLoc = new ResourceLocation(Rarmor.MODID, "textures/gui/guiTabColoring.png");
+        private ResourceLocation iconLoc = new ResourceLocation(RarmorValues.MODID, "textures/gui/guiTabColoring.png");
         public ColorButton(Color color, int x, int y){
             this.color = color;
             this.x = x;

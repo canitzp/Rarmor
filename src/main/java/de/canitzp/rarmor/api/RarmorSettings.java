@@ -38,13 +38,15 @@ public class RarmorSettings {
     }
 
     public static Object getSetting(ItemStack stack, Settings setting){
-        NBTTagCompound nbt = getSettingsNBT(stack);
-        switch (setting.type){
-            case BOOLEAN:{
-                return nbt.getBoolean(setting.name);
-            }
-            case INTEGER:{
-                return nbt.getInteger(setting.name);
+        if(stack != null){
+            NBTTagCompound nbt = getSettingsNBT(stack);
+            switch (setting.type){
+                case BOOLEAN:{
+                    return nbt.getBoolean(setting.name);
+                }
+                case INTEGER:{
+                    return nbt.getInteger(setting.name);
+                }
             }
         }
         return null;

@@ -6,26 +6,17 @@ import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.armor.*;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.PacketHandler;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -37,14 +28,10 @@ import java.util.List;
 /**
  * @author canitzp
  */
-@Mod(modid = Rarmor.MODID, name = Rarmor.NAME, version = Rarmor.VERSION)
+@Mod(modid = RarmorValues.MODID, name = RarmorValues.MODNAME, version = RarmorValues.MODVERSION)
 public class Rarmor{
 
-    public static final String NAME = "Rarmor";
-    public static final String MODID = "rarmor";
-    public static final String VERSION = "@VERSION@";
-
-    public static final Logger logger = LogManager.getLogger(NAME);
+    public static final Logger logger = LogManager.getLogger(RarmorValues.MODNAME);
 
     public static final ItemArmor.ArmorMaterial rarmorMaterial = EnumHelper.addArmorMaterial("rarmor", "", 0, new int[]{0, 0, 0, 0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0);
 
@@ -55,7 +42,7 @@ public class Rarmor{
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        logger.info("Rarmor: The way to a peaceful world. Version:" + VERSION);
+        logger.info("Rarmor: The way to a peaceful world. Version:" + RarmorValues.MODVERSION);
         List<Class<? extends IRarmorTab>> tabs = RarmorAPI.registeredTabs;
         if(!tabs.isEmpty()){
             RarmorAPI.registeredTabs.clear();
@@ -117,9 +104,11 @@ public class Rarmor{
     }
 
     private void initConfigValues(FMLPreInitializationEvent event){
-        RarmorValues.rarmorMaxEnergy = 250000;
-        RarmorValues.rarmorMaxTransfer = 25000;
-        RarmorValues.generatorTabTickValue = 40;
+        RarmorConfig.initializeConfiguration(event);
+        RarmorValues.rarmorMaxEnergy = RarmorConfig.ConfigValues.RARMOR_MAX_ENERGY.getInteger();
+        RarmorValues.rarmorMaxTransfer = RarmorConfig.ConfigValues.RARMOR_MAX_TRANSFER.getInteger();
+        RarmorValues.generatorTabTickValue = RarmorConfig.ConfigValues.GENERATOR_MAX_RECEIVE.getInteger();
+        RarmorValues.tooltipsAlwaysActive = RarmorConfig.ConfigValues.TOOLTIPS_ALWAYS_ACTIVE.getBoolean();
     }
 
 }
