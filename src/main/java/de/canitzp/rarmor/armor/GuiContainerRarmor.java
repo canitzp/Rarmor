@@ -177,7 +177,7 @@ public class GuiContainerRarmor extends Container{
         public void setTab(IRarmorTab tab){
             if(tab != null){
                 NBTUtil.getTagFromStack(RarmorUtil.getRarmorChestplate(this.player)).setInteger("RarmorTabID", RarmorAPI.registeredTabs.indexOf(tab.getClass()));
-                PacketHandler.network.sendToServer(new PacketSetTab(this.player, tab));
+                PacketHandler.network.sendToServer(new PacketSetTab(tab));
             }
         }
     }

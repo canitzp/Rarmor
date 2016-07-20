@@ -17,23 +17,19 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketSendBoolean implements IMessage, IMessageHandler<PacketSendBoolean, IMessage> {
 
-    private int tabID, key, playerID, worldID;
+    private int tabID, key;
     private boolean bool;
 
     public PacketSendBoolean(){}
 
-    public PacketSendBoolean(EntityPlayer player, IRarmorTab tab, int key, boolean bool){
+    public PacketSendBoolean(IRarmorTab tab, int key, boolean bool){
         this.tabID = RarmorAPI.registeredTabs.indexOf(tab.getClass());
         this.key = key;
         this.bool = bool;
-        this.playerID = player.getEntityId();
-        this.worldID = player.worldObj.provider.getDimension();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.worldID = buf.readInt();
-        this.playerID = buf.readInt();
         this.tabID = buf.readInt();
         this.key = buf.readInt();
         this.bool = buf.readBoolean();
@@ -41,8 +37,6 @@ public class PacketSendBoolean implements IMessage, IMessageHandler<PacketSendBo
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.worldID);
-        buf.writeInt(this.playerID);
         buf.writeInt(this.tabID);
         buf.writeInt(this.key);
         buf.writeBoolean(this.bool);
@@ -50,8 +44,7 @@ public class PacketSendBoolean implements IMessage, IMessageHandler<PacketSendBo
 
     @Override
     public IMessage onMessage(PacketSendBoolean message, MessageContext ctx) {
-        World world = DimensionManager.getWorld(message.worldID);
-        EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
+        EntityPlayer player = ctx.getServerHandler().playerEntity;
         if(player != null && RarmorUtil.isPlayerWearingArmor(player)){
             ItemStack stack = RarmorUtil.getRarmorChestplate(player);
             if(stack != null){

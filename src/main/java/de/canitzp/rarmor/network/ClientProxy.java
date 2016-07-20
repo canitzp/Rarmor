@@ -82,7 +82,7 @@ public class ClientProxy extends CommonProxy{
                 }
                 if(player.isSneaking() == RarmorSettings.getSettingBoolean(RarmorUtil.getRarmorChestplate(player), RarmorSettings.Settings.INVERTED_OPENING)){
                     event.setCanceled(true);
-                    PacketHandler.network.sendToServer(new PacketOpenGui(player, 0));
+                    PacketHandler.network.sendToServer(new PacketOpenGui(0));
                 }
             }
         }

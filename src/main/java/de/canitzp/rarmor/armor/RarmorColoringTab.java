@@ -118,7 +118,7 @@ public class RarmorColoringTab implements IRarmorTab{
                 ItemStack part = RarmorUtil.getPlayerArmorPart(player, this.clickedSlot.slot);
                 if(part != null){
                     NBTUtil.setColor(part, color);
-                    PacketHandler.network.sendToServer(new PacketPaintRarmor(player, this.clickedSlot.slot, color));
+                    PacketHandler.network.sendToServer(new PacketPaintRarmor(this.clickedSlot.slot, color));
                 }
             }
         }

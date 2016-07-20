@@ -1,28 +1,22 @@
 package de.canitzp.rarmor.network;
 
-import de.canitzp.rarmor.NBTUtil;
-import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.RarmorUtil;
-import de.canitzp.rarmor.api.IRarmorTab;
-import de.canitzp.rarmor.api.RarmorAPI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import de.canitzp.rarmor.NBTUtil;
+import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorAPI;
 
 /**
  * @author canitzp

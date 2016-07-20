@@ -15,46 +15,38 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author canitzp
  */
-public class PacketSetTab implements IMessage{
+public class PacketSetTab implements IMessage {
 
-    private int tabID, playerID, worldID;
+	private int tabID;
 
-    public PacketSetTab(){}
+	public PacketSetTab() {
+	}
 
-    public PacketSetTab(EntityPlayer player, IRarmorTab tab){
-        this.worldID = player.worldObj.provider.getDimension();
-        this.playerID = player.getEntityId();
-        this.tabID = RarmorAPI.registeredTabs.indexOf(tab.getClass());
-    }
+	public PacketSetTab(IRarmorTab tab) {
+		this.tabID = RarmorAPI.registeredTabs.indexOf(tab.getClass());
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-        this.worldID = buf.readInt();
-        this.playerID = buf.readInt();
-        this.tabID = buf.readInt();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.tabID = buf.readInt();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf){
-        buf.writeInt(this.worldID);
-        buf.writeInt(this.playerID);
-        buf.writeInt(this.tabID);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		buf.writeInt(this.tabID);
+	}
 
-    public static class Handler implements IMessageHandler<PacketSetTab, IMessage>{
-        @Override
-        public IMessage onMessage(PacketSetTab message, MessageContext ctx){
-            World world = DimensionManager.getWorld(message.worldID);
-            if(world != null){
-                EntityPlayer player = (EntityPlayer) world.getEntityByID(message.playerID);
-                if(player != null){
-                    Container container = player.openContainer;
-                    if(container != null && container instanceof GuiContainerRarmor){
-                        ((GuiContainerRarmor) container).setTabPacket(message.tabID);
-                    }
-                }
-            }
-            return null;
-        }
-    }
+	public static class Handler implements IMessageHandler<PacketSetTab, IMessage> {
+		@Override
+		public IMessage onMessage(PacketSetTab message, MessageContext ctx) {
+			EntityPlayer player = ctx.getServerHandler().playerEntity;
+			if (player != null) {
+				Container container = player.openContainer;
+				if (container != null && container instanceof GuiContainerRarmor) {
+					((GuiContainerRarmor) container).setTabPacket(message.tabID);
+				}
+			}
+			return null;
+		}
+	}
 }

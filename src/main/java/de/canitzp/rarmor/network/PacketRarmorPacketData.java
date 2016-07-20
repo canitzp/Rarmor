@@ -22,29 +22,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class PacketRarmorPacketData implements IMessage {
 
     private NBTTagCompound nbtTagCompound;
-    private int tabID, playerID, worldID;
+    private int tabID;
 
     public PacketRarmorPacketData(){}
 
-    public PacketRarmorPacketData(EntityPlayer player, NBTTagCompound nbt, int tabID){
+    public PacketRarmorPacketData(NBTTagCompound nbt, int tabID){
         this.nbtTagCompound = nbt;
         this.tabID = tabID;
-        this.playerID = player.getEntityId();
-        this.worldID = player.getEntityWorld().provider.getDimension();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.worldID = buf.readInt();
-        this.playerID = buf.readInt();
         this.nbtTagCompound = ByteBufUtils.readTag(buf);
         this.tabID = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(this.worldID);
-        buf.writeInt(this.playerID);
         ByteBufUtils.writeTag(buf, this.nbtTagCompound);
         buf.writeInt(this.tabID);
     }
