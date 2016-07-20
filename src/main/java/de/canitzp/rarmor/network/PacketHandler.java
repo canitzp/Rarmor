@@ -21,6 +21,8 @@ public class PacketHandler {
         network.registerMessage(PacketPaintRarmor.Handler.class, PacketPaintRarmor.class, 2, Side.SERVER);
         network.registerMessage(PacketRarmorPacketData.Handler.class, PacketRarmorPacketData.class, 3, Side.CLIENT);
         network.registerMessage(PacketSendBoolean.class, PacketSendBoolean.class, 4, Side.SERVER);
+        network.registerMessage(PacketRequestEnergyLevel.class, PacketRequestEnergyLevel.class, 5, Side.SERVER);
+        network.registerMessage(PacketGetEnergy.class, PacketGetEnergy.class, 6, Side.CLIENT);
     }
 
 }

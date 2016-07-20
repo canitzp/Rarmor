@@ -45,7 +45,7 @@ public class InWorldTooltips implements IInWorldTooltip {
     @SideOnly(Side.CLIENT)
     @Override
     public void showTooltip(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet) {
-        if((isHelmet && RarmorSettings.getSettingBoolean(stack, RarmorSettings.Settings.INWORLDTOOLTIPS)) || RarmorValues.tooltipsAlwaysActive){
+        if(RarmorValues.tooltipsAlwaysActive || (isHelmet && RarmorSettings.getSettingBoolean(stack, RarmorSettings.Settings.INWORLDTOOLTIPS))){
             Minecraft mc = Minecraft.getMinecraft();
             RayTraceResult trace = mc.objectMouseOver;
             if(trace != null){
@@ -86,6 +86,7 @@ public class InWorldTooltips implements IInWorldTooltip {
             EnumFacing side = trace.sideHit;
             //CoFH Energy:
             if(tileEntity instanceof IEnergyProvider){
+                RarmorUtil.requestEnergy(tileEntity.getPos(), side);
                 IEnergyProvider tile = (IEnergyProvider) tileEntity;
                 int currentEnergy = tile.getEnergyStored(side), maxEnergy = tile.getMaxEnergyStored(side);
                 if(maxEnergy > 1){
@@ -93,6 +94,7 @@ public class InWorldTooltips implements IInWorldTooltip {
                     component.newLine();
                 }
             } else if(tileEntity instanceof IEnergyReceiver){
+                RarmorUtil.requestEnergy(tileEntity.getPos(), side);
                 IEnergyReceiver tile = (IEnergyReceiver) tileEntity;
                 int currentEnergy = tile.getEnergyStored(side), maxEnergy = tile.getMaxEnergyStored(side);
                 if(maxEnergy > 1){
@@ -100,6 +102,7 @@ public class InWorldTooltips implements IInWorldTooltip {
                     component.newLine();
                 }
             } else if(tileEntity instanceof IEnergyStorage){
+                RarmorUtil.requestEnergy(tileEntity.getPos(), side);
                 IEnergyStorage tile = (IEnergyStorage) tileEntity;
                 int currentEnergy = tile.getEnergyStored(), maxEnergy = tile.getMaxEnergyStored();
                 if(maxEnergy > 1){

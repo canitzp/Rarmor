@@ -5,6 +5,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.armor.ItemRarmor;
 import de.canitzp.rarmor.network.PacketHandler;
 import de.canitzp.rarmor.network.PacketRarmorPacketData;
+import de.canitzp.rarmor.network.PacketRequestEnergyLevel;
 import de.canitzp.rarmor.network.PacketSendBoolean;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,6 +19,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketSetSlot;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -107,8 +110,8 @@ public class RarmorUtil{
         PacketHandler.network.sendToServer(new PacketSendBoolean(tab, key, bool));
     }
 
-    public static NBTTagCompound getTabNBT(IRarmorTab tab, EntityPlayer player){
-        return NBTUtil.getTagFromStack(getRarmorChestplate(player)).getCompoundTag(tab.getTabIdentifier(getRarmorChestplate(player), player));
+    public static void requestEnergy(BlockPos pos, EnumFacing side){
+        PacketHandler.network.sendToServer(new PacketRequestEnergyLevel(pos, side));
     }
 
 }
