@@ -3,11 +3,10 @@ package de.canitzp.rarmor;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cofh.api.energy.IEnergyStorage;
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorSettings;
 import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.api.tooltip.*;
-import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.armor.RarmorColoringTab;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -15,9 +14,9 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -40,8 +39,6 @@ import java.util.List;
  */
 public class InWorldTooltips implements IInWorldTooltip {
 
-    private RarmorColoringTab.Color textColor = new RarmorColoringTab.Color(0xFFFFFF, "");
-
     @SideOnly(Side.CLIENT)
     @Override
     public void showTooltip(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet) {
@@ -52,7 +49,7 @@ public class InWorldTooltips implements IInWorldTooltip {
                 if(trace.typeOfHit.equals(RayTraceResult.Type.BLOCK) || trace.typeOfHit.equals(RayTraceResult.Type.MISS)){
                     IBlockState state = world.getBlockState(trace.getBlockPos());
                     TileEntity tileEntity = world.getTileEntity(trace.getBlockPos());
-                    if(state.getBlock() != Blocks.AIR){
+                    if(!world.isAirBlock(trace.getBlockPos())){
                         List<TooltipComponent> toShow = new ArrayList<>();
                         if(state.getBlock() instanceof BlockLiquid || state.getBlock() instanceof BlockFluidBase){
                             toShow.add(new TooltipComponent().addText(state.getBlock().getLocalizedName()));
@@ -61,7 +58,8 @@ public class InWorldTooltips implements IInWorldTooltip {
                                 toShow.add(tooltip.showTooltipAtBlock(world, player, stack, resolution, fontRenderer, state, tileEntity, partialTicks, isHelmet));
                             }
                         }
-                        this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
+                        GuiIWTSettings.setValues(player, false);
+                        showList(fontRenderer, resolution.getScaledWidth(), GuiIWTSettings.offsetY, toShow);
                     }
                 } else if (trace.typeOfHit.equals(RayTraceResult.Type.ENTITY)){
                     Entity entity = trace.entityHit;
@@ -70,7 +68,8 @@ public class InWorldTooltips implements IInWorldTooltip {
                         for(IInWorldTooltip tooltip : RarmorAPI.getInWorldTooltips()){
                             toShow.add(tooltip.showTooltipAtEntity(world, player, stack, resolution, fontRenderer, entity, partialTicks, isHelmet));
                         }
-                        this.showList(fontRenderer, resolution.getScaledWidth(), 5, toShow);
+                        GuiIWTSettings.setValues(player, false);
+                        showList(fontRenderer, resolution.getScaledWidth(), GuiIWTSettings.offsetY, toShow);
                     }
                 }
             }
@@ -124,7 +123,7 @@ public class InWorldTooltips implements IInWorldTooltip {
                     }
                 }
             } else if(tileEntity instanceof net.minecraftforge.fluids.IFluidHandler){
-                component.addText("This Side of the Block uses the old Fluid System.").newLine();
+                component.addText("This Side of the Block").newLine().addText("uses the old Fluid System.");
             }
         }
         return component;
@@ -147,22 +146,26 @@ public class InWorldTooltips implements IInWorldTooltip {
     }
 
     @SideOnly(Side.CLIENT)
-    private void showList(FontRenderer fontRenderer, int x, int y, List<TooltipComponent> lines){
+    public static void showList(FontRenderer fontRenderer, int x, int y, List<TooltipComponent> lines){
+        float scale = GuiIWTSettings.scale;
         for(TooltipComponent tooltipComponent : lines){
             if(tooltipComponent != null){
                 for(List<Object> lists : tooltipComponent.endComponent()){
                     if(lists != null){
                         for(Object o : lists){
                             if(o != null){
+                                GlStateManager.pushMatrix();
+                                GlStateManager.scale(scale, scale, scale);
                                 if(o instanceof String){
-                                    fontRenderer.drawString((String) o, (x - fontRenderer.getStringWidth((String) o)) / 2, y, this.textColor.hexValue, true);
+                                    fontRenderer.drawString((String) o, x/2 - fontRenderer.getStringWidth((String) o)/ 2 + GuiIWTSettings.offsetX, y, GuiIWTSettings.textColor, true);
                                 } else if (o instanceof IComponentRender){
-                                    ((IComponentRender) o).render(fontRenderer, x, y, this.textColor.hexValue);
+                                    ((IComponentRender) o).render(fontRenderer, x, y, GuiIWTSettings.textColor);
                                 }
+                                GlStateManager.popMatrix();
                             }
                         }
                     }
-                    y += 10;
+                    y += 10*scale+(scale/100);
                 }
             }
         }

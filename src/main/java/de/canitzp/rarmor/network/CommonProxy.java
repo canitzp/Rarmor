@@ -1,10 +1,12 @@
 package de.canitzp.rarmor.network;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import de.canitzp.rarmor.GuiIWTSettings;
+import de.canitzp.rarmor.NBTUtil;
+import de.canitzp.rarmor.RarmorUtil;
+import de.canitzp.rarmor.api.IRarmorTab;
+import de.canitzp.rarmor.api.RarmorAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,10 +15,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import de.canitzp.rarmor.NBTUtil;
-import de.canitzp.rarmor.RarmorUtil;
-import de.canitzp.rarmor.api.IRarmorTab;
-import de.canitzp.rarmor.api.RarmorAPI;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author canitzp
@@ -27,8 +29,6 @@ public class CommonProxy{
 
 
     public void preInit(FMLPreInitializationEvent event){
-
-
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -37,6 +37,14 @@ public class CommonProxy{
     public void registerTexture(ItemStack stack, String name){
         if(!this.textures.keySet().contains(stack)){
             this.textures.put(stack, name);
+        }
+    }
+
+    @SubscribeEvent
+    public void playerLoggin(PlayerEvent.PlayerLoggedInEvent event){
+        EntityPlayer player = event.player;
+        if(!player.worldObj.isRemote){
+            PacketHandler.network.sendTo(new PacketSetPlayerNBT(player.getEntityData().getCompoundTag(GuiIWTSettings.DATA_NAME)), (EntityPlayerMP) player);
         }
     }
 

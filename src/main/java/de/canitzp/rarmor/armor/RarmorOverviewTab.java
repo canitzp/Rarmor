@@ -1,9 +1,7 @@
 package de.canitzp.rarmor.armor;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyProvider;
 import de.canitzp.rarmor.NBTUtil;
-import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.RarmorUtil;
 import de.canitzp.rarmor.Registry;
 import de.canitzp.rarmor.api.GuiUtils;
@@ -11,14 +9,15 @@ import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -109,4 +108,8 @@ public class RarmorOverviewTab implements IRarmorTab{
         //GuiInventory.drawEntityOnScreen(guiLeft + 137, guiTop + 125, 55, guiLeft + 133 - mouseX, guiTop + 37 - mouseY, gui.mc.thePlayer);
     }
 
+    @Override
+    public void onArmorColorChangeThroughReconstructor(World world, BlockPos pos, ItemStack stack, int oldColorValue, int newColorValue) {
+        System.out.println(world + "   " + pos + "   " + stack + "   " + oldColorValue + "->" + newColorValue);
+    }
 }

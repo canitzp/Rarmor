@@ -20,12 +20,12 @@ import javax.annotation.Nullable;
 public interface IInWorldTooltip {
 
     @SideOnly(Side.CLIENT)
-    void showTooltip(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet);
+    default void showTooltip(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet){}
 
     @SideOnly(Side.CLIENT)
-    TooltipComponent showTooltipAtBlock(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, IBlockState state, TileEntity tileEntity, float partialTicks, boolean isHelmet);
+    default TooltipComponent showTooltipAtBlock(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, IBlockState state, TileEntity tileEntity, float partialTicks, boolean isHelmet){return null;}
 
     @SideOnly(Side.CLIENT)
-    TooltipComponent showTooltipAtEntity(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, Entity entity, float partialTicks, boolean isHelmet);
+    default TooltipComponent showTooltipAtEntity(WorldClient world, EntityPlayerSP player, @Nullable ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, Entity entity, float partialTicks, boolean isHelmet){return null;}
 
 }

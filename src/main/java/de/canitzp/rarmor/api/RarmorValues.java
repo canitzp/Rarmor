@@ -1,5 +1,8 @@
 package de.canitzp.rarmor.api;
 
+import net.minecraft.client.settings.KeyBinding;
+import org.lwjgl.input.Keyboard;
+
 /**
  * @author canitzp
  */
@@ -9,9 +12,6 @@ public class RarmorValues {
     public static final String MODID = "rarmor";
     public static final String MODNAME = "Rarmor";
     public static final String MODVERSION = "@Version@";
-    public static final String APIOWNER = "rarmor";
-    public static final String APIPROVIDER = "rarmorAPI";
-    public static final String APIVERSION = "@APIVersion@";
 
     /** Rarmor values: */
     public static int rarmorMaxEnergy;
@@ -21,6 +21,9 @@ public class RarmorValues {
     public static int generatorTabTickValue;
 
     /** InWorld-Tooltips Values */
+    public static KeyBinding defaultOpenKey = new KeyBinding("rarmor.key.tooltipsettings", Keyboard.KEY_NUMPAD0, "rarmor.key");
     public static boolean tooltipsAlwaysActive;
+    public static float[] defaultValues;
+
 
 }

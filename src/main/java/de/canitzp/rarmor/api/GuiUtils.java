@@ -7,10 +7,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.client.renderer.texture.Stitcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -230,6 +228,25 @@ public class GuiUtils{
     public static void drawFluid(Fluid fluid, int x, int y, int width, int height){
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(fluid.getStill().getResourceDomain(), "textures/" + fluid.getStill().getResourcePath() + ".png"));
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, 16, 512);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void glcolor(int hexValue){
+        float r = (float)(hexValue >> 16 & 255) / 255.0F;
+        float g = (float)(hexValue >> 8 & 255) / 255.0F;
+        float b = (float)(hexValue & 255) / 255.0F;
+        float alpha = (float)(hexValue >> 24 & 255) / 255.0F;
+        glcolor(r, g, b, alpha);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void glcolor(float r, float g, float b, float alpha){
+        GlStateManager.color(r, g, b, 1.0F);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void glcolor(){
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
 }

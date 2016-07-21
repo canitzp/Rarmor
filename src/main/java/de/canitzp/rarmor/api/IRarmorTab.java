@@ -8,11 +8,11 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -52,9 +52,6 @@ public interface IRarmorTab{
     @SideOnly(Side.CLIENT)
     default void onPacketData(EntityPlayer player, ItemStack stack, NBTTagCompound nbt){}
 
-    @SideOnly(Side.CLIENT)
-    default void preOpen(EntityPlayer player, ItemStack stack){}
-
     default void onPacketBool(EntityPlayer player, int id, boolean bool){}
 
     /**
@@ -63,8 +60,6 @@ public interface IRarmorTab{
     default void initContainer(Container container, EntityPlayer player){}
 
     default List<Slot> manipulateSlots(Container container, EntityPlayer player, List<Slot> slotList, InventoryBasic energyField, int containerOffsetLeft, int containerOffsetTop){return slotList;}
-
-    default void addListener(Container container, EntityPlayer player, IContainerListener listener){}
 
     /**
      * Just Gui things
@@ -87,4 +82,15 @@ public interface IRarmorTab{
     @SideOnly(Side.CLIENT)
     default void onInWorldRendering(WorldClient world, EntityPlayerSP player, ItemStack stack, ScaledResolution resolution, FontRenderer fontRenderer, RenderGameOverlayEvent.ElementType type, float partialTicks, boolean isHelmet){}
 
+    /**
+     * Integration Events
+     */
+    /**
+     * @param world The World
+     * @param pos The position of the Atomic Reconstructor
+     * @param stack The Rarmor Chestplate
+     * @param oldColorValue The old color of the Rarmor Chestplate.
+     * @param newColorValue The new color of the Rarmor Chestplate.
+     */
+    default void onArmorColorChangeThroughReconstructor(World world, BlockPos pos, ItemStack stack, int oldColorValue, int newColorValue){}
 }

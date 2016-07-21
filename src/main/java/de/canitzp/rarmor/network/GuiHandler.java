@@ -1,5 +1,6 @@
 package de.canitzp.rarmor.network;
 
+import de.canitzp.rarmor.GuiIWTSettings;
 import de.canitzp.rarmor.armor.GuiContainerRarmor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -16,6 +17,6 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z){
-        return new GuiContainerRarmor.GuiRarmor(player);
+        return ID == 0 ? new GuiContainerRarmor.GuiRarmor(player) : new GuiIWTSettings(player);
     }
 }

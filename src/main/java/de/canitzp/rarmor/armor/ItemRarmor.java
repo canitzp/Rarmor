@@ -3,7 +3,6 @@ package de.canitzp.rarmor.armor;
 import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.NBTUtil;
 import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.api.tooltip.IInWorldTooltip;
 import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
@@ -54,12 +53,11 @@ public class ItemRarmor extends ItemGenericRarmor implements ISpecialArmor, IEne
     public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
         if (!RarmorAPI.hasRarmorTabs(world, stack)) {
             RarmorAPI.setNewTabsToStack(player, stack);
-            if (!world.isRemote) {
+            if (!world.isRemote){
                 for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {
                     NBTTagCompound tabNBT = NBTUtil.getTagFromStack(stack).getCompoundTag(tab.getTabIdentifier(stack, player));
                     tab.readFromNBT(tabNBT);
                 }
-                //((EntityPlayerMP) player).connection.sendPacket(new SPacketSetSlot(-2, 38, stack));
             }
         }
         for (IRarmorTab tab : RarmorAPI.getTabsFromStack(world, stack)) {

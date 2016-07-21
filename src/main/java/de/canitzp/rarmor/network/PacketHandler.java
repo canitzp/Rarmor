@@ -23,6 +23,8 @@ public class PacketHandler {
         network.registerMessage(PacketSendBoolean.class, PacketSendBoolean.class, 4, Side.SERVER);
         network.registerMessage(PacketRequestEnergyLevel.class, PacketRequestEnergyLevel.class, 5, Side.SERVER);
         network.registerMessage(PacketGetEnergy.class, PacketGetEnergy.class, 6, Side.CLIENT);
+        network.registerMessage(PacketAddToPlayerNBT.class, PacketAddToPlayerNBT.class, 7, Side.SERVER);
+        network.registerMessage(PacketSetPlayerNBT.class, PacketSetPlayerNBT.class, 8, Side.CLIENT);
     }
 
 }

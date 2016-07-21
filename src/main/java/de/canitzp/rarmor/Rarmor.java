@@ -4,6 +4,7 @@ import de.canitzp.rarmor.api.IRarmorTab;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.RarmorValues;
 import de.canitzp.rarmor.armor.*;
+import de.canitzp.rarmor.integration.Integration;
 import de.canitzp.rarmor.network.CommonProxy;
 import de.canitzp.rarmor.network.PacketHandler;
 import net.minecraft.init.Blocks;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -28,7 +30,7 @@ import java.util.List;
 /**
  * @author canitzp
  */
-@Mod(modid = RarmorValues.MODID, name = RarmorValues.MODNAME, version = RarmorValues.MODVERSION)
+@Mod(modid = RarmorValues.MODID, name = RarmorValues.MODNAME, version = RarmorValues.MODVERSION, guiFactory = "de.canitzp.rarmor.RarmorConfig$GuiConfigurationFactory")
 public class Rarmor{
 
     public static final Logger logger = LogManager.getLogger(RarmorValues.MODNAME);
@@ -43,6 +45,8 @@ public class Rarmor{
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         logger.info("Rarmor: The way to a peaceful world. Version:" + RarmorValues.MODVERSION);
+        RarmorConfig.initializeConfiguration(event);
+        redefineValues();
         List<Class<? extends IRarmorTab>> tabs = RarmorAPI.registeredTabs;
         if(!tabs.isEmpty()){
             RarmorAPI.registeredTabs.clear();
@@ -64,6 +68,11 @@ public class Rarmor{
     public void init(FMLInitializationEvent event){
         PacketHandler.init();
         proxy.init(event);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event){
+        Integration.init(event);
     }
 
     @Mod.EventHandler
@@ -105,10 +114,19 @@ public class Rarmor{
 
     private void initConfigValues(FMLPreInitializationEvent event){
         RarmorConfig.initializeConfiguration(event);
+    }
+
+    public static void redefineValues(){
         RarmorValues.rarmorMaxEnergy = RarmorConfig.ConfigValues.RARMOR_MAX_ENERGY.getInteger();
         RarmorValues.rarmorMaxTransfer = RarmorConfig.ConfigValues.RARMOR_MAX_TRANSFER.getInteger();
         RarmorValues.generatorTabTickValue = RarmorConfig.ConfigValues.GENERATOR_MAX_RECEIVE.getInteger();
         RarmorValues.tooltipsAlwaysActive = RarmorConfig.ConfigValues.TOOLTIPS_ALWAYS_ACTIVE.getBoolean();
+        RarmorValues.defaultValues = new float[]{
+                RarmorConfig.ConfigValues.TOOLTIPS_DEFAULT_POSITION.getIntList()[0],
+                RarmorConfig.ConfigValues.TOOLTIPS_DEFAULT_POSITION.getIntList()[1],
+                RarmorConfig.ConfigValues.TOOLTIPS_DEFAULT_TEXTCOLOR.getInteger(),
+                RarmorConfig.ConfigValues.TOOLTIPS_DEFAULT_SCALE.getFloat()
+        };
     }
 
 }
