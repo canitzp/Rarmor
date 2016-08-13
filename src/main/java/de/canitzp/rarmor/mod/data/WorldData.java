@@ -25,22 +25,16 @@ public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
-    public Map<UUID, RarmorData> rarmorDataServer = new HashMap<UUID, RarmorData>();
-    public Map<UUID, RarmorData> rarmorDataClient = new HashMap<UUID, RarmorData>();
+    public final Map<UUID, RarmorData> rarmorData = new HashMap<UUID, RarmorData>();
 
-    public WorldData(){
-        super(NAME);
+    public WorldData(String name){
+        super(name);
     }
 
     public static Map<UUID, RarmorData> getRarmorData(World world){
         WorldData data = getOrLoadData(world);
         if(data != null){
-            if(world.isRemote){
-                return data.rarmorDataClient;
-            }
-            else{
-                return data.rarmorDataServer;
-            }
+            return data.rarmorData;
         }
         return null;
     }
@@ -51,13 +45,10 @@ public class WorldData extends WorldSavedData{
             if(storage != null){
                 WorldSavedData data = storage.getOrLoadData(WorldData.class, NAME);
                 if(data instanceof WorldData){
-                    Rarmor.LOGGER.info("Loaded WorldData.");
                     return (WorldData)data;
                 }
                 else{
-                    Rarmor.LOGGER.info("No WorldData found, creating...");
-
-                    WorldData newData = new WorldData();
+                    WorldData newData = new WorldData(NAME);
                     storage.setData(NAME, newData);
                     return newData;
                 }
@@ -68,7 +59,7 @@ public class WorldData extends WorldSavedData{
 
     @Override
     public void readFromNBT(NBTTagCompound compound){
-        this.rarmorDataServer.clear();
+        this.rarmorData.clear();
 
         NBTTagList list = compound.getTagList("RarmorData", 10);
         for(int i = 0; i < list.tagCount(); i++){
@@ -78,14 +69,14 @@ public class WorldData extends WorldSavedData{
             RarmorData data = new RarmorData();
             data.readFromNBT(tag);
 
-            this.rarmorDataServer.put(id, data);
+            this.rarmorData.put(id, data);
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound){
         NBTTagList list = new NBTTagList();
-        for(Map.Entry<UUID, RarmorData> entry : this.rarmorDataServer.entrySet()){
+        for(Map.Entry<UUID, RarmorData> entry : this.rarmorData.entrySet()){
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setUniqueId("RarmorItemId", entry.getKey());

@@ -13,6 +13,9 @@ package de.canitzp.rarmor.mod.misc;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import de.canitzp.rarmor.mod.Rarmor;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
@@ -46,5 +49,10 @@ public final class Helper{
             }
         }
         return null;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static ResourceLocation getGuiLocation(String guiName){
+        return new ResourceLocation(RarmorAPI.MOD_ID, "textures/gui/"+guiName+".png");
     }
 }

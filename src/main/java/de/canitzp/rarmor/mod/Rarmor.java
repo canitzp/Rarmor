@@ -12,10 +12,14 @@ package de.canitzp.rarmor.mod;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.mod.event.CommonEvents;
+import de.canitzp.rarmor.mod.inventory.GuiHandler;
 import de.canitzp.rarmor.mod.item.ItemRegistry;
+import de.canitzp.rarmor.mod.module.ModuleRegistry;
+import de.canitzp.rarmor.mod.packet.PacketHandler;
 import de.canitzp.rarmor.mod.proxy.IProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +43,15 @@ public final class Rarmor{
         LOGGER.info("Starting "+MOD_NAME+"...");
 
         ItemRegistry.preInit();
-        new CommonEvents();
+        new GuiHandler();
         proxy.preInit(event);
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event){
+        ModuleRegistry.init();
+        PacketHandler.init();
+        new CommonEvents();
+        proxy.init(event);
     }
 }

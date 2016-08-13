@@ -26,5 +26,4 @@ public final class RarmorAPI{
     public static void registerRarmorModule(String id, Class<? extends IActiveRarmorModule> moduleClass){
         RARMOR_MODULE_REGISTRY.put(id, moduleClass);
     }
-
 }

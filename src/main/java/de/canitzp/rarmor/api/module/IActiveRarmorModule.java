@@ -10,8 +10,8 @@
 
 package de.canitzp.rarmor.api.module;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.inventory.Container;
+import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
+import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,14 +22,14 @@ public interface IActiveRarmorModule{
 
     void writeToNBT(NBTTagCompound compound);
 
-    String getUniqueIdentifier();
-
-    Container createContainer();
+    RarmorModuleContainer createContainer();
 
     @SideOnly(Side.CLIENT)
-    GuiScreen createGui();
+    RarmorModuleGui createGui();
 
     void onInstalled();
 
     void onUninstalled();
+
+    boolean hasTab();
 }

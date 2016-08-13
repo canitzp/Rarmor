@@ -4,3 +4,5 @@ item.rarmor.itemRarmorHelmet.name=Rarmor Helmet
 item.rarmor.itemRarmorChest.name=Rarmor Chestplate
 item.rarmor.itemRarmorPants.name=Rarmor Pants
 item.rarmor.itemRarmorBoots.name=Rarmor Boots
+
+rarmor.back=Back to Inventory

@@ -24,16 +24,16 @@ public class CommonEvents{
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event){
-        loadAndMarkWorldData(event.getWorld());
+        doData(event.getWorld());
     }
 
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save event){
-        loadAndMarkWorldData(event.getWorld());
+        doData(event.getWorld());
     }
 
-    private static void loadAndMarkWorldData(World world){
-        if(world != null && !world.isRemote){
+    private static void doData(World world){
+        if(!world.isRemote){
             WorldData data = WorldData.getOrLoadData(world);
             if(data != null){
                 data.markDirty();

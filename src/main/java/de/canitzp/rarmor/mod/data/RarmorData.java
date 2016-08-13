@@ -12,6 +12,9 @@ package de.canitzp.rarmor.mod.data;
 
 import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import de.canitzp.rarmor.mod.misc.Helper;
+import de.canitzp.rarmor.mod.module.main.ActiveModuleMain;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,6 +28,7 @@ import java.util.UUID;
 public class RarmorData{
 
     public List<IActiveRarmorModule> loadedModules = new ArrayList<IActiveRarmorModule>();
+    public int guiToOpen;
 
     public void readFromNBT(NBTTagCompound compound){
         NBTTagList list = compound.getTagList("ModuleData", 10);
@@ -53,6 +57,14 @@ public class RarmorData{
         compound.setTag("ModuleData", list);
     }
 
+    public static RarmorData getDataForChestplate(EntityPlayer player){
+        ItemStack stack = player.inventory.armorInventory[EntityEquipmentSlot.CHEST.getIndex()];
+        if(stack != null){
+            return getDataForStack(player.worldObj, stack);
+        }
+        return null;
+    }
+
     public static RarmorData getDataForStack(World world, ItemStack stack){
         Map<UUID, RarmorData> data = WorldData.getRarmorData(world);
         if(data != null){
@@ -78,6 +90,7 @@ public class RarmorData{
             RarmorData theData = data.get(stackId);
             if(theData == null){
                 theData = new RarmorData();
+                theData.loadedModules.add(Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER));
                 data.put(stackId, theData);
             }
 

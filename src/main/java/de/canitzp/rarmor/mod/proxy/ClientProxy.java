@@ -10,10 +10,12 @@
 
 package de.canitzp.rarmor.mod.proxy;
 
+import de.canitzp.rarmor.mod.event.ClientEvents;
 import de.canitzp.rarmor.mod.item.ItemRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy implements IProxy{
@@ -24,6 +26,11 @@ public class ClientProxy implements IProxy{
         this.addLocation(ItemRegistry.itemRarmorChest);
         this.addLocation(ItemRegistry.itemRarmorPants);
         this.addLocation(ItemRegistry.itemRarmorBoots);
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event){
+        new ClientEvents();
     }
 
     private void addLocation(Item item){
