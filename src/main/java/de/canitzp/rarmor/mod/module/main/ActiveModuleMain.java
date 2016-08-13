@@ -15,13 +15,16 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.gui.BasicInventory;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ActiveModuleMain implements IActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
-    public BasicInventory inventory = new BasicInventory("modules", 3);
+    public BasicInventory inventory = new BasicInventory("modules", 13);
 
     @Override
     public void readFromNBT(NBTTagCompound compound){
@@ -34,13 +37,13 @@ public class ActiveModuleMain implements IActiveRarmorModule{
     }
 
     @Override
-    public RarmorModuleContainer createContainer(){
-        return new ContainerModuleMain(this);
+    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+        return new ContainerModuleMain(player, container, this);
     }
 
     @Override
-    public RarmorModuleGui createGui(){
-        return new GuiModuleMain(this);
+    public RarmorModuleGui createGui(GuiContainer container){
+        return new GuiModuleMain(container, this);
     }
 
     @Override

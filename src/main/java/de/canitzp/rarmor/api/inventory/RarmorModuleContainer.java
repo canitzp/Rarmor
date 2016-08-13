@@ -12,9 +12,7 @@ package de.canitzp.rarmor.api.inventory;
 
 import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,10 +22,12 @@ import java.util.List;
 
 public class RarmorModuleContainer{
 
+    public final Container actualContainer;
     public final IActiveRarmorModule module;
 
-    public RarmorModuleContainer(IActiveRarmorModule module){
+    public RarmorModuleContainer(Container container, IActiveRarmorModule module){
         this.module = module;
+        this.actualContainer = container;
     }
 
     public List<Slot> getSlots(){
@@ -62,5 +62,9 @@ public class RarmorModuleContainer{
     @SideOnly(Side.CLIENT)
     public void removeListener(IContainerListener listener){
 
+    }
+
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
+        return null;
     }
 }

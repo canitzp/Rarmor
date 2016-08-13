@@ -11,6 +11,7 @@
 package de.canitzp.rarmor.mod.inventory.gui;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
 import de.canitzp.rarmor.mod.misc.Helper;
 import net.minecraft.client.Minecraft;
@@ -29,9 +30,9 @@ public class GuiRarmor extends GuiContainer{
 
     private final RarmorModuleGui gui;
 
-    public GuiRarmor(ContainerRarmor container, RarmorModuleGui gui){
+    public GuiRarmor(ContainerRarmor container, IActiveRarmorModule module){
         super(container);
-        this.gui = gui;
+        this.gui = module.createGui(this);
 
         this.xSize = 236;
         this.ySize = 229;

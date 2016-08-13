@@ -17,15 +17,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
-    public final Map<UUID, RarmorData> rarmorData = new HashMap<UUID, RarmorData>();
+    private final ConcurrentHashMap<UUID, RarmorData> rarmorData = new ConcurrentHashMap<UUID, RarmorData>();
 
     public WorldData(String name){
         super(name);

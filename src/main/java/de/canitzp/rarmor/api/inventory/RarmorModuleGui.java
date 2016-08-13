@@ -14,6 +14,7 @@ import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,13 +26,15 @@ public class RarmorModuleGui extends Gui{
 
     public List<GuiButton> buttonList;
     public final IActiveRarmorModule module;
+    public final GuiContainer actualGui;
     public Minecraft mc;
 
     public int guiLeft;
     public int guiTop;
 
-    public RarmorModuleGui(IActiveRarmorModule module){
+    public RarmorModuleGui(GuiContainer gui, IActiveRarmorModule module){
         this.module = module;
+        this.actualGui = gui;
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{

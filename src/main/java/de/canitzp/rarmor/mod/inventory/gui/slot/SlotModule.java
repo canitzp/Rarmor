@@ -15,16 +15,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-
 public class SlotModule extends Slot{
 
-    public SlotModule(IInventory inventoryIn, int index, int xPosition, int yPosition){
-        super(inventoryIn, index, xPosition, yPosition);
+    public SlotModule(IInventory inventory, int index, int xPosition, int yPosition){
+        super(inventory, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean isItemValid(@Nullable ItemStack stack){
+    public boolean isItemValid(ItemStack stack){
         return stack.getItem() instanceof IRarmorModuleItem;
     }
 }

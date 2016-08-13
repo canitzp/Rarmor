@@ -29,7 +29,7 @@ public class GuiHandler implements IGuiHandler{
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
         IActiveRarmorModule module = this.getModuleToOpen(player);
         if(module != null && module.hasTab()){
-            return new ContainerRarmor(player.inventory, module.createContainer());
+            return new ContainerRarmor(player, module);
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class GuiHandler implements IGuiHandler{
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
         IActiveRarmorModule module = this.getModuleToOpen(player);
         if(module != null && module.hasTab()){
-            return new GuiRarmor(new ContainerRarmor(player.inventory, module.createContainer()), module.createGui());
+            return new GuiRarmor(new ContainerRarmor(player, module), module);
         }
         return null;
     }

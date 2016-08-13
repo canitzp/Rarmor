@@ -11,12 +11,9 @@
 package de.canitzp.rarmor.mod.inventory;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
+import de.canitzp.rarmor.api.module.IActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -25,11 +22,21 @@ public class ContainerRarmor extends Container{
 
     public final RarmorModuleContainer container;
 
-    public ContainerRarmor(InventoryPlayer inventory, RarmorModuleContainer container){
-        this.container = container;
+    public ContainerRarmor(EntityPlayer player, IActiveRarmorModule module){
+        this.container = module.createContainer(player, this);
 
         for(Slot slot : this.container.getSlots()){
             this.addSlotToContainer(slot);
+        }
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 9; j++){
+                this.addSlotToContainer(new Slot(player.inventory, j+(i+1)*9, 38+j*18, 147+i*18));
+            }
+        }
+
+        for(int i = 0; i < 9; i++){
+            this.addSlotToContainer(new Slot(player.inventory, i, 38+i*18, 205));
         }
     }
 
@@ -80,5 +87,14 @@ public class ContainerRarmor extends Container{
     public void updateProgressBar(int id, int data){
         super.updateProgressBar(id, data);
         this.container.updateProgressBar(id, data);
+    }
+
+    @Override
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
+        ItemStack stack = this.container.slotClick(slotId, dragType, clickType, player);
+        if(stack != null){
+            return stack;
+        }
+        return super.slotClick(slotId, dragType, clickType, player);
     }
 }

@@ -12,6 +12,9 @@ package de.canitzp.rarmor.api.module;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,10 +25,10 @@ public interface IActiveRarmorModule{
 
     void writeToNBT(NBTTagCompound compound);
 
-    RarmorModuleContainer createContainer();
+    RarmorModuleContainer createContainer(EntityPlayer player, Container container);
 
     @SideOnly(Side.CLIENT)
-    RarmorModuleGui createGui();
+    RarmorModuleGui createGui(GuiContainer gui);
 
     void onInstalled();
 
