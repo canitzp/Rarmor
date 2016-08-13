@@ -10,59 +10,55 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-version = "${version}"
-group= "de.canitzp.${modid}"
-archivesBaseName = "${name}"
+version = "1.10.2-r2"
+group = "de.ellpeck.toolheadswapper"
+archivesBaseName = "ToolHeadSwapper"
 
 minecraft {
-    version = "${forge}"
-    runDir = "run"
-    mappings = "snapshot_20160721"
-    replaceIn "RarmorValues.java"
-    replace "@Version@", project.version.toString()
+    version = "1.10.2-12.18.0.2002-1.10.0"
+    runDir = "idea"
+
+    mappings = "snapshot_20160519"
+    makeObfSourceJar = false
+    //useDepAts = true
+
+    replaceIn "ToolHeadSwapper.java"
+    replace "@VERSION@", project.version.toString()
 }
 
 repositories {
-    maven {
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        name = "eiranet"
-        url ="http://repo.blay09.net"
-    }
-    maven {
-        url 'http://maven.epoxide.xyz'
-    }
+
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_${mcversion}:${jei_version}"
-    deobfCompile "net.darkhax.tesla:Tesla:${mcversion}-${tesla_version}"
-    compile files('/libraries')
+
 }
 
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-        
-    // copy everything else, thats not the mcmod.info
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+jar {
+
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.java
+    classifier = 'dev'
 }
