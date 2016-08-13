@@ -10,9 +10,9 @@
 
 package de.canitzp.rarmor.mod.inventory.gui.slot;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import de.canitzp.rarmor.mod.data.RarmorData;
 import de.canitzp.rarmor.mod.misc.Helper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,11 +21,13 @@ import net.minecraft.item.ItemStack;
 
 public class SlotModule extends Slot{
 
+    private final IRarmorData currentData;
     private final EntityPlayer player;
 
-    public SlotModule(IInventory inventory, EntityPlayer player, int index, int xPosition, int yPosition){
+    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, int index, int xPosition, int yPosition){
         super(inventory, index, xPosition, yPosition);
         this.player = player;
+        this.currentData = currentData;
     }
 
     @Override
@@ -65,38 +67,28 @@ public class SlotModule extends Slot{
 
     private void installModule(ItemStack stack){
         if(stack.getItem() instanceof IRarmorModuleItem){
-            RarmorData data = RarmorData.getDataForChestplate(this.player);
-            if(data != null){
-                IActiveRarmorModule module = Helper.initiateModuleById(((IRarmorModuleItem)stack.getItem()).getModuleIdentifier());
-                if(module != null){
-                    module.onInstalled(this.player);
-                    data.loadedModules.add(module);
-                    data.slotToModulePlaceInListMap.put(this.getSlotIndex(), data.loadedModules.indexOf(module));
-
-                    System.out.println("INSTALLED "+data.loadedModules+" "+data.slotToModulePlaceInListMap);
-                }
+            ActiveRarmorModule module = Helper.initiateModuleById(((IRarmorModuleItem)stack.getItem()).getModuleIdentifier());
+            if(module != null && !this.currentData.getCurrentModules().contains(module)){
+                module.onInstalled(this.player);
+                this.currentData.getCurrentModules().add(module);
+                this.currentData.getSlotToModuleMap().put(this.getSlotIndex(), this.currentData.getCurrentModules().indexOf(module));
             }
         }
     }
 
     private void uninstallModule(){
-        RarmorData data = RarmorData.getDataForChestplate(this.player);
-        IActiveRarmorModule module = this.getActiveModule(data);
-        if(module != null){
+        ActiveRarmorModule module = this.getActiveModule();
+        if(module != null && this.currentData.getCurrentModules().contains(module)){
             module.onUninstalled(this.player);
-            data.loadedModules.remove(module);
-            data.slotToModulePlaceInListMap.remove(this.getSlotIndex());
-
-            System.out.println("UNINSTALLED "+data.loadedModules+" "+data.slotToModulePlaceInListMap);
+            this.currentData.getCurrentModules().remove(module);
+            this.currentData.getSlotToModuleMap().remove(this.getSlotIndex());
         }
     }
 
-    private IActiveRarmorModule getActiveModule(RarmorData data){
-        if(data != null){
-            Integer i = data.slotToModulePlaceInListMap.get(this.getSlotIndex());
-            if(i != null){
-                return data.loadedModules.get(i);
-            }
+    private ActiveRarmorModule getActiveModule(){
+        Integer i = this.currentData.getSlotToModuleMap().get(this.getSlotIndex());
+        if(i != null){
+            return this.currentData.getCurrentModules().get(i);
         }
         return null;
     }
@@ -109,7 +101,7 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        IActiveRarmorModule module = this.getActiveModule(RarmorData.getDataForChestplate(this.player));
+        ActiveRarmorModule module = this.getActiveModule();
         return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, module);
     }
 }

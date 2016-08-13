@@ -11,8 +11,9 @@
 package de.canitzp.rarmor.mod.module.main;
 
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.event.ClientEvents;
 import de.canitzp.rarmor.mod.inventory.gui.button.TexturedButton;
 import de.canitzp.rarmor.mod.misc.Helper;
@@ -33,15 +34,15 @@ import java.util.Collections;
 @SideOnly(Side.CLIENT)
 public class GuiModuleMain extends RarmorModuleGui{
 
-    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorMain");
+    public static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorMain");
 
     private GuiButton buttonBackToMainInventory;
 
     private float oldMouseX;
     private float oldMouseY;
 
-    public GuiModuleMain(GuiContainer container, IActiveRarmorModule module){
-        super(container, module);
+    public GuiModuleMain(GuiContainer container, ActiveRarmorModule module, IRarmorData currentData){
+        super(container, module, currentData);
     }
 
     @Override

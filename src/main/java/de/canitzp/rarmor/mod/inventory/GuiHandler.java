@@ -10,7 +10,8 @@
 
 package de.canitzp.rarmor.mod.inventory;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.Rarmor;
 import de.canitzp.rarmor.mod.data.RarmorData;
 import de.canitzp.rarmor.mod.inventory.gui.GuiRarmor;
@@ -27,26 +28,27 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IActiveRarmorModule module = this.getModuleToOpen(player);
+        IRarmorData data = RarmorData.getDataForChestplate(player);
+        ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
-            return new ContainerRarmor(player, module);
+            return new ContainerRarmor(player, module, data);
         }
         return null;
     }
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IActiveRarmorModule module = this.getModuleToOpen(player);
+        IRarmorData data = RarmorData.getDataForChestplate(player);
+        ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
-            return new GuiRarmor(new ContainerRarmor(player, module), module);
+            return new GuiRarmor(new ContainerRarmor(player, module, data), module, data);
         }
         return null;
     }
 
-    private IActiveRarmorModule getModuleToOpen(EntityPlayer player){
-        RarmorData data = RarmorData.getDataForChestplate(player);
+    private ActiveRarmorModule getModuleToOpen(IRarmorData data){
         if(data != null){
-            return data.loadedModules.get(data.loadedModules.size() <= data.guiToOpen ? 0 : data.guiToOpen);
+            return data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule());
         }
         return null;
     }

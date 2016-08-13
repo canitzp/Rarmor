@@ -19,5 +19,5 @@ public interface IRarmorModuleItem{
 
     boolean canInstall(EntityPlayer player, Slot slot);
 
-    boolean canUninstall(EntityPlayer player, Slot slot, IActiveRarmorModule module);
+    boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module);
 }

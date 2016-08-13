@@ -10,7 +10,8 @@
 
 package de.canitzp.rarmor.api.inventory;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -24,17 +25,19 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class RarmorModuleGui extends Gui{
 
+    public final IRarmorData currentData;
     public List<GuiButton> buttonList;
-    public final IActiveRarmorModule module;
+    public final ActiveRarmorModule module;
     public final GuiContainer actualGui;
     public Minecraft mc;
 
     public int guiLeft;
     public int guiTop;
 
-    public RarmorModuleGui(GuiContainer gui, IActiveRarmorModule module){
+    public RarmorModuleGui(GuiContainer gui, ActiveRarmorModule module, IRarmorData currentData){
         this.module = module;
         this.actualGui = gui;
+        this.currentData = currentData;
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{

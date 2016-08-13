@@ -10,7 +10,7 @@
 
 package de.canitzp.rarmor.api;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,9 +21,9 @@ public final class RarmorAPI{
     public static final String API_NAME = MOD_ID+"api";
     public static final String API_VERSION = "1";
 
-    public static final Map<String, Class<? extends IActiveRarmorModule>> RARMOR_MODULE_REGISTRY = new HashMap<String, Class<? extends IActiveRarmorModule>>();
+    public static final Map<String, Class<? extends ActiveRarmorModule>> RARMOR_MODULE_REGISTRY = new HashMap<String, Class<? extends ActiveRarmorModule>>();
 
-    public static void registerRarmorModule(String id, Class<? extends IActiveRarmorModule> moduleClass){
+    public static void registerRarmorModule(String id, Class<? extends ActiveRarmorModule> moduleClass){
         RARMOR_MODULE_REGISTRY.put(id, moduleClass);
     }
 }

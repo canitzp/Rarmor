@@ -10,6 +10,7 @@
 
 package de.canitzp.rarmor.api.module;
 
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,20 +20,27 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IActiveRarmorModule{
+public abstract class ActiveRarmorModule{
 
-    void readFromNBT(NBTTagCompound compound);
+    public abstract String getIdentifier();
 
-    void writeToNBT(NBTTagCompound compound);
+    public abstract void readFromNBT(NBTTagCompound compound);
 
-    RarmorModuleContainer createContainer(EntityPlayer player, Container container);
+    public abstract void writeToNBT(NBTTagCompound compound);
+
+    public abstract RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData);
 
     @SideOnly(Side.CLIENT)
-    RarmorModuleGui createGui(GuiContainer gui);
+    public abstract RarmorModuleGui createGui(GuiContainer gui, IRarmorData currentData);
 
-    void onInstalled(EntityPlayer player);
+    public abstract void onInstalled(EntityPlayer player);
 
-    void onUninstalled(EntityPlayer player);
+    public abstract void onUninstalled(EntityPlayer player);
 
-    boolean hasTab(EntityPlayer player);
+    public abstract boolean hasTab(EntityPlayer player);
+
+    @Override
+    public boolean equals(Object obj){
+        return obj instanceof ActiveRarmorModule && this.getIdentifier().equals(((ActiveRarmorModule)obj).getIdentifier());
+    }
 }

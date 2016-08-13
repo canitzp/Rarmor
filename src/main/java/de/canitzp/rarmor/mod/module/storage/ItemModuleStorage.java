@@ -10,7 +10,7 @@
 
 package de.canitzp.rarmor.mod.module.storage;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.item.ItemRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -33,7 +33,7 @@ public class ItemModuleStorage extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, IActiveRarmorModule module){
+    public boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module){
         System.out.println("CAN I BE UNINSTALLED!?!?");
         return true;
     }

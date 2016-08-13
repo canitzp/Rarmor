@@ -11,20 +11,26 @@
 package de.canitzp.rarmor.mod.module.main;
 
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.gui.BasicInventory;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ActiveModuleMain implements IActiveRarmorModule{
+public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
     public BasicInventory inventory = new BasicInventory("modules", 13);
+
+    @Override
+    public String getIdentifier(){
+        return IDENTIFIER;
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound){
@@ -37,13 +43,13 @@ public class ActiveModuleMain implements IActiveRarmorModule{
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
-        return new ContainerModuleMain(player, container, this);
+    public RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData){
+        return new ContainerModuleMain(player, container, this, currentData);
     }
 
     @Override
-    public RarmorModuleGui createGui(GuiContainer container){
-        return new GuiModuleMain(container, this);
+    public RarmorModuleGui createGui(GuiContainer container, IRarmorData currentData){
+        return new GuiModuleMain(container, this, currentData);
     }
 
     @Override

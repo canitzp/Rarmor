@@ -10,6 +10,7 @@
 
 package de.canitzp.rarmor.mod.data;
 
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.mod.Rarmor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,13 +26,13 @@ public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
-    private final Map<UUID, RarmorData> rarmorData = new ConcurrentHashMap<UUID, RarmorData>();
+    private final Map<UUID, IRarmorData> rarmorData = new ConcurrentHashMap<UUID, IRarmorData>();
 
     public WorldData(String name){
         super(name);
     }
 
-    public static Map<UUID, RarmorData> getRarmorData(World world){
+    public static Map<UUID, IRarmorData> getRarmorData(World world){
         WorldData data = getOrLoadData(world);
         if(data != null){
             return data.rarmorData;
@@ -66,7 +67,7 @@ public class WorldData extends WorldSavedData{
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
             UUID id = tag.getUniqueId("RarmorItemId");
-            RarmorData data = new RarmorData();
+            IRarmorData data = new RarmorData();
             data.readFromNBT(tag);
 
             this.rarmorData.put(id, data);
@@ -76,7 +77,7 @@ public class WorldData extends WorldSavedData{
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound){
         NBTTagList list = new NBTTagList();
-        for(Map.Entry<UUID, RarmorData> entry : this.rarmorData.entrySet()){
+        for(Map.Entry<UUID, IRarmorData> entry : this.rarmorData.entrySet()){
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setUniqueId("RarmorItemId", entry.getKey());

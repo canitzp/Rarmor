@@ -11,25 +11,30 @@
 package de.canitzp.rarmor.mod.misc;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.Rarmor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Map;
-
 public final class Helper{
 
-    public static IActiveRarmorModule initiateModuleById(String id){
+    public static ActiveRarmorModule initiateModuleById(String id){
         if(id != null && !id.isEmpty()){
-            Class<? extends IActiveRarmorModule> moduleClass = RarmorAPI.RARMOR_MODULE_REGISTRY.get(id);
-            return initiateModule(moduleClass);
+            Class<? extends ActiveRarmorModule> moduleClass = RarmorAPI.RARMOR_MODULE_REGISTRY.get(id);
+            ActiveRarmorModule module = initiateModule(moduleClass);
+
+            String moduleId = module.getIdentifier();
+            if(!id.equals(moduleId)){
+                Rarmor.LOGGER.fatal("A "+Rarmor.MOD_NAME+" Module has a different identifier than the one it was registered with. This is not allowed behavior! Expected id: "+id+", got "+moduleId+".");
+            }
+
+            return module;
         }
         return null;
     }
 
-    public static IActiveRarmorModule initiateModule(Class<? extends IActiveRarmorModule> moduleClass){
+    private static ActiveRarmorModule initiateModule(Class<? extends ActiveRarmorModule> moduleClass){
         try{
             return moduleClass.newInstance();
         }
@@ -37,18 +42,6 @@ public final class Helper{
             Rarmor.LOGGER.error("Trying to initiate a module failed!", e);
             return null;
         }
-    }
-
-    public static String getIdFromModule(IActiveRarmorModule module){
-        if(module != null){
-            Class<? extends IActiveRarmorModule> moduleClass = module.getClass();
-            for(Map.Entry<String, Class<? extends IActiveRarmorModule>> entry : RarmorAPI.RARMOR_MODULE_REGISTRY.entrySet()){
-                if(moduleClass.equals(entry.getValue())){
-                    return entry.getKey();
-                }
-            }
-        }
-        return null;
     }
 
     @SideOnly(Side.CLIENT)

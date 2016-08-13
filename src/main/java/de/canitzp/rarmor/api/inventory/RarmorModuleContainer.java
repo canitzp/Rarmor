@@ -10,7 +10,8 @@
 
 package de.canitzp.rarmor.api.inventory;
 
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -22,12 +23,14 @@ import java.util.List;
 
 public class RarmorModuleContainer{
 
+    public final IRarmorData currentData;
     public final Container actualContainer;
-    public final IActiveRarmorModule module;
+    public final ActiveRarmorModule module;
 
-    public RarmorModuleContainer(Container container, IActiveRarmorModule module){
+    public RarmorModuleContainer(Container container, ActiveRarmorModule module, IRarmorData currentData){
         this.module = module;
         this.actualContainer = container;
+        this.currentData = currentData;
     }
 
     public List<Slot> getSlots(){

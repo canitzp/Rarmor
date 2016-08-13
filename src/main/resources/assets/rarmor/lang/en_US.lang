@@ -7,3 +7,5 @@ item.rarmor.itemRarmorBoots.name=Rarmor Boots
 
 rarmor.back=Back to Inventory
 rarmor.removeChest=Press '%s' to remove and close Rarmor
+
+module.rarmorMain.name=Overview

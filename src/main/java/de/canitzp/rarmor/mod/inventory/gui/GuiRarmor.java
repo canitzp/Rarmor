@@ -10,10 +10,14 @@
 
 package de.canitzp.rarmor.mod.inventory.gui;
 
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
+import de.canitzp.rarmor.mod.inventory.gui.button.TabButton;
 import de.canitzp.rarmor.mod.misc.Helper;
+import de.canitzp.rarmor.mod.packet.PacketHandler;
+import de.canitzp.rarmor.mod.packet.PacketOpenGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -22,17 +26,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiRarmor extends GuiContainer{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorBase");
 
+    private final IRarmorData currentData;
     private final RarmorModuleGui gui;
+    private final TabButton[] tabButtons = new TabButton[10];
 
-    public GuiRarmor(ContainerRarmor container, IActiveRarmorModule module){
+    public GuiRarmor(ContainerRarmor container, ActiveRarmorModule currentModule, IRarmorData currentData){
         super(container);
-        this.gui = module.createGui(this);
+        this.currentData = currentData;
+        this.gui = currentModule.createGui(this, currentData);
 
         this.xSize = 236;
         this.ySize = 229;
@@ -73,6 +81,15 @@ public class GuiRarmor extends GuiContainer{
     @Override
     public void actionPerformed(GuiButton button) throws IOException{
         super.actionPerformed(button);
+
+        for(TabButton tabButton : this.tabButtons){
+            if(tabButton == button && this.currentData.getSelectedModule() != tabButton.moduleNum){
+                this.currentData.selectModule(tabButton.moduleNum);
+                PacketHandler.handler.sendToServer(new PacketOpenGui(this.currentData.getSelectedModule()));
+                System.out.println("OPENING!!");
+            }
+        }
+
         this.gui.actionPerformed(button);
     }
 
@@ -86,10 +103,41 @@ public class GuiRarmor extends GuiContainer{
     public void initGui(){
         super.initGui();
 
+        for(int i = 0; i < this.tabButtons.length; i++){
+            this.tabButtons[i] = new TabButton(-2837+i, this.guiLeft+this.xSize-3, this.guiTop+8+(i*29));
+            this.buttonList.add(this.tabButtons[i]);
+        }
+        this.updateTabs();
+
         this.gui.guiLeft = this.guiLeft;
         this.gui.guiTop = this.guiTop;
         this.gui.buttonList = this.buttonList;
         this.gui.initGui();
+    }
+
+    public void updateTabs(){
+        int buttonCounter = 0;
+
+        List<ActiveRarmorModule> modules = this.currentData.getCurrentModules();
+        System.out.println(modules);
+        for(int i = 0; i < modules.size(); i++){
+            if(i < this.tabButtons.length){
+                ActiveRarmorModule module = modules.get(i);
+                if(module != null && module.hasTab(this.mc.thePlayer)){
+                    this.tabButtons[buttonCounter].setModule(this.currentData, i);
+                    this.tabButtons[buttonCounter].visible = true;
+                    buttonCounter++;
+                }
+            }
+            else{
+                break;
+            }
+        }
+
+        while(buttonCounter < this.tabButtons.length){
+            this.tabButtons[buttonCounter].visible = false;
+            buttonCounter++;
+        }
     }
 
     @Override

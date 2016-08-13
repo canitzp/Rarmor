@@ -10,8 +10,12 @@
 
 package de.canitzp.rarmor.mod.inventory;
 
+import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.api.module.IActiveRarmorModule;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.mod.inventory.gui.GuiRarmor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -20,10 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerRarmor extends Container{
 
+    private final IRarmorData currentData;
     public final RarmorModuleContainer container;
 
-    public ContainerRarmor(EntityPlayer player, IActiveRarmorModule module){
-        this.container = module.createContainer(player, this);
+    public ContainerRarmor(EntityPlayer player, ActiveRarmorModule currentModule, IRarmorData currentData){
+        this.container = currentModule.createContainer(player, this, currentData);
+        this.currentData = currentData;
 
         for(Slot slot : this.container.getSlots()){
             this.addSlotToContainer(slot);
@@ -61,7 +67,6 @@ public class ContainerRarmor extends Container{
     @Override
     public void detectAndSendChanges(){
         super.detectAndSendChanges();
-
         this.container.detectAndSendChanges();
     }
 
@@ -92,9 +97,17 @@ public class ContainerRarmor extends Container{
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
         ItemStack stack = this.container.slotClick(slotId, dragType, clickType, player);
-        if(stack != null){
-            return stack;
+        if(stack == null){
+            stack = super.slotClick(slotId, dragType, clickType, player);
         }
-        return super.slotClick(slotId, dragType, clickType, player);
+
+        if(player.worldObj.isRemote){ //TODO Make this into a packet that gets sent to the client (sends all the data, have some variable that is true if tabs should update)
+            GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+            if(gui instanceof GuiRarmor){
+                ((GuiRarmor)gui).updateTabs();
+            }
+        }
+
+        return stack;
     }
 }
