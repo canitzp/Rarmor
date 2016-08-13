@@ -60,7 +60,7 @@ public class ContainerModuleMain extends RarmorModuleContainer{
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
         for(int i = 0; i < 3; i++){
-            slots.add(new SlotModule(module.inventory, i+10, 11, 10+i*26));
+            slots.add(new SlotModule(module.inventory, this.player, i+10, 11, 10+i*26));
         }
 
         for(int i = 0; i < 4; i++){

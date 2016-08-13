@@ -20,41 +20,58 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RarmorData{
 
     public List<IActiveRarmorModule> loadedModules = new ArrayList<IActiveRarmorModule>();
+    public Map<Integer, Integer> slotToModulePlaceInListMap = new HashMap<Integer, Integer>();
     public int guiToOpen;
 
     public void readFromNBT(NBTTagCompound compound){
-        NBTTagList list = compound.getTagList("ModuleData", 10);
-        for(int i = 0; i < list.tagCount(); i++){
-            NBTTagCompound tag = list.getCompoundTagAt(i);
+        NBTTagList data = compound.getTagList("ModuleData", 10);
+        for(int i = 0; i < data.tagCount(); i++){
+            NBTTagCompound tag = data.getCompoundTagAt(i);
 
             IActiveRarmorModule module = Helper.initiateModuleById(tag.getString("ModuleId"));
             module.readFromNBT(tag);
 
             this.loadedModules.add(module);
         }
+
+        NBTTagList list = compound.getTagList("SlotToRarmorDataPlaceList", 10);
+        for(int i = 0; i < list.tagCount(); i++){
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+
+            int key = tag.getInteger("Key");
+            int value = tag.getInteger("Value");
+
+            this.slotToModulePlaceInListMap.put(key, value);
+        }
     }
 
     public void writeToNBT(NBTTagCompound compound){
-        NBTTagList list = new NBTTagList();
-
+        NBTTagList data = new NBTTagList();
         for(IActiveRarmorModule module : this.loadedModules){
             NBTTagCompound tag = new NBTTagCompound();
 
             module.writeToNBT(tag);
             tag.setString("ModuleId", Helper.getIdFromModule(module));
 
+            data.appendTag(tag);
+        }
+        compound.setTag("ModuleData", data);
+
+        NBTTagList list = new NBTTagList();
+        for(Map.Entry<Integer, Integer> entry : this.slotToModulePlaceInListMap.entrySet()){
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setInteger("Key", entry.getKey());
+            tag.setInteger("Value", entry.getValue());
+
             list.appendTag(tag);
         }
-
-        compound.setTag("ModuleData", list);
+        compound.setTag("SlotToRarmorDataPlaceList", list);
     }
 
     public static RarmorData getDataForChestplate(EntityPlayer player){
@@ -90,7 +107,11 @@ public class RarmorData{
             RarmorData theData = data.get(stackId);
             if(theData == null){
                 theData = new RarmorData();
-                theData.loadedModules.add(Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER));
+
+                IActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER);
+                module.onInstalled(null);
+                theData.loadedModules.add(module);
+
                 data.put(stackId, theData);
             }
 

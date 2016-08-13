@@ -12,11 +12,13 @@ package de.canitzp.rarmor.mod.module;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.mod.module.main.ActiveModuleMain;
+import de.canitzp.rarmor.mod.module.storage.ActiveModuleStorage;
 
 public final class ModuleRegistry{
 
     public static void init(){
         RarmorAPI.registerRarmorModule(ActiveModuleMain.IDENTIFIER, ActiveModuleMain.class);
+        RarmorAPI.registerRarmorModule(ActiveModuleStorage.IDENTIFIER, ActiveModuleStorage.class);
     }
 
 }

@@ -11,14 +11,13 @@
 package de.canitzp.rarmor.api.module;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
 public interface IRarmorModuleItem{
 
     String getModuleIdentifier();
 
-    boolean canInstall(EntityPlayer player, Container container, Slot slot);
+    boolean canInstall(EntityPlayer player, Slot slot);
 
-    boolean canUninstall(EntityPlayer player, Container container, Slot slot, IActiveRarmorModule module);
+    boolean canUninstall(EntityPlayer player, Slot slot, IActiveRarmorModule module);
 }

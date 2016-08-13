@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler{
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
         IActiveRarmorModule module = this.getModuleToOpen(player);
-        if(module != null && module.hasTab()){
+        if(module != null && module.hasTab(player)){
             return new ContainerRarmor(player, module);
         }
         return null;
@@ -37,7 +37,7 @@ public class GuiHandler implements IGuiHandler{
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
         IActiveRarmorModule module = this.getModuleToOpen(player);
-        if(module != null && module.hasTab()){
+        if(module != null && module.hasTab(player)){
             return new GuiRarmor(new ContainerRarmor(player, module), module);
         }
         return null;

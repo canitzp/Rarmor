@@ -30,9 +30,9 @@ public interface IActiveRarmorModule{
     @SideOnly(Side.CLIENT)
     RarmorModuleGui createGui(GuiContainer gui);
 
-    void onInstalled();
+    void onInstalled(EntityPlayer player);
 
-    void onUninstalled();
+    void onUninstalled(EntityPlayer player);
 
-    boolean hasTab();
+    boolean hasTab(EntityPlayer player);
 }

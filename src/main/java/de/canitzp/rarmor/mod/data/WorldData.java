@@ -25,7 +25,7 @@ public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
-    private final ConcurrentHashMap<UUID, RarmorData> rarmorData = new ConcurrentHashMap<UUID, RarmorData>();
+    private final Map<UUID, RarmorData> rarmorData = new ConcurrentHashMap<UUID, RarmorData>();
 
     public WorldData(String name){
         super(name);
