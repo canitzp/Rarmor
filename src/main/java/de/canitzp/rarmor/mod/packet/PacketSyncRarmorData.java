@@ -34,20 +34,23 @@ public class PacketSyncRarmorData implements IMessage{
     private UUID stackId;
     private IRarmorData data;
     private boolean shouldReloadTabs;
+    private int moduleIdForConfirmation;
 
     public PacketSyncRarmorData(){
 
     }
 
-    public PacketSyncRarmorData(UUID stackId, IRarmorData data, boolean shouldReloadTabs){
+    public PacketSyncRarmorData(UUID stackId, IRarmorData data, boolean shouldReloadTabs, int moduleIdForConfirmation){
         this.stackId = stackId;
         this.data = data;
         this.shouldReloadTabs = shouldReloadTabs;
+        this.moduleIdForConfirmation = moduleIdForConfirmation;
     }
 
     @Override
     public void fromBytes(ByteBuf buf){
         this.shouldReloadTabs = buf.readBoolean();
+        this.moduleIdForConfirmation = buf.readInt();
 
         try{
             PacketBuffer buffer = new PacketBuffer(buf);
@@ -65,6 +68,7 @@ public class PacketSyncRarmorData implements IMessage{
     @Override
     public void toBytes(ByteBuf buf){
         buf.writeBoolean(this.shouldReloadTabs);
+        buf.writeInt(this.moduleIdForConfirmation);
 
         PacketBuffer buffer = new PacketBuffer(buf);
 
@@ -89,6 +93,10 @@ public class PacketSyncRarmorData implements IMessage{
                     if(mc.currentScreen instanceof GuiRarmor){
                         ((GuiRarmor)mc.currentScreen).updateTabs();
                     }
+                }
+
+                if(message.moduleIdForConfirmation >= 0){
+                    PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
                 }
             }
             return null;

@@ -14,6 +14,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.mod.event.CommonEvents;
 import de.canitzp.rarmor.mod.inventory.GuiHandler;
 import de.canitzp.rarmor.mod.item.ItemRegistry;
+import de.canitzp.rarmor.mod.misc.Config;
 import de.canitzp.rarmor.mod.module.ModuleRegistry;
 import de.canitzp.rarmor.mod.packet.PacketHandler;
 import de.canitzp.rarmor.mod.proxy.IProxy;
@@ -42,6 +43,7 @@ public final class Rarmor{
     public void preInit(FMLPreInitializationEvent event){
         LOGGER.info("Starting "+MOD_NAME+"...");
 
+        Config.init(event.getSuggestedConfigurationFile());
         ItemRegistry.preInit();
         new GuiHandler();
         proxy.preInit(event);

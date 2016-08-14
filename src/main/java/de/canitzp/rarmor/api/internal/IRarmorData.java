@@ -35,4 +35,6 @@ public interface IRarmorData{
     UUID getBoundStackId();
 
     void sendUpdate(EntityPlayer player, boolean reloadTabs);
+
+    void sendUpdate(EntityPlayer player, boolean reloadTabs, int moduleIdForConfirmation);
 }

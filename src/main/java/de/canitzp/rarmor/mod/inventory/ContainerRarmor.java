@@ -14,10 +14,7 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.gui.slot.SlotModule;
-import de.canitzp.rarmor.mod.packet.PacketHandler;
-import de.canitzp.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -120,11 +117,11 @@ public class ContainerRarmor extends Container{
             stack = super.slotClick(slotId, dragType, clickType, player);
         }
 
-        if(!player.worldObj.isRemote && player instanceof EntityPlayerMP){
+        if(!player.worldObj.isRemote){
             if(slotId > 0 && slotId < this.inventorySlots.size()){
                 Slot slot = this.inventorySlots.get(slotId);
                 if(slot instanceof SlotModule){
-                    PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.currentData.getBoundStackId(), this.currentData, true), (EntityPlayerMP)player);
+                    this.currentData.sendUpdate(player, true);
                 }
             }
         }

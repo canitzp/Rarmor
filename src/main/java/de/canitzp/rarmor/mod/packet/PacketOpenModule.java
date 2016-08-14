@@ -13,6 +13,7 @@ package de.canitzp.rarmor.mod.packet;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.mod.Rarmor;
 import de.canitzp.rarmor.mod.data.RarmorData;
+import de.canitzp.rarmor.mod.misc.Config;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -62,11 +63,20 @@ public class PacketOpenModule implements IMessage{
                 }
             }
 
+            boolean shouldOpenGui;
             if(message.sendRarmorDataToClient){
-                data.sendUpdate(player, true);
+                boolean doPacket = Config.doOpeningConfirmationPacket;
+
+                shouldOpenGui = !doPacket;
+                data.sendUpdate(player, true, doPacket ? message.moduleId : -1);
+            }
+            else{
+                shouldOpenGui = true;
             }
 
-            player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+            if(shouldOpenGui){
+                player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+            }
             return null;
         }
     }

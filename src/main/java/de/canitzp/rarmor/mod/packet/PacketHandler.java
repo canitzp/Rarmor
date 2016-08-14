@@ -23,6 +23,7 @@ public final class PacketHandler{
 
         handler.registerMessage(PacketOpenModule.Handler.class, PacketOpenModule.class, 0, Side.SERVER);
         handler.registerMessage(PacketSyncRarmorData.Handler.class, PacketSyncRarmorData.class, 1, Side.CLIENT);
+        handler.registerMessage(PacketOpenConfirmation.Handler.class, PacketOpenConfirmation.class, 2, Side.SERVER);
     }
 
 }
