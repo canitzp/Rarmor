@@ -15,7 +15,7 @@ Everything that is not listed below applies to the above.
 * Redistribute the mod. This does not apply, however, when it comes to pre-packaged modpacks.
 
 ### YOU HAVE TO
-* When modifying or using code, always explicitly credit Ellpeck as the creator.
+* When modifying or using code, always explicitly credit canitzp & Ellpeck as the owners.
 * When making a review/spotlight containing the mod or using it in a modpack, always make clear that the mod is used.
 * When it comes to the code, always link back to the official repository.
 * When it comes to the mod, always link back to the the official CurseForge page.
