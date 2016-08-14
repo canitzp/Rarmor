@@ -42,12 +42,16 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     @Override
     public void readFromNBT(NBTTagCompound compound, boolean sync){
-        this.inventory.loadSlots(compound);
+        if(!sync){
+            this.inventory.loadSlots(compound);
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound, boolean sync){
-        this.inventory.saveSlots(compound);
+        if(!sync){
+            this.inventory.saveSlots(compound);
+        }
     }
 
     @Override
@@ -68,13 +72,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     @Override
     public void onUninstalled(EntityPlayer player){
-        for(int i = 0; i < this.inventory.getSizeInventory(); i++){
-            ItemStack stack = this.inventory.getStackInSlot(i);
-            if(stack != null){
-                player.dropItem(stack.copy(), false, false);
-                this.inventory.setInventorySlotContents(i, null);
-            }
-        }
+        this.inventory.drop(player);
     }
 
     @Override

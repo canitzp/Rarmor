@@ -68,7 +68,7 @@ public class PacketOpenModule implements IMessage{
                     boolean doPacket = Config.doOpeningConfirmationPacket;
 
                     shouldOpenGui = !doPacket;
-                    data.sendUpdate(player, true, doPacket ? message.moduleId : -1);
+                    data.queueUpdate(true, doPacket ? message.moduleId : -1, true);
                 }
                 else{
                     shouldOpenGui = true;

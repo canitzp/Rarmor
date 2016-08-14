@@ -13,7 +13,6 @@ package de.ellpeck.rarmor.mod.packet;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.mod.Rarmor;
 import de.ellpeck.rarmor.mod.data.RarmorData;
-import de.ellpeck.rarmor.mod.data.WorldData;
 import de.ellpeck.rarmor.mod.inventory.gui.GuiRarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -26,7 +25,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.UUID;
 
 public class PacketSyncRarmorData implements IMessage{
@@ -35,6 +33,8 @@ public class PacketSyncRarmorData implements IMessage{
     private IRarmorData data;
     private boolean shouldReloadTabs;
     private int moduleIdForConfirmation;
+
+    private NBTTagCompound receivedDataCompound;
 
     public PacketSyncRarmorData(){
 
@@ -56,9 +56,7 @@ public class PacketSyncRarmorData implements IMessage{
             PacketBuffer buffer = new PacketBuffer(buf);
 
             this.stackId = buffer.readUuid();
-
-            this.data = new RarmorData(this.stackId);
-            this.data.readFromNBT(buffer.readNBTTagCompoundFromBuffer(), true);
+            this.receivedDataCompound = buffer.readNBTTagCompoundFromBuffer();
         }
         catch(IOException e){
             Rarmor.LOGGER.info("Something went wrong trying to receive a "+Rarmor.MOD_NAME+" Update Packet!", e);
@@ -85,9 +83,9 @@ public class PacketSyncRarmorData implements IMessage{
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketSyncRarmorData message, MessageContext context){
             Minecraft mc = Minecraft.getMinecraft();
-            Map<UUID, IRarmorData> data = WorldData.getRarmorData(mc.theWorld);
+            IRarmorData data = RarmorData.getDataForUuid(mc.theWorld, message.stackId);
             if(data != null){
-                data.put(message.stackId, message.data);
+                data.readFromNBT(message.receivedDataCompound, true);
 
                 if(message.shouldReloadTabs){
                     if(mc.currentScreen instanceof GuiRarmor){

@@ -24,5 +24,6 @@ public abstract class ItemRarmorModule extends Item implements IRarmorModuleItem
 
         this.setUnlocalizedName(RarmorAPI.MOD_ID+"."+name);
         this.setCreativeTab(CreativeTab.INSTANCE);
+        this.setMaxStackSize(1);
     }
 }

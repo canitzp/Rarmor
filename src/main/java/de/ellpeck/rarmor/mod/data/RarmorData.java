@@ -34,6 +34,10 @@ public class RarmorData implements IRarmorData{
     private final UUID stackId;
     public int selectedModule;
 
+    private boolean isUpdateQueued;
+    private boolean queuedUpdateReload;
+    private int queuedUpdateConfirmation;
+
     public RarmorData(UUID stackId){
         this.stackId = stackId;
     }
@@ -46,32 +50,18 @@ public class RarmorData implements IRarmorData{
         return null;
     }
 
-    public static boolean checkAndSetRarmorId(ItemStack stack, boolean set){
+    public static void checkAndSetRarmorId(ItemStack stack){
         if(!stack.hasTagCompound()){
-            if(set){
-                stack.setTagCompound(new NBTTagCompound());
-            }
-            else{
-                return false;
-            }
+            stack.setTagCompound(new NBTTagCompound());
         }
 
         NBTTagCompound compound = stack.getTagCompound();
         if(!compound.hasUniqueId("RarmorId")){
-            if(set){
-                compound.setUniqueId("RarmorId", UUID.randomUUID());
-            }
-            return false;
-        }
-        else{
-            return true;
+            compound.setUniqueId("RarmorId", UUID.randomUUID());
         }
     }
 
-    public static IRarmorData getDataForStack(World world, ItemStack stack){
-        checkAndSetRarmorId(stack, true);
-        UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
-
+    public static IRarmorData getDataForUuid(World world, UUID stackId){
         Map<UUID, IRarmorData> data = WorldData.getRarmorData(world);
         if(data != null){
             IRarmorData theData = data.get(stackId);
@@ -90,16 +80,20 @@ public class RarmorData implements IRarmorData{
         return null;
     }
 
+    public static IRarmorData getDataForStack(World world, ItemStack stack){
+        checkAndSetRarmorId(stack);
+        UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
+        return getDataForUuid(world, stackId);
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound compound, boolean sync){
         NBTTagList data = compound.getTagList("ModuleData", 10);
         for(int i = 0; i < data.tagCount(); i++){
             NBTTagCompound tag = data.getCompoundTagAt(i);
 
-            ActiveRarmorModule module = Helper.initiateModuleById(tag.getString("ModuleId"), this);
+            ActiveRarmorModule module = this.findOrCreateModule(tag.getString("ModuleId"));
             module.readFromNBT(tag, sync);
-
-            this.loadedModules.add(module);
         }
 
         NBTTagList list = compound.getTagList("SlotToRarmorDataPlaceList", 10);
@@ -115,6 +109,18 @@ public class RarmorData implements IRarmorData{
         this.selectedModule = compound.getInteger("SelectedModule");
     }
 
+    private ActiveRarmorModule findOrCreateModule(String moduleId){
+        for(ActiveRarmorModule module : this.loadedModules){
+            if(moduleId.equals(module.getIdentifier())){
+                return module;
+            }
+        }
+
+        ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
+        this.loadedModules.add(module);
+        return module;
+    }
+
     @Override
     public void selectModule(int i){
         this.selectedModule = i;
@@ -126,9 +132,11 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void sendUpdate(EntityPlayer player, boolean reloadTabs, int moduleIdForConfirmation){
-        if(!player.worldObj.isRemote && player instanceof EntityPlayerMP){
-            PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.stackId, this, reloadTabs, moduleIdForConfirmation), (EntityPlayerMP)player);
+    public void sendQueuedUpdate(EntityPlayer player){
+        if(this.isUpdateQueued && player instanceof EntityPlayerMP){
+            PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.stackId, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
+
+            this.isUpdateQueued = false;
         }
     }
 
@@ -182,10 +190,41 @@ public class RarmorData implements IRarmorData{
                 module.onInstalled(player);
                 this.getCurrentModules().add(module);
                 this.getSlotToModuleMap().put(slotIndex, module.getIdentifier());
-
-                System.out.println(this.getCurrentModules());
-                System.out.println(this.getSlotToModuleMap());
             }
+        }
+    }
+
+    @Override
+    public void tick(World world){
+        for(ActiveRarmorModule module : this.loadedModules){
+            if(module != null){
+                module.tick(world);
+            }
+        }
+    }
+
+    @Override
+    public void queueUpdate(){
+        this.queueUpdate(false);
+    }
+
+    @Override
+    public void queueUpdate(boolean reloadTabs){
+        this.queueUpdate(reloadTabs, -1);
+    }
+
+    @Override
+    public void queueUpdate(boolean reloadTabs, int moduleIdForConfirmation){
+        this.queueUpdate(reloadTabs, moduleIdForConfirmation, false);
+    }
+
+    @Override
+    public void queueUpdate(boolean reloadTabs, int moduleIdForConfirmation, boolean override){
+        if(override || !this.isUpdateQueued){
+            this.queuedUpdateReload = reloadTabs;
+            this.queuedUpdateConfirmation = moduleIdForConfirmation;
+
+            this.isUpdateQueued = true;
         }
     }
 
@@ -195,9 +234,6 @@ public class RarmorData implements IRarmorData{
             module.onUninstalled(player);
             this.getCurrentModules().remove(module);
             this.getSlotToModuleMap().remove(slotIndex);
-
-            System.out.println(this.getCurrentModules());
-            System.out.println(this.getSlotToModuleMap());
         }
     }
 }

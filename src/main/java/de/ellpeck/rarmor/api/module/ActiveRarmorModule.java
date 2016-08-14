@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,5 +53,9 @@ public abstract class ActiveRarmorModule{
     @Override
     public boolean equals(Object obj){
         return obj instanceof ActiveRarmorModule && this.getIdentifier().equals(((ActiveRarmorModule)obj).getIdentifier());
+    }
+
+    public void tick(World world){
+
     }
 }

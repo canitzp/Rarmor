@@ -89,4 +89,8 @@ public final class Helper{
     public static String getMajorModVersion(){
         return splitVersion()[1].substring(1);
     }
+
+    public static boolean canBeStacked(ItemStack stack1, ItemStack stack2){
+        return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
 }

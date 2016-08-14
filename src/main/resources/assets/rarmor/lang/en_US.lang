@@ -11,6 +11,7 @@ rarmor.removeChest=Press '%s' to remove and close Rarmor
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage
 module.rarmorEnder.name=Ender Chest
+module.rarmorFurnace.name=Furnace
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!

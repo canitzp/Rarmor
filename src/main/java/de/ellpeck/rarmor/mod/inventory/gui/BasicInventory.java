@@ -166,4 +166,15 @@ public class BasicInventory implements IInventory{
             }
         }
     }
+
+    public void drop(EntityPlayer player){
+        if(!player.worldObj.isRemote){
+            for(int i = 0; i < this.slots.length; i++){
+                if(this.slots[i] != null){
+                    player.dropItem(this.slots[i].copy(), false, false);
+                    this.slots[i] = null;
+                }
+            }
+        }
+    }
 }

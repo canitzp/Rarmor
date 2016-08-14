@@ -120,7 +120,7 @@ public class ContainerRarmor extends Container{
             if(slotId > 0 && slotId < this.inventorySlots.size()){
                 Slot slot = this.inventorySlots.get(slotId);
                 if(slot instanceof SlotModule){
-                    this.currentData.sendUpdate(player, true, -1);
+                    this.currentData.queueUpdate(true);
                 }
             }
         }

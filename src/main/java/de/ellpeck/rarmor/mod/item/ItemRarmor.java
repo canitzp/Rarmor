@@ -11,9 +11,11 @@
 package de.ellpeck.rarmor.mod.item;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.misc.CreativeTab;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -40,8 +42,12 @@ public class ItemRarmor extends ItemArmor{
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
-        if(!world.isRemote){
-            RarmorData.checkAndSetRarmorId(stack, true);
+        if(entity instanceof EntityPlayer){
+            IRarmorData data = RarmorData.getDataForStack(world, stack);
+            if(data != null){
+                data.tick(world);
+                data.sendQueuedUpdate((EntityPlayer)entity);
+            }
         }
     }
 }

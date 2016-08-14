@@ -76,10 +76,10 @@ public class SlotModule extends Slot{
     }
 
     private void uninstallModule(){
-        this.currentData.uninstallModule(getActiveModule(this.uniqueModuleSlotId, this.currentData), this.player, this.uniqueModuleSlotId);
+        this.currentData.uninstallModule(this.getActiveModule(this.uniqueModuleSlotId, this.currentData), this.player, this.uniqueModuleSlotId);
     }
 
-    public static ActiveRarmorModule getActiveModule(int slotIndex, IRarmorData data){
+    private ActiveRarmorModule getActiveModule(int slotIndex, IRarmorData data){
         String identifier = data.getSlotToModuleMap().get(slotIndex);
         if(identifier != null){
             List<ActiveRarmorModule> modules = data.getCurrentModules();
@@ -100,7 +100,7 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        ActiveRarmorModule module = getActiveModule(this.uniqueModuleSlotId, this.currentData);
+        ActiveRarmorModule module = this.getActiveModule(this.uniqueModuleSlotId, this.currentData);
         return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, module);
     }
 }

@@ -199,6 +199,7 @@ public class GuiRarmor extends GuiContainer{
                 this.updateDisplayStrings.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.1", TextFormatting.DARK_GREEN+Rarmor.MOD_NAME+TextFormatting.GOLD));
                 this.updateDisplayStrings.add(I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.2", TextFormatting.RED+Rarmor.VERSION+TextFormatting.RED));
                 this.updateDisplayStrings.add(I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.3", TextFormatting.GREEN+UpdateChecker.updateVersionString+TextFormatting.RED));
+                this.doesUpdateAnimate = true;
             }
 
             this.updateDisplayStrings.add("");
@@ -244,10 +245,10 @@ public class GuiRarmor extends GuiContainer{
         if(this.updateButton.visible){
             this.updateTimer++;
             if(this.doesUpdateAnimate){
-                if(this.updateTimer%40 == 0){
+                if(this.updateTimer%30 == 0){
                     this.updateButton.u = 216;
                 }
-                else if(this.updateTimer%20 == 0){
+                else if(this.updateTimer%15 == 0){
                     this.updateButton.u = 236;
                 }
             }
