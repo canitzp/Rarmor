@@ -31,7 +31,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
-    public final BasicInventory inventory = new BasicInventory("main", 13);
+    public final BasicInventory inventory = new BasicInventory("main", 5);
 
     @Override
     public String getIdentifier(){

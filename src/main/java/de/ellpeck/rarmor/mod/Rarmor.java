@@ -36,7 +36,7 @@ public final class Rarmor{
     @Mod.Instance(RarmorAPI.MOD_ID)
     public static Rarmor instance;
 
-    @SidedProxy(clientSide = "de.canitzp.rarmor.mod.proxy.ClientProxy", serverSide = "de.canitzp.rarmor.mod.proxy.ServerProxy")
+    @SidedProxy(clientSide = "de.ellpeck.rarmor.mod.proxy.ClientProxy", serverSide = "de.ellpeck.rarmor.mod.proxy.ServerProxy")
     public static IProxy proxy;
 
     @Mod.EventHandler

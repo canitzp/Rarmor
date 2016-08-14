@@ -31,6 +31,6 @@ public class GuiModuleStorage extends RarmorModuleGui{
     @Override
     public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+37, this.guiTop+25, 0, 0, 162, 72);
+        this.drawTexturedModalRect(this.guiLeft+9, this.guiTop+15, 0, 0, 220, 105);
     }
 }

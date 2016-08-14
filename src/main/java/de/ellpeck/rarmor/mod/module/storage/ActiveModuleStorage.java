@@ -29,7 +29,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Storage";
 
-    public final BasicInventory inventory = new BasicInventory("storage", 36);
+    public final BasicInventory inventory = new BasicInventory("storage", 46);
 
     @Override
     public String getIdentifier(){
@@ -48,7 +48,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     @Override
     public RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData){
-        return new ContainerModuleStorage(container, this, currentData);
+        return new ContainerModuleStorage(player, container, this, currentData);
     }
 
     @Override

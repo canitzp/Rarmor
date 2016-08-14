@@ -17,10 +17,12 @@ import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
 import de.ellpeck.rarmor.mod.inventory.gui.slot.SlotModule;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,26 +36,9 @@ public class ContainerModuleMain extends RarmorModuleContainer{
 
     private final EntityPlayer player;
 
-    public InventoryCrafting craftMatrix = new InventoryCrafting(this.actualContainer, 3, 3);
-    public InventoryCraftResult craftResult = new InventoryCraftResult();
-
     public ContainerModuleMain(EntityPlayer player, Container actualContainer, ActiveRarmorModule module, IRarmorData currentData){
         super(actualContainer, module, currentData);
         this.player = player;
-    }
-
-    @Override
-    public void onCraftMatrixChanged(IInventory inventory){
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.worldObj));
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer player){
-        ActiveModuleMain module = (ActiveModuleMain)this.module;
-        for(int i = 0; i < this.craftMatrix.getSizeInventory(); i++){
-            module.inventory.setInventorySlotContents(i+1, this.craftMatrix.getStackInSlot(i));
-        }
-        module.inventory.setInventorySlotContents(0, this.craftResult.getStackInSlot(0));
     }
 
     @Override
@@ -62,8 +47,11 @@ public class ContainerModuleMain extends RarmorModuleContainer{
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
         for(int i = 0; i < 3; i++){
-            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i+10, 11, 10+i*26));
+            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i+2, 11, 10+i*26));
         }
+
+        slots.add(new Slot(module.inventory, 0, 173, 3));
+        slots.add(new Slot(module.inventory, 1, 173, 119));
 
         for(int i = 0; i < 4; i++){
             final EntityEquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];
@@ -115,18 +103,6 @@ public class ContainerModuleMain extends RarmorModuleContainer{
                 return "minecraft:items/empty_armor_slot_shield";
             }
         });
-
-        slots.add(new SlotCrafting(this.player, this.craftMatrix, this.craftResult, 0, 189, 104));
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                slots.add(new Slot(this.craftMatrix, j+i*3, 170+j*18, 16+i*18));
-            }
-        }
-
-        for(int i = 0; i < this.craftMatrix.getSizeInventory(); i++){
-            this.craftMatrix.setInventorySlotContents(i, module.inventory.getStackInSlot(i+1));
-        }
-        this.craftResult.setInventorySlotContents(0, module.inventory.getStackInSlot(0));
 
         return slots;
     }

@@ -39,7 +39,7 @@ public class GuiModuleMain extends RarmorModuleGui{
     @Override
     public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+6, this.guiTop+5, 0, 0, 217, 136);
+        this.drawTexturedModalRect(this.guiLeft+6, this.guiTop+5, 0, 0, 224, 136);
 
         GuiInventory.drawEntityOnScreen(this.guiLeft+118, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.thePlayer);
     }
