@@ -73,11 +73,6 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void sendUpdate(EntityPlayer player, boolean reloadTabs){
-        this.sendUpdate(player, reloadTabs, -1);
-    }
-
-    @Override
     public void sendUpdate(EntityPlayer player, boolean reloadTabs, int moduleIdForConfirmation){
         if(!player.worldObj.isRemote && player instanceof EntityPlayerMP){
             PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.stackId, this, reloadTabs, moduleIdForConfirmation), (EntityPlayerMP)player);

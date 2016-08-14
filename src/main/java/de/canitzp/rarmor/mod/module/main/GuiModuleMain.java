@@ -27,6 +27,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -77,7 +78,11 @@ public class GuiModuleMain extends RarmorModuleGui{
     public void actionPerformed(GuiButton button) throws IOException{
         if(button.id == 0){
             ClientEvents.stopGuiOverride = true;
+            int mouseX = Mouse.getX();
+            int mouseY = Mouse.getY();
+            this.mc.thePlayer.closeScreen();
             this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
+            Mouse.setCursorPosition(mouseX, mouseY);
             ClientEvents.stopGuiOverride = false;
         }
     }
