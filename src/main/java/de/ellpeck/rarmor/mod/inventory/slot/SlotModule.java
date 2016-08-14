@@ -8,7 +8,7 @@
  * © 2015-2016 canitzp & Ellpeck
  */
 
-package de.ellpeck.rarmor.mod.inventory.gui.slot;
+package de.ellpeck.rarmor.mod.inventory.slot;
 
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;

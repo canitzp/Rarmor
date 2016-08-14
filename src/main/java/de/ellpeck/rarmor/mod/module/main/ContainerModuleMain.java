@@ -13,7 +13,7 @@ package de.ellpeck.rarmor.mod.module.main;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
-import de.ellpeck.rarmor.mod.inventory.gui.slot.SlotModule;
+import de.ellpeck.rarmor.mod.inventory.slot.SlotModule;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
