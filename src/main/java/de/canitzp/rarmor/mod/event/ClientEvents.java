@@ -16,6 +16,7 @@ import de.canitzp.rarmor.mod.packet.PacketHandler;
 import de.canitzp.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -35,10 +36,13 @@ public class ClientEvents{
     public void onOpenGui(GuiOpenEvent event){
         if(!stopGuiOverride){
             if(event.getGui() instanceof GuiInventory){
-                IRarmorData data = RarmorData.getDataForChestplate(Minecraft.getMinecraft().thePlayer);
-                if(data != null){
-                    PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
-                    event.setCanceled(true);
+                EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+                if(!player.isSneaking()){
+                    IRarmorData data = RarmorData.getDataForChestplate(player);
+                    if(data != null){
+                        PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
+                        event.setCanceled(true);
+                    }
                 }
             }
         }

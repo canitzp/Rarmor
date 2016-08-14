@@ -16,6 +16,7 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,6 +39,9 @@ public abstract class ActiveRarmorModule{
     public abstract void onUninstalled(EntityPlayer player);
 
     public abstract boolean hasTab(EntityPlayer player);
+
+    @SideOnly(Side.CLIENT)
+    public abstract ItemStack getTabIcon();
 
     @Override
     public boolean equals(Object obj){

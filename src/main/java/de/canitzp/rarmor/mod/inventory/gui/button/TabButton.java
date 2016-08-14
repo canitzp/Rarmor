@@ -11,14 +11,19 @@
 package de.canitzp.rarmor.mod.inventory.gui.button;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.mod.misc.Helper;
 import de.canitzp.rarmor.mod.module.main.GuiModuleMain;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 
 public class TabButton extends TexturedButton{
 
     private IRarmorData data;
     private String moduleName;
+    private ItemStack tabIcon;
     public int moduleNum;
 
     public TabButton(int buttonId, int x, int y){
@@ -27,12 +32,17 @@ public class TabButton extends TexturedButton{
 
     public void setModule(IRarmorData data, int selectedModule){
         this.moduleNum = selectedModule;
-        this.moduleName = data.getCurrentModules().get(selectedModule).getIdentifier();
         this.data = data;
+
+        ActiveRarmorModule module = data.getCurrentModules().get(selectedModule);
+        this.moduleName = module.getIdentifier();
+        this.tabIcon = module.getTabIcon();
     }
 
     @Override
     protected void drawCustom(Minecraft mc, int mouseX, int mouseY){
+        Helper.renderStackToGui(this.tabIcon, this.xPosition+68, this.yPosition-3, 1.2F);
+
         mc.getTextureManager().bindTexture(this.resLoc);
 
         int actualV = this.v;
@@ -41,5 +51,12 @@ public class TabButton extends TexturedButton{
         }
         this.drawTexturedModalRect(this.xPosition, this.yPosition, this.u, actualV, this.width, this.height);
         mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+15, this.yPosition+6, 4210752);
+    }
+
+    @Override
+    public void playPressSound(SoundHandler handler){
+        if(this.moduleNum != this.data.getSelectedModule()){
+            super.playPressSound(handler);
+        }
     }
 }

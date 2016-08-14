@@ -16,16 +16,22 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.inventory.gui.BasicInventory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
-    public BasicInventory inventory = new BasicInventory("modules", 13);
+    public final BasicInventory inventory = new BasicInventory("main", 13);
 
     @Override
     public String getIdentifier(){
@@ -48,6 +54,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public RarmorModuleGui createGui(GuiContainer container, IRarmorData currentData){
         return new GuiModuleMain(container, this, currentData);
     }
@@ -65,5 +72,25 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     @Override
     public boolean hasTab(EntityPlayer player){
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ItemStack getTabIcon(){
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if(player != null){
+            String name = player.getName();
+            if("bootytoast".equalsIgnoreCase(name)){
+                return new ItemStack(Items.BREAD);
+            }
+            else if("canitzp".equalsIgnoreCase(name)){
+                return new ItemStack(Items.CARROT_ON_A_STICK);
+            }
+            else if("ellpeck".equalsIgnoreCase(name)){
+                return new ItemStack(Items.REDSTONE);
+            }
+        }
+
+        return new ItemStack(Blocks.CRAFTING_TABLE);
     }
 }

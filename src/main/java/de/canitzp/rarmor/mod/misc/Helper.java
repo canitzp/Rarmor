@@ -13,9 +13,14 @@ package de.canitzp.rarmor.mod.misc;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.Rarmor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 public final class Helper{
 
@@ -47,5 +52,24 @@ public final class Helper{
     @SideOnly(Side.CLIENT)
     public static ResourceLocation getGuiLocation(String guiName){
         return new ResourceLocation(RarmorAPI.MOD_ID, "textures/gui/"+guiName+".png");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void renderStackToGui(ItemStack stack, int x, int y, float scale){
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.translate(x, y, 0);
+        GlStateManager.scale(scale, scale, scale);
+
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
+        mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRendererObj, stack, 0, 0, null);
+
+        RenderHelper.disableStandardItemLighting();
+        GlStateManager.popMatrix();
     }
 }

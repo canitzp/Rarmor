@@ -61,7 +61,7 @@ public class PacketSyncRarmorData implements IMessage{
             this.data.readFromNBT(buffer.readNBTTagCompoundFromBuffer(), true);
         }
         catch(IOException e){
-            Rarmor.LOGGER.info("Something went wrong trying to receive a Rarmor Update Packet!", e);
+            Rarmor.LOGGER.info("Something went wrong trying to receive a "+Rarmor.MOD_NAME+" Update Packet!", e);
         }
     }
 

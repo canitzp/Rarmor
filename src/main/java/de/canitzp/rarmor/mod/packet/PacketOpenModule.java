@@ -56,26 +56,27 @@ public class PacketOpenModule implements IMessage{
         public IMessage onMessage(PacketOpenModule message, MessageContext context){
             EntityPlayerMP player = context.getServerHandler().playerEntity;
             IRarmorData data = RarmorData.getDataForChestplate(player);
-
-            if(message.alsoSetData){
-                if(data != null){
-                    data.selectModule(message.moduleId);
+            if(data != null){
+                if(message.alsoSetData){
+                    if(data != null){
+                        data.selectModule(message.moduleId);
+                    }
                 }
-            }
 
-            boolean shouldOpenGui;
-            if(message.sendRarmorDataToClient){
-                boolean doPacket = Config.doOpeningConfirmationPacket;
+                boolean shouldOpenGui;
+                if(message.sendRarmorDataToClient){
+                    boolean doPacket = Config.doOpeningConfirmationPacket;
 
-                shouldOpenGui = !doPacket;
-                data.sendUpdate(player, true, doPacket ? message.moduleId : -1);
-            }
-            else{
-                shouldOpenGui = true;
-            }
+                    shouldOpenGui = !doPacket;
+                    data.sendUpdate(player, true, doPacket ? message.moduleId : -1);
+                }
+                else{
+                    shouldOpenGui = true;
+                }
 
-            if(shouldOpenGui){
-                player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+                if(shouldOpenGui){
+                    player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+                }
             }
             return null;
         }

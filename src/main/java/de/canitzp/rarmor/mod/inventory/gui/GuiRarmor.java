@@ -10,22 +10,31 @@
 
 package de.canitzp.rarmor.mod.inventory.gui;
 
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.mod.event.ClientEvents;
 import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
 import de.canitzp.rarmor.mod.inventory.gui.button.TabButton;
+import de.canitzp.rarmor.mod.inventory.gui.button.TexturedButton;
 import de.canitzp.rarmor.mod.misc.Helper;
+import de.canitzp.rarmor.mod.module.main.GuiModuleMain;
 import de.canitzp.rarmor.mod.packet.PacketHandler;
 import de.canitzp.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -35,6 +44,8 @@ public class GuiRarmor extends GuiContainer{
 
     private final IRarmorData currentData;
     private final RarmorModuleGui gui;
+
+    private GuiButton buttonBackToMainInventory;
     private final TabButton[] tabButtons = new TabButton[10];
 
     public GuiRarmor(ContainerRarmor container, ActiveRarmorModule currentModule, IRarmorData currentData){
@@ -89,12 +100,27 @@ public class GuiRarmor extends GuiContainer{
             }
         }
 
+        if(button == this.buttonBackToMainInventory){
+            ClientEvents.stopGuiOverride = true;
+            int mouseX = Mouse.getX();
+            int mouseY = Mouse.getY();
+            this.mc.thePlayer.closeScreen();
+            this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
+            Mouse.setCursorPosition(mouseX, mouseY);
+            ClientEvents.stopGuiOverride = false;
+        }
+
         this.gui.actionPerformed(button);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks){
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        if(this.buttonBackToMainInventory.isMouseOver()){
+            GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".back")), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+        }
+
         this.gui.drawScreen(mouseX, mouseY, partialTicks);
     }
 
@@ -103,10 +129,13 @@ public class GuiRarmor extends GuiContainer{
         super.initGui();
 
         for(int i = 0; i < this.tabButtons.length; i++){
-            this.tabButtons[i] = new TabButton(-2837+i, this.guiLeft+this.xSize-3, this.guiTop+8+(i*21));
+            this.tabButtons[i] = new TabButton(2837+i, this.guiLeft+this.xSize-3, this.guiTop+8+(i*21));
             this.buttonList.add(this.tabButtons[i]);
         }
         this.updateTabs();
+
+        this.buttonBackToMainInventory = new TexturedButton(2836, this.guiLeft+5, this.guiTop+120, 20, 20, GuiModuleMain.RES_LOC, 0, 216);
+        this.buttonList.add(this.buttonBackToMainInventory);
 
         this.gui.guiLeft = this.guiLeft;
         this.gui.guiTop = this.guiTop;

@@ -14,10 +14,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.mod.event.ClientEvents;
-import de.canitzp.rarmor.mod.inventory.gui.button.TexturedButton;
 import de.canitzp.rarmor.mod.misc.Helper;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
@@ -27,9 +24,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Mouse;
 
-import java.io.IOException;
 import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
@@ -37,19 +32,8 @@ public class GuiModuleMain extends RarmorModuleGui{
 
     public static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorMain");
 
-    private GuiButton buttonBackToMainInventory;
-
-    private float oldMouseX;
-    private float oldMouseY;
-
     public GuiModuleMain(GuiContainer container, ActiveRarmorModule module, IRarmorData currentData){
         super(container, module, currentData);
-    }
-
-    @Override
-    public void initGui(){
-        this.buttonBackToMainInventory = new TexturedButton(0, this.guiLeft+5, this.guiTop+120, 20, 20, RES_LOC, 0, 216);
-        this.buttonList.add(this.buttonBackToMainInventory);
     }
 
     @Override
@@ -57,33 +41,14 @@ public class GuiModuleMain extends RarmorModuleGui{
         this.mc.getTextureManager().bindTexture(RES_LOC);
         this.drawTexturedModalRect(this.guiLeft+6, this.guiTop+5, 0, 0, 217, 136);
 
-        GuiInventory.drawEntityOnScreen(this.guiLeft+118, this.guiTop+128, 55, (float)(this.guiLeft+118)-this.oldMouseX, (float)(this.guiTop+45)-this.oldMouseY, this.mc.thePlayer);
-        this.oldMouseX = (float)mouseX;
-        this.oldMouseY = (float)mouseY;
+        GuiInventory.drawEntityOnScreen(this.guiLeft+118, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.thePlayer);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks){
-        if(this.buttonBackToMainInventory.isMouseOver()){
-            GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".back")), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
-        }
-
         Slot slot = this.actualGui.getSlotUnderMouse();
         if(slot != null && slot.getSlotIndex() == 38){ //chestplate slot
             GuiUtils.drawHoveringText(Collections.singletonList(TextFormatting.GOLD+""+TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".removeChest", this.mc.gameSettings.keyBindDrop.getDisplayName())), mouseX, mouseY-20, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
-        }
-    }
-
-    @Override
-    public void actionPerformed(GuiButton button) throws IOException{
-        if(button.id == 0){
-            ClientEvents.stopGuiOverride = true;
-            int mouseX = Mouse.getX();
-            int mouseY = Mouse.getY();
-            this.mc.thePlayer.closeScreen();
-            this.mc.displayGuiScreen(new GuiInventory(this.mc.thePlayer));
-            Mouse.setCursorPosition(mouseX, mouseY);
-            ClientEvents.stopGuiOverride = false;
         }
     }
 }
