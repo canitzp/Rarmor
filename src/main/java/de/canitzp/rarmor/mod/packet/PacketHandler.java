@@ -22,6 +22,7 @@ public final class PacketHandler{
         handler = new SimpleNetworkWrapper(RarmorAPI.MOD_ID+"network");
 
         handler.registerMessage(PacketOpenModule.Handler.class, PacketOpenModule.class, 0, Side.SERVER);
+        handler.registerMessage(PacketSyncRarmorData.Handler.class, PacketSyncRarmorData.class, 1, Side.CLIENT);
     }
 
 }

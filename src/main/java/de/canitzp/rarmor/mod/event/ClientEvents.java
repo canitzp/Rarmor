@@ -37,7 +37,7 @@ public class ClientEvents{
             if(event.getGui() instanceof GuiInventory){
                 IRarmorData data = RarmorData.getDataForChestplate(Minecraft.getMinecraft().thePlayer);
                 if(data != null){
-                    PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false));
+                    PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
                     event.setCanceled(true);
                 }
             }

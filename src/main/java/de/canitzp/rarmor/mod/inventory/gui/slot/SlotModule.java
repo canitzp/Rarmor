@@ -13,6 +13,7 @@ package de.canitzp.rarmor.mod.inventory.gui.slot;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
+import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
 import de.canitzp.rarmor.mod.misc.Helper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -23,11 +24,13 @@ public class SlotModule extends Slot{
 
     private final IRarmorData currentData;
     private final EntityPlayer player;
+    private final ContainerRarmor container;
 
-    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, int index, int xPosition, int yPosition){
+    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, ContainerRarmor container, int index, int xPosition, int yPosition){
         super(inventory, index, xPosition, yPosition);
         this.player = player;
         this.currentData = currentData;
+        this.container = container;
     }
 
     @Override
@@ -42,14 +45,19 @@ public class SlotModule extends Slot{
 
     @Override
     public void putStack(ItemStack newStack){
-        ItemStack stack = this.getStack();
-        if(stack == null || stack.stackSize <= 0){
-            this.uninstallModule();
+        if(!this.container.isPuttingStacksInSlots){
+            ItemStack stack = this.getStack();
+            if(stack == null || stack.stackSize <= 0){
+                this.uninstallModule();
+            }
         }
 
         super.putStack(newStack);
-        if(newStack != null){
-            this.installModule(newStack);
+
+        if(!this.container.isPuttingStacksInSlots){
+            if(newStack != null){
+                this.installModule(newStack);
+            }
         }
     }
 

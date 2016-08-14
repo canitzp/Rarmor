@@ -13,10 +13,11 @@ package de.canitzp.rarmor.mod.inventory;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.mod.inventory.gui.GuiRarmor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import de.canitzp.rarmor.mod.inventory.gui.slot.SlotModule;
+import de.canitzp.rarmor.mod.packet.PacketHandler;
+import de.canitzp.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,6 +27,10 @@ public class ContainerRarmor extends Container{
 
     private final IRarmorData currentData;
     public final RarmorModuleContainer container;
+
+    //this is needed due to putStack() also being called when the container is opened
+    //but only on the client for some reason. Ugh.
+    public boolean isPuttingStacksInSlots;
 
     public ContainerRarmor(EntityPlayer player, ActiveRarmorModule currentModule, IRarmorData currentData){
         this.container = currentModule.createContainer(player, this, currentData);
@@ -65,6 +70,20 @@ public class ContainerRarmor extends Container{
     }
 
     @Override
+    public void putStacksInSlots(ItemStack[] stack){
+        this.isPuttingStacksInSlots = true;
+        super.putStacksInSlots(stack);
+        this.isPuttingStacksInSlots = false;
+    }
+
+    @Override
+    public void putStackInSlot(int slotID, ItemStack stack){
+        this.isPuttingStacksInSlots = true;
+        super.putStackInSlot(slotID, stack);
+        this.isPuttingStacksInSlots = false;
+    }
+
+    @Override
     public void detectAndSendChanges(){
         super.detectAndSendChanges();
         this.container.detectAndSendChanges();
@@ -101,10 +120,12 @@ public class ContainerRarmor extends Container{
             stack = super.slotClick(slotId, dragType, clickType, player);
         }
 
-        if(player.worldObj.isRemote){ //TODO Make this into a packet that gets sent to the client (sends all the data, have some variable that is true if tabs should update)
-            GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-            if(gui instanceof GuiRarmor){
-                ((GuiRarmor)gui).updateTabs();
+        if(!player.worldObj.isRemote && player instanceof EntityPlayerMP){
+            if(slotId > 0 && slotId < this.inventorySlots.size()){
+                Slot slot = this.inventorySlots.get(slotId);
+                if(slot instanceof SlotModule){
+                    PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.currentData.getBoundStackId(), this.currentData, true), (EntityPlayerMP)player);
+                }
             }
         }
 

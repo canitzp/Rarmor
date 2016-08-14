@@ -21,42 +21,51 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketOpenModule implements IMessage{
 
-    public int moduleId;
-    public boolean alsoSetData;
+    private int moduleId;
+    private boolean alsoSetData;
+    private boolean sendRarmorDataToClient;
 
     public PacketOpenModule(){
 
     }
 
-    public PacketOpenModule(int moduleId, boolean alsoSetData){
+    public PacketOpenModule(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
         this.moduleId = moduleId;
         this.alsoSetData = alsoSetData;
+        this.sendRarmorDataToClient = sendRarmorDataToClient;
     }
 
     @Override
     public void fromBytes(ByteBuf buf){
         this.moduleId = buf.readInt();
         this.alsoSetData = buf.readBoolean();
+        this.sendRarmorDataToClient = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf){
         buf.writeInt(this.moduleId);
         buf.writeBoolean(this.alsoSetData);
+        buf.writeBoolean(this.sendRarmorDataToClient);
     }
 
     public static class Handler implements IMessageHandler<PacketOpenModule, IMessage>{
 
         @Override
         public IMessage onMessage(PacketOpenModule message, MessageContext context){
-            System.out.println("WJOIEF");
             EntityPlayerMP player = context.getServerHandler().playerEntity;
+            IRarmorData data = RarmorData.getDataForChestplate(player);
+
             if(message.alsoSetData){
-                IRarmorData data = RarmorData.getDataForChestplate(player);
                 if(data != null){
                     data.selectModule(message.moduleId);
                 }
             }
+
+            if(message.sendRarmorDataToClient){
+                data.sendUpdate(player, true);
+            }
+
             player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
             return null;
         }

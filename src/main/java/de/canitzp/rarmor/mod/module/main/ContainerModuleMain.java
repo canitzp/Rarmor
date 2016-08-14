@@ -13,6 +13,7 @@ package de.canitzp.rarmor.mod.module.main;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
 import de.canitzp.rarmor.mod.inventory.gui.slot.SlotModule;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +62,7 @@ public class ContainerModuleMain extends RarmorModuleContainer{
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
         for(int i = 0; i < 3; i++){
-            slots.add(new SlotModule(module.inventory, this.player, this.currentData, i+10, 11, 10+i*26));
+            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i+10, 11, 10+i*26));
         }
 
         for(int i = 0; i < 4; i++){

@@ -41,7 +41,7 @@ public class ItemRarmor extends ItemArmor{
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
         if(!world.isRemote){
-            RarmorData.checkAndSetRarmorId(stack);
+            RarmorData.checkAndSetRarmorId(stack, true);
         }
     }
 }

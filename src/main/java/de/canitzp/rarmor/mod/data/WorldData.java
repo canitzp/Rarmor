@@ -67,7 +67,7 @@ public class WorldData extends WorldSavedData{
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
             UUID id = tag.getUniqueId("RarmorItemId");
-            IRarmorData data = new RarmorData();
+            IRarmorData data = new RarmorData(id);
             data.readFromNBT(tag, false);
 
             this.rarmorData.put(id, data);

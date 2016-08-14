@@ -14,7 +14,10 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.mod.misc.Helper;
 import de.canitzp.rarmor.mod.module.main.ActiveModuleMain;
+import de.canitzp.rarmor.mod.packet.PacketHandler;
+import de.canitzp.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,6 +31,11 @@ public class RarmorData implements IRarmorData{
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final Map<Integer, Integer> slotToModulePlaceInListMap = new HashMap<Integer, Integer>();
     public int selectedModule;
+    private final UUID stackId;
+
+    public RarmorData(UUID stackId){
+        this.stackId = stackId;
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound, boolean sync){
@@ -57,6 +65,18 @@ public class RarmorData implements IRarmorData{
     @Override
     public void selectModule(int i){
         this.selectedModule = i;
+    }
+
+    @Override
+    public UUID getBoundStackId(){
+        return this.stackId;
+    }
+
+    @Override
+    public void sendUpdate(EntityPlayer player, boolean reloadTabs){
+        if(!player.worldObj.isRemote && player instanceof EntityPlayerMP){
+            PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.stackId, this, reloadTabs), (EntityPlayerMP)player);
+        }
     }
 
     @Override
@@ -94,27 +114,37 @@ public class RarmorData implements IRarmorData{
         return null;
     }
 
-    public static void checkAndSetRarmorId(ItemStack stack){
+    public static boolean checkAndSetRarmorId(ItemStack stack, boolean set){
         if(!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
+            if(set){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            else{
+                return false;
+            }
         }
 
         NBTTagCompound compound = stack.getTagCompound();
         if(!compound.hasUniqueId("RarmorId")){
-            compound.setUniqueId("RarmorId", UUID.randomUUID());
-            System.out.println("INITTING UUID");
+            if(set){
+                compound.setUniqueId("RarmorId", UUID.randomUUID());
+            }
+            return false;
+        }
+        else{
+            return true;
         }
     }
 
     public static IRarmorData getDataForStack(World world, ItemStack stack){
-        checkAndSetRarmorId(stack);
+        checkAndSetRarmorId(stack, true);
         UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
 
         Map<UUID, IRarmorData> data = WorldData.getRarmorData(world);
         if(data != null){
             IRarmorData theData = data.get(stackId);
             if(theData == null){
-                theData = new RarmorData();
+                theData = new RarmorData(stackId);
 
                 ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER);
                 module.onInstalled(null);
@@ -142,4 +172,5 @@ public class RarmorData implements IRarmorData{
     public int getSelectedModule(){
         return this.selectedModule;
     }
+
 }

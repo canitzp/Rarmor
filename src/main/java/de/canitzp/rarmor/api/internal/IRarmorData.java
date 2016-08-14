@@ -11,10 +11,12 @@
 package de.canitzp.rarmor.api.internal;
 
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface IRarmorData{
 
@@ -29,4 +31,8 @@ public interface IRarmorData{
     void readFromNBT(NBTTagCompound compound, boolean sync);
 
     void selectModule(int i);
+
+    UUID getBoundStackId();
+
+    void sendUpdate(EntityPlayer player, boolean reloadTabs);
 }

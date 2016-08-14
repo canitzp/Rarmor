@@ -28,13 +28,11 @@ public class ItemModuleStorage extends ItemRarmorModule{
 
     @Override
     public boolean canInstall(EntityPlayer player, Slot slot){
-        System.out.println("CAN I BE INSTALLED!?!?");
         return true;
     }
 
     @Override
     public boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module){
-        System.out.println("CAN I BE UNINSTALLED!?!?");
         return true;
     }
 }

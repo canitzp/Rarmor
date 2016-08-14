@@ -85,8 +85,7 @@ public class GuiRarmor extends GuiContainer{
         for(TabButton tabButton : this.tabButtons){
             if(tabButton == button && this.currentData.getSelectedModule() != tabButton.moduleNum){
                 this.currentData.selectModule(tabButton.moduleNum);
-                PacketHandler.handler.sendToServer(new PacketOpenModule(this.currentData.getSelectedModule(), true));
-                System.out.println("OPENING!!");
+                PacketHandler.handler.sendToServer(new PacketOpenModule(this.currentData.getSelectedModule(), true, false));
             }
         }
 
@@ -119,7 +118,6 @@ public class GuiRarmor extends GuiContainer{
         int buttonCounter = 0;
 
         List<ActiveRarmorModule> modules = this.currentData.getCurrentModules();
-        System.out.println(modules);
         for(int i = 0; i < modules.size(); i++){
             if(i < this.tabButtons.length){
                 ActiveRarmorModule module = modules.get(i);

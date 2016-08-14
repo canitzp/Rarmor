@@ -51,12 +51,12 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     @Override
     public void onInstalled(EntityPlayer player){
-        System.out.println("I BE INSTALLED!!");
+
     }
 
     @Override
     public void onUninstalled(EntityPlayer player){
-        System.out.println("I BE UNINSTALLED!!");
+
     }
 
     @Override
