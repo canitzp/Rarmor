@@ -17,7 +17,7 @@ import de.canitzp.rarmor.mod.inventory.ContainerRarmor;
 import de.canitzp.rarmor.mod.inventory.gui.button.TabButton;
 import de.canitzp.rarmor.mod.misc.Helper;
 import de.canitzp.rarmor.mod.packet.PacketHandler;
-import de.canitzp.rarmor.mod.packet.PacketOpenGui;
+import de.canitzp.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -85,7 +85,7 @@ public class GuiRarmor extends GuiContainer{
         for(TabButton tabButton : this.tabButtons){
             if(tabButton == button && this.currentData.getSelectedModule() != tabButton.moduleNum){
                 this.currentData.selectModule(tabButton.moduleNum);
-                PacketHandler.handler.sendToServer(new PacketOpenGui(this.currentData.getSelectedModule()));
+                PacketHandler.handler.sendToServer(new PacketOpenModule(this.currentData.getSelectedModule(), true));
                 System.out.println("OPENING!!");
             }
         }
@@ -104,7 +104,7 @@ public class GuiRarmor extends GuiContainer{
         super.initGui();
 
         for(int i = 0; i < this.tabButtons.length; i++){
-            this.tabButtons[i] = new TabButton(-2837+i, this.guiLeft+this.xSize-3, this.guiTop+8+(i*29));
+            this.tabButtons[i] = new TabButton(-2837+i, this.guiLeft+this.xSize-3, this.guiTop+8+(i*21));
             this.buttonList.add(this.tabButtons[i]);
         }
         this.updateTabs();

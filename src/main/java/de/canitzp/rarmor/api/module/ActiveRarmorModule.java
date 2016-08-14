@@ -24,9 +24,9 @@ public abstract class ActiveRarmorModule{
 
     public abstract String getIdentifier();
 
-    public abstract void readFromNBT(NBTTagCompound compound);
+    public abstract void readFromNBT(NBTTagCompound compound, boolean sync);
 
-    public abstract void writeToNBT(NBTTagCompound compound);
+    public abstract void writeToNBT(NBTTagCompound compound, boolean sync);
 
     public abstract RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData);
 

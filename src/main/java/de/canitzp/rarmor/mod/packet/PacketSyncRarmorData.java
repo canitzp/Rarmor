@@ -1,5 +1,5 @@
 /*
- * This file ("PacketOpenGui.java") is part of the Rarmor mod for Minecraft.
+ * This file ("PacketSyncRarmorData.java") is part of the Rarmor mod for Minecraft.
  * It is created by Ellpeck and owned by canitzp & Ellpeck and distributed
  * under the Rarmor License to be found at
  * https://github.com/Ellpeck/Rarmor/blob/master/LICENSE.md
@@ -10,41 +10,43 @@
 
 package de.canitzp.rarmor.mod.packet;
 
-import de.canitzp.rarmor.mod.Rarmor;
+import de.canitzp.rarmor.mod.data.RarmorData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketOpenGui implements IMessage{
+import java.util.UUID;
 
-    public int guiId;
+public class PacketSyncRarmorData implements IMessage{
 
-    public PacketOpenGui(){
+    private UUID uuid;
+    private RarmorData data;
+
+    public PacketSyncRarmorData(){
 
     }
 
-    public PacketOpenGui(int guiId){
-        this.guiId = guiId;
+    public PacketSyncRarmorData(RarmorData data){
+
     }
 
     @Override
     public void fromBytes(ByteBuf buf){
-        this.guiId = buf.readInt();
+
     }
 
     @Override
     public void toBytes(ByteBuf buf){
-        buf.writeInt(this.guiId);
+
     }
 
-    public static class Handler implements IMessageHandler<PacketOpenGui, IMessage>{
+    public static class Handler implements IMessageHandler<PacketSyncRarmorData, IMessage>{
 
         @Override
-        public IMessage onMessage(PacketOpenGui message, MessageContext context){
+        public IMessage onMessage(PacketSyncRarmorData message, MessageContext context){
             EntityPlayerMP player = context.getServerHandler().playerEntity;
-            player.openGui(Rarmor.instance, message.guiId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
             return null;
         }
     }

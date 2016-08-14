@@ -21,7 +21,7 @@ public final class PacketHandler{
     public static void init(){
         handler = new SimpleNetworkWrapper(RarmorAPI.MOD_ID+"network");
 
-        handler.registerMessage(PacketOpenGui.Handler.class, PacketOpenGui.class, 0, Side.SERVER);
+        handler.registerMessage(PacketOpenModule.Handler.class, PacketOpenModule.class, 0, Side.SERVER);
     }
 
 }

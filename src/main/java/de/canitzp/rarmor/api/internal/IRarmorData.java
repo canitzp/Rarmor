@@ -24,9 +24,9 @@ public interface IRarmorData{
 
     int getSelectedModule();
 
-    void writeToNBT(NBTTagCompound compound);
+    void writeToNBT(NBTTagCompound compound, boolean sync);
 
-    void readFromNBT(NBTTagCompound compound);
+    void readFromNBT(NBTTagCompound compound, boolean sync);
 
     void selectModule(int i);
 }

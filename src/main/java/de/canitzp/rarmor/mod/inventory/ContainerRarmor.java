@@ -31,18 +31,18 @@ public class ContainerRarmor extends Container{
         this.container = currentModule.createContainer(player, this, currentData);
         this.currentData = currentData;
 
-        for(Slot slot : this.container.getSlots()){
-            this.addSlotToContainer(slot);
-        }
-
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 9; j++){
-                this.addSlotToContainer(new Slot(player.inventory, j+(i+1)*9, 38+j*18, 147+i*18));
+                this.addSlotToContainer(new Slot(player.inventory, j+i*9+9, 38+j*18, 147+i*18));
             }
         }
 
-        for(int i = 0; i < 9; i++){
-            this.addSlotToContainer(new Slot(player.inventory, i, 38+i*18, 205));
+        for(int k = 0; k < 9; k++){
+            this.addSlotToContainer(new Slot(player.inventory, k, 38+k*18, 205));
+        }
+
+        for(Slot slot : this.container.getSlots()){
+            this.addSlotToContainer(slot);
         }
     }
 

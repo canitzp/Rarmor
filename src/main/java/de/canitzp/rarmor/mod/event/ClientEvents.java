@@ -13,7 +13,7 @@ package de.canitzp.rarmor.mod.event;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.mod.data.RarmorData;
 import de.canitzp.rarmor.mod.packet.PacketHandler;
-import de.canitzp.rarmor.mod.packet.PacketOpenGui;
+import de.canitzp.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -37,7 +37,7 @@ public class ClientEvents{
             if(event.getGui() instanceof GuiInventory){
                 IRarmorData data = RarmorData.getDataForChestplate(Minecraft.getMinecraft().thePlayer);
                 if(data != null){
-                    PacketHandler.handler.sendToServer(new PacketOpenGui(data.getSelectedModule()));
+                    PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false));
                     event.setCanceled(true);
                 }
             }

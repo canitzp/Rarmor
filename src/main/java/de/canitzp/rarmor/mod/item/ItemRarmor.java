@@ -11,10 +11,14 @@
 package de.canitzp.rarmor.mod.item;
 
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.mod.data.RarmorData;
 import de.canitzp.rarmor.mod.misc.CreativeTab;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -32,5 +36,12 @@ public class ItemRarmor extends ItemArmor{
 
         this.setUnlocalizedName(RarmorAPI.MOD_ID+"."+name);
         this.setCreativeTab(CreativeTab.INSTANCE);
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
+        if(!world.isRemote){
+            RarmorData.checkAndSetRarmorId(stack);
+        }
     }
 }

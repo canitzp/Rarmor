@@ -30,13 +30,13 @@ public class RarmorData implements IRarmorData{
     public int selectedModule;
 
     @Override
-    public void readFromNBT(NBTTagCompound compound){
+    public void readFromNBT(NBTTagCompound compound, boolean sync){
         NBTTagList data = compound.getTagList("ModuleData", 10);
         for(int i = 0; i < data.tagCount(); i++){
             NBTTagCompound tag = data.getCompoundTagAt(i);
 
             ActiveRarmorModule module = Helper.initiateModuleById(tag.getString("ModuleId"));
-            module.readFromNBT(tag);
+            module.readFromNBT(tag, sync);
 
             this.loadedModules.add(module);
         }
@@ -60,12 +60,12 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound){
+    public void writeToNBT(NBTTagCompound compound, boolean sync){
         NBTTagList data = new NBTTagList();
         for(ActiveRarmorModule module : this.loadedModules){
             NBTTagCompound tag = new NBTTagCompound();
 
-            module.writeToNBT(tag);
+            module.writeToNBT(tag, sync);
             tag.setString("ModuleId", module.getIdentifier());
 
             data.appendTag(tag);
@@ -94,28 +94,24 @@ public class RarmorData implements IRarmorData{
         return null;
     }
 
+    public static void checkAndSetRarmorId(ItemStack stack){
+        if(!stack.hasTagCompound()){
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        NBTTagCompound compound = stack.getTagCompound();
+        if(!compound.hasUniqueId("RarmorId")){
+            compound.setUniqueId("RarmorId", UUID.randomUUID());
+            System.out.println("INITTING UUID");
+        }
+    }
+
     public static IRarmorData getDataForStack(World world, ItemStack stack){
+        checkAndSetRarmorId(stack);
+        UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
+
         Map<UUID, IRarmorData> data = WorldData.getRarmorData(world);
         if(data != null){
-            UUID stackId = null;
-
-            boolean hasCompound = stack.hasTagCompound();
-            if(hasCompound){
-                NBTTagCompound compound = stack.getTagCompound();
-                if(compound.hasKey("RarmorIdMost")){
-                    stackId = compound.getUniqueId("RarmorId");
-                }
-            }
-
-            if(stackId == null){
-                if(!hasCompound){
-                    stack.setTagCompound(new NBTTagCompound());
-                }
-
-                stackId = UUID.randomUUID();
-                stack.getTagCompound().setUniqueId("RarmorId", stackId);
-            }
-
             IRarmorData theData = data.get(stackId);
             if(theData == null){
                 theData = new RarmorData();
@@ -129,9 +125,7 @@ public class RarmorData implements IRarmorData{
 
             return theData;
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
     @Override

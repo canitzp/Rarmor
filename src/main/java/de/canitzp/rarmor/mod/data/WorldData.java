@@ -68,7 +68,7 @@ public class WorldData extends WorldSavedData{
 
             UUID id = tag.getUniqueId("RarmorItemId");
             IRarmorData data = new RarmorData();
-            data.readFromNBT(tag);
+            data.readFromNBT(tag, false);
 
             this.rarmorData.put(id, data);
         }
@@ -81,7 +81,7 @@ public class WorldData extends WorldSavedData{
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setUniqueId("RarmorItemId", entry.getKey());
-            entry.getValue().writeToNBT(tag);
+            entry.getValue().writeToNBT(tag, false);
 
             list.appendTag(tag);
         }

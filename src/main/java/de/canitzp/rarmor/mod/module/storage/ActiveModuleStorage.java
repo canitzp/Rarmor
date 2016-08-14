@@ -30,23 +30,23 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound){
+    public void readFromNBT(NBTTagCompound compound, boolean sync){
 
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound){
+    public void writeToNBT(NBTTagCompound compound, boolean sync){
 
     }
 
     @Override
     public RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData){
-        return null;
+        return new ContainerModuleStorage(container, this, currentData);
     }
 
     @Override
     public RarmorModuleGui createGui(GuiContainer gui, IRarmorData currentData){
-        return null;
+        return new GuiModuleStorage(gui, this, currentData);
     }
 
     @Override

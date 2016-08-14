@@ -22,7 +22,7 @@ public class TabButton extends TexturedButton{
     public int moduleNum;
 
     public TabButton(int buttonId, int x, int y){
-        super(buttonId, x, y, 94, 28, GuiModuleMain.RES_LOC, 20, 200);
+        super(buttonId, x, y, 94, 20, GuiModuleMain.RES_LOC, 20, 216);
     }
 
     public void setModule(IRarmorData data, int selectedModule){
@@ -36,10 +36,10 @@ public class TabButton extends TexturedButton{
         mc.getTextureManager().bindTexture(this.resLoc);
 
         int actualV = this.v;
-        if(this.moduleNum == this.data.getSelectedModule()){
+        if(this.moduleNum == this.data.getSelectedModule() || this.hovered){
             actualV += this.height;
         }
         this.drawTexturedModalRect(this.xPosition, this.yPosition, this.u, actualV, this.width, this.height);
-        mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+5, this.yPosition+9, 4210752);
+        mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+15, this.yPosition+6, 4210752);
     }
 }

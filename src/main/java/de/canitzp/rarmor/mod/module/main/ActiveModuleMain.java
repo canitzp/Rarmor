@@ -33,12 +33,12 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound){
+    public void readFromNBT(NBTTagCompound compound, boolean sync){
         this.inventory.loadSlots(compound);
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound){
+    public void writeToNBT(NBTTagCompound compound, boolean sync){
         this.inventory.saveSlots(compound);
     }
 
