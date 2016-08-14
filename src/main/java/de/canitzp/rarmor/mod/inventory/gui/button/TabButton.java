@@ -41,7 +41,7 @@ public class TabButton extends TexturedButton{
 
     @Override
     protected void drawCustom(Minecraft mc, int mouseX, int mouseY){
-        Helper.renderStackToGui(this.tabIcon, this.xPosition+68, this.yPosition-3, 1.2F);
+        Helper.renderStackToGui(this.tabIcon, this.xPosition+75, this.yPosition+1.5F, 1F);
 
         mc.getTextureManager().bindTexture(this.resLoc);
 
@@ -50,7 +50,7 @@ public class TabButton extends TexturedButton{
             actualV += this.height;
         }
         this.drawTexturedModalRect(this.xPosition, this.yPosition, this.u, actualV, this.width, this.height);
-        mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+15, this.yPosition+6, 4210752);
+        mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+8, this.yPosition+6, 0);
     }
 
     @Override

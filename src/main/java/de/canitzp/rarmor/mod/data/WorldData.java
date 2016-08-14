@@ -18,15 +18,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
-    private final Map<UUID, IRarmorData> rarmorData = new ConcurrentHashMap<UUID, IRarmorData>();
+    private final Map<UUID, IRarmorData> rarmorData = new HashMap<UUID, IRarmorData>();
+    private boolean isLoading;
 
     public WorldData(String name){
         super(name);
@@ -60,6 +61,8 @@ public class WorldData extends WorldSavedData{
 
     @Override
     public void readFromNBT(NBTTagCompound compound){
+        this.isLoading = true;
+
         this.rarmorData.clear();
 
         NBTTagList list = compound.getTagList("RarmorData", 10);
@@ -72,20 +75,30 @@ public class WorldData extends WorldSavedData{
 
             this.rarmorData.put(id, data);
         }
+
+        this.isLoading = false;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound){
-        NBTTagList list = new NBTTagList();
-        for(Map.Entry<UUID, IRarmorData> entry : this.rarmorData.entrySet()){
-            NBTTagCompound tag = new NBTTagCompound();
+        if(!this.isLoading){
+            NBTTagList list = new NBTTagList();
+            for(Map.Entry<UUID, IRarmorData> entry : this.rarmorData.entrySet()){
+                NBTTagCompound tag = new NBTTagCompound();
 
-            tag.setUniqueId("RarmorItemId", entry.getKey());
-            entry.getValue().writeToNBT(tag, false);
+                tag.setUniqueId("RarmorItemId", entry.getKey());
+                entry.getValue().writeToNBT(tag, false);
 
-            list.appendTag(tag);
+                list.appendTag(tag);
+            }
+            compound.setTag("RarmorData", list);
         }
-        compound.setTag("RarmorData", list);
+        else{
+            for(int i = 0; i < 50; i++){
+                //TODO Remove eventually
+                System.out.println("TRYING TO SAVE WHILE LOADING!!");
+            }
+        }
 
         return compound;
     }

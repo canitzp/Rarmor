@@ -10,3 +10,4 @@ rarmor.removeChest=Press '%s' to remove and close Rarmor
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage
+module.rarmorEnder.name=Ender Chest

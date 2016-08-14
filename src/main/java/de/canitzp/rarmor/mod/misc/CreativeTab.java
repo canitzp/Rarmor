@@ -43,6 +43,7 @@ public class CreativeTab extends CreativeTabs{
         this.addItem(ItemRegistry.itemRarmorBoots);
 
         this.addItem(ItemRegistry.itemModuleStorage);
+        this.addItem(ItemRegistry.itemModuleEnder);
     }
 
     private void addItem(Item item){

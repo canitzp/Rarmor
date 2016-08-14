@@ -55,7 +55,7 @@ public final class Helper{
     }
 
     @SideOnly(Side.CLIENT)
-    public static void renderStackToGui(ItemStack stack, int x, int y, float scale){
+    public static void renderStackToGui(ItemStack stack, float x, float y, float scale){
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

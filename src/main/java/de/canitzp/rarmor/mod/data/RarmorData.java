@@ -24,16 +24,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public class RarmorData implements IRarmorData{
 
-    private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>(); //TODO Check concurrency problems
-    private final Map<Integer, Integer> slotToModulePlaceInListMap = new ConcurrentHashMap<Integer, Integer>();
+    private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
+    private final Map<Integer, Integer> slotToModulePlaceInListMap = new HashMap<Integer, Integer>();
     public int selectedModule;
     private final UUID stackId;
 

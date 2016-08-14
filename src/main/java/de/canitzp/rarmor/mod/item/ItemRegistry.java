@@ -10,6 +10,7 @@
 
 package de.canitzp.rarmor.mod.item;
 
+import de.canitzp.rarmor.mod.module.ender.ItemModuleEnder;
 import de.canitzp.rarmor.mod.module.storage.ItemModuleStorage;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -22,6 +23,7 @@ public final class ItemRegistry{
     public static Item itemRarmorBoots;
 
     public static Item itemModuleStorage;
+    public static Item itemModuleEnder;
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
@@ -30,6 +32,7 @@ public final class ItemRegistry{
         itemRarmorBoots = new ItemRarmor("itemRarmorBoots", EntityEquipmentSlot.FEET);
 
         itemModuleStorage = new ItemModuleStorage("itemModuleStorage");
+        itemModuleEnder = new ItemModuleEnder("itemModuleEnder");
     }
 
 }
