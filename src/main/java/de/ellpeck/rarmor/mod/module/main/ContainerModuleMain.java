@@ -10,7 +10,6 @@
 
 package de.ellpeck.rarmor.mod.module.main;
 
-import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
@@ -36,8 +35,8 @@ public class ContainerModuleMain extends RarmorModuleContainer{
 
     private final EntityPlayer player;
 
-    public ContainerModuleMain(EntityPlayer player, Container actualContainer, ActiveRarmorModule module, IRarmorData currentData){
-        super(actualContainer, module, currentData);
+    public ContainerModuleMain(EntityPlayer player, Container actualContainer, ActiveRarmorModule module){
+        super(actualContainer, module);
         this.player = player;
     }
 
@@ -46,12 +45,12 @@ public class ContainerModuleMain extends RarmorModuleContainer{
         List<Slot> slots = new ArrayList<Slot>();
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
-        for(int i = 0; i < 3; i++){
-            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i+2, 11, 10+i*26));
-        }
-
         slots.add(new Slot(module.inventory, 0, 173, 3));
         slots.add(new Slot(module.inventory, 1, 173, 119));
+
+        for(int i = 0; i < 3; i++){
+            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i, i+2, 8, 7+i*22));
+        }
 
         for(int i = 0; i < 4; i++){
             final EntityEquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];

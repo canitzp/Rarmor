@@ -28,9 +28,9 @@ public class ContainerRarmor extends Container{
     //but only on the client for some reason. Ugh.
     public boolean isPuttingStacksInSlots;
 
-    public ContainerRarmor(EntityPlayer player, ActiveRarmorModule currentModule, IRarmorData currentData){
-        this.container = currentModule.createContainer(player, this, currentData);
-        this.currentData = currentData;
+    public ContainerRarmor(EntityPlayer player, ActiveRarmorModule currentModule){
+        this.container = currentModule.createContainer(player, this);
+        this.currentData = currentModule.data;
 
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 9; j++){

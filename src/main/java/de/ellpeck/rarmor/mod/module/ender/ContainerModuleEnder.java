@@ -10,7 +10,6 @@
 
 package de.ellpeck.rarmor.mod.module.ender;
 
-import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +24,8 @@ public class ContainerModuleEnder extends RarmorModuleContainer{
 
     private final EntityPlayer player;
 
-    public ContainerModuleEnder(EntityPlayer player, Container container, ActiveRarmorModule module, IRarmorData currentData){
-        super(container, module, currentData);
+    public ContainerModuleEnder(EntityPlayer player, Container container, ActiveRarmorModule module){
+        super(container, module);
         this.player = player;
     }
 

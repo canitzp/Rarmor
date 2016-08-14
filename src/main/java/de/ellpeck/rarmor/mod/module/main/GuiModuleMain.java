@@ -11,7 +11,6 @@
 package de.ellpeck.rarmor.mod.module.main;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
-import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.misc.Helper;
@@ -32,8 +31,8 @@ public class GuiModuleMain extends RarmorModuleGui{
 
     public static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorMain");
 
-    public GuiModuleMain(GuiContainer container, ActiveRarmorModule module, IRarmorData currentData){
-        super(container, module, currentData);
+    public GuiModuleMain(GuiContainer container, ActiveRarmorModule module){
+        super(container, module);
     }
 
     @Override

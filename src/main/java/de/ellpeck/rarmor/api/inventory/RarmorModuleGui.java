@@ -34,10 +34,10 @@ public class RarmorModuleGui extends Gui{
     public int guiLeft;
     public int guiTop;
 
-    public RarmorModuleGui(GuiContainer gui, ActiveRarmorModule module, IRarmorData currentData){
+    public RarmorModuleGui(GuiContainer gui, ActiveRarmorModule module){
         this.module = module;
         this.actualGui = gui;
-        this.currentData = currentData;
+        this.currentData = module.data;
     }
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{

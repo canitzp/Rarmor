@@ -31,7 +31,7 @@ public class GuiHandler implements IGuiHandler{
         IRarmorData data = RarmorData.getDataForChestplate(player);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
-            return new ContainerRarmor(player, module, data);
+            return new ContainerRarmor(player, module);
         }
         return null;
     }
@@ -41,7 +41,7 @@ public class GuiHandler implements IGuiHandler{
         IRarmorData data = RarmorData.getDataForChestplate(player);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
-            return new GuiRarmor(new ContainerRarmor(player, module, data), module, data);
+            return new GuiRarmor(new ContainerRarmor(player, module), module);
         }
         return null;
     }

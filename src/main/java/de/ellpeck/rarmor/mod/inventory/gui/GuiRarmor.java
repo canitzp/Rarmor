@@ -47,10 +47,10 @@ public class GuiRarmor extends GuiContainer{
     private final TabButton[] tabButtons = new TabButton[10];
     private GuiButton buttonBackToMainInventory;
 
-    public GuiRarmor(ContainerRarmor container, ActiveRarmorModule currentModule, IRarmorData currentData){
+    public GuiRarmor(ContainerRarmor container, ActiveRarmorModule currentModule){
         super(container);
-        this.currentData = currentData;
-        this.gui = currentModule.createGui(this, currentData);
+        this.currentData = currentModule.data;
+        this.gui = currentModule.createGui(this);
 
         this.xSize = 236;
         this.ySize = 229;

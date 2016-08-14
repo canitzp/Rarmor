@@ -27,10 +27,10 @@ public class RarmorModuleContainer{
     public final Container actualContainer;
     public final ActiveRarmorModule module;
 
-    public RarmorModuleContainer(Container container, ActiveRarmorModule module, IRarmorData currentData){
+    public RarmorModuleContainer(Container container, ActiveRarmorModule module){
         this.module = module;
         this.actualContainer = container;
-        this.currentData = currentData;
+        this.currentData = this.module.data;
     }
 
     public List<Slot> getSlots(){

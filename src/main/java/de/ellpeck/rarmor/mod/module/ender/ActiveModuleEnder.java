@@ -28,6 +28,10 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Ender";
 
+    public ActiveModuleEnder(IRarmorData data){
+        super(data);
+    }
+
     @Override
     public String getIdentifier(){
         return IDENTIFIER;
@@ -44,14 +48,14 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData){
-        return new ContainerModuleEnder(player, container, this, currentData);
+    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+        return new ContainerModuleEnder(player, container, this);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public RarmorModuleGui createGui(GuiContainer gui, IRarmorData currentData){
-        return new GuiModuleEnder(gui, this, currentData);
+    public RarmorModuleGui createGui(GuiContainer gui){
+        return new GuiModuleEnder(gui, this);
     }
 
     @Override

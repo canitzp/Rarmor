@@ -10,7 +10,6 @@
 
 package de.ellpeck.rarmor.mod.module.storage;
 
-import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.misc.Helper;
@@ -24,8 +23,8 @@ public class GuiModuleStorage extends RarmorModuleGui{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorStorage");
 
-    public GuiModuleStorage(GuiContainer gui, ActiveRarmorModule module, IRarmorData currentData){
-        super(gui, module, currentData);
+    public GuiModuleStorage(GuiContainer gui, ActiveRarmorModule module){
+        super(gui, module);
     }
 
     @Override

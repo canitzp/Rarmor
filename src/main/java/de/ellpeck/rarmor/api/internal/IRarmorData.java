@@ -12,6 +12,7 @@ package de.ellpeck.rarmor.api.internal;
 
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface IRarmorData{
 
     List<ActiveRarmorModule> getCurrentModules();
 
-    Map<Integer, Integer> getSlotToModuleMap();
+    Map<Integer, String> getSlotToModuleMap();
 
     int getSelectedModule();
 
@@ -35,4 +36,8 @@ public interface IRarmorData{
     UUID getBoundStackId();
 
     void sendUpdate(EntityPlayer player, boolean reloadTabs, int moduleIdForConfirmation);
+
+    void uninstallModule(ActiveRarmorModule module, EntityPlayer player, int slotIndex);
+
+    void installModule(ItemStack stack, EntityPlayer player, int slotIndex);
 }

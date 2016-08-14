@@ -23,16 +23,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ActiveRarmorModule{
 
+    public final IRarmorData data;
+
+    public ActiveRarmorModule(IRarmorData data){
+        this.data = data;
+    }
+
     public abstract String getIdentifier();
 
     public abstract void readFromNBT(NBTTagCompound compound, boolean sync);
 
     public abstract void writeToNBT(NBTTagCompound compound, boolean sync);
 
-    public abstract RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData);
+    public abstract RarmorModuleContainer createContainer(EntityPlayer player, Container container);
 
     @SideOnly(Side.CLIENT)
-    public abstract RarmorModuleGui createGui(GuiContainer gui, IRarmorData currentData);
+    public abstract RarmorModuleGui createGui(GuiContainer gui);
 
     public abstract void onInstalled(EntityPlayer player);
 

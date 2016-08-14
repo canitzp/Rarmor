@@ -31,6 +31,10 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     public final BasicInventory inventory = new BasicInventory("storage", 46);
 
+    public ActiveModuleStorage(IRarmorData data){
+        super(data);
+    }
+
     @Override
     public String getIdentifier(){
         return IDENTIFIER;
@@ -47,14 +51,14 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container, IRarmorData currentData){
-        return new ContainerModuleStorage(player, container, this, currentData);
+    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+        return new ContainerModuleStorage(player, container, this);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public RarmorModuleGui createGui(GuiContainer gui, IRarmorData currentData){
-        return new GuiModuleStorage(gui, this, currentData);
+    public RarmorModuleGui createGui(GuiContainer gui){
+        return new GuiModuleStorage(gui, this);
     }
 
     @Override

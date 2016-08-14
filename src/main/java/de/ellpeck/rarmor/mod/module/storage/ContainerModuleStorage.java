@@ -10,7 +10,6 @@
 
 package de.ellpeck.rarmor.mod.module.storage;
 
-import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,8 +26,8 @@ public class ContainerModuleStorage extends RarmorModuleContainer{
     public InventoryCrafting craftMatrix = new InventoryCrafting(this.actualContainer, 3, 3);
     public InventoryCraftResult craftResult = new InventoryCraftResult();
 
-    public ContainerModuleStorage(EntityPlayer player, Container container, ActiveRarmorModule module, IRarmorData currentData){
-        super(container, module, currentData);
+    public ContainerModuleStorage(EntityPlayer player, Container container, ActiveRarmorModule module){
+        super(container, module);
         this.player = player;
     }
 

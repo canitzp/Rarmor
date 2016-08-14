@@ -11,6 +11,7 @@
 package de.ellpeck.rarmor.mod.misc;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.Rarmor;
 import net.minecraft.client.Minecraft;
@@ -24,10 +25,10 @@ import org.lwjgl.opengl.GL11;
 
 public final class Helper{
 
-    public static ActiveRarmorModule initiateModuleById(String id){
+    public static ActiveRarmorModule initiateModuleById(String id, IRarmorData data){
         if(id != null && !id.isEmpty()){
             Class<? extends ActiveRarmorModule> moduleClass = RarmorAPI.RARMOR_MODULE_REGISTRY.get(id);
-            ActiveRarmorModule module = initiateModule(moduleClass);
+            ActiveRarmorModule module = initiateModule(moduleClass, data);
 
             String moduleId = module.getIdentifier();
             if(!id.equals(moduleId)){
@@ -39,9 +40,9 @@ public final class Helper{
         return null;
     }
 
-    private static ActiveRarmorModule initiateModule(Class<? extends ActiveRarmorModule> moduleClass){
+    private static ActiveRarmorModule initiateModule(Class<? extends ActiveRarmorModule> moduleClass, IRarmorData data){
         try{
-            return moduleClass.newInstance();
+            return moduleClass.getConstructor(IRarmorData.class).newInstance(data);
         }
         catch(Exception e){
             Rarmor.LOGGER.error("Trying to initiate a module failed!", e);

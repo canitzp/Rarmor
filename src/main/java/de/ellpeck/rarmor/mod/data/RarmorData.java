@@ -12,6 +12,7 @@ package de.ellpeck.rarmor.mod.data;
 
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
@@ -29,7 +30,7 @@ import java.util.*;
 public class RarmorData implements IRarmorData{
 
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
-    private final Map<Integer, Integer> slotToModulePlaceInListMap = new HashMap<Integer, Integer>();
+    private final Map<Integer, String> slotToModulePlaceInListMap = new HashMap<Integer, String>();
     private final UUID stackId;
     public int selectedModule;
 
@@ -77,7 +78,7 @@ public class RarmorData implements IRarmorData{
             if(theData == null){
                 theData = new RarmorData(stackId);
 
-                ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER);
+                ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, theData);
                 module.onInstalled(null);
                 theData.getCurrentModules().add(module);
 
@@ -95,7 +96,7 @@ public class RarmorData implements IRarmorData{
         for(int i = 0; i < data.tagCount(); i++){
             NBTTagCompound tag = data.getCompoundTagAt(i);
 
-            ActiveRarmorModule module = Helper.initiateModuleById(tag.getString("ModuleId"));
+            ActiveRarmorModule module = Helper.initiateModuleById(tag.getString("ModuleId"), this);
             module.readFromNBT(tag, sync);
 
             this.loadedModules.add(module);
@@ -106,7 +107,7 @@ public class RarmorData implements IRarmorData{
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
             int key = tag.getInteger("Key");
-            int value = tag.getInteger("Value");
+            String value = tag.getString("Value");
 
             this.slotToModulePlaceInListMap.put(key, value);
         }
@@ -145,11 +146,11 @@ public class RarmorData implements IRarmorData{
         compound.setTag("ModuleData", data);
 
         NBTTagList list = new NBTTagList();
-        for(Map.Entry<Integer, Integer> entry : this.slotToModulePlaceInListMap.entrySet()){
+        for(Map.Entry<Integer, String> entry : this.slotToModulePlaceInListMap.entrySet()){
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setInteger("Key", entry.getKey());
-            tag.setInteger("Value", entry.getValue());
+            tag.setString("Value", entry.getValue());
 
             list.appendTag(tag);
         }
@@ -164,7 +165,7 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public Map<Integer, Integer> getSlotToModuleMap(){
+    public Map<Integer, String> getSlotToModuleMap(){
         return this.slotToModulePlaceInListMap;
     }
 
@@ -173,4 +174,30 @@ public class RarmorData implements IRarmorData{
         return this.selectedModule;
     }
 
+    @Override
+    public void installModule(ItemStack stack, EntityPlayer player, int slotIndex){
+        if(stack.getItem() instanceof IRarmorModuleItem){
+            ActiveRarmorModule module = Helper.initiateModuleById(((IRarmorModuleItem)stack.getItem()).getModuleIdentifier(), this);
+            if(module != null && !this.getCurrentModules().contains(module)){
+                module.onInstalled(player);
+                this.getCurrentModules().add(module);
+                this.getSlotToModuleMap().put(slotIndex, module.getIdentifier());
+
+                System.out.println(this.getCurrentModules());
+                System.out.println(this.getSlotToModuleMap());
+            }
+        }
+    }
+
+    @Override
+    public void uninstallModule(ActiveRarmorModule module, EntityPlayer player, int slotIndex){
+        if(module != null && this.getCurrentModules().contains(module)){
+            module.onUninstalled(player);
+            this.getCurrentModules().remove(module);
+            this.getSlotToModuleMap().remove(slotIndex);
+
+            System.out.println(this.getCurrentModules());
+            System.out.println(this.getSlotToModuleMap());
+        }
+    }
 }
