@@ -16,8 +16,8 @@ import net.minecraft.util.ResourceLocation;
 public class TexturedButton extends CustomButton{
 
     protected final ResourceLocation resLoc;
-    protected final int u;
-    protected final int v;
+    public int u;
+    public int v;
 
     public TexturedButton(int buttonId, int x, int y, int width, int height, ResourceLocation resLoc, int u, int v){
         super(buttonId, x, y, width, height);

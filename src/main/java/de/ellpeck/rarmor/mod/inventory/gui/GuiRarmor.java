@@ -14,6 +14,7 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.Rarmor;
 import de.ellpeck.rarmor.mod.event.ClientEvents;
 import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
 import de.ellpeck.rarmor.mod.inventory.gui.button.TabButton;
@@ -22,18 +23,23 @@ import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.module.main.GuiModuleMain;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
+import de.ellpeck.rarmor.mod.update.UpdateChecker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,6 +52,11 @@ public class GuiRarmor extends GuiContainer{
     private final RarmorModuleGui gui;
     private final TabButton[] tabButtons = new TabButton[10];
     private GuiButton buttonBackToMainInventory;
+
+    private TexturedButton updateButton;
+    private boolean doesUpdateAnimate;
+    private int updateTimer;
+    private List<String> updateDisplayStrings;
 
     public GuiRarmor(ContainerRarmor container, ActiveRarmorModule currentModule){
         super(container);
@@ -109,6 +120,31 @@ public class GuiRarmor extends GuiContainer{
             ClientEvents.stopGuiOverride = false;
         }
 
+        if(!UpdateChecker.notifiedAlready && button == this.updateButton){
+            if(UpdateChecker.checkFailed || isCtrlKeyDown()){
+                this.updateButton.visible = false;
+                UpdateChecker.notifiedAlready = true;
+            }
+            else{
+                String url;
+                if(isShiftKeyDown()){
+                    url = UpdateChecker.DOWNLOAD_LINK;
+                }
+                else{
+                    url = UpdateChecker.CHANGELOG_LINK;
+                }
+
+                if(Desktop.isDesktopSupported()){
+                    try{
+                        Desktop.getDesktop().browse(new URI(url));
+                    }
+                    catch(Exception e){
+                        Rarmor.LOGGER.error("Couldn't open URL!", e);
+                    }
+                }
+            }
+        }
+
         this.gui.actionPerformed(button);
     }
 
@@ -118,6 +154,10 @@ public class GuiRarmor extends GuiContainer{
 
         if(this.buttonBackToMainInventory.isMouseOver()){
             GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".back")), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+        }
+
+        if(this.updateButton.visible && this.updateButton.isMouseOver() && this.updateDisplayStrings != null){
+            GuiUtils.drawHoveringText(this.updateDisplayStrings, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
         }
 
         this.gui.drawScreen(mouseX, mouseY, partialTicks);
@@ -136,10 +176,41 @@ public class GuiRarmor extends GuiContainer{
         this.buttonBackToMainInventory = new TexturedButton(2836, this.guiLeft+5, this.guiTop+120, 20, 20, GuiModuleMain.RES_LOC, 0, 216);
         this.buttonList.add(this.buttonBackToMainInventory);
 
+        this.updateButton = new TexturedButton(1337, this.guiLeft-21, this.guiTop-21, 20, 20, GuiModuleMain.RES_LOC, 216, 216);
+        this.buttonList.add(this.updateButton);
+        this.initUpdateButton();
+
         this.gui.guiLeft = this.guiLeft;
         this.gui.guiTop = this.guiTop;
         this.gui.buttonList = this.buttonList;
         this.gui.initGui();
+    }
+
+    private void initUpdateButton(){
+        boolean failed = UpdateChecker.checkFailed;
+        boolean notify = UpdateChecker.needsUpdateNotify;
+        if(!UpdateChecker.notifiedAlready && (failed || notify)){
+            this.updateDisplayStrings = new ArrayList<String>();
+
+            if(failed){
+                this.updateDisplayStrings.add(TextFormatting.RED+I18n.format(RarmorAPI.MOD_ID+".checkFailed", TextFormatting.DARK_GREEN+Rarmor.MOD_NAME+TextFormatting.RED));
+            }
+            else if(notify){
+                this.updateDisplayStrings.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.1", TextFormatting.DARK_GREEN+Rarmor.MOD_NAME+TextFormatting.GOLD));
+                this.updateDisplayStrings.add(I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.2", TextFormatting.RED+Rarmor.VERSION+TextFormatting.RED));
+                this.updateDisplayStrings.add(I18n.format(RarmorAPI.MOD_ID+".notifyUpdate.3", TextFormatting.GREEN+UpdateChecker.updateVersionString+TextFormatting.RED));
+            }
+
+            this.updateDisplayStrings.add("");
+            for(int i = (notify ? 0 : 2); i < 3; i++){
+                this.updateDisplayStrings.add(TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".clickInfo."+(i+1)));
+            }
+
+            this.updateButton.visible = true;
+        }
+        else{
+            this.updateButton.visible = false;
+        }
     }
 
     public void updateTabs(){
@@ -169,6 +240,19 @@ public class GuiRarmor extends GuiContainer{
     @Override
     public void updateScreen(){
         super.updateScreen();
+
+        if(this.updateButton.visible){
+            this.updateTimer++;
+            if(this.doesUpdateAnimate){
+                if(this.updateTimer%40 == 0){
+                    this.updateButton.u = 216;
+                }
+                else if(this.updateTimer%20 == 0){
+                    this.updateButton.u = 236;
+                }
+            }
+        }
+
         this.gui.updateScreen();
     }
 }

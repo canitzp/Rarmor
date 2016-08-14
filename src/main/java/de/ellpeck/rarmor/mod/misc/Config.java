@@ -17,12 +17,14 @@ import java.io.File;
 public final class Config{
 
     public static boolean doOpeningConfirmationPacket;
+    public static boolean doUpdateCheck;
 
     public static void init(File file){
         Configuration config = new Configuration(file);
         config.load();
 
         doOpeningConfirmationPacket = config.get(Configuration.CATEGORY_GENERAL, "openingConfirmation", true, "Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI. Turning this off might reduce server load.").getBoolean();
+        doUpdateCheck = config.get(Configuration.CATEGORY_GENERAL, "updateCheck", true, "Turn this off to disable the Update Checker").getBoolean();
 
         if(config.hasChanged()){
             config.save();

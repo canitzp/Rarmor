@@ -18,6 +18,7 @@ import de.ellpeck.rarmor.mod.misc.Config;
 import de.ellpeck.rarmor.mod.module.ModuleRegistry;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.proxy.IProxy;
+import de.ellpeck.rarmor.mod.update.UpdateChecker;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -29,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 public final class Rarmor{
 
     public static final String MOD_NAME = "Rarmor";
-    public static final String VERSION = "@VERSION@";
+    public static final String VERSION = "1.10.2-r1";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
@@ -46,6 +47,7 @@ public final class Rarmor{
         Config.init(event.getSuggestedConfigurationFile());
         ItemRegistry.preInit();
         new GuiHandler();
+        new UpdateChecker();
         proxy.preInit(event);
     }
 

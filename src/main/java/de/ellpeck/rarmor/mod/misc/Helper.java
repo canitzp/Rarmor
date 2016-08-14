@@ -73,4 +73,20 @@ public final class Helper{
         RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
     }
+
+    public static boolean isDevVersion(){
+        return Rarmor.VERSION.equals("@VERSION@");
+    }
+
+    private static String[] splitVersion(){
+        return Rarmor.VERSION.split("-");
+    }
+
+    public static String getMcVersion(){
+        return splitVersion()[0];
+    }
+
+    public static String getMajorModVersion(){
+        return splitVersion()[1].substring(1);
+    }
 }

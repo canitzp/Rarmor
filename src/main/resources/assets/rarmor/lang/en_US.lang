@@ -11,3 +11,11 @@ rarmor.removeChest=Press '%s' to remove and close Rarmor
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage
 module.rarmorEnder.name=Ender Chest
+
+rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
+rarmor.notifyUpdate.1=There is an Update for %s available!
+rarmor.notifyUpdate.2=Current Version: %s
+rarmor.notifyUpdate.3=Newest Version: %s
+rarmor.clickInfo.1=Click to view the changelog
+rarmor.clickInfo.2=Shift-click to download
+rarmor.clickInfo.3=Ctrl-click to dismiss this message
