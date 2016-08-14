@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'idea'
 
 version = "1.10.2-r1"
-group = "de.canitzp.rarmor"
+group = "de.ellpeck.rarmor"
 archivesBaseName = "Rarmor"
 
 minecraft {
