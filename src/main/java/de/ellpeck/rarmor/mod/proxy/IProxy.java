@@ -18,4 +18,6 @@ public interface IProxy{
     void preInit(FMLPreInitializationEvent event);
 
     void init(FMLInitializationEvent event);
+
+    void addWeirdRunnablePacketThing(Runnable runnable);
 }

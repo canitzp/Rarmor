@@ -31,11 +31,17 @@ minecraft {
 }
 
 repositories {
-
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url "http://maven.epoxide.xyz"
+    }
 }
 
 dependencies {
-
+    compile "net.darkhax.tesla:Tesla:1.10.2-1.2.1.42"
+    deobfCompile "mezz.jei:jei_1.10.2:3.7.8.235"
 }
 
 processResources {

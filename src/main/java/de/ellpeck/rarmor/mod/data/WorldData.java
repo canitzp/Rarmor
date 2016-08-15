@@ -26,6 +26,9 @@ public class WorldData extends WorldSavedData{
 
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
+    //TODO Fix problem with this not deleting its data when ItemStacks are removed from the world
+    //TODO Maybe look into capabilities instead of WorldSavedData to save RarmorData on each item individually?
+    //TODO Have to check if capabilities stay so that loading and saving to NBT doesn't have to occur all the time
     private final Map<UUID, IRarmorData> rarmorData = new HashMap<UUID, IRarmorData>();
     private boolean isLoading;
 

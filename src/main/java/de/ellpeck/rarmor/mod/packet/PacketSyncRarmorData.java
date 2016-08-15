@@ -81,22 +81,27 @@ public class PacketSyncRarmorData implements IMessage{
 
         @Override
         @SideOnly(Side.CLIENT)
-        public IMessage onMessage(PacketSyncRarmorData message, MessageContext context){
-            Minecraft mc = Minecraft.getMinecraft();
-            IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId, true);
-            if(data != null){
-                data.readFromNBT(message.receivedDataCompound, true);
+        public IMessage onMessage(final PacketSyncRarmorData message, MessageContext context){
+            Rarmor.proxy.addWeirdRunnablePacketThing(new Runnable(){
+                @Override
+                public void run(){
+                    Minecraft mc = Minecraft.getMinecraft();
+                    IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId, true);
+                    if(data != null){
+                        data.readFromNBT(message.receivedDataCompound, true);
 
-                if(message.shouldReloadTabs){
-                    if(mc.currentScreen instanceof GuiRarmor){
-                        ((GuiRarmor)mc.currentScreen).updateTabs();
+                        if(message.shouldReloadTabs){
+                            if(mc.currentScreen instanceof GuiRarmor){
+                                ((GuiRarmor)mc.currentScreen).updateTabs();
+                            }
+                        }
+
+                        if(message.moduleIdForConfirmation >= 0){
+                            PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
+                        }
                     }
                 }
-
-                if(message.moduleIdForConfirmation >= 0){
-                    PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
-                }
-            }
+            });
             return null;
         }
     }

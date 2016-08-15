@@ -53,31 +53,36 @@ public class PacketOpenModule implements IMessage{
     public static class Handler implements IMessageHandler<PacketOpenModule, IMessage>{
 
         @Override
-        public IMessage onMessage(PacketOpenModule message, MessageContext context){
-            EntityPlayerMP player = context.getServerHandler().playerEntity;
-            IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
-            if(data != null){
-                if(message.alsoSetData){
+        public IMessage onMessage(final PacketOpenModule message, final MessageContext context){
+            Rarmor.proxy.addWeirdRunnablePacketThing(new Runnable(){
+                @Override
+                public void run(){
+                    EntityPlayerMP player = context.getServerHandler().playerEntity;
+                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
                     if(data != null){
-                        data.selectModule(message.moduleId);
+                        if(message.alsoSetData){
+                            if(data != null){
+                                data.selectModule(message.moduleId);
+                            }
+                        }
+
+                        boolean shouldOpenGui;
+                        if(message.sendRarmorDataToClient){
+                            boolean doPacket = Config.doOpeningConfirmationPacket;
+
+                            shouldOpenGui = !doPacket;
+                            data.queueUpdate(true, doPacket ? message.moduleId : -1, true);
+                        }
+                        else{
+                            shouldOpenGui = true;
+                        }
+
+                        if(shouldOpenGui){
+                            player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+                        }
                     }
                 }
-
-                boolean shouldOpenGui;
-                if(message.sendRarmorDataToClient){
-                    boolean doPacket = Config.doOpeningConfirmationPacket;
-
-                    shouldOpenGui = !doPacket;
-                    data.queueUpdate(true, doPacket ? message.moduleId : -1, true);
-                }
-                else{
-                    shouldOpenGui = true;
-                }
-
-                if(shouldOpenGui){
-                    player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
-                }
-            }
+            });
             return null;
         }
     }

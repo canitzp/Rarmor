@@ -42,9 +42,14 @@ public class PacketOpenConfirmation implements IMessage{
     public static class Handler implements IMessageHandler<PacketOpenConfirmation, IMessage>{
 
         @Override
-        public IMessage onMessage(PacketOpenConfirmation message, MessageContext context){
-            EntityPlayerMP player = context.getServerHandler().playerEntity;
-            player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+        public IMessage onMessage(final PacketOpenConfirmation message, final MessageContext context){
+            Rarmor.proxy.addWeirdRunnablePacketThing(new Runnable(){
+                @Override
+                public void run(){
+                    EntityPlayerMP player = context.getServerHandler().playerEntity;
+                    player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+                }
+            });
             return null;
         }
     }

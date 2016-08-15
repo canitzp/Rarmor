@@ -12,6 +12,7 @@ package de.ellpeck.rarmor.mod.proxy;
 
 import de.ellpeck.rarmor.mod.event.ClientEvents;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -31,6 +32,11 @@ public class ClientProxy implements IProxy{
     @Override
     public void init(FMLInitializationEvent event){
         new ClientEvents();
+    }
+
+    @Override
+    public void addWeirdRunnablePacketThing(Runnable runnable){
+        Minecraft.getMinecraft().addScheduledTask(runnable);
     }
 
     private void addLocation(Item item){
