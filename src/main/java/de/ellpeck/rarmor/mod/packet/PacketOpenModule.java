@@ -10,9 +10,9 @@
 
 package de.ellpeck.rarmor.mod.packet;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.misc.Config;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -55,7 +55,7 @@ public class PacketOpenModule implements IMessage{
         @Override
         public IMessage onMessage(PacketOpenModule message, MessageContext context){
             EntityPlayerMP player = context.getServerHandler().playerEntity;
-            IRarmorData data = RarmorData.getDataForChestplate(player);
+            IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
             if(data != null){
                 if(message.alsoSetData){
                     if(data != null){

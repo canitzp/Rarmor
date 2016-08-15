@@ -15,6 +15,7 @@ import de.ellpeck.rarmor.mod.event.CommonEvents;
 import de.ellpeck.rarmor.mod.inventory.GuiHandler;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
 import de.ellpeck.rarmor.mod.misc.Config;
+import de.ellpeck.rarmor.mod.misc.MethodHandler;
 import de.ellpeck.rarmor.mod.module.ModuleRegistry;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.proxy.IProxy;
@@ -43,6 +44,8 @@ public final class Rarmor{
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         LOGGER.info("Starting "+MOD_NAME+"...");
+
+        RarmorAPI.methodHandler = new MethodHandler();
 
         Config.init(event.getSuggestedConfigurationFile());
         ItemRegistry.preInit();

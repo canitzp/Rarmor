@@ -10,8 +10,8 @@
 
 package de.ellpeck.rarmor.mod.event;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
-import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class ClientEvents{
             if(event.getGui() instanceof GuiInventory){
                 EntityPlayer player = Minecraft.getMinecraft().thePlayer;
                 if(!player.isSneaking()){
-                    IRarmorData data = RarmorData.getDataForChestplate(player);
+                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
                     if(data != null){
                         PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
                         event.setCanceled(true);

@@ -10,10 +10,10 @@
 
 package de.ellpeck.rarmor.mod.inventory;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.inventory.gui.GuiRarmor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IRarmorData data = RarmorData.getDataForChestplate(player);
+        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
             return new ContainerRarmor(player, module);
@@ -38,7 +38,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IRarmorData data = RarmorData.getDataForChestplate(player);
+        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
             return new GuiRarmor(new ContainerRarmor(player, module), module);

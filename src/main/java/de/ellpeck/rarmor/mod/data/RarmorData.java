@@ -14,12 +14,10 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
 import de.ellpeck.rarmor.mod.misc.Helper;
-import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -40,50 +38,6 @@ public class RarmorData implements IRarmorData{
 
     public RarmorData(UUID stackId){
         this.stackId = stackId;
-    }
-
-    public static IRarmorData getDataForChestplate(EntityPlayer player){
-        ItemStack stack = player.inventory.armorInventory[EntityEquipmentSlot.CHEST.getIndex()];
-        if(stack != null){
-            return getDataForStack(player.worldObj, stack);
-        }
-        return null;
-    }
-
-    public static void checkAndSetRarmorId(ItemStack stack){
-        if(!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
-        }
-
-        NBTTagCompound compound = stack.getTagCompound();
-        if(!compound.hasUniqueId("RarmorId")){
-            compound.setUniqueId("RarmorId", UUID.randomUUID());
-        }
-    }
-
-    public static IRarmorData getDataForUuid(World world, UUID stackId){
-        Map<UUID, IRarmorData> data = WorldData.getRarmorData(world);
-        if(data != null){
-            IRarmorData theData = data.get(stackId);
-            if(theData == null){
-                theData = new RarmorData(stackId);
-
-                ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, theData);
-                module.onInstalled(null);
-                theData.getCurrentModules().add(module);
-
-                data.put(stackId, theData);
-            }
-
-            return theData;
-        }
-        return null;
-    }
-
-    public static IRarmorData getDataForStack(World world, ItemStack stack){
-        checkAndSetRarmorId(stack);
-        UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
-        return getDataForUuid(world, stackId);
     }
 
     @Override

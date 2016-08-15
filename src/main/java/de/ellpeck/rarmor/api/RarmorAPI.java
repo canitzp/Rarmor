@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.api;
 
+import de.ellpeck.rarmor.api.internal.IMethodHandler;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public final class RarmorAPI{
     public static final String API_VERSION = "1";
 
     public static final Map<String, Class<? extends ActiveRarmorModule>> RARMOR_MODULE_REGISTRY = new HashMap<String, Class<? extends ActiveRarmorModule>>();
+
+    public static IMethodHandler methodHandler;
 
     public static void registerRarmorModule(String id, Class<? extends ActiveRarmorModule> moduleClass){
         RARMOR_MODULE_REGISTRY.put(id, moduleClass);

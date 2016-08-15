@@ -10,9 +10,9 @@
 
 package de.ellpeck.rarmor.mod.packet;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.inventory.gui.GuiRarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -83,7 +83,7 @@ public class PacketSyncRarmorData implements IMessage{
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketSyncRarmorData message, MessageContext context){
             Minecraft mc = Minecraft.getMinecraft();
-            IRarmorData data = RarmorData.getDataForUuid(mc.theWorld, message.stackId);
+            IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId);
             if(data != null){
                 data.readFromNBT(message.receivedDataCompound, true);
 
