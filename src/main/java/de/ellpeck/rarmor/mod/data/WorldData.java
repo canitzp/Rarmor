@@ -93,12 +93,6 @@ public class WorldData extends WorldSavedData{
             }
             compound.setTag("RarmorData", list);
         }
-        else{
-            for(int i = 0; i < 50; i++){
-                //TODO Remove eventually
-                System.out.println("TRYING TO SAVE WHILE LOADING!!");
-            }
-        }
 
         return compound;
     }

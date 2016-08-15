@@ -32,6 +32,8 @@ public class RarmorData implements IRarmorData{
     private final UUID stackId;
     public int selectedModule;
 
+    private boolean sentInitialUpdate;
+
     private boolean isUpdateQueued;
     private boolean queuedUpdateReload;
     private int queuedUpdateConfirmation;
@@ -150,6 +152,11 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public void tick(World world){
+        if(!this.sentInitialUpdate){
+            this.queueUpdate(false);
+            this.sentInitialUpdate = true;
+        }
+
         for(ActiveRarmorModule module : this.loadedModules){
             if(module != null){
                 module.tick(world);

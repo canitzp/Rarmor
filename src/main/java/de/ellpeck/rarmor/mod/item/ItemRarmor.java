@@ -12,17 +12,22 @@ package de.ellpeck.rarmor.mod.item;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
+import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.misc.CreativeTab;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.util.List;
 import java.util.Locale;
 
 public class ItemRarmor extends ItemArmor{
@@ -41,12 +46,36 @@ public class ItemRarmor extends ItemArmor{
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
-        if(entity instanceof EntityPlayer){
-            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack);
-            if(data != null){
-                data.tick(world);
-                data.sendQueuedUpdate((EntityPlayer)entity);
+        if(this.isChestplate()){
+            if(entity instanceof EntityPlayer){
+                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack);
+                if(data != null){
+                    data.tick(world);
+                    data.sendQueuedUpdate((EntityPlayer)entity);
+                }
             }
         }
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
+        if(this.isChestplate()){
+            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack);
+            if(data != null){
+                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
+                for(ActiveRarmorModule module : data.getCurrentModules()){
+                    tooltip.add(TextFormatting.YELLOW+"   -"+I18n.format("module."+module.getIdentifier()+".name"));
+                }
+            }
+        }
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack stack){
+        return EnumRarity.RARE;
+    }
+
+    private boolean isChestplate(){
+        return this.armorType == EntityEquipmentSlot.CHEST;
     }
 }

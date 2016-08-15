@@ -6,7 +6,7 @@ item.rarmor.itemRarmorPants.name=Rarmor Pants
 item.rarmor.itemRarmorBoots.name=Rarmor Boots
 
 rarmor.back=Back to Inventory
-rarmor.removeChest=Press '%s' to remove and close Rarmor
+rarmor.installedModules=Installed Modules
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage

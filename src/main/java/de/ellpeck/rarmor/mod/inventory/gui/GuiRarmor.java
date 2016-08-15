@@ -106,7 +106,7 @@ public class GuiRarmor extends GuiContainer{
         for(TabButton tabButton : this.tabButtons){
             if(tabButton == button && this.currentData.getSelectedModule() != tabButton.moduleNum){
                 this.currentData.selectModule(tabButton.moduleNum);
-                PacketHandler.handler.sendToServer(new PacketOpenModule(this.currentData.getSelectedModule(), true, true));
+                PacketHandler.handler.sendToServer(new PacketOpenModule(this.currentData.getSelectedModule(), true, false));
             }
         }
 

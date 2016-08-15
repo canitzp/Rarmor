@@ -14,9 +14,7 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
 import de.ellpeck.rarmor.mod.inventory.slot.SlotModule;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
@@ -45,8 +43,8 @@ public class ContainerModuleMain extends RarmorModuleContainer{
         List<Slot> slots = new ArrayList<Slot>();
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
-        slots.add(new Slot(module.inventory, 0, 173, 3));
-        slots.add(new Slot(module.inventory, 1, 173, 119));
+        slots.add(new Slot(module.inventory, 0, 179, 8));
+        slots.add(new Slot(module.inventory, 1, 179, 124));
 
         for(int i = 0; i < 3; i++){
             slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i, i+2, 8, 7+i*22));
@@ -104,30 +102,5 @@ public class ContainerModuleMain extends RarmorModuleContainer{
         });
 
         return slots;
-    }
-
-    @Override
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
-        if(clickType == ClickType.THROW){
-            List<Slot> slots = this.actualContainer.inventorySlots;
-            if(slotId >= 0 && slotId < slots.size()){
-                Slot slot = this.actualContainer.inventorySlots.get(slotId);
-                if(slot.getSlotIndex() == 38){ //chestplate slot
-                    ItemStack stack = slot.getStack();
-                    if(stack != null){
-                        ItemStack copy = stack.copy();
-                        if(!player.inventory.addItemStackToInventory(copy)){
-                            EntityItem item = new EntityItem(player.worldObj, player.posX, player.posY, player.posZ, copy);
-                            item.setNoPickupDelay();
-                            player.worldObj.spawnEntityInWorld(item);
-                        }
-                        slot.inventory.setInventorySlotContents(slot.getSlotIndex(), null);
-
-                        player.closeScreen();
-                    }
-                }
-            }
-        }
-        return null;
     }
 }
