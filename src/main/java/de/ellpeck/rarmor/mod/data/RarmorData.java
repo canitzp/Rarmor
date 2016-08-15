@@ -27,9 +27,13 @@ import java.util.*;
 
 public class RarmorData implements IRarmorData{
 
+    private static final Map<UUID, IRarmorData> TEMP_RARMOR_DATA = new HashMap<UUID, IRarmorData>();
+    private static final Map<UUID, IRarmorData> TEMP_RARMOR_DATA_CLIENT = new HashMap<UUID, IRarmorData>();
+
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final Map<Integer, String> slotToModulePlaceInListMap = new HashMap<Integer, String>();
-    private final UUID stackId;
+    private ItemStack stack;
+
     private int totalTickedTicks;
     private int selectedModule;
 
@@ -39,8 +43,17 @@ public class RarmorData implements IRarmorData{
     private boolean queuedUpdateReload;
     private int queuedUpdateConfirmation;
 
-    public RarmorData(UUID stackId){
-        this.stackId = stackId;
+    public RarmorData(ItemStack stack){
+        this.stack = stack;
+    }
+
+    public static Map<UUID, IRarmorData> getRarmorData(boolean client){
+        if(client){
+            return TEMP_RARMOR_DATA_CLIENT;
+        }
+        else{
+            return TEMP_RARMOR_DATA;
+        }
     }
 
     @Override
@@ -82,14 +95,25 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public UUID getBoundStackId(){
-        return this.stackId;
+    public ItemStack getBoundStack(){
+        return this.stack;
+    }
+
+    @Override
+    public void setBoundStack(ItemStack stack){
+        this.stack = stack;
     }
 
     @Override
     public void sendQueuedUpdate(EntityPlayer player){
         if(this.isUpdateQueued && player instanceof EntityPlayerMP){
-            PacketHandler.handler.sendTo(new PacketSyncRarmorData(this.stackId, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
+            for(int i = 0; i < player.inventory.getSizeInventory(); i++){
+                ItemStack stack = player.inventory.getStackInSlot(i);
+                if(stack == this.stack){
+                    PacketHandler.handler.sendTo(new PacketSyncRarmorData(i, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
+                    break;
+                }
+            }
 
             this.isUpdateQueued = false;
         }

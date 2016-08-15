@@ -18,7 +18,6 @@ import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public interface IRarmorData{
 
@@ -34,7 +33,9 @@ public interface IRarmorData{
 
     void selectModule(int i);
 
-    UUID getBoundStackId();
+    ItemStack getBoundStack();
+
+    void setBoundStack(ItemStack stack);
 
     void sendQueuedUpdate(EntityPlayer player);
 

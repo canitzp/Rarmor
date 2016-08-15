@@ -21,9 +21,9 @@ public interface IMethodHandler{
 
     IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent);
 
-    IRarmorData getDataForUuid(World world, UUID stackId, boolean createIfAbsent);
-
     IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent);
 
     boolean compareModules(ActiveRarmorModule module, Object o);
+
+    UUID checkAndSetRarmorId(ItemStack stack, boolean create);
 }

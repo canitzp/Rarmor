@@ -10,8 +10,10 @@
 
 package de.ellpeck.rarmor.mod.event;
 
-import de.ellpeck.rarmor.mod.data.WorldData;
-import net.minecraft.world.World;
+import de.ellpeck.rarmor.api.internal.IRarmorData;
+import de.ellpeck.rarmor.mod.data.RarmorData;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,22 +24,25 @@ public class CommonEvents{
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private static void doData(World world){
-        if(!world.isRemote){
-            WorldData data = WorldData.getOrLoadData(world);
-            if(data != null){
-                data.markDirty();
+    @SubscribeEvent
+    public void onWorldSave(WorldEvent.Save event){
+        if(!event.getWorld().isRemote){
+            for(IRarmorData data : RarmorData.getRarmorData(false).values()){
+                ItemStack stack = data.getBoundStack();
+
+                NBTTagCompound compound = new NBTTagCompound();
+                data.writeToNBT(compound, false);
+
+                if(!stack.hasTagCompound()){
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+                stack.getTagCompound().setTag("RarmorData", compound);
             }
         }
     }
 
     @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event){
-        doData(event.getWorld());
-    }
-
-    @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save event){
-        doData(event.getWorld());
+    public void onWorldUnload(WorldEvent.Unload event){
+        RarmorData.getRarmorData(event.getWorld().isRemote).clear();
     }
 }

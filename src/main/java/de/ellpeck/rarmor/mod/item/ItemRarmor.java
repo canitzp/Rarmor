@@ -69,7 +69,7 @@ public class ItemRarmor extends ItemArmor{
                 }
 
                 tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
-                tooltip.add(TextFormatting.YELLOW+s+data.getBoundStackId());
+                tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
             }
             else{
                 String s = TextFormatting.RED+""+TextFormatting.ITALIC;

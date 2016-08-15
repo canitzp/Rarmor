@@ -16,6 +16,8 @@ import de.ellpeck.rarmor.mod.Rarmor;
 import de.ellpeck.rarmor.mod.inventory.gui.GuiRarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -25,11 +27,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.UUID;
 
 public class PacketSyncRarmorData implements IMessage{
 
-    private UUID stackId;
+    private int slotId;
     private IRarmorData data;
     private boolean shouldReloadTabs;
     private int moduleIdForConfirmation;
@@ -40,8 +41,8 @@ public class PacketSyncRarmorData implements IMessage{
 
     }
 
-    public PacketSyncRarmorData(UUID stackId, IRarmorData data, boolean shouldReloadTabs, int moduleIdForConfirmation){
-        this.stackId = stackId;
+    public PacketSyncRarmorData(int slotId, IRarmorData data, boolean shouldReloadTabs, int moduleIdForConfirmation){
+        this.slotId = slotId;
         this.data = data;
         this.shouldReloadTabs = shouldReloadTabs;
         this.moduleIdForConfirmation = moduleIdForConfirmation;
@@ -55,7 +56,7 @@ public class PacketSyncRarmorData implements IMessage{
         try{
             PacketBuffer buffer = new PacketBuffer(buf);
 
-            this.stackId = buffer.readUuid();
+            this.slotId = buffer.readInt();
             this.receivedDataCompound = buffer.readNBTTagCompoundFromBuffer();
         }
         catch(IOException e){
@@ -70,7 +71,7 @@ public class PacketSyncRarmorData implements IMessage{
 
         PacketBuffer buffer = new PacketBuffer(buf);
 
-        buffer.writeUuid(this.stackId);
+        buffer.writeInt(this.slotId);
 
         NBTTagCompound compound = new NBTTagCompound();
         this.data.writeToNBT(compound, true);
@@ -82,22 +83,28 @@ public class PacketSyncRarmorData implements IMessage{
         @Override
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(final PacketSyncRarmorData message, MessageContext context){
-            Rarmor.proxy.addWeirdRunnablePacketThing(new Runnable(){
+            Minecraft.getMinecraft().addScheduledTask(new Runnable(){
                 @Override
                 public void run(){
                     Minecraft mc = Minecraft.getMinecraft();
-                    IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId, true);
-                    if(data != null){
-                        data.readFromNBT(message.receivedDataCompound, true);
+                    EntityPlayer player = mc.thePlayer;
+                    if(message.slotId >= 0 && message.slotId < player.inventory.getSizeInventory()){
+                        ItemStack stack = player.inventory.getStackInSlot(message.slotId);
+                        if(stack != null){
+                            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.theWorld, stack, true);
+                            if(data != null){
+                                data.readFromNBT(message.receivedDataCompound, true);
 
-                        if(message.shouldReloadTabs){
-                            if(mc.currentScreen instanceof GuiRarmor){
-                                ((GuiRarmor)mc.currentScreen).updateTabs();
+                                if(message.shouldReloadTabs){
+                                    if(mc.currentScreen instanceof GuiRarmor){
+                                        ((GuiRarmor)mc.currentScreen).updateTabs();
+                                    }
+                                }
+
+                                if(message.moduleIdForConfirmation >= 0){
+                                    PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
+                                }
                             }
-                        }
-
-                        if(message.moduleIdForConfirmation >= 0){
-                            PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
                         }
                     }
                 }

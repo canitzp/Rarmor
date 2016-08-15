@@ -13,6 +13,7 @@ package de.ellpeck.rarmor.mod.packet;
 import de.ellpeck.rarmor.mod.Rarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -43,7 +44,7 @@ public class PacketOpenConfirmation implements IMessage{
 
         @Override
         public IMessage onMessage(final PacketOpenConfirmation message, final MessageContext context){
-            Rarmor.proxy.addWeirdRunnablePacketThing(new Runnable(){
+            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
                 @Override
                 public void run(){
                     EntityPlayerMP player = context.getServerHandler().playerEntity;
