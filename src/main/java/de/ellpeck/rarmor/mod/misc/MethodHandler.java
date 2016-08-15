@@ -73,4 +73,9 @@ public class MethodHandler implements IMethodHandler{
         UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
         return this.getDataForUuid(world, stackId);
     }
+
+    @Override
+    public boolean compareModules(ActiveRarmorModule module, Object o){
+        return o instanceof ActiveRarmorModule && ((ActiveRarmorModule)o).getIdentifier().equals(module.getIdentifier());
+    }
 }

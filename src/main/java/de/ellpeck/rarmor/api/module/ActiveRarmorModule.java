@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.api.module;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
@@ -51,8 +52,8 @@ public abstract class ActiveRarmorModule{
     public abstract ItemStack getTabIcon();
 
     @Override
-    public boolean equals(Object obj){
-        return obj instanceof ActiveRarmorModule && this.getIdentifier().equals(((ActiveRarmorModule)obj).getIdentifier());
+    public final boolean equals(Object o){
+        return RarmorAPI.methodHandler.compareModules(this, o);
     }
 
     public void tick(World world){

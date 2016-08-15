@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.api.internal;
 
+import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -23,4 +24,6 @@ public interface IMethodHandler{
     IRarmorData getDataForUuid(World world, UUID stackId);
 
     IRarmorData getDataForStack(World world, ItemStack stack);
+
+    boolean compareModules(ActiveRarmorModule module, Object o);
 }
