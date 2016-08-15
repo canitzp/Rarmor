@@ -94,7 +94,13 @@ public class SlotModule extends Slot{
 
     @Override
     public boolean isItemValid(ItemStack stack){
-        return stack.getItem() instanceof IRarmorModuleItem && ((IRarmorModuleItem)stack.getItem()).canInstall(this.player, this);
+        if(stack.getItem() instanceof IRarmorModuleItem){
+            IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
+            if(item.canInstall(this.player, this) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier()) == null){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

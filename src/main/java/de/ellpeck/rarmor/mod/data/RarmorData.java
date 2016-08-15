@@ -66,14 +66,11 @@ public class RarmorData implements IRarmorData{
     }
 
     private ActiveRarmorModule findOrCreateModule(String moduleId){
-        for(ActiveRarmorModule module : this.loadedModules){
-            if(moduleId.equals(module.getIdentifier())){
-                return module;
-            }
+        ActiveRarmorModule module = this.getInstalledModuleWithId(moduleId);
+        if(module == null){
+            module = Helper.initiateModuleById(moduleId, this);
+            this.loadedModules.add(module);
         }
-
-        ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
-        this.loadedModules.add(module);
         return module;
     }
 
@@ -141,20 +138,25 @@ public class RarmorData implements IRarmorData{
     @Override
     public void installModule(ItemStack stack, EntityPlayer player, int slotIndex){
         if(stack.getItem() instanceof IRarmorModuleItem){
-            ActiveRarmorModule module = Helper.initiateModuleById(((IRarmorModuleItem)stack.getItem()).getModuleIdentifier(), this);
-            if(module != null && !this.getCurrentModules().contains(module)){
-                module.onInstalled(player);
-                this.getCurrentModules().add(module);
-                this.getSlotToModuleMap().put(slotIndex, module.getIdentifier());
+            String moduleId = ((IRarmorModuleItem)stack.getItem()).getModuleIdentifier();
+            if(this.getInstalledModuleWithId(moduleId) == null){
+                ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
+                if(module != null && !this.loadedModules.contains(module)){
+                    module.onInstalled(player);
+                    this.loadedModules.add(module);
+                    this.slotToModulePlaceInListMap.put(slotIndex, module.getIdentifier());
+                }
             }
         }
     }
 
     @Override
     public void tick(World world){
-        if(!this.sentInitialUpdate){
-            this.queueUpdate(false);
-            this.sentInitialUpdate = true;
+        if(!world.isRemote){
+            if(!this.sentInitialUpdate){
+                this.queueUpdate();
+                this.sentInitialUpdate = true;
+            }
         }
 
         for(ActiveRarmorModule module : this.loadedModules){
@@ -190,11 +192,21 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
+    public ActiveRarmorModule getInstalledModuleWithId(String moduleId){
+        for(ActiveRarmorModule module : this.loadedModules){
+            if(moduleId.equals(module.getIdentifier())){
+                return module;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void uninstallModule(ActiveRarmorModule module, EntityPlayer player, int slotIndex){
-        if(module != null && this.getCurrentModules().contains(module)){
+        if(module != null && this.loadedModules.contains(module) && this.getInstalledModuleWithId(module.getIdentifier()) != null){
             module.onUninstalled(player);
-            this.getCurrentModules().remove(module);
-            this.getSlotToModuleMap().remove(slotIndex);
+            this.loadedModules.remove(module);
+            this.slotToModulePlaceInListMap.remove(slotIndex);
         }
     }
 }
