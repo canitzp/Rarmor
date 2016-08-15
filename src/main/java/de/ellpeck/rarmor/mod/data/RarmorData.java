@@ -30,7 +30,8 @@ public class RarmorData implements IRarmorData{
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final Map<Integer, String> slotToModulePlaceInListMap = new HashMap<Integer, String>();
     private final UUID stackId;
-    public int selectedModule;
+    private int totalTickedTicks;
+    private int selectedModule;
 
     private boolean sentInitialUpdate;
 
@@ -63,6 +64,7 @@ public class RarmorData implements IRarmorData{
         }
 
         this.selectedModule = compound.getInteger("SelectedModule");
+        this.totalTickedTicks = compound.getInteger("TotalTicks");
     }
 
     private ActiveRarmorModule findOrCreateModule(String moduleId){
@@ -118,6 +120,7 @@ public class RarmorData implements IRarmorData{
         compound.setTag("SlotToRarmorDataPlaceList", list);
 
         compound.setInteger("SelectedModule", this.selectedModule);
+        compound.setInteger("TotalTicks", this.totalTickedTicks);
     }
 
     @Override
@@ -164,6 +167,8 @@ public class RarmorData implements IRarmorData{
                 module.tick(world);
             }
         }
+
+        this.totalTickedTicks++;
     }
 
     @Override
@@ -199,6 +204,11 @@ public class RarmorData implements IRarmorData{
             }
         }
         return null;
+    }
+
+    @Override
+    public int getTotalTickedTicks(){
+        return this.totalTickedTicks;
     }
 
     @Override

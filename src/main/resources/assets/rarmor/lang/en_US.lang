@@ -7,6 +7,9 @@ item.rarmor.itemRarmorBoots.name=Rarmor Boots
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
+rarmor.stackId=Unique ID
+rarmor.noDataYet=No Data present yet
+rarmor.noDataExplain=Place this in your inventory
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage

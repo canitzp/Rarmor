@@ -55,7 +55,7 @@ public class PacketOpenModule implements IMessage{
         @Override
         public IMessage onMessage(PacketOpenModule message, MessageContext context){
             EntityPlayerMP player = context.getServerHandler().playerEntity;
-            IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
+            IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
             if(data != null){
                 if(message.alsoSetData){
                     if(data != null){

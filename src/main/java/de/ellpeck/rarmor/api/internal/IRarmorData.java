@@ -53,4 +53,6 @@ public interface IRarmorData{
     void queueUpdate(boolean reloadTabs, int moduleIdForConfirmation, boolean override);
 
     ActiveRarmorModule getInstalledModuleWithId(String moduleId);
+
+    int getTotalTickedTicks();
 }

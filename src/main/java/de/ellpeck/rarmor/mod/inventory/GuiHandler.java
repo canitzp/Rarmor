@@ -28,7 +28,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
+        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
             return new ContainerRarmor(player, module);
@@ -38,7 +38,7 @@ public class GuiHandler implements IGuiHandler{
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
-        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
+        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
             return new GuiRarmor(new ContainerRarmor(player, module), module);

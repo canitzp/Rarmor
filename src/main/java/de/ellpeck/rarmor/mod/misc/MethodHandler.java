@@ -28,10 +28,10 @@ import java.util.UUID;
 public class MethodHandler implements IMethodHandler{
 
     @Override
-    public IRarmorData getDataForChestplate(EntityPlayer player){
+    public IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent){
         ItemStack stack = player.inventory.armorInventory[EntityEquipmentSlot.CHEST.getIndex()];
         if(stack != null){
-            return this.getDataForStack(player.worldObj, stack);
+            return this.getDataForStack(player.worldObj, stack, createIfAbsent);
         }
         return null;
     }
@@ -48,11 +48,11 @@ public class MethodHandler implements IMethodHandler{
     }
 
     @Override
-    public IRarmorData getDataForUuid(World world, UUID stackId){
+    public IRarmorData getDataForUuid(World world, UUID stackId, boolean createIfAbsent){
         Map<UUID, IRarmorData> data = WorldData.getRarmorData(world);
         if(data != null){
             IRarmorData theData = data.get(stackId);
-            if(theData == null){
+            if(theData == null && createIfAbsent){
                 theData = new RarmorData(stackId);
 
                 ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, theData);
@@ -68,10 +68,10 @@ public class MethodHandler implements IMethodHandler{
     }
 
     @Override
-    public IRarmorData getDataForStack(World world, ItemStack stack){
+    public IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent){
         this.checkAndSetRarmorId(stack);
         UUID stackId = stack.getTagCompound().getUniqueId("RarmorId");
-        return this.getDataForUuid(world, stackId);
+        return this.getDataForUuid(world, stackId, createIfAbsent);
     }
 
     @Override

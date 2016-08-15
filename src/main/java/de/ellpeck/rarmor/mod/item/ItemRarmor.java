@@ -48,7 +48,7 @@ public class ItemRarmor extends ItemArmor{
     public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
         if(this.isChestplate()){
             if(entity instanceof EntityPlayer){
-                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack);
+                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack, !world.isRemote);
                 if(data != null){
                     data.tick(world);
                     data.sendQueuedUpdate((EntityPlayer)entity);
@@ -60,12 +60,21 @@ public class ItemRarmor extends ItemArmor{
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
         if(this.isChestplate()){
-            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack);
+            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack, false);
             if(data != null){
+                String s = "   ";
                 tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
                 for(ActiveRarmorModule module : data.getCurrentModules()){
-                    tooltip.add(TextFormatting.YELLOW+"   -"+I18n.format("module."+module.getIdentifier()+".name"));
+                    tooltip.add(TextFormatting.YELLOW+s+"-"+I18n.format("module."+module.getIdentifier()+".name"));
                 }
+
+                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
+                tooltip.add(TextFormatting.YELLOW+s+data.getBoundStackId());
+            }
+            else{
+                String s = TextFormatting.RED+""+TextFormatting.ITALIC;
+                tooltip.add(s+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
+                tooltip.add(s+I18n.format(RarmorAPI.MOD_ID+".noDataExplain"));
             }
         }
     }

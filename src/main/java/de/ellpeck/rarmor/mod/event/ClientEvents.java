@@ -38,7 +38,7 @@ public class ClientEvents{
             if(event.getGui() instanceof GuiInventory){
                 EntityPlayer player = Minecraft.getMinecraft().thePlayer;
                 if(!player.isSneaking()){
-                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player);
+                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
                     if(data != null){
                         PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
                         event.setCanceled(true);

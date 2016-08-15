@@ -83,7 +83,7 @@ public class PacketSyncRarmorData implements IMessage{
         @SideOnly(Side.CLIENT)
         public IMessage onMessage(PacketSyncRarmorData message, MessageContext context){
             Minecraft mc = Minecraft.getMinecraft();
-            IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId);
+            IRarmorData data = RarmorAPI.methodHandler.getDataForUuid(mc.theWorld, message.stackId, true);
             if(data != null){
                 data.readFromNBT(message.receivedDataCompound, true);
 

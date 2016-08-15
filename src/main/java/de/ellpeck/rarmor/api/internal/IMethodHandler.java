@@ -19,11 +19,11 @@ import java.util.UUID;
 
 public interface IMethodHandler{
 
-    IRarmorData getDataForChestplate(EntityPlayer player);
+    IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent);
 
-    IRarmorData getDataForUuid(World world, UUID stackId);
+    IRarmorData getDataForUuid(World world, UUID stackId, boolean createIfAbsent);
 
-    IRarmorData getDataForStack(World world, ItemStack stack);
+    IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent);
 
     boolean compareModules(ActiveRarmorModule module, Object o);
 }
