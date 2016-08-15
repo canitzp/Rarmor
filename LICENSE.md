@@ -25,4 +25,5 @@ Everything that is not listed below applies to the above.
 * Almost all of the assets used in this mod are made by BootyToast and are owned by me. You are not allowed to copy them for any other project.
 * The above License only applies for code I wrote myself, any APIs used (such as the CoFH API) have their own License that is being respected.
 * Parts of this license, especially restrictive ones, can be ignored with personal permission. Said permission, however, will only be given to people I know or someone who has a very good reason for needing it.
+
 © 2016 canitzp & Ellpeck
