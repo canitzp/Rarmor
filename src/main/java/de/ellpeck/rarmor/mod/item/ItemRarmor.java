@@ -50,8 +50,11 @@ public class ItemRarmor extends ItemArmor{
             if(entity instanceof EntityPlayer){
                 IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack, !world.isRemote);
                 if(data != null){
+                    if(!world.isRemote){
+                        data.sendQueuedUpdate((EntityPlayer)entity);
+                    }
+                    
                     data.tick(world);
-                    data.sendQueuedUpdate((EntityPlayer)entity);
                 }
             }
         }

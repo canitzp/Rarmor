@@ -22,13 +22,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
 
 public class RarmorData implements IRarmorData{
 
-    private static final Map<UUID, IRarmorData> TEMP_RARMOR_DATA = new HashMap<UUID, IRarmorData>();
-    private static final Map<UUID, IRarmorData> TEMP_RARMOR_DATA_CLIENT = new HashMap<UUID, IRarmorData>();
+    @SideOnly(Side.CLIENT)
+    private static Map<UUID, IRarmorData> tempRarmorDataClient;
+    private static Map<UUID, IRarmorData> tempRarmorDataServer;
 
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final Map<Integer, String> slotToModulePlaceInListMap = new HashMap<Integer, String>();
@@ -49,10 +52,16 @@ public class RarmorData implements IRarmorData{
 
     public static Map<UUID, IRarmorData> getRarmorData(boolean client){
         if(client){
-            return TEMP_RARMOR_DATA_CLIENT;
+            if(tempRarmorDataClient == null){
+                tempRarmorDataClient = new HashMap<UUID, IRarmorData>();
+            }
+            return tempRarmorDataClient;
         }
         else{
-            return TEMP_RARMOR_DATA;
+            if(tempRarmorDataServer == null){
+                tempRarmorDataServer = new HashMap<UUID, IRarmorData>();
+            }
+            return tempRarmorDataServer;
         }
     }
 
