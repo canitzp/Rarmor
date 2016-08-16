@@ -27,10 +27,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class PacketSyncRarmorData implements IMessage{
 
-    private int slotId;
+    private UUID stackId;
     private IRarmorData data;
     private boolean shouldReloadTabs;
     private int moduleIdForConfirmation;
@@ -41,8 +42,8 @@ public class PacketSyncRarmorData implements IMessage{
 
     }
 
-    public PacketSyncRarmorData(int slotId, IRarmorData data, boolean shouldReloadTabs, int moduleIdForConfirmation){
-        this.slotId = slotId;
+    public PacketSyncRarmorData(UUID stackId, IRarmorData data, boolean shouldReloadTabs, int moduleIdForConfirmation){
+        this.stackId = stackId;
         this.data = data;
         this.shouldReloadTabs = shouldReloadTabs;
         this.moduleIdForConfirmation = moduleIdForConfirmation;
@@ -56,7 +57,7 @@ public class PacketSyncRarmorData implements IMessage{
         try{
             PacketBuffer buffer = new PacketBuffer(buf);
 
-            this.slotId = buffer.readInt();
+            this.stackId = buffer.readUuid();
             this.receivedDataCompound = buffer.readNBTTagCompoundFromBuffer();
         }
         catch(IOException e){
@@ -71,7 +72,7 @@ public class PacketSyncRarmorData implements IMessage{
 
         PacketBuffer buffer = new PacketBuffer(buf);
 
-        buffer.writeInt(this.slotId);
+        buffer.writeUuid(this.stackId);
 
         NBTTagCompound compound = new NBTTagCompound();
         this.data.writeToNBT(compound, true);
@@ -88,21 +89,23 @@ public class PacketSyncRarmorData implements IMessage{
                 public void run(){
                     Minecraft mc = Minecraft.getMinecraft();
                     EntityPlayer player = mc.thePlayer;
-                    if(message.slotId >= 0 && message.slotId < player.inventory.getSizeInventory()){
-                        ItemStack stack = player.inventory.getStackInSlot(message.slotId);
+                    for(int i = 0; i < player.inventory.getSizeInventory(); i++){
+                        ItemStack stack = player.inventory.getStackInSlot(i);
                         if(stack != null){
-                            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.theWorld, stack, true);
-                            if(data != null){
-                                data.readFromNBT(message.receivedDataCompound, true);
+                            if(message.stackId.equals(RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false))){
+                                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.theWorld, stack, true);
+                                if(data != null){
+                                    data.readFromNBT(message.receivedDataCompound, true);
 
-                                if(message.shouldReloadTabs){
-                                    if(mc.currentScreen instanceof GuiRarmor){
-                                        ((GuiRarmor)mc.currentScreen).updateTabs();
+                                    if(message.shouldReloadTabs){
+                                        if(mc.currentScreen instanceof GuiRarmor){
+                                            ((GuiRarmor)mc.currentScreen).updateTabs();
+                                        }
                                     }
-                                }
 
-                                if(message.moduleIdForConfirmation >= 0){
-                                    PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
+                                    if(message.moduleIdForConfirmation >= 0){
+                                        PacketHandler.handler.sendToServer(new PacketOpenConfirmation(message.moduleIdForConfirmation));
+                                    }
                                 }
                             }
                         }

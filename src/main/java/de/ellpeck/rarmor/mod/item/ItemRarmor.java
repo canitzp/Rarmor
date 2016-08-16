@@ -75,9 +75,7 @@ public class ItemRarmor extends ItemArmor{
                 tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
             }
             else{
-                String s = TextFormatting.RED+""+TextFormatting.ITALIC;
-                tooltip.add(s+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
-                tooltip.add(s+I18n.format(RarmorAPI.MOD_ID+".noDataExplain"));
+                tooltip.add(TextFormatting.RED+""+TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
             }
         }
     }

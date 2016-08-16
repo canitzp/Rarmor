@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.mod.data;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
@@ -116,13 +117,8 @@ public class RarmorData implements IRarmorData{
     @Override
     public void sendQueuedUpdate(EntityPlayer player){
         if(this.isUpdateQueued && player instanceof EntityPlayerMP){
-            for(int i = 0; i < player.inventory.getSizeInventory(); i++){
-                ItemStack stack = player.inventory.getStackInSlot(i);
-                if(stack == this.stack){
-                    PacketHandler.handler.sendTo(new PacketSyncRarmorData(i, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
-                    break;
-                }
-            }
+            UUID id = RarmorAPI.methodHandler.checkAndSetRarmorId(this.stack, false);
+            PacketHandler.handler.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
 
             this.isUpdateQueued = false;
         }
