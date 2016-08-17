@@ -79,18 +79,18 @@ public class ActiveModuleMain extends ActiveRarmorModule{
                 IEnergyContainerItem container = (IEnergyContainerItem)item;
                 int canCharge = container.receiveEnergy(charge, Integer.MAX_VALUE, true);
                 if(canCharge > 0){
-                    int discharged = this.data.extractEnergy(canCharge, false);
-                    container.receiveEnergy(charge, discharged, false);
+                    int charged = this.data.extractEnergy(canCharge, false);
+                    container.receiveEnergy(charge, charged, false);
                     this.data.queueUpdate();
                 }
             }
             else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
                 ITeslaConsumer cap = charge.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN);
                 if(cap != null){
-                    int canDischarge = (int)cap.givePower(Long.MAX_VALUE, true);
-                    if(canDischarge > 0){
-                        int discharged = this.data.extractEnergy(canDischarge, false);
-                        cap.givePower(discharged, false);
+                    int canCharge = (int)cap.givePower(Long.MAX_VALUE, true);
+                    if(canCharge > 0){
+                        int charged = this.data.extractEnergy(canCharge, false);
+                        cap.givePower(charged, false);
                         this.data.queueUpdate();
                     }
                 }
