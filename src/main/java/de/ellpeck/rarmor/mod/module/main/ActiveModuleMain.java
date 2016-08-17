@@ -10,20 +10,28 @@
 
 package de.ellpeck.rarmor.mod.module.main;
 
+import cofh.api.energy.IEnergyContainerItem;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.compat.Compat;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaProducer;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,6 +43,59 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public ActiveModuleMain(IRarmorData data){
         super(data);
+    }
+
+    @Override
+    public void tick(World world){
+        ItemStack discharge = this.inventory.getStackInSlot(0);
+        if(discharge != null){
+            Item item = discharge.getItem();
+            if(item instanceof IEnergyContainerItem){
+                IEnergyContainerItem container = (IEnergyContainerItem)item;
+                int canDischarge = container.extractEnergy(discharge, Integer.MAX_VALUE, true);
+                if(canDischarge > 0){
+                    int discharged = this.data.receiveEnergy(canDischarge, false);
+                    container.extractEnergy(discharge, discharged, false);
+                    this.data.queueUpdate();
+                }
+            }
+            else if(Compat.teslaLoaded && discharge.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
+                ITeslaProducer cap = discharge.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN);
+                if(cap != null){
+                    int canDischarge = (int)cap.takePower(Long.MAX_VALUE, true);
+                    if(canDischarge > 0){
+                        int discharged = this.data.receiveEnergy(canDischarge, false);
+                        cap.takePower(discharged, false);
+                        this.data.queueUpdate();
+                    }
+                }
+            }
+        }
+
+        ItemStack charge = this.inventory.getStackInSlot(1);
+        if(charge != null){
+            Item item = charge.getItem();
+            if(item instanceof IEnergyContainerItem){
+                IEnergyContainerItem container = (IEnergyContainerItem)item;
+                int canCharge = container.receiveEnergy(charge, Integer.MAX_VALUE, true);
+                if(canCharge > 0){
+                    int discharged = this.data.extractEnergy(canCharge, false);
+                    container.receiveEnergy(charge, discharged, false);
+                    this.data.queueUpdate();
+                }
+            }
+            else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
+                ITeslaConsumer cap = charge.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN);
+                if(cap != null){
+                    int canDischarge = (int)cap.givePower(Long.MAX_VALUE, true);
+                    if(canDischarge > 0){
+                        int discharged = this.data.extractEnergy(canDischarge, false);
+                        cap.givePower(discharged, false);
+                        this.data.queueUpdate();
+                    }
+                }
+            }
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ public final class Config{
     public static boolean doOpeningConfirmationPacket;
     public static boolean doUpdateCheck;
 
-    public static void init(File file){
+    public static void preInit(File file){
         Configuration config = new Configuration(file);
         config.load();
 

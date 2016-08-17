@@ -14,6 +14,8 @@ import cofh.api.energy.IEnergyContainerItem;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.compat.Compat;
+import de.ellpeck.rarmor.mod.compat.ItemTeslaWrapper;
 import de.ellpeck.rarmor.mod.misc.CreativeTab;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -26,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -149,5 +152,10 @@ public class ItemRarmor extends ItemArmor implements IEnergyContainerItem{
     @Override
     public int getMaxEnergyStored(ItemStack stack){
         return CAPACITY;
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
+        return Compat.teslaLoaded ? new ItemTeslaWrapper(stack, this) : super.initCapabilities(stack, compound);
     }
 }
