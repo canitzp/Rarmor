@@ -56,4 +56,14 @@ public interface IRarmorData{
     ActiveRarmorModule getInstalledModuleWithId(String moduleId);
 
     int getTotalTickedTicks();
+
+    int getEnergyStored();
+
+    int getMaxEnergyStored();
+
+    int receiveEnergy(int energy, boolean simulate);
+
+    int extractEnergy(int energy, boolean simulate);
+
+    void setEnergy(int energy);
 }

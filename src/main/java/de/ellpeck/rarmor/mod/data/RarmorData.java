@@ -14,11 +14,13 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
+import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -88,6 +90,10 @@ public class RarmorData implements IRarmorData{
 
         this.selectedModule = compound.getInteger("SelectedModule");
         this.totalTickedTicks = compound.getInteger("TotalTicks");
+
+        if(sync){
+            this.setEnergy(compound.getInteger("EnergyStored"));
+        }
     }
 
     private ActiveRarmorModule findOrCreateModule(String moduleId){
@@ -150,6 +156,10 @@ public class RarmorData implements IRarmorData{
 
         compound.setInteger("SelectedModule", this.selectedModule);
         compound.setInteger("TotalTicks", this.totalTickedTicks);
+
+        if(sync){
+            compound.setInteger("EnergyStored", this.getEnergyStored());
+        }
     }
 
     @Override
@@ -238,6 +248,60 @@ public class RarmorData implements IRarmorData{
     @Override
     public int getTotalTickedTicks(){
         return this.totalTickedTicks;
+    }
+
+    @Override
+    public int getEnergyStored(){
+        ItemRarmor item = this.getEnergyContainer();
+        if(item != null){
+            return item.getEnergyStored(this.stack);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getMaxEnergyStored(){
+        ItemRarmor item = this.getEnergyContainer();
+        if(item != null){
+            return item.getMaxEnergyStored(this.stack);
+        }
+        return 0;
+    }
+
+    @Override
+    public int receiveEnergy(int energy, boolean simulate){
+        ItemRarmor item = this.getEnergyContainer();
+        if(item != null){
+            return item.receiveEnergy(this.stack, energy, simulate);
+        }
+        return 0;
+    }
+
+    @Override
+    public int extractEnergy(int energy, boolean simulate){
+        ItemRarmor item = this.getEnergyContainer();
+        if(item != null){
+            return item.extractEnergy(this.stack, energy, simulate);
+        }
+        return 0;
+    }
+
+    @Override
+    public void setEnergy(int energy){
+        ItemRarmor item = this.getEnergyContainer();
+        if(item != null){
+            item.setEnergy(this.stack, energy);
+        }
+    }
+
+    private ItemRarmor getEnergyContainer(){
+        if(this.stack != null){
+            Item item = this.stack.getItem();
+            if(item instanceof ItemRarmor){
+                return (ItemRarmor)item;
+            }
+        }
+        return null;
     }
 
     @Override
