@@ -71,4 +71,8 @@ public class RarmorModuleGui extends Gui{
     public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
 
     }
+
+    public boolean doesDisplayPowerBar(){
+        return false;
+    }
 }

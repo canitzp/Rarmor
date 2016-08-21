@@ -49,6 +49,7 @@ public class GuiRarmor extends GuiContainer{
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorBase");
 
     private final IRarmorData currentData;
+
     private final RarmorModuleGui gui;
     private final TabButton[] tabButtons = new TabButton[10];
     private GuiButton buttonBackToMainInventory;
@@ -79,6 +80,16 @@ public class GuiRarmor extends GuiContainer{
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 
         this.gui.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+
+        if(this.gui.doesDisplayPowerBar()){
+            this.mc.getTextureManager().bindTexture(GuiModuleMain.RES_LOC);
+            this.drawTexturedModalRect(this.guiLeft+197, this.guiTop+7, 191, 2, 33, 134);
+
+            int i = this.currentData.getEnergyStored()*132/this.currentData.getMaxEnergyStored();
+            if(i > 0){
+                this.drawTexturedModalRect(this.guiLeft+198, this.guiTop+140-i, 224, 134-i+1, 31, i);
+            }
+        }
     }
 
     @Override
@@ -161,6 +172,20 @@ public class GuiRarmor extends GuiContainer{
         }
 
         this.gui.drawScreen(mouseX, mouseY, partialTicks);
+
+        if(this.gui.doesDisplayPowerBar()){
+            if(mouseX >= this.guiLeft+6+192 && mouseY >= this.guiTop+5+3){
+                if(mouseX < this.guiLeft+6+192+31 && mouseY < this.guiTop+5+3+132){
+                    int current = this.currentData.getEnergyStored();
+                    int max = this.currentData.getMaxEnergyStored();
+
+                    List<String> list = new ArrayList<String>();
+                    list.add(current+"/"+max+" RF");
+                    list.add((int)(((float)current/(float)max)*100)+"%");
+                    GuiUtils.drawHoveringText(list, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+                }
+            }
+        }
     }
 
     @Override

@@ -39,4 +39,9 @@ public class GuiModuleFurnace extends RarmorModuleGui{
     private int getCookProgressScaled(int pixels){
         return ((ActiveModuleFurnace)this.module).burnTime*pixels/ActiveModuleFurnace.TIME_TO_REACH;
     }
+
+    @Override
+    public boolean doesDisplayPowerBar(){
+        return true;
+    }
 }
