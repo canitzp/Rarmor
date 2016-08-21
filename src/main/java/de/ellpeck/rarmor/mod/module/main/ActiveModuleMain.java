@@ -47,51 +47,55 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     @Override
     public void tick(World world){
-        ItemStack discharge = this.inventory.getStackInSlot(0);
-        if(discharge != null){
-            Item item = discharge.getItem();
-            if(item instanceof IEnergyContainerItem){
-                IEnergyContainerItem container = (IEnergyContainerItem)item;
-                int canDischarge = container.extractEnergy(discharge, Integer.MAX_VALUE, true);
-                if(canDischarge > 0){
-                    int discharged = this.data.receiveEnergy(canDischarge, false);
-                    container.extractEnergy(discharge, discharged, false);
-                    this.data.queueUpdate();
-                }
-            }
-            else if(Compat.teslaLoaded && discharge.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
-                ITeslaProducer cap = discharge.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN);
-                if(cap != null){
-                    int canDischarge = (int)cap.takePower(Long.MAX_VALUE, true);
+        if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
+            ItemStack discharge = this.inventory.getStackInSlot(0);
+            if(discharge != null){
+                Item item = discharge.getItem();
+                if(item instanceof IEnergyContainerItem){
+                    IEnergyContainerItem container = (IEnergyContainerItem)item;
+                    int canDischarge = container.extractEnergy(discharge, Integer.MAX_VALUE, true);
                     if(canDischarge > 0){
                         int discharged = this.data.receiveEnergy(canDischarge, false);
-                        cap.takePower(discharged, false);
+                        container.extractEnergy(discharge, discharged, false);
                         this.data.queueUpdate();
+                    }
+                }
+                else if(Compat.teslaLoaded && discharge.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
+                    ITeslaProducer cap = discharge.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN);
+                    if(cap != null){
+                        int canDischarge = (int)cap.takePower(Integer.MAX_VALUE, true);
+                        if(canDischarge > 0){
+                            int discharged = this.data.receiveEnergy(canDischarge, false);
+                            cap.takePower(discharged, false);
+                            this.data.queueUpdate();
+                        }
                     }
                 }
             }
         }
 
-        ItemStack charge = this.inventory.getStackInSlot(1);
-        if(charge != null){
-            Item item = charge.getItem();
-            if(item instanceof IEnergyContainerItem){
-                IEnergyContainerItem container = (IEnergyContainerItem)item;
-                int canCharge = container.receiveEnergy(charge, Integer.MAX_VALUE, true);
-                if(canCharge > 0){
-                    int charged = this.data.extractEnergy(canCharge, false);
-                    container.receiveEnergy(charge, charged, false);
-                    this.data.queueUpdate();
-                }
-            }
-            else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
-                ITeslaConsumer cap = charge.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN);
-                if(cap != null){
-                    int canCharge = (int)cap.givePower(Long.MAX_VALUE, true);
+        if(this.data.getEnergyStored() > 0){
+            ItemStack charge = this.inventory.getStackInSlot(1);
+            if(charge != null){
+                Item item = charge.getItem();
+                if(item instanceof IEnergyContainerItem){
+                    IEnergyContainerItem container = (IEnergyContainerItem)item;
+                    int canCharge = container.receiveEnergy(charge, Integer.MAX_VALUE, true);
                     if(canCharge > 0){
                         int charged = this.data.extractEnergy(canCharge, false);
-                        cap.givePower(charged, false);
+                        container.receiveEnergy(charge, charged, false);
                         this.data.queueUpdate();
+                    }
+                }
+                else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
+                    ITeslaConsumer cap = charge.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN);
+                    if(cap != null){
+                        int canCharge = (int)cap.givePower(Integer.MAX_VALUE, true);
+                        if(canCharge > 0){
+                            int charged = this.data.extractEnergy(canCharge, false);
+                            cap.givePower(charged, false);
+                            this.data.queueUpdate();
+                        }
                     }
                 }
             }
