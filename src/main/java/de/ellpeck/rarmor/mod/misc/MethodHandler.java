@@ -14,9 +14,13 @@ import de.ellpeck.rarmor.api.internal.IMethodHandler;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.data.RarmorData;
+import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -27,8 +31,22 @@ import java.util.UUID;
 public class MethodHandler implements IMethodHandler{
 
     @Override
+    public ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot){
+        if(entity instanceof EntityLivingBase){
+            ItemStack stack = ((EntityLivingBase)entity).getItemStackFromSlot(slot);
+            if(stack != null){
+                Item item = stack.getItem();
+                if(item instanceof ItemRarmor && ((ItemRarmor)item).armorType == slot){
+                    return stack;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent){
-        ItemStack stack = player.inventory.armorInventory[EntityEquipmentSlot.CHEST.getIndex()];
+        ItemStack stack = this.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
         if(stack != null){
             return this.getDataForStack(player.worldObj, stack, createIfAbsent);
         }
@@ -36,29 +54,34 @@ public class MethodHandler implements IMethodHandler{
     }
 
     @Override
-    public UUID checkAndSetRarmorId(ItemStack stack, boolean create){
-        if(!stack.hasTagCompound()){
-            if(create){
-                stack.setTagCompound(new NBTTagCompound());
+    public UUID checkAndSetRarmorId(ItemStack stack, boolean createIfAbsent){
+        if(stack.getItem() instanceof ItemRarmor){
+            if(!stack.hasTagCompound()){
+                if(createIfAbsent){
+                    stack.setTagCompound(new NBTTagCompound());
+                }
+                else{
+                    return null;
+                }
             }
-            else{
-                return null;
-            }
-        }
 
-        NBTTagCompound compound = stack.getTagCompound();
-        if(!compound.hasUniqueId("RarmorId")){
-            if(create){
-                UUID id = UUID.randomUUID();
-                compound.setUniqueId("RarmorId", id);
-                return id;
+            NBTTagCompound compound = stack.getTagCompound();
+            if(!compound.hasUniqueId("RarmorId")){
+                if(createIfAbsent){
+                    UUID id = UUID.randomUUID();
+                    compound.setUniqueId("RarmorId", id);
+                    return id;
+                }
+                else{
+                    return null;
+                }
             }
             else{
-                return null;
+                return compound.getUniqueId("RarmorId");
             }
         }
         else{
-            return compound.getUniqueId("RarmorId");
+            return null;
         }
     }
 

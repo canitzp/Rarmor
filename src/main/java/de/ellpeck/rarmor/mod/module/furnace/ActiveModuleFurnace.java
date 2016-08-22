@@ -18,6 +18,7 @@ import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
@@ -42,7 +43,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world){
+    public void tick(World world, Entity entity){
         if(!world.isRemote){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
                 ItemStack input = this.inventory.getStackInSlot(0);

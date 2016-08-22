@@ -18,6 +18,7 @@ import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -193,7 +194,7 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void tick(World world){
+    public void tick(World world, Entity entity){
         if(!world.isRemote){
             if(!this.sentInitialUpdate){
                 this.queueUpdate();
@@ -203,7 +204,7 @@ public class RarmorData implements IRarmorData{
 
         for(ActiveRarmorModule module : this.loadedModules){
             if(module != null){
-                module.tick(world);
+                module.tick(world, entity);
             }
         }
 

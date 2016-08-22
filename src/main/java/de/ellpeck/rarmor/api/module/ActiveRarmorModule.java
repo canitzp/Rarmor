@@ -15,6 +15,7 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -56,7 +57,7 @@ public abstract class ActiveRarmorModule{
         return RarmorAPI.methodHandler.compareModules(this, o);
     }
 
-    public void tick(World world){
+    public void tick(World world, Entity entity){
 
     }
 }

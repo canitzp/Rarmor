@@ -11,7 +11,9 @@
 package de.ellpeck.rarmor.api.internal;
 
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -19,11 +21,13 @@ import java.util.UUID;
 
 public interface IMethodHandler{
 
+    ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot);
+
     IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent);
 
     IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent);
 
     boolean compareModules(ActiveRarmorModule module, Object o);
 
-    UUID checkAndSetRarmorId(ItemStack stack, boolean create);
+    UUID checkAndSetRarmorId(ItemStack stack, boolean createIfAbsent);
 }

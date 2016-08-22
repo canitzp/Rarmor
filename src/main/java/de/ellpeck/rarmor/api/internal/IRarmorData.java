@@ -11,6 +11,7 @@
 package de.ellpeck.rarmor.api.internal;
 
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,7 +44,7 @@ public interface IRarmorData{
 
     void installModule(ItemStack stack, EntityPlayer player, int slotIndex);
 
-    void tick(World world);
+    void tick(World world, Entity entity);
 
     void queueUpdate();
 

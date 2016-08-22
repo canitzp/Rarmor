@@ -23,6 +23,7 @@ import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -47,7 +48,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world){
+    public void tick(World world, Entity entity){
         if(!world.isRemote){
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
                 ItemStack discharge = this.inventory.getStackInSlot(0);
