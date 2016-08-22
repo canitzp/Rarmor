@@ -31,7 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ActiveModuleFurnace extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Furnace";
-    public static final int TIME_TO_REACH = 300;
+    public static final int TIME_TO_REACH = 150;
+    private static final int ENERGY_PER_TICK = 40;
 
     public final BasicInventory inventory = new BasicInventory("furnace", 2);
     public int burnTime;
@@ -43,34 +44,38 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     @Override
     public void tick(World world){
         if(!world.isRemote){
-            ItemStack input = this.inventory.getStackInSlot(0);
-            if(input != null){
-                ItemStack output = FurnaceRecipes.instance().getSmeltingResult(input);
-                if(output != null){
-                    ItemStack outputSlot = this.inventory.getStackInSlot(1);
-                    if(outputSlot == null || Helper.canBeStacked(output, outputSlot)){
-                        this.burnTime++;
-                        if(this.burnTime >= TIME_TO_REACH){
-                            if(outputSlot == null){
-                                this.inventory.setInventorySlotContents(1, output.copy());
+            if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
+                ItemStack input = this.inventory.getStackInSlot(0);
+                if(input != null){
+                    ItemStack output = FurnaceRecipes.instance().getSmeltingResult(input);
+                    if(output != null){
+                        ItemStack outputSlot = this.inventory.getStackInSlot(1);
+                        if(outputSlot == null || Helper.canBeStacked(output, outputSlot)){
+                            this.burnTime++;
+                            this.data.extractEnergy(ENERGY_PER_TICK, false);
+
+                            if(this.burnTime >= TIME_TO_REACH){
+                                if(outputSlot == null){
+                                    this.inventory.setInventorySlotContents(1, output.copy());
+                                }
+                                else{
+                                    outputSlot.stackSize += output.stackSize;
+                                }
+
+                                this.inventory.decrStackSize(0, 1);
+                                this.burnTime = 0;
                             }
-                            else{
-                                outputSlot.stackSize += output.stackSize;
+
+                            if(this.burnTime%15 == 0){
+                                this.data.queueUpdate();
                             }
 
-                            this.inventory.decrStackSize(0, 1);
-                            this.burnTime = 0;
+                            return;
                         }
-
-                        if(this.burnTime%15 == 0){
-                            this.data.queueUpdate();
-                        }
-
-                        return;
                     }
                 }
+                this.burnTime = 0;
             }
-            this.burnTime = 0;
         }
     }
 
