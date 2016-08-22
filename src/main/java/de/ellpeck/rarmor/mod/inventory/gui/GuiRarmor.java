@@ -51,7 +51,7 @@ public class GuiRarmor extends GuiContainer{
     private final IRarmorData currentData;
 
     private final RarmorModuleGui gui;
-    private final TabButton[] tabButtons = new TabButton[10];
+    public final TabButton[] tabButtons = new TabButton[10];
     private GuiButton buttonBackToMainInventory;
 
     private TexturedButton updateButton;
