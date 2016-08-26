@@ -13,9 +13,14 @@ package de.ellpeck.rarmor.mod.module.solar;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.item.ItemRarmorModule;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
 
 public class ItemModuleSolar extends ItemRarmorModule{
 
@@ -36,5 +41,10 @@ public class ItemModuleSolar extends ItemRarmorModule{
     @Override
     public boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module){
         return true;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced){
+        tooltip.add(TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".needsHat"));
     }
 }

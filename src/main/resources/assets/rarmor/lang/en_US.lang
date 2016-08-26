@@ -14,11 +14,13 @@ rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
 rarmor.noDataYet=No Data present yet
+rarmor.needsHat=Helmet needed
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage
 module.rarmorEnder.name=Ender Chest
 module.rarmorFurnace.name=Furnace
+module.rarmorSolar.name=Solar
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!

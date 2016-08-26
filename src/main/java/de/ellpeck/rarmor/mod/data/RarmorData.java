@@ -42,7 +42,7 @@ public class RarmorData implements IRarmorData{
 
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final String[] moduleIdsForSlots = new String[3];
-    public final IInventory modules = new BasicInventory("modules", 3);
+    public final BasicInventory modules = new BasicInventory("modules", 3);
     private ItemStack stack;
 
     private int totalTickedTicks;
@@ -94,6 +94,9 @@ public class RarmorData implements IRarmorData{
 
         if(sync){
             this.setEnergy(compound.getInteger("EnergyStored"));
+        }
+        else{
+            this.modules.loadSlots(compound);
         }
     }
 
@@ -155,6 +158,9 @@ public class RarmorData implements IRarmorData{
 
         if(sync){
             compound.setInteger("EnergyStored", this.getEnergyStored());
+        }
+        else{
+            this.modules.saveSlots(compound);
         }
     }
 
@@ -341,8 +347,8 @@ public class RarmorData implements IRarmorData{
             int slot = this.getSlotForActiveModule(module);
             if(slot >= 0){
                 this.moduleIdsForSlots[slot] = null;
-                if(drop && !entity.worldObj.isRemote && this.modules instanceof BasicInventory){
-                    ((BasicInventory)this.modules).dropSingle(entity, slot);
+                if(drop && !entity.worldObj.isRemote){
+                    this.modules.dropSingle(entity, slot);
                 }
             }
         }
