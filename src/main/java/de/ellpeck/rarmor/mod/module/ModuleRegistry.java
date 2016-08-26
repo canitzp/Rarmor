@@ -13,6 +13,7 @@ package de.ellpeck.rarmor.mod.module;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.mod.module.ender.ActiveModuleEnder;
 import de.ellpeck.rarmor.mod.module.furnace.ActiveModuleFurnace;
+import de.ellpeck.rarmor.mod.module.generator.ActiveModuleGenerator;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
 import de.ellpeck.rarmor.mod.module.solar.ActiveModuleSolar;
 import de.ellpeck.rarmor.mod.module.storage.ActiveModuleStorage;
@@ -25,6 +26,7 @@ public final class ModuleRegistry{
         RarmorAPI.registerRarmorModule(ActiveModuleEnder.IDENTIFIER, ActiveModuleEnder.class);
         RarmorAPI.registerRarmorModule(ActiveModuleFurnace.IDENTIFIER, ActiveModuleFurnace.class);
         RarmorAPI.registerRarmorModule(ActiveModuleSolar.IDENTIFIER, ActiveModuleSolar.class);
+        RarmorAPI.registerRarmorModule(ActiveModuleGenerator.IDENTIFIER, ActiveModuleGenerator.class);
     }
 
 }

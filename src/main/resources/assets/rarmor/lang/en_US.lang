@@ -9,6 +9,7 @@ item.rarmor.itemModuleStorage.name=Storage Module
 item.rarmor.itemModuleEnder.name=Ender Storage Module
 item.rarmor.itemModuleFurnace.name=Smelting Module
 item.rarmor.itemModuleSolar.name=Solar Module
+item.rarmor.itemModuleGenerator.name=Generator Module
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
@@ -21,6 +22,7 @@ module.rarmorStorage.name=Storage
 module.rarmorEnder.name=Ender Chest
 module.rarmorFurnace.name=Furnace
 module.rarmorSolar.name=Solar
+module.rarmorGenerator.name=Generator
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!

@@ -18,7 +18,6 @@ import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -98,6 +97,6 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
 
     @Override
     public ItemStack getTabIcon(){
-        return new ItemStack(Blocks.DAYLIGHT_DETECTOR_INVERTED);
+        return null;
     }
 }

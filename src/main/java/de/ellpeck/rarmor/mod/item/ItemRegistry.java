@@ -12,6 +12,7 @@ package de.ellpeck.rarmor.mod.item;
 
 import de.ellpeck.rarmor.mod.module.ender.ItemModuleEnder;
 import de.ellpeck.rarmor.mod.module.furnace.ItemModuleFurnace;
+import de.ellpeck.rarmor.mod.module.generator.ItemModuleGenerator;
 import de.ellpeck.rarmor.mod.module.solar.ItemModuleSolar;
 import de.ellpeck.rarmor.mod.module.storage.ItemModuleStorage;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -28,6 +29,7 @@ public final class ItemRegistry{
     public static Item itemModuleEnder;
     public static Item itemModuleFurnace;
     public static Item itemModuleSolar;
+    public static Item itemModuleGenerator;
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
@@ -39,6 +41,7 @@ public final class ItemRegistry{
         itemModuleEnder = new ItemModuleEnder("itemModuleEnder");
         itemModuleFurnace = new ItemModuleFurnace("itemModuleFurnace");
         itemModuleSolar = new ItemModuleSolar("itemModuleSolar");
+        itemModuleGenerator = new ItemModuleGenerator("itemModuleGenerator");
     }
 
 }
