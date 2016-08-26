@@ -46,8 +46,8 @@ public class ContainerModuleMain extends RarmorModuleContainer{
         slots.add(new Slot(module.inventory, 0, 179, 8));
         slots.add(new Slot(module.inventory, 1, 179, 124));
 
-        for(int i = 0; i < 3; i++){
-            slots.add(new SlotModule(module.inventory, this.player, this.currentData, (ContainerRarmor)this.actualContainer, i, i+2, 8, 7+i*22));
+        for(int i = 0; i < ActiveModuleMain.MODULE_SLOT_AMOUNT; i++){
+            slots.add(new SlotModule(this.currentData.getModuleStacks(), this.player, this.currentData, (ContainerRarmor)this.actualContainer, i, 8, 7+i*22));
         }
 
         for(int i = 0; i < 4; i++){

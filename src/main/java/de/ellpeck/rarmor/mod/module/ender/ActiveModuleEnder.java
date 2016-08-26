@@ -16,11 +16,13 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -59,12 +61,12 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
     }
 
     @Override
-    public void onInstalled(EntityPlayer player){
+    public void onInstalled(Entity entity){
 
     }
 
     @Override
-    public void onUninstalled(EntityPlayer player){
+    public void onUninstalled(Entity entity){
 
     }
 
@@ -77,6 +79,11 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
     @SideOnly(Side.CLIENT)
     public ItemStack getTabIcon(){
         return new ItemStack(Blocks.ENDER_CHEST);
+    }
+
+    @Override
+    public void tick(World world, Entity entity){
+
     }
 
 }

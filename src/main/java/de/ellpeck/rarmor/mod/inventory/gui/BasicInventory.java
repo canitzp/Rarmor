@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.mod.inventory.gui;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -167,14 +168,18 @@ public class BasicInventory implements IInventory{
         }
     }
 
-    public void drop(EntityPlayer player){
-        if(!player.worldObj.isRemote){
+    public void drop(Entity entity){
+        if(!entity.worldObj.isRemote){
             for(int i = 0; i < this.slots.length; i++){
-                if(this.slots[i] != null){
-                    player.dropItem(this.slots[i].copy(), false, false);
-                    this.slots[i] = null;
-                }
+                this.dropSingle(entity, i);
             }
+        }
+    }
+
+    public void dropSingle(Entity entity, int i){
+        if(this.slots[i] != null){
+            entity.entityDropItem(this.slots[i].copy(), 0);
+            this.slots[i] = null;
         }
     }
 }

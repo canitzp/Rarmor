@@ -27,6 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class ActiveRarmorModule{
 
     public final IRarmorData data;
+    public boolean invalid;
 
     public ActiveRarmorModule(IRarmorData data){
         this.data = data;
@@ -43,9 +44,9 @@ public abstract class ActiveRarmorModule{
     @SideOnly(Side.CLIENT)
     public abstract RarmorModuleGui createGui(GuiContainer gui);
 
-    public abstract void onInstalled(EntityPlayer player);
+    public abstract void onInstalled(Entity entity);
 
-    public abstract void onUninstalled(EntityPlayer player);
+    public abstract void onUninstalled(Entity entity);
 
     public abstract boolean hasTab(EntityPlayer player);
 
@@ -57,7 +58,5 @@ public abstract class ActiveRarmorModule{
         return RarmorAPI.methodHandler.compareModules(this, o);
     }
 
-    public void tick(World world, Entity entity){
-
-    }
+    public abstract void tick(World world, Entity entity);
 }

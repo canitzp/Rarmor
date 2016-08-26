@@ -38,9 +38,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleMain extends ActiveRarmorModule{
 
+    public static final int MODULE_SLOT_AMOUNT = 3;
+
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
-    public final BasicInventory inventory = new BasicInventory("main", 5);
+    public final BasicInventory inventory = new BasicInventory("main", 2);
     private int lastEnergy;
 
     public ActiveModuleMain(IRarmorData data){
@@ -101,7 +103,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
             }
 
             int energy = this.data.getEnergyStored();
-            if(energy != this.lastEnergy && world.getTotalWorldTime()%10 == 0){
+            if(energy != this.lastEnergy && this.data.getTotalTickedTicks()%10 == 0){
                 this.data.queueUpdate();
                 this.lastEnergy = energy;
             }
@@ -139,12 +141,12 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void onInstalled(EntityPlayer player){
+    public void onInstalled(Entity entity){
         //Called with null player for this module
     }
 
     @Override
-    public void onUninstalled(EntityPlayer player){
+    public void onUninstalled(Entity entity){
         //Not called for this module
     }
 

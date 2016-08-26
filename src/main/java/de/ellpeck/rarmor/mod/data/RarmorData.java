@@ -14,6 +14,7 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
+import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
 import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
@@ -21,10 +22,12 @@ import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +41,8 @@ public class RarmorData implements IRarmorData{
     private static Map<UUID, IRarmorData> tempRarmorDataServer;
 
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
-    private final Map<Integer, String> slotToModulePlaceInListMap = new HashMap<Integer, String>();
+    private final String[] moduleIdsForSlots = new String[3];
+    public final IInventory modules = new BasicInventory("modules", 3);
     private ItemStack stack;
 
     private int totalTickedTicks;
@@ -79,14 +83,10 @@ public class RarmorData implements IRarmorData{
             module.readFromNBT(tag, sync);
         }
 
-        NBTTagList list = compound.getTagList("SlotToRarmorDataPlaceList", 10);
+        NBTTagList list = compound.getTagList("SlotData", 8);
         for(int i = 0; i < list.tagCount(); i++){
-            NBTTagCompound tag = list.getCompoundTagAt(i);
-
-            int key = tag.getInteger("Key");
-            String value = tag.getString("Value");
-
-            this.slotToModulePlaceInListMap.put(key, value);
+            String s = list.getStringTagAt(i);
+            this.moduleIdsForSlots[i] = s == null || s.isEmpty() ? null : s;
         }
 
         this.selectedModule = compound.getInteger("SelectedModule");
@@ -145,15 +145,10 @@ public class RarmorData implements IRarmorData{
         compound.setTag("ModuleData", data);
 
         NBTTagList list = new NBTTagList();
-        for(Map.Entry<Integer, String> entry : this.slotToModulePlaceInListMap.entrySet()){
-            NBTTagCompound tag = new NBTTagCompound();
-
-            tag.setInteger("Key", entry.getKey());
-            tag.setString("Value", entry.getValue());
-
-            list.appendTag(tag);
+        for(String id : this.moduleIdsForSlots){
+            list.appendTag(new NBTTagString(id == null ? "" : id));
         }
-        compound.setTag("SlotToRarmorDataPlaceList", list);
+        compound.setTag("SlotData", list);
 
         compound.setInteger("SelectedModule", this.selectedModule);
         compound.setInteger("TotalTicks", this.totalTickedTicks);
@@ -169,8 +164,23 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public Map<Integer, String> getSlotToModuleMap(){
-        return this.slotToModulePlaceInListMap;
+    public String[] getModulesForSlotsArray(){
+        return this.moduleIdsForSlots;
+    }
+
+    @Override
+    public IInventory getModuleStacks(){
+        return this.modules;
+    }
+
+    @Override
+    public int getSlotForActiveModule(ActiveRarmorModule module){
+        for(int i = 0; i < this.moduleIdsForSlots.length; i++){
+            if(module.getIdentifier().equals(this.moduleIdsForSlots[i])){
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -179,15 +189,15 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void installModule(ItemStack stack, EntityPlayer player, int slotIndex){
+    public void installModule(ItemStack stack, Entity entity, int slotIndex){
         if(stack.getItem() instanceof IRarmorModuleItem){
             String moduleId = ((IRarmorModuleItem)stack.getItem()).getModuleIdentifier();
             if(this.getInstalledModuleWithId(moduleId) == null){
                 ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
                 if(module != null && !this.loadedModules.contains(module)){
-                    module.onInstalled(player);
+                    module.onInstalled(entity);
                     this.loadedModules.add(module);
-                    this.slotToModulePlaceInListMap.put(slotIndex, module.getIdentifier());
+                    this.moduleIdsForSlots[slotIndex] = module.getIdentifier();
                 }
             }
         }
@@ -202,10 +212,25 @@ public class RarmorData implements IRarmorData{
             }
         }
 
+        List<ActiveRarmorModule> forUninstall = null;
         for(ActiveRarmorModule module : this.loadedModules){
             if(module != null){
                 module.tick(world, entity);
+
+                if(module.invalid){
+                    if(forUninstall == null){
+                        forUninstall = new ArrayList<ActiveRarmorModule>();
+                    }
+                    forUninstall.add(module);
+                }
             }
+        }
+
+        if(forUninstall != null){
+            for(ActiveRarmorModule module : forUninstall){
+                this.uninstallModule(module, entity, true);
+            }
+            this.queueUpdate(true, -1, true);
         }
 
         this.totalTickedTicks++;
@@ -238,9 +263,11 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public ActiveRarmorModule getInstalledModuleWithId(String moduleId){
-        for(ActiveRarmorModule module : this.loadedModules){
-            if(moduleId.equals(module.getIdentifier())){
-                return module;
+        if(moduleId != null){
+            for(ActiveRarmorModule module : this.loadedModules){
+                if(moduleId.equals(module.getIdentifier())){
+                    return module;
+                }
             }
         }
         return null;
@@ -306,11 +333,18 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void uninstallModule(ActiveRarmorModule module, EntityPlayer player, int slotIndex){
+    public void uninstallModule(ActiveRarmorModule module, Entity entity, boolean drop){
         if(module != null && this.loadedModules.contains(module) && this.getInstalledModuleWithId(module.getIdentifier()) != null){
-            module.onUninstalled(player);
+            module.onUninstalled(entity);
             this.loadedModules.remove(module);
-            this.slotToModulePlaceInListMap.remove(slotIndex);
+
+            int slot = this.getSlotForActiveModule(module);
+            if(slot >= 0){
+                this.moduleIdsForSlots[slot] = null;
+                if(drop && !entity.worldObj.isRemote && this.modules instanceof BasicInventory){
+                    ((BasicInventory)this.modules).dropSingle(entity, slot);
+                }
+            }
         }
     }
 }

@@ -26,14 +26,12 @@ public class SlotModule extends Slot{
     private final IRarmorData currentData;
     private final EntityPlayer player;
     private final ContainerRarmor container;
-    private final int uniqueModuleSlotId;
 
-    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, ContainerRarmor container, int uniqueModuleSlotId, int index, int xPosition, int yPosition){
+    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, ContainerRarmor container, int index, int xPosition, int yPosition){
         super(inventory, index, xPosition, yPosition);
         this.player = player;
         this.currentData = currentData;
         this.container = container;
-        this.uniqueModuleSlotId = uniqueModuleSlotId;
     }
 
     @Override
@@ -72,15 +70,15 @@ public class SlotModule extends Slot{
     }
 
     private void installModule(ItemStack stack){
-        this.currentData.installModule(stack, this.player, this.uniqueModuleSlotId);
+        this.currentData.installModule(stack, this.player, this.getSlotIndex());
     }
 
     private void uninstallModule(){
-        this.currentData.uninstallModule(this.getActiveModule(this.uniqueModuleSlotId, this.currentData), this.player, this.uniqueModuleSlotId);
+        this.currentData.uninstallModule(this.getActiveModule(this.getSlotIndex(), this.currentData), this.player, false);
     }
 
     private ActiveRarmorModule getActiveModule(int slotIndex, IRarmorData data){
-        String identifier = data.getSlotToModuleMap().get(slotIndex);
+        String identifier = data.getModulesForSlotsArray()[slotIndex];
         if(identifier != null){
             List<ActiveRarmorModule> modules = data.getCurrentModules();
             for(ActiveRarmorModule module : modules){
@@ -106,7 +104,7 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        ActiveRarmorModule module = this.getActiveModule(this.uniqueModuleSlotId, this.currentData);
+        ActiveRarmorModule module = this.getActiveModule(this.getSlotIndex(), this.currentData);
         return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, module);
     }
 }

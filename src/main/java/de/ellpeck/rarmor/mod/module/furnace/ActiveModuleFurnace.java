@@ -67,7 +67,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
                                 this.burnTime = 0;
                             }
 
-                            if(this.burnTime%15 == 0){
+                            if(this.data.getTotalTickedTicks()%10 == 0){
                                 this.data.queueUpdate();
                             }
 
@@ -113,13 +113,13 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     }
 
     @Override
-    public void onInstalled(EntityPlayer player){
+    public void onInstalled(Entity entity){
 
     }
 
     @Override
-    public void onUninstalled(EntityPlayer player){
-        this.inventory.drop(player);
+    public void onUninstalled(Entity entity){
+        this.inventory.drop(entity);
     }
 
     @Override

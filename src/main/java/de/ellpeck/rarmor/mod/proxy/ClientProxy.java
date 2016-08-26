@@ -30,6 +30,7 @@ public class ClientProxy implements IProxy{
         this.addLocation(ItemRegistry.itemModuleStorage);
         this.addLocation(ItemRegistry.itemModuleEnder);
         this.addLocation(ItemRegistry.itemModuleFurnace);
+        this.addLocation(ItemRegistry.itemModuleSolar);
     }
 
     @Override

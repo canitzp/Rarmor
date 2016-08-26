@@ -8,6 +8,7 @@ item.rarmor.itemRarmorBoots.name=Rarmor Boots
 item.rarmor.itemModuleStorage.name=Storage Module
 item.rarmor.itemModuleEnder.name=Ender Storage Module
 item.rarmor.itemModuleFurnace.name=Smelting Module
+item.rarmor.itemModuleSolar.name=Solar Module
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules

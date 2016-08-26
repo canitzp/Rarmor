@@ -28,14 +28,21 @@ public final class Helper{
     public static ActiveRarmorModule initiateModuleById(String id, IRarmorData data){
         if(id != null && !id.isEmpty()){
             Class<? extends ActiveRarmorModule> moduleClass = RarmorAPI.RARMOR_MODULE_REGISTRY.get(id);
-            ActiveRarmorModule module = initiateModule(moduleClass, data);
+            if(moduleClass != null){
+                ActiveRarmorModule module = initiateModule(moduleClass, data);
 
-            String moduleId = module.getIdentifier();
-            if(!id.equals(moduleId)){
-                Rarmor.LOGGER.fatal("A "+Rarmor.MOD_NAME+" Module has a different identifier than the one it was registered with. This is not allowed behavior! Expected id: "+id+", got "+moduleId+".");
+                if(module != null){
+                    String moduleId = module.getIdentifier();
+                    if(!id.equals(moduleId)){
+                        Rarmor.LOGGER.fatal("A "+Rarmor.MOD_NAME+" Module has a different identifier than the one it was registered with. This is not allowed behavior! Expected id: "+id+", got "+moduleId+".");
+                    }
+
+                    return module;
+                }
             }
-
-            return module;
+            else{
+                Rarmor.LOGGER.fatal("A "+Rarmor.MOD_NAME+" Module has failed to initialize as it isn't registered. This is a critical error! Id: "+id+".");
+            }
         }
         return null;
     }
@@ -45,7 +52,7 @@ public final class Helper{
             return moduleClass.getConstructor(IRarmorData.class).newInstance(data);
         }
         catch(Exception e){
-            Rarmor.LOGGER.error("Trying to initiate a module failed!", e);
+            Rarmor.LOGGER.fatal("Trying to initiate a "+Rarmor.MOD_NAME+" Module failed! Probably there is no fitting constructor available.", e);
             return null;
         }
     }
