@@ -198,7 +198,7 @@ public class GuiRarmor extends GuiContainer{
         }
         this.updateTabs();
 
-        this.buttonBackToMainInventory = new TexturedButton(2836, this.guiLeft+5, this.guiTop+120, 20, 20, GuiModuleMain.RES_LOC, 0, 216);
+        this.buttonBackToMainInventory = new TexturedButton(2836, this.guiLeft+5, this.guiTop+123, 20, 20, GuiModuleMain.RES_LOC, 0, 216);
         this.buttonList.add(this.buttonBackToMainInventory);
 
         this.updateButton = new TexturedButton(1337, this.guiLeft-21, this.guiTop-21, 20, 20, GuiModuleMain.RES_LOC, 216, 216);

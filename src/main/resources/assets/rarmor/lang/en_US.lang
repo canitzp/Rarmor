@@ -5,6 +5,10 @@ item.rarmor.itemRarmorChest.name=Rarmor Chestplate
 item.rarmor.itemRarmorPants.name=Rarmor Pants
 item.rarmor.itemRarmorBoots.name=Rarmor Boots
 
+item.rarmor.itemModuleStorage.name=Storage Module
+item.rarmor.itemModuleEnder.name=Ender Storage Module
+item.rarmor.itemModuleFurnace.name=Smelting Module
+
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
