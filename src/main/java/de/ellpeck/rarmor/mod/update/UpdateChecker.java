@@ -13,7 +13,6 @@ package de.ellpeck.rarmor.mod.update;
 import de.ellpeck.rarmor.mod.Rarmor;
 import de.ellpeck.rarmor.mod.misc.Config;
 import de.ellpeck.rarmor.mod.misc.Helper;
-import net.minecraftforge.common.MinecraftForge;
 
 public final class UpdateChecker{
 
@@ -29,7 +28,6 @@ public final class UpdateChecker{
             Rarmor.LOGGER.info("Initializing Update Checker...");
 
             new ThreadUpdateChecker();
-            MinecraftForge.EVENT_BUS.register(this);
         }
     }
 }

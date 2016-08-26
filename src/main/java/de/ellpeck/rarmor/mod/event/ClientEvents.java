@@ -17,6 +17,9 @@ import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,6 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientEvents{
 
     public static boolean stopGuiOverride;
+
+    private static boolean hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct;
 
     public ClientEvents(){
         MinecraftForge.EVENT_BUS.register(this);
@@ -42,6 +47,12 @@ public class ClientEvents{
                     if(data != null){
                         PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
                         event.setCanceled(true);
+
+                        if(!hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct){
+                            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.1", TextFormatting.GREEN+"github.com/Ellpeck/Rarmor"+TextFormatting.RESET).setStyle(new Style().setColor(TextFormatting.RED)));
+                            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.2").setStyle(new Style().setColor(TextFormatting.GOLD)));
+                            hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct = true;
+                        }
                     }
                 }
             }

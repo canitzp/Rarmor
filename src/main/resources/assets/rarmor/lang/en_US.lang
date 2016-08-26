@@ -26,3 +26,6 @@ rarmor.notifyUpdate.3=Newest Version: %s
 rarmor.clickInfo.1=Click to view the changelog
 rarmor.clickInfo.2=Shift-click to download
 rarmor.clickInfo.3=Ctrl-click to dismiss this message
+
+rarmor.notFinishedInfo.1=It should be noted that this is an unfinished version of Rarmor. There is probably multiple things that will still be added and changed. If you have any suggestions or bugs to report, please visit %s and post them as an issue there.
+rarmor.notFinishedInfo.2=Additionally, the mod is now being developed by Ellpeck. So if you have anything to say, please tell him and not canitzp anymore. Thanks and have fun! :)
