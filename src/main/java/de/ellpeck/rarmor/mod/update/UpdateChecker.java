@@ -11,7 +11,7 @@
 package de.ellpeck.rarmor.mod.update;
 
 import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.misc.Config;
+import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.misc.Helper;
 
 public final class UpdateChecker{

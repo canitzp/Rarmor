@@ -12,11 +12,11 @@ package de.ellpeck.rarmor.mod;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.mod.compat.Compat;
+import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.crafting.CraftingRegistry;
 import de.ellpeck.rarmor.mod.event.CommonEvents;
 import de.ellpeck.rarmor.mod.inventory.GuiHandler;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
-import de.ellpeck.rarmor.mod.misc.Config;
 import de.ellpeck.rarmor.mod.misc.MethodHandler;
 import de.ellpeck.rarmor.mod.module.ModuleRegistry;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = RarmorAPI.MOD_ID, name = Rarmor.MOD_NAME, version = Rarmor.VERSION)
+@Mod(modid = RarmorAPI.MOD_ID, name = Rarmor.MOD_NAME, version = Rarmor.VERSION, guiFactory = "de.ellpeck.rarmor.mod.config.ConfigGuiFactory")
 public final class Rarmor{
 
     public static final String MOD_NAME = "Rarmor";
@@ -49,7 +49,7 @@ public final class Rarmor{
 
         RarmorAPI.methodHandler = new MethodHandler();
 
-        Config.preInit(event.getSuggestedConfigurationFile());
+        new Config(event.getSuggestedConfigurationFile());
         Compat.preInit();
         ItemRegistry.preInit();
         new GuiHandler();

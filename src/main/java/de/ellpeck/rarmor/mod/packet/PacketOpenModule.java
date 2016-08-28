@@ -13,7 +13,7 @@ package de.ellpeck.rarmor.mod.packet;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.misc.Config;
+import de.ellpeck.rarmor.mod.config.Config;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;

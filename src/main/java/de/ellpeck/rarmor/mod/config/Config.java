@@ -8,13 +8,19 @@
  * © 2015-2016 canitzp & Ellpeck
  */
 
-package de.ellpeck.rarmor.mod.misc;
+package de.ellpeck.rarmor.mod.config;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
 
 public final class Config{
+
+    public static Configuration config;
 
     public static boolean doOpeningConfirmationPacket;
     public static boolean doUpdateCheck;
@@ -22,10 +28,15 @@ public final class Config{
     public static int rarmorOverlayY;
     public static float rarmorOverlayScale;
 
-    public static void preInit(File file){
-        Configuration config = new Configuration(file);
+    public Config(File file){
+        config = new Configuration(file);
         config.load();
+        this.config();
 
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void config(){
         doOpeningConfirmationPacket = config.get(Configuration.CATEGORY_GENERAL, "openingConfirmation", true, "Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI. Turning this off might reduce server load, but could cause bugs. Use at your own risk.").getBoolean();
         doUpdateCheck = config.get(Configuration.CATEGORY_GENERAL, "updateCheck", true, "Turn this off to disable the Update Checker").getBoolean();
 
@@ -38,4 +49,10 @@ public final class Config{
         }
     }
 
+    @SubscribeEvent
+    public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event){
+        if(RarmorAPI.MOD_ID.equalsIgnoreCase(event.getModID())){
+            this.config();
+        }
+    }
 }

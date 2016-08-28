@@ -13,7 +13,7 @@ package de.ellpeck.rarmor.mod.event;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
-import de.ellpeck.rarmor.mod.misc.Config;
+import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
