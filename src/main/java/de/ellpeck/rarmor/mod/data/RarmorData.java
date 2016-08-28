@@ -215,7 +215,7 @@ public class RarmorData implements IRarmorData{
     public void tick(World world, Entity entity){
         if(!world.isRemote){
             if(!this.sentInitialUpdate){
-                this.queueUpdate();
+                this.queueUpdate(true);
                 this.sentInitialUpdate = true;
             }
         }
