@@ -15,6 +15,8 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleEnder extends ActiveRarmorModule{
 
+    private static final ItemStack ENDER_CHEST = new ItemStack(Blocks.ENDER_CHEST);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Ender";
 
     public ActiveModuleEnder(IRarmorData data){
@@ -77,8 +80,8 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ItemStack getTabIcon(){
-        return new ItemStack(Blocks.ENDER_CHEST);
+    public ItemStack getDisplayIcon(){
+        return ENDER_CHEST;
     }
 
     @Override
@@ -86,4 +89,8 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
 
     }
 
+    @Override
+    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+
+    }
 }

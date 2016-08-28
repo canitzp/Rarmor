@@ -64,21 +64,23 @@ public final class Helper{
 
     @SideOnly(Side.CLIENT)
     public static void renderStackToGui(ItemStack stack, float x, float y, float scale){
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.translate(x, y, 0);
-        GlStateManager.scale(scale, scale, scale);
+        if(stack != null && stack.getItem() != null){
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.enableDepth();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.translate(x, y, 0);
+            GlStateManager.scale(scale, scale, scale);
 
-        Minecraft mc = Minecraft.getMinecraft();
-        mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
-        mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRendererObj, stack, 0, 0, null);
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
+            mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRendererObj, stack, 0, 0, null);
 
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.popMatrix();
+            RenderHelper.disableStandardItemLighting();
+            GlStateManager.popMatrix();
+        }
     }
 
     public static boolean isDevVersion(){

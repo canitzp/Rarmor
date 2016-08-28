@@ -17,10 +17,13 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
 import de.ellpeck.rarmor.mod.misc.Helper;
+import de.ellpeck.rarmor.mod.module.generator.ActiveModuleGenerator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -81,23 +84,38 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     }
 
     @Override
+    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+        renderX += 19;
+        renderY += 5;
+
+        if(this.burnTime > 0){
+            FontRenderer font = mc.fontRendererObj;
+            String percentage = (int)(((float)this.burnTime/(float)TIME_TO_REACH)*100)+"%";
+            boolean unicode = font.getUnicodeFlag();
+            font.setUnicodeFlag(true);
+            font.drawString(percentage, renderX+15-font.getStringWidth(percentage)/2, renderY-5, 0xFFFFFF, true);
+            font.setUnicodeFlag(unicode);
+        }
+
+        Helper.renderStackToGui(this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
+        renderX += 18;
+        Helper.renderStackToGui(this.inventory.getStackInSlot(1), renderX, renderY, 0.7F);
+    }
+
+    @Override
     public String getIdentifier(){
         return IDENTIFIER;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound, boolean sync){
-        if(!sync){
-            this.inventory.loadSlots(compound);
-        }
+        this.inventory.loadSlots(compound);
         this.burnTime = compound.getInteger("BurnTime");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound, boolean sync){
-        if(!sync){
-            this.inventory.saveSlots(compound);
-        }
+        this.inventory.saveSlots(compound);
         compound.setInteger("BurnTime", this.burnTime);
     }
 
@@ -129,8 +147,8 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ItemStack getTabIcon(){
-        return new ItemStack(Blocks.FURNACE);
+    public ItemStack getDisplayIcon(){
+        return ActiveModuleGenerator.FURNACE;
     }
 
 }

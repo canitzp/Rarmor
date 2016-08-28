@@ -16,6 +16,10 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
+import de.ellpeck.rarmor.mod.misc.Helper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +32,9 @@ import net.minecraft.world.World;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule{
 
+    public static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Generator";
+
     private static final int ENERGY_PER_TICK = 30;
 
     public final BasicInventory inventory = new BasicInventory("input", 1);
@@ -76,26 +82,37 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
     }
 
     @Override
+    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+        renderX += 19;
+        renderY += 2;
+        Helper.renderStackToGui(this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
+
+        renderX += 20;
+        if(this.currentBurnTime > 0 && this.burnTimeTickingDownFrom > 0){
+            FontRenderer font = mc.fontRendererObj;
+            String percentage = (int)(((float)this.currentBurnTime/(float)this.burnTimeTickingDownFrom)*100)+"%";
+            boolean unicode = font.getUnicodeFlag();
+            font.setUnicodeFlag(true);
+            font.drawString(percentage, renderX-font.getStringWidth(percentage)/2, renderY, 0xFFFFFF, true);
+            font.setUnicodeFlag(unicode);
+        }
+    }
+
+    @Override
     public String getIdentifier(){
         return IDENTIFIER;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound, boolean sync){
-        if(!sync){
-            this.inventory.loadSlots(compound);
-        }
-
+        this.inventory.loadSlots(compound);
         this.currentBurnTime = compound.getInteger("BurnTime");
         this.burnTimeTickingDownFrom = compound.getInteger("BurnTimeFrom");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound, boolean sync){
-        if(!sync){
-            this.inventory.saveSlots(compound);
-        }
-
+        this.inventory.saveSlots(compound);
         compound.setInteger("BurnTime", this.currentBurnTime);
         compound.setInteger("BurnTimeFrom", this.burnTimeTickingDownFrom);
     }
@@ -126,7 +143,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
     }
 
     @Override
-    public ItemStack getTabIcon(){
-        return new ItemStack(Blocks.FURNACE);
+    public ItemStack getDisplayIcon(){
+        return FURNACE;
     }
 }

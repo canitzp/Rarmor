@@ -16,6 +16,8 @@ rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
 rarmor.noDataYet=No Data present yet
 rarmor.needsHat=Helmet needed
+rarmor.generating=Generating
+rarmor.notGenerating=Not Generating
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage

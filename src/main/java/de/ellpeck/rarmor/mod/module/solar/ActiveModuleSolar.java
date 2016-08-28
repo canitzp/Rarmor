@@ -15,20 +15,30 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ActiveModuleSolar extends ActiveRarmorModule{
 
+    private static final ItemStack DAYLIGHT_SENSOR = new ItemStack(Blocks.DAYLIGHT_DETECTOR);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Solar";
+
     private static final int ENERGY_PER_TICK = 10;
+
+    private boolean generatedLastTick;
 
     public ActiveModuleSolar(IRarmorData data){
         super(data);
@@ -51,8 +61,12 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
                         if(this.data.getTotalTickedTicks()%10 == 0){
                             this.data.queueUpdate();
                         }
+
+                        this.generatedLastTick = true;
+                        return;
                     }
                 }
+                this.generatedLastTick = false;
             }
         }
         else{
@@ -61,13 +75,31 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+        renderX += 19;
+        renderY += 5;
 
+        FontRenderer font = mc.fontRendererObj;
+        boolean unicode = font.getUnicodeFlag();
+        font.setUnicodeFlag(true);
+        TextFormatting color = this.generatedLastTick ? TextFormatting.GREEN : TextFormatting.RED;
+        String key = this.generatedLastTick ? "generating" : "notGenerating";
+        font.drawString(color+I18n.format(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF, true);
+        font.setUnicodeFlag(unicode);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound, boolean sync){
+        if(sync){
+            this.generatedLastTick = compound.getBoolean("GenLastTick");
+        }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound, boolean sync){
-
+        if(sync){
+            compound.setBoolean("GenLastTick", this.generatedLastTick);
+        }
     }
 
     @Override
@@ -96,7 +128,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
     }
 
     @Override
-    public ItemStack getTabIcon(){
-        return null;
+    public ItemStack getDisplayIcon(){
+        return DAYLIGHT_SENSOR;
     }
 }

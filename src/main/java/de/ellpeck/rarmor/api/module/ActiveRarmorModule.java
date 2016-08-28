@@ -14,6 +14,8 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,7 +53,7 @@ public abstract class ActiveRarmorModule{
     public abstract boolean hasTab(EntityPlayer player);
 
     @SideOnly(Side.CLIENT)
-    public abstract ItemStack getTabIcon();
+    public abstract ItemStack getDisplayIcon();
 
     @Override
     public final boolean equals(Object o){
@@ -59,4 +61,7 @@ public abstract class ActiveRarmorModule{
     }
 
     public abstract void tick(World world, Entity entity);
+
+    @SideOnly(Side.CLIENT)
+    public abstract void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks);
 }

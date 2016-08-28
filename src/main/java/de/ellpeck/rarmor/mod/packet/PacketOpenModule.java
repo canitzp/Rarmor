@@ -62,9 +62,7 @@ public class PacketOpenModule implements IMessage{
                     IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
                     if(data != null){
                         if(message.alsoSetData){
-                            if(data != null){
-                                data.selectModule(message.moduleId);
-                            }
+                            data.selectModule(message.moduleId);
                         }
 
                         boolean shouldOpenGui;

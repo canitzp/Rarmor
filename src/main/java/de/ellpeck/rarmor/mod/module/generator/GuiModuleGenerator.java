@@ -30,7 +30,7 @@ public class GuiModuleGenerator extends RarmorModuleGui{
         this.drawTexturedModalRect(this.guiLeft+109, this.guiTop+48, 0, 0, 18, 34);
 
         ActiveModuleGenerator gen = (ActiveModuleGenerator)this.module;
-        if(gen.currentBurnTime > 0){
+        if(gen.currentBurnTime > 0 && gen.burnTimeTickingDownFrom > 0){
             int i = gen.currentBurnTime*13/gen.burnTimeTickingDownFrom;
             this.drawTexturedModalRect(this.guiLeft+110, this.guiTop+48+12-i, 176, 12-i, 14, i+1);
         }

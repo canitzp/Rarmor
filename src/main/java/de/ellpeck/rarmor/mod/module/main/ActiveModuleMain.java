@@ -22,11 +22,11 @@ import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,6 +40,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
 
+    private static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.CRAFTING_TABLE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
     public final BasicInventory inventory = new BasicInventory("main", 2);
@@ -111,6 +112,11 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
+    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+
+    }
+
+    @Override
     public String getIdentifier(){
         return IDENTIFIER;
     }
@@ -157,21 +163,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ItemStack getTabIcon(){
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if(player != null){
-            String name = player.getName();
-            if("bootytoast".equalsIgnoreCase(name)){
-                return new ItemStack(Items.BREAD);
-            }
-            else if("canitzp".equalsIgnoreCase(name)){
-                return new ItemStack(Items.CARROT_ON_A_STICK);
-            }
-            else if("ellpeck".equalsIgnoreCase(name)){
-                return new ItemStack(Items.REDSTONE);
-            }
-        }
-
-        return new ItemStack(Blocks.CRAFTING_TABLE);
+    public ItemStack getDisplayIcon(){
+        return CRAFTING_TABLE;
     }
 }

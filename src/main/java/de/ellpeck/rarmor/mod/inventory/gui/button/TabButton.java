@@ -36,7 +36,7 @@ public class TabButton extends TexturedButton{
 
         ActiveRarmorModule module = data.getCurrentModules().get(selectedModule);
         this.moduleName = module.getIdentifier();
-        this.tabIcon = module.getTabIcon();
+        this.tabIcon = module.getDisplayIcon();
     }
 
     @Override
