@@ -54,6 +54,8 @@ public class RarmorData implements IRarmorData{
     private boolean queuedUpdateReload;
     private int queuedUpdateConfirmation;
 
+    private boolean shouldDeleteStackDataOnFetch;
+
     public RarmorData(ItemStack stack){
         this.stack = stack;
     }
@@ -326,6 +328,16 @@ public class RarmorData implements IRarmorData{
         if(item != null){
             item.setEnergy(this.stack, energy);
         }
+    }
+
+    @Override
+    public void setDeleteStackDataOnFetch(boolean yes){
+        this.shouldDeleteStackDataOnFetch = yes;
+    }
+
+    @Override
+    public boolean getDeleteStackDataOnFetch(){
+        return this.shouldDeleteStackDataOnFetch;
     }
 
     private ItemRarmor getEnergyContainer(){

@@ -71,4 +71,8 @@ public interface IRarmorData{
     int extractEnergy(int energy, boolean simulate);
 
     void setEnergy(int energy);
+
+    void setDeleteStackDataOnFetch(boolean yes);
+
+    boolean getDeleteStackDataOnFetch();
 }

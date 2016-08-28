@@ -37,6 +37,8 @@ public class CommonEvents{
                     stack.setTagCompound(new NBTTagCompound());
                 }
                 stack.getTagCompound().setTag("RarmorData", compound);
+
+                data.setDeleteStackDataOnFetch(true);
             }
         }
     }

@@ -96,10 +96,13 @@ public class MethodHandler implements IMethodHandler{
                     data = new RarmorData(stack);
 
                     NBTTagCompound storedData = null;
-                    if(stack.hasTagCompound()){
-                        NBTTagCompound compound = stack.getTagCompound();
-                        if(compound.hasKey("RarmorData")){
-                            storedData = compound.getCompoundTag("RarmorData");
+                    if(!world.isRemote){
+                        if(stack.hasTagCompound()){
+                            NBTTagCompound compound = stack.getTagCompound();
+                            if(compound.hasKey("RarmorData")){
+                                storedData = compound.getCompoundTag("RarmorData");
+                                this.deleteRarmorDataFromStack(stack);
+                            }
                         }
                     }
 
@@ -115,12 +118,24 @@ public class MethodHandler implements IMethodHandler{
                     allData.put(stackId, data);
                 }
             }
-            else if(data.getBoundStack() != stack){
-                data.setBoundStack(stack);
+            else{
+                if(data.getBoundStack() != stack){
+                    data.setBoundStack(stack);
+                }
+                if(!world.isRemote && data.getDeleteStackDataOnFetch()){
+                    this.deleteRarmorDataFromStack(stack);
+                    data.setDeleteStackDataOnFetch(false);
+                }
             }
             return data;
         }
         return null;
+    }
+
+    private void deleteRarmorDataFromStack(ItemStack stack){
+        if(stack.hasTagCompound()){
+            stack.getTagCompound().removeTag("RarmorData");
+        }
     }
 
     @Override
