@@ -43,11 +43,6 @@ public class SlotModule extends Slot{
 
     @Override
     public void putStack(ItemStack newStack){
-        if(!this.container.isPuttingStacksInSlots){
-            ItemStack stack = this.getStack();
-            this.uninstallModule();
-        }
-
         super.putStack(newStack);
 
         if(!this.container.isPuttingStacksInSlots){
@@ -92,10 +87,13 @@ public class SlotModule extends Slot{
 
     @Override
     public boolean isItemValid(ItemStack stack){
-        if(stack.getItem() instanceof IRarmorModuleItem){
-            IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
-            if(item.canInstall(this.player, this) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier()) == null){
-                return true;
+        ItemStack myStack = this.getStack();
+        if(myStack == null || myStack.stackSize <= 0){
+            if(stack.getItem() instanceof IRarmorModuleItem){
+                IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
+                if(item.canInstall(this.player, this) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier()) == null){
+                    return true;
+                }
             }
         }
         return false;
