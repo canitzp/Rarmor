@@ -53,7 +53,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
     public void tick(World world, Entity entity){
         if(RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != null){
             if(!world.isRemote){
-                BlockPos pos = entity.getPosition();
+                BlockPos pos = new BlockPos(entity.posX, entity.posY+entity.height, entity.posZ);
                 if(world.canSeeSky(pos) && world.isDaytime() && !world.isRainingAt(pos)){
                     if(this.data.getMaxEnergyStored()-this.data.getEnergyStored() >= ENERGY_PER_TICK){
                         this.data.receiveEnergy(ENERGY_PER_TICK, false);

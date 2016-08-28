@@ -101,7 +101,7 @@ public class MethodHandler implements IMethodHandler{
                             NBTTagCompound compound = stack.getTagCompound();
                             if(compound.hasKey("RarmorData")){
                                 storedData = compound.getCompoundTag("RarmorData");
-                                this.deleteRarmorDataFromStack(stack);
+                                data.setDeleteStackDataOnFetch(true);
                             }
                         }
                     }
@@ -123,19 +123,15 @@ public class MethodHandler implements IMethodHandler{
                     data.setBoundStack(stack);
                 }
                 if(!world.isRemote && data.getDeleteStackDataOnFetch()){
-                    this.deleteRarmorDataFromStack(stack);
+                    if(stack.hasTagCompound()){
+                        stack.getTagCompound().removeTag("RarmorData");
+                    }
                     data.setDeleteStackDataOnFetch(false);
                 }
             }
             return data;
         }
         return null;
-    }
-
-    private void deleteRarmorDataFromStack(ItemStack stack){
-        if(stack.hasTagCompound()){
-            stack.getTagCompound().removeTag("RarmorData");
-        }
     }
 
     @Override

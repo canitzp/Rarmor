@@ -97,8 +97,11 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
             font.setUnicodeFlag(unicode);
         }
 
-        Helper.renderStackToGui(this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
-        renderX += 18;
+        ItemStack input = this.inventory.getStackInSlot(0);
+        if(input != null){
+            Helper.renderStackToGui(input, renderX, renderY, 0.7F);
+            renderX += 18;
+        }
         Helper.renderStackToGui(this.inventory.getStackInSlot(1), renderX, renderY, 0.7F);
     }
 
