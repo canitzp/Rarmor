@@ -12,6 +12,7 @@ package de.ellpeck.rarmor.mod;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.mod.compat.Compat;
+import de.ellpeck.rarmor.mod.crafting.CraftingRegistry;
 import de.ellpeck.rarmor.mod.event.CommonEvents;
 import de.ellpeck.rarmor.mod.inventory.GuiHandler;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
@@ -60,6 +61,7 @@ public final class Rarmor{
     public void init(FMLInitializationEvent event){
         ModuleRegistry.init();
         PacketHandler.init();
+        CraftingRegistry.init();
         new CommonEvents();
         proxy.init(event);
     }

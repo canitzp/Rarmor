@@ -13,6 +13,7 @@ package de.ellpeck.rarmor.mod.event;
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.misc.Config;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
@@ -20,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -80,8 +82,12 @@ public class ClientEvents{
                 if(stack != null){
                     IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack, false);
                     if(data != null){
-                        int renderX = 3;
-                        int renderY = 3;
+                        float scale = Config.rarmorOverlayScale;
+                        int renderX = Config.rarmorOverlayX;
+                        int renderY = Config.rarmorOverlayY;
+
+                        GlStateManager.pushMatrix();
+                        GlStateManager.scale(scale, scale, scale);
 
                         font.drawString(data.getEnergyStored()+"/"+data.getMaxEnergyStored()+" RF", renderX+18, renderY+5, 0xFFFFFF, true);
                         Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
@@ -97,6 +103,8 @@ public class ClientEvents{
                             module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
                             renderY += 17;
                         }
+
+                        GlStateManager.popMatrix();
                     }
                 }
             }

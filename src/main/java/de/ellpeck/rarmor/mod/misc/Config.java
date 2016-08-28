@@ -18,13 +18,20 @@ public final class Config{
 
     public static boolean doOpeningConfirmationPacket;
     public static boolean doUpdateCheck;
+    public static int rarmorOverlayX;
+    public static int rarmorOverlayY;
+    public static float rarmorOverlayScale;
 
     public static void preInit(File file){
         Configuration config = new Configuration(file);
         config.load();
 
-        doOpeningConfirmationPacket = config.get(Configuration.CATEGORY_GENERAL, "openingConfirmation", true, "Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI. Turning this off might reduce server load.").getBoolean();
+        doOpeningConfirmationPacket = config.get(Configuration.CATEGORY_GENERAL, "openingConfirmation", true, "Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI. Turning this off might reduce server load, but could cause bugs. Use at your own risk.").getBoolean();
         doUpdateCheck = config.get(Configuration.CATEGORY_GENERAL, "updateCheck", true, "Turn this off to disable the Update Checker").getBoolean();
+
+        rarmorOverlayX = config.get(Configuration.CATEGORY_GENERAL, "overlayX", 3, "The X position of the Rarmor overlay").getInt();
+        rarmorOverlayY = config.get(Configuration.CATEGORY_GENERAL, "overlayY", 3, "The Y position of the Rarmor overlay").getInt();
+        rarmorOverlayScale = (float)config.get(Configuration.CATEGORY_GENERAL, "overlayScale", 1.0, "The scale of the Rarmor overlay").getDouble();
 
         if(config.hasChanged()){
             config.save();
