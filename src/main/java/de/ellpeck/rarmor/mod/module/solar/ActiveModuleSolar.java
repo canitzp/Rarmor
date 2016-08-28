@@ -30,6 +30,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleSolar extends ActiveRarmorModule{
 
@@ -74,6 +75,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
         renderX += 19;
@@ -107,6 +109,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public RarmorModuleGui createGui(GuiContainer gui){
         return null;
@@ -127,6 +130,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
         return false;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
         return DAYLIGHT_SENSOR;

@@ -84,6 +84,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 5;

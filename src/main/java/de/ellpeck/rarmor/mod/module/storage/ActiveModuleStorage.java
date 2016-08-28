@@ -96,6 +96,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
 
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
 

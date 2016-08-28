@@ -90,6 +90,7 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
 
     }

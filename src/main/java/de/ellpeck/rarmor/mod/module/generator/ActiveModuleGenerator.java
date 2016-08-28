@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule{
 
@@ -81,6 +82,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
         renderX += 19;
@@ -122,6 +124,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
         return new ContainerModuleGenerator(container, this);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public RarmorModuleGui createGui(GuiContainer gui){
         return new GuiModuleGenerator(gui, this);
@@ -142,6 +145,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
         return FURNACE;
