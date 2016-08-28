@@ -11,6 +11,7 @@
 package de.ellpeck.rarmor.mod.module.solar;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.item.ItemRarmorModule;
 import net.minecraft.client.resources.I18n;
@@ -29,17 +30,17 @@ public class ItemModuleSolar extends ItemRarmorModule{
     }
 
     @Override
-    public String getModuleIdentifier(){
+    public String getModuleIdentifier(ItemStack stack){
         return ActiveModuleSolar.IDENTIFIER;
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot){
+    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
         return RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.HEAD) != null;
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module){
+    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData){
         return true;
     }
 

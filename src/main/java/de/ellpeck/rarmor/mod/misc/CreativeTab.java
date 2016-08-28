@@ -47,6 +47,7 @@ public class CreativeTab extends CreativeTabs{
         this.addItem(ItemRegistry.itemModuleFurnace);
         this.addItem(ItemRegistry.itemModuleSolar);
         this.addItem(ItemRegistry.itemModuleGenerator);
+        this.addItem(ItemRegistry.itemModuleProtection);
     }
 
     private void addItem(Item item){

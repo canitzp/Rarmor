@@ -91,7 +91,7 @@ public class SlotModule extends Slot{
         if(myStack == null || myStack.stackSize <= 0){
             if(stack.getItem() instanceof IRarmorModuleItem){
                 IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
-                if(item.canInstall(this.player, this) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier()) == null){
+                if(item.canInstall(this.player, this, stack, this.currentData) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier(stack)) == null){
                     return true;
                 }
             }
@@ -103,6 +103,6 @@ public class SlotModule extends Slot{
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
         ActiveRarmorModule module = this.getActiveModule(this.getSlotIndex(), this.currentData);
-        return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, module);
+        return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, module, this.currentData);
     }
 }

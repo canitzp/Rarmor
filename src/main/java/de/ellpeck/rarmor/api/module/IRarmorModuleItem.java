@@ -10,14 +10,16 @@
 
 package de.ellpeck.rarmor.api.module;
 
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public interface IRarmorModuleItem{
 
-    String getModuleIdentifier();
+    String getModuleIdentifier(ItemStack stack);
 
-    boolean canInstall(EntityPlayer player, Slot slot);
+    boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData);
 
-    boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module);
+    boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData);
 }

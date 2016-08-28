@@ -10,10 +10,12 @@
 
 package de.ellpeck.rarmor.mod.module.storage;
 
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.item.ItemRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class ItemModuleStorage extends ItemRarmorModule{
 
@@ -22,17 +24,17 @@ public class ItemModuleStorage extends ItemRarmorModule{
     }
 
     @Override
-    public String getModuleIdentifier(){
+    public String getModuleIdentifier(ItemStack stack){
         return ActiveModuleStorage.IDENTIFIER;
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot){
+    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ActiveRarmorModule module){
+    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData){
         return true;
     }
 }
