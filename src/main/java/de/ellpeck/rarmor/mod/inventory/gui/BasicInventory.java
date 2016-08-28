@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.mod.inventory.gui;
 
+import de.ellpeck.rarmor.api.internal.IRarmorData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -21,12 +22,14 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class BasicInventory implements IInventory{
 
+    private final IRarmorData data;
     private final String name;
     private final ItemStack[] slots;
 
-    public BasicInventory(String name, int slotAmount){
+    public BasicInventory(String name, int slotAmount, IRarmorData data){
         this.name = name;
         this.slots = new ItemStack[slotAmount];
+        this.data = data;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class BasicInventory implements IInventory{
 
     @Override
     public void markDirty(){
-
+        this.data.setDirty();
     }
 
     @Override
@@ -84,6 +87,7 @@ public class BasicInventory implements IInventory{
         for(int i = 0; i < this.slots.length; i++){
             this.slots[i] = null;
         }
+        this.markDirty();
     }
 
     @Override
@@ -180,6 +184,8 @@ public class BasicInventory implements IInventory{
         if(this.slots[i] != null){
             entity.entityDropItem(this.slots[i].copy(), 0);
             this.slots[i] = null;
+
+            this.markDirty();
         }
     }
 }

@@ -43,7 +43,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     private static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.CRAFTING_TABLE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
 
-    public final BasicInventory inventory = new BasicInventory("main", 2);
+    public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 
     public ActiveModuleMain(IRarmorData data){
@@ -63,6 +63,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
                         if(canDischarge > 0){
                             int discharged = this.data.receiveEnergy(canDischarge, false);
                             container.extractEnergy(discharge, discharged, false);
+                            this.data.setDirty();
                         }
                     }
                     else if(Compat.teslaLoaded && discharge.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
@@ -72,6 +73,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
                             if(canDischarge > 0){
                                 int discharged = this.data.receiveEnergy(canDischarge, false);
                                 cap.takePower(discharged, false);
+                                this.data.setDirty();
                             }
                         }
                     }
@@ -88,6 +90,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
                         if(canCharge > 0){
                             int charged = this.data.extractEnergy(canCharge, false);
                             container.receiveEnergy(charge, charged, false);
+                            this.data.setDirty();
                         }
                     }
                     else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
@@ -97,6 +100,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
                             if(canCharge > 0){
                                 int charged = this.data.extractEnergy(canCharge, false);
                                 cap.givePower(charged, false);
+                                this.data.setDirty();
                             }
                         }
                     }

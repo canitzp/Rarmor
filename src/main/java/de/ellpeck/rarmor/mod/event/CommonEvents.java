@@ -12,11 +12,11 @@ package de.ellpeck.rarmor.mod.event;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
-import de.ellpeck.rarmor.mod.data.RarmorData;
+import de.ellpeck.rarmor.mod.data.WorldData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -29,35 +29,22 @@ public class CommonEvents{
     }
 
     @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save event){
-        if(!event.getWorld().isRemote){
-            this.saveRarmorData(true);
-        }
-    }
-
-    private void saveRarmorData(boolean allowDeletion){
-        for(IRarmorData data : RarmorData.getRarmorData(false).values()){
-            ItemStack stack = data.getBoundStack();
-
-            NBTTagCompound compound = new NBTTagCompound();
-            data.writeToNBT(compound, false);
-
-            if(!stack.hasTagCompound()){
-                stack.setTagCompound(new NBTTagCompound());
-            }
-            stack.getTagCompound().setTag("RarmorData", compound);
-
-            data.setDeleteStackDataOnFetch(allowDeletion);
-        }
+    public void onWorldLoad(WorldEvent.Load event){
+        doData(event.getWorld());
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event){
-        if(!event.getWorld().isRemote){
-            this.saveRarmorData(false);
-        }
+    public void onWorldSave(WorldEvent.Save event){
+        doData(event.getWorld());
+    }
 
-        RarmorData.getRarmorData(event.getWorld().isRemote).clear();
+    private static void doData(World world){
+        if(!world.isRemote){
+            WorldData data = WorldData.getOrLoadData(world);
+            if(data != null){
+                data.markDirty();
+            }
+        }
     }
 
     @SubscribeEvent

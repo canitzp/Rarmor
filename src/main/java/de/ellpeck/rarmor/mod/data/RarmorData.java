@@ -29,21 +29,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class RarmorData implements IRarmorData{
 
-    @SideOnly(Side.CLIENT)
-    private static Map<UUID, IRarmorData> tempRarmorDataClient;
-    private static Map<UUID, IRarmorData> tempRarmorDataServer;
-
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final String[] moduleIdsForSlots = new String[3];
-    public final BasicInventory modules = new BasicInventory("modules", 3);
+    public final BasicInventory modules = new BasicInventory("modules", 3, this);
     private ItemStack stack;
+    private boolean isDirty;
 
     private int totalTickedTicks;
     private int selectedModule;
@@ -54,25 +51,8 @@ public class RarmorData implements IRarmorData{
     private boolean queuedUpdateReload;
     private int queuedUpdateConfirmation;
 
-    private boolean shouldDeleteStackDataOnFetch;
-
     public RarmorData(ItemStack stack){
         this.stack = stack;
-    }
-
-    public static Map<UUID, IRarmorData> getRarmorData(boolean client){
-        if(client){
-            if(tempRarmorDataClient == null){
-                tempRarmorDataClient = new HashMap<UUID, IRarmorData>();
-            }
-            return tempRarmorDataClient;
-        }
-        else{
-            if(tempRarmorDataServer == null){
-                tempRarmorDataServer = new HashMap<UUID, IRarmorData>();
-            }
-            return tempRarmorDataServer;
-        }
     }
 
     @Override
@@ -206,6 +186,8 @@ public class RarmorData implements IRarmorData{
                     module.onInstalled(entity);
                     this.loadedModules.add(module);
                     this.moduleIdsForSlots[slotIndex] = module.getIdentifier();
+
+                    this.setDirty();
                 }
             }
         }
@@ -331,13 +313,18 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void setDeleteStackDataOnFetch(boolean yes){
-        this.shouldDeleteStackDataOnFetch = yes;
+    public boolean getDirty(){
+        return this.isDirty;
     }
 
     @Override
-    public boolean getDeleteStackDataOnFetch(){
-        return this.shouldDeleteStackDataOnFetch;
+    public void setDirty(boolean yes){
+        this.isDirty = yes;
+    }
+
+    @Override
+    public void setDirty(){
+        this.setDirty(true);
     }
 
     private ItemRarmor getEnergyContainer(){
@@ -363,6 +350,8 @@ public class RarmorData implements IRarmorData{
                     this.modules.dropSingle(entity, slot);
                 }
             }
+
+            this.setDirty();
         }
     }
 }

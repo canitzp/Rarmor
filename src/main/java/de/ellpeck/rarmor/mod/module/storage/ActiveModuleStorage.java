@@ -34,7 +34,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Storage";
     private static final ItemStack CHEST = new ItemStack(Blocks.CHEST);
 
-    public final BasicInventory inventory = new BasicInventory("storage", 46);
+    public final BasicInventory inventory = new BasicInventory("storage", 46, this.data);
 
     public ActiveModuleStorage(IRarmorData data){
         super(data);

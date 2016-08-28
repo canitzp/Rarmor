@@ -39,7 +39,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
 
     private static final int ENERGY_PER_TICK = 30;
 
-    public final BasicInventory inventory = new BasicInventory("input", 1);
+    public final BasicInventory inventory = new BasicInventory("input", 1, this.data);
 
     public int currentBurnTime;
     public int burnTimeTickingDownFrom;
@@ -55,6 +55,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
 
             if(this.currentBurnTime > 0){
                 this.currentBurnTime--;
+                this.data.setDirty();
 
                 if(canAddEnergy){
                     this.data.receiveEnergy(ENERGY_PER_TICK, false);
@@ -71,6 +72,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
                     if(time > 0){
                         this.currentBurnTime = time;
                         this.burnTimeTickingDownFrom = time;
+                        this.data.setDirty();
 
                         stack.stackSize--;
 

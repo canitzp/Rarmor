@@ -38,7 +38,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     public static final int TIME_TO_REACH = 150;
     private static final int ENERGY_PER_TICK = 40;
 
-    public final BasicInventory inventory = new BasicInventory("furnace", 2);
+    public final BasicInventory inventory = new BasicInventory("furnace", 2, this.data);
     public int burnTime;
 
     public ActiveModuleFurnace(IRarmorData data){
@@ -56,6 +56,8 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
                         ItemStack outputSlot = this.inventory.getStackInSlot(1);
                         if(outputSlot == null || Helper.canBeStacked(output, outputSlot)){
                             this.burnTime++;
+                            this.data.setDirty();
+
                             this.data.extractEnergy(ENERGY_PER_TICK, false);
 
                             if(this.burnTime >= TIME_TO_REACH){
@@ -79,6 +81,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
                     }
                 }
                 this.burnTime = 0;
+                this.data.setDirty();
             }
         }
     }

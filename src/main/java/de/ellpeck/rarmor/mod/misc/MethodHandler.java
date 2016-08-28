@@ -14,6 +14,7 @@ import de.ellpeck.rarmor.api.internal.IMethodHandler;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.data.RarmorData;
+import de.ellpeck.rarmor.mod.data.WorldData;
 import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
 import net.minecraft.entity.Entity;
@@ -89,46 +90,27 @@ public class MethodHandler implements IMethodHandler{
     public IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent){
         UUID stackId = this.checkAndSetRarmorId(stack, !world.isRemote && createIfAbsent);
         if(stackId != null){
-            Map<UUID, IRarmorData> allData = RarmorData.getRarmorData(world.isRemote);
+            Map<UUID, IRarmorData> allData = WorldData.getRarmorData(world);
             IRarmorData data = allData.get(stackId);
             if(data == null){
                 if(createIfAbsent){
                     data = new RarmorData(stack);
 
-                    NBTTagCompound storedData = null;
-                    if(!world.isRemote){
-                        if(stack.hasTagCompound()){
-                            NBTTagCompound compound = stack.getTagCompound();
-                            if(compound.hasKey("RarmorData")){
-                                storedData = compound.getCompoundTag("RarmorData");
-                                data.setDeleteStackDataOnFetch(true);
-                            }
-                        }
-                    }
-
-                    if(storedData == null){
-                        ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, data);
-                        module.onInstalled(null);
-                        data.getCurrentModules().add(module);
-                    }
-                    else{
-                        data.readFromNBT(storedData, false);
-                    }
+                    ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, data);
+                    module.onInstalled(null);
+                    data.getCurrentModules().add(module);
+                    data.setDirty(false);
 
                     allData.put(stackId, data);
                 }
             }
             else{
-                if(data.getBoundStack() != stack){
+                ItemStack bound = data.getBoundStack();
+                if(bound != null || bound != stack){
                     data.setBoundStack(stack);
                 }
-                if(!world.isRemote && data.getDeleteStackDataOnFetch()){
-                    if(stack.hasTagCompound()){
-                        stack.getTagCompound().removeTag("RarmorData");
-                    }
-                    data.setDeleteStackDataOnFetch(false);
-                }
             }
+
             return data;
         }
         return null;
