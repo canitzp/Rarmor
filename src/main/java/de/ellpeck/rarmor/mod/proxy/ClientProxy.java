@@ -23,16 +23,7 @@ public class ClientProxy implements IProxy{
 
     @Override
     public void preInit(FMLPreInitializationEvent event){
-        this.addLocation(ItemRegistry.itemRarmorHelmet);
-        this.addLocation(ItemRegistry.itemRarmorChest);
-        this.addLocation(ItemRegistry.itemRarmorPants);
-        this.addLocation(ItemRegistry.itemRarmorBoots);
-
-        this.addLocation(ItemRegistry.itemModuleStorage);
-        this.addLocation(ItemRegistry.itemModuleEnder);
-        this.addLocation(ItemRegistry.itemModuleFurnace);
-        this.addLocation(ItemRegistry.itemModuleSolar);
-        this.addLocation(ItemRegistry.itemModuleGenerator);
+        ItemRegistry.preInitClient();
     }
 
     @Override
@@ -40,15 +31,15 @@ public class ClientProxy implements IProxy{
         new ClientEvents();
     }
 
-    private void addLocation(Item item){
-        this.addLocation(item, 0);
+    public static void addLocation(Item item){
+        addLocation(item, 0);
     }
 
-    private void addLocation(Item item, int meta){
-        this.addLocation(item, meta, item.getRegistryName());
+    public static void addLocation(Item item, int meta){
+        addLocation(item, meta, item.getRegistryName());
     }
 
-    private void addLocation(Item item, int meta, ResourceLocation location){
+    public static void addLocation(Item item, int meta, ResourceLocation location){
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, "inventory"));
     }
 }

@@ -15,8 +15,11 @@ import de.ellpeck.rarmor.mod.module.furnace.ItemModuleFurnace;
 import de.ellpeck.rarmor.mod.module.generator.ItemModuleGenerator;
 import de.ellpeck.rarmor.mod.module.solar.ItemModuleSolar;
 import de.ellpeck.rarmor.mod.module.storage.ItemModuleStorage;
+import de.ellpeck.rarmor.mod.proxy.ClientProxy;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class ItemRegistry{
 
@@ -55,6 +58,26 @@ public final class ItemRegistry{
         itemModuleFurnace = new ItemModuleFurnace("itemModuleFurnace");
         itemModuleSolar = new ItemModuleSolar("itemModuleSolar");
         itemModuleGenerator = new ItemModuleGenerator("itemModuleGenerator");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void preInitClient(){
+        ClientProxy.addLocation(itemRarmorHelmet);
+        ClientProxy.addLocation(itemRarmorChest);
+        ClientProxy.addLocation(itemRarmorPants);
+        ClientProxy.addLocation(itemRarmorBoots);
+
+        ClientProxy.addLocation(itemWrench);
+        ClientProxy.addLocation(itemControlCircuit);
+        ClientProxy.addLocation(itemWire);
+        ClientProxy.addLocation(itemConnector);
+        ClientProxy.addLocation(itemBattery);
+
+        ClientProxy.addLocation(itemModuleStorage);
+        ClientProxy.addLocation(itemModuleEnder);
+        ClientProxy.addLocation(itemModuleFurnace);
+        ClientProxy.addLocation(itemModuleSolar);
+        ClientProxy.addLocation(itemModuleGenerator);
     }
 
 }
