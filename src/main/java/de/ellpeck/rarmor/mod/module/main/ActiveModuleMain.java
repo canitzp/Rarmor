@@ -171,4 +171,9 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     public ItemStack getDisplayIcon(){
         return CRAFTING_TABLE;
     }
+
+    @Override
+    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data){
+        return false;
+    }
 }

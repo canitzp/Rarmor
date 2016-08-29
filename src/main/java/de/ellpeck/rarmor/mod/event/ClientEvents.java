@@ -22,6 +22,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -89,19 +90,23 @@ public class ClientEvents{
                         GlStateManager.pushMatrix();
                         GlStateManager.scale(scale, scale, scale);
 
-                        font.drawString(data.getEnergyStored()+"/"+data.getMaxEnergyStored()+" RF", renderX+18, renderY+5, 0xFFFFFF, true);
+                        font.drawString(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+": ", renderX+20, renderY, 0xFFFFFF, true);
+                        font.drawString(TextFormatting.YELLOW+""+data.getEnergyStored()+"/"+data.getMaxEnergyStored(), renderX+20, renderY+10, 0xFFFFFF, true);
+
                         Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
 
-                        renderY += 22;
+                        renderY += 26;
 
                         for(ActiveRarmorModule module : data.getCurrentModules()){
-                            ItemStack display = module.getDisplayIcon();
-                            if(display != null){
-                                Helper.renderStackToGui(display, renderX, renderY, 1.0F);
-                            }
+                            if(module.doesRenderOnOverlay(mc, player, data)){
+                                ItemStack display = module.getDisplayIcon();
+                                if(display != null){
+                                    Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                                }
 
-                            module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
-                            renderY += 17;
+                                module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
+                                renderY += 17;
+                            }
                         }
 
                         GlStateManager.popMatrix();

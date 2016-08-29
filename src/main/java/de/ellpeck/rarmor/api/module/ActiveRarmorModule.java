@@ -64,4 +64,9 @@ public abstract class ActiveRarmorModule{
 
     @SideOnly(Side.CLIENT)
     public abstract void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks);
+
+    @SideOnly(Side.CLIENT)
+    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data){
+        return true;
+    }
 }

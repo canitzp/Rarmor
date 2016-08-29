@@ -179,8 +179,10 @@ public class GuiRarmor extends GuiContainer{
                     int max = this.currentData.getMaxEnergyStored();
 
                     List<String> list = new ArrayList<String>();
-                    list.add(current+"/"+max+" RF");
-                    list.add((int)(((float)current/(float)max)*100)+"%");
+                    list.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+": ");
+                    list.add(TextFormatting.YELLOW+""+current+"/"+max);
+
+                    list.add(TextFormatting.ITALIC+""+(int)(((float)current/(float)max)*100)+"%");
                     GuiUtils.drawHoveringText(list, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
                 }
             }
