@@ -14,15 +14,10 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 public class CreativeTab extends CreativeTabs{
 
     public static final CreativeTab INSTANCE = new CreativeTab();
-
-    private List<ItemStack> list;
 
     public CreativeTab(){
         super(RarmorAPI.MOD_ID);
@@ -31,26 +26,5 @@ public class CreativeTab extends CreativeTabs{
     @Override
     public Item getTabIconItem(){
         return ItemRegistry.itemRarmorChest;
-    }
-
-    @Override
-    public void displayAllRelevantItems(List<ItemStack> list){
-        this.list = list;
-
-        this.addItem(ItemRegistry.itemRarmorHelmet);
-        this.addItem(ItemRegistry.itemRarmorChest);
-        this.addItem(ItemRegistry.itemRarmorPants);
-        this.addItem(ItemRegistry.itemRarmorBoots);
-
-        this.addItem(ItemRegistry.itemModuleStorage);
-        this.addItem(ItemRegistry.itemModuleEnder);
-        this.addItem(ItemRegistry.itemModuleFurnace);
-        this.addItem(ItemRegistry.itemModuleSolar);
-        this.addItem(ItemRegistry.itemModuleGenerator);
-        this.addItem(ItemRegistry.itemModuleProtection);
-    }
-
-    private void addItem(Item item){
-        item.getSubItems(item, this, this.list);
     }
 }

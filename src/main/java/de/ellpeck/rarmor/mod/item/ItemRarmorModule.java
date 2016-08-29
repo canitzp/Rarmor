@@ -10,20 +10,12 @@
 
 package de.ellpeck.rarmor.mod.item;
 
-import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
-import de.ellpeck.rarmor.mod.misc.CreativeTab;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public abstract class ItemRarmorModule extends Item implements IRarmorModuleItem{
+public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
     public ItemRarmorModule(String name){
-        this.setRegistryName(RarmorAPI.MOD_ID, name);
-        GameRegistry.register(this);
-
-        this.setUnlocalizedName(RarmorAPI.MOD_ID+"."+name);
-        this.setCreativeTab(CreativeTab.INSTANCE);
+        super(name);
         this.setMaxStackSize(1);
     }
 }

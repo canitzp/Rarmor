@@ -13,7 +13,9 @@ package de.ellpeck.rarmor.mod.crafting;
 public final class CraftingRegistry{
 
     public static void init(){
-
+        //GameRegistry.addRecipe(new ShapedOreRecipe(ItemRegistry.itemRarmorChest,
+        //        "", "C", "",
+        //       'C', Items.DIAMOND_CHESTPLATE));
     }
 
 }

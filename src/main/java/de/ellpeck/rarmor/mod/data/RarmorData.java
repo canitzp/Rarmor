@@ -15,7 +15,7 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
-import de.ellpeck.rarmor.mod.item.ItemRarmor;
+import de.ellpeck.rarmor.mod.item.ItemRarmorChest;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
@@ -270,7 +270,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public int getEnergyStored(){
-        ItemRarmor item = this.getEnergyContainer();
+        ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
             return item.getEnergyStored(this.stack);
         }
@@ -279,7 +279,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public int getMaxEnergyStored(){
-        ItemRarmor item = this.getEnergyContainer();
+        ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
             return item.getMaxEnergyStored(this.stack);
         }
@@ -288,7 +288,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public int receiveEnergy(int energy, boolean simulate){
-        ItemRarmor item = this.getEnergyContainer();
+        ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
             return item.receiveEnergy(this.stack, energy, simulate);
         }
@@ -297,7 +297,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public int extractEnergy(int energy, boolean simulate){
-        ItemRarmor item = this.getEnergyContainer();
+        ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
             return item.extractEnergy(this.stack, energy, simulate);
         }
@@ -306,7 +306,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public void setEnergy(int energy){
-        ItemRarmor item = this.getEnergyContainer();
+        ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
             item.setEnergy(this.stack, energy);
         }
@@ -327,11 +327,11 @@ public class RarmorData implements IRarmorData{
         this.setDirty(true);
     }
 
-    private ItemRarmor getEnergyContainer(){
+    private ItemRarmorChest getEnergyContainer(){
         if(this.stack != null){
             Item item = this.stack.getItem();
-            if(item instanceof ItemRarmor){
-                return (ItemRarmor)item;
+            if(item instanceof ItemRarmorChest){
+                return (ItemRarmorChest)item;
             }
         }
         return null;

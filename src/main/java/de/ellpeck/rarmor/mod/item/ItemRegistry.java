@@ -25,6 +25,12 @@ public final class ItemRegistry{
     public static Item itemRarmorPants;
     public static Item itemRarmorBoots;
 
+    public static Item itemWrench;
+    public static Item itemControlCircuit;
+    public static Item itemWire;
+    public static Item itemConnector;
+    public static Item itemBattery;
+
     public static Item itemModuleStorage;
     public static Item itemModuleEnder;
     public static Item itemModuleFurnace;
@@ -34,9 +40,15 @@ public final class ItemRegistry{
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
-        itemRarmorChest = new ItemRarmor("itemRarmorChest", EntityEquipmentSlot.CHEST);
+        itemRarmorChest = new ItemRarmorChest("itemRarmorChest");
         itemRarmorPants = new ItemRarmor("itemRarmorPants", EntityEquipmentSlot.LEGS);
         itemRarmorBoots = new ItemRarmor("itemRarmorBoots", EntityEquipmentSlot.FEET);
+
+        itemWrench = new ItemWrench("itemWrench");
+        itemControlCircuit = new ItemBase("itemControlCircuit");
+        itemWire = new ItemBase("itemWire");
+        itemConnector = new ItemBase("itemConnector");
+        itemBattery = new ItemBattery("itemBattery");
 
         itemModuleStorage = new ItemModuleStorage("itemModuleStorage");
         itemModuleEnder = new ItemModuleEnder("itemModuleEnder");

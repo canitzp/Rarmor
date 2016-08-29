@@ -14,6 +14,7 @@ item.rarmor.itemModuleGenerator.name=Generator Module
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
+rarmor.storedEnergy=Tesla/RF stored
 rarmor.noDataYet=No Data present yet
 rarmor.needsHat=Helmet needed
 rarmor.generating=Generating
