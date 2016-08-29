@@ -20,8 +20,6 @@ import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
 import de.ellpeck.rarmor.mod.packet.PacketSyncRarmorData;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -224,8 +222,6 @@ public class RarmorData implements IRarmorData{
             }
             this.queueUpdate(true, -1, true);
         }
-
-        System.out.println("ARMOR "+((EntityLivingBase)entity).getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue());
 
         this.totalTickedTicks++;
     }

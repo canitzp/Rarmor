@@ -12,7 +12,6 @@ package de.ellpeck.rarmor.mod.proxy;
 
 import de.ellpeck.rarmor.mod.event.ClientEvents;
 import de.ellpeck.rarmor.mod.item.ItemRegistry;
-import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtection;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -34,11 +33,6 @@ public class ClientProxy implements IProxy{
         this.addLocation(ItemRegistry.itemModuleFurnace);
         this.addLocation(ItemRegistry.itemModuleSolar);
         this.addLocation(ItemRegistry.itemModuleGenerator);
-
-        for(int i = 0; i < ActiveModuleProtection.TYPES.length; i++){
-            ResourceLocation location = new ResourceLocation(ItemRegistry.itemModuleProtection.getRegistryName()+ActiveModuleProtection.TYPES[i]);
-            this.addLocation(ItemRegistry.itemModuleProtection, i, location);
-        }
     }
 
     @Override
