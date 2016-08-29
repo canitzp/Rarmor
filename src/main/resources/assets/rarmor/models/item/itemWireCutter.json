@@ -1,0 +1,6 @@
+{
+  "parent": "rarmor:item/standardItem",
+  "textures": {
+    "layer0": "rarmor:items/itemWireCutter"
+  }
+}

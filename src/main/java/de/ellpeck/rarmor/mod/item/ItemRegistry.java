@@ -28,10 +28,12 @@ public final class ItemRegistry{
     public static Item itemRarmorPants;
     public static Item itemRarmorBoots;
 
-    public static Item itemWrench;
+    public static Item itemWireCutter;
     public static Item itemControlCircuit;
     public static Item itemWire;
     public static Item itemConnector;
+    public static Item itemSolarCell;
+    public static Item itemGenerator;
     public static Item itemBattery;
 
     public static Item itemModuleStorage;
@@ -39,7 +41,6 @@ public final class ItemRegistry{
     public static Item itemModuleFurnace;
     public static Item itemModuleSolar;
     public static Item itemModuleGenerator;
-    public static Item itemModuleProtection;
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
@@ -47,10 +48,12 @@ public final class ItemRegistry{
         itemRarmorPants = new ItemRarmor("itemRarmorPants", EntityEquipmentSlot.LEGS);
         itemRarmorBoots = new ItemRarmor("itemRarmorBoots", EntityEquipmentSlot.FEET);
 
-        itemWrench = new ItemWrench("itemWrench");
+        itemWireCutter = new ItemWireCutter("itemWireCutter");
         itemControlCircuit = new ItemBase("itemControlCircuit");
         itemWire = new ItemBase("itemWire");
         itemConnector = new ItemBase("itemConnector");
+        itemSolarCell = new ItemBase("itemSolarCell");
+        itemGenerator = new ItemBase("itemGenerator");
         itemBattery = new ItemBattery("itemBattery");
 
         itemModuleStorage = new ItemModuleStorage("itemModuleStorage");
@@ -67,10 +70,12 @@ public final class ItemRegistry{
         ClientProxy.addLocation(itemRarmorPants);
         ClientProxy.addLocation(itemRarmorBoots);
 
-        ClientProxy.addLocation(itemWrench);
+        ClientProxy.addLocation(itemWireCutter);
         ClientProxy.addLocation(itemControlCircuit);
         ClientProxy.addLocation(itemWire);
         ClientProxy.addLocation(itemConnector);
+        ClientProxy.addLocation(itemSolarCell);
+        ClientProxy.addLocation(itemGenerator);
         ClientProxy.addLocation(itemBattery);
 
         ClientProxy.addLocation(itemModuleStorage);

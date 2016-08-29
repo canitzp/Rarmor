@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -101,5 +102,12 @@ public final class Helper{
 
     public static boolean canBeStacked(ItemStack stack1, ItemStack stack2){
         return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
+    public static void setItemEnergy(ItemStack stack, int energy){
+        if(!stack.hasTagCompound()){
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        stack.getTagCompound().setInteger("Energy", energy);
     }
 }

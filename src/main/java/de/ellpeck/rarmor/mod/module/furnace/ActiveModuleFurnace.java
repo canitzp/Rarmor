@@ -17,13 +17,13 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
 import de.ellpeck.rarmor.mod.misc.Helper;
-import de.ellpeck.rarmor.mod.module.generator.ActiveModuleGenerator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -34,6 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleFurnace extends ActiveRarmorModule{
 
+    private static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Furnace";
     public static final int TIME_TO_REACH = 150;
     private static final int ENERGY_PER_TICK = 40;
@@ -155,7 +156,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     @Override
     @SideOnly(Side.CLIENT)
     public ItemStack getDisplayIcon(){
-        return ActiveModuleGenerator.FURNACE;
+        return FURNACE;
     }
 
 }

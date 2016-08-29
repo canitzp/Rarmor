@@ -16,10 +16,13 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.compat.Compat;
 import de.ellpeck.rarmor.mod.compat.ItemTeslaWrapper;
+import de.ellpeck.rarmor.mod.misc.Helper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
@@ -52,16 +55,17 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
+        String s = "   ";
+
+        tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
+        tooltip.add(TextFormatting.YELLOW+s+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
+
         IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack, false);
         if(data != null){
-            String s = "   ";
             tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
             for(ActiveRarmorModule module : data.getCurrentModules()){
                 tooltip.add(TextFormatting.YELLOW+s+"-"+I18n.format("module."+module.getIdentifier()+".name"));
             }
-
-            tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
-            tooltip.add(TextFormatting.YELLOW+s+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
 
             tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
             tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
@@ -118,13 +122,6 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
         return 0;
     }
 
-    public void setEnergy(ItemStack stack, int energy){
-        if(!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
-        }
-        stack.getTagCompound().setInteger("Energy", energy);
-    }
-
     @Override
     public int getEnergyStored(ItemStack stack){
         if(stack.hasTagCompound()){
@@ -141,5 +138,14 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
         return Compat.teslaLoaded ? new ItemTeslaWrapper(stack, this) : super.initCapabilities(stack, compound);
+    }
+
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems){
+        super.getSubItems(item, tab, subItems);
+
+        ItemStack stack = new ItemStack(item);
+        Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
+        subItems.add(stack);
     }
 }

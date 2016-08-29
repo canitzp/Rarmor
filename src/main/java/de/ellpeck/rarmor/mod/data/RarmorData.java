@@ -308,7 +308,7 @@ public class RarmorData implements IRarmorData{
     public void setEnergy(int energy){
         ItemRarmorChest item = this.getEnergyContainer();
         if(item != null){
-            item.setEnergy(this.stack, energy);
+            Helper.setItemEnergy(this.stack, energy);
         }
     }
 

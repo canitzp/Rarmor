@@ -12,13 +12,15 @@ package de.ellpeck.rarmor.mod.item;
 
 import net.minecraft.item.ItemStack;
 
-public class ItemWrench extends ItemBase{
+public class ItemWireCutter extends ItemBase{
 
-    public ItemWrench(String name){
+    public ItemWireCutter(String name){
         super(name);
 
+        this.setMaxDamage(15);
         this.setMaxStackSize(1);
-        this.setMaxDamage(10);
+        this.setContainerItem(this);
+        this.setNoRepair();
     }
 
     @Override

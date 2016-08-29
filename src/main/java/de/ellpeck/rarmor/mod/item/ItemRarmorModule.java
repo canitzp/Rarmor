@@ -11,11 +11,18 @@
 package de.ellpeck.rarmor.mod.item;
 
 import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.ItemStack;
 
 public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
     public ItemRarmorModule(String name){
         super(name);
         this.setMaxStackSize(1);
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack stack){
+        return EnumRarity.UNCOMMON;
     }
 }

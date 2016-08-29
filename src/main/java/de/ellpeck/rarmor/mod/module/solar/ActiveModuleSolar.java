@@ -15,6 +15,7 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -22,7 +23,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -35,10 +35,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleSolar extends ActiveRarmorModule{
 
-    private static final ItemStack DAYLIGHT_SENSOR = new ItemStack(Blocks.DAYLIGHT_DETECTOR);
+    private static final ItemStack SOLAR_CELL = new ItemStack(ItemRegistry.itemSolarCell);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Solar";
 
-    private static final int ENERGY_PER_TICK = 10;
+    private static final int ENERGY_PER_TICK = 15;
 
     private boolean generatedLastTick;
 
@@ -134,6 +134,6 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
-        return DAYLIGHT_SENSOR;
+        return SOLAR_CELL;
     }
 }

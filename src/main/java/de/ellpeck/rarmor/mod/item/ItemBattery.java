@@ -15,8 +15,11 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.mod.compat.Compat;
 import de.ellpeck.rarmor.mod.compat.ItemTeslaWrapper;
 import de.ellpeck.rarmor.mod.misc.CreativeTab;
+import de.ellpeck.rarmor.mod.misc.Helper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
@@ -57,5 +60,14 @@ public class ItemBattery extends ItemEnergyContainer{
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
         return Compat.teslaLoaded ? new ItemTeslaWrapper(stack, this) : super.initCapabilities(stack, compound);
+    }
+
+    @Override
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems){
+        super.getSubItems(item, tab, subItems);
+
+        ItemStack stack = new ItemStack(item);
+        Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
+        subItems.add(stack);
     }
 }

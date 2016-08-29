@@ -16,6 +16,7 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
+import de.ellpeck.rarmor.mod.item.ItemRegistry;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,7 +24,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule{
 
-    public static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
+    private static final ItemStack GENERATOR = new ItemStack(ItemRegistry.itemGenerator);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Generator";
 
     private static final int ENERGY_PER_TICK = 30;
@@ -151,6 +151,6 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
     @SideOnly(Side.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
-        return FURNACE;
+        return GENERATOR;
     }
 }
