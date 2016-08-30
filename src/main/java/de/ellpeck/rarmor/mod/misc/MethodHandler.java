@@ -13,10 +13,14 @@ package de.ellpeck.rarmor.mod.misc;
 import de.ellpeck.rarmor.api.internal.IMethodHandler;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.mod.Rarmor;
+import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.data.WorldData;
 import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
+import de.ellpeck.rarmor.mod.packet.PacketHandler;
+import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +29,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 import java.util.UUID;
@@ -84,6 +90,37 @@ public class MethodHandler implements IMethodHandler{
         else{
             return null;
         }
+    }
+
+    @Override
+    public void openRarmor(EntityPlayer player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
+        IRarmorData data = this.getDataForChestplate(player, true);
+        if(data != null){
+            if(alsoSetData){
+                data.selectModule(moduleId);
+            }
+
+            boolean shouldOpenGui;
+            if(sendRarmorDataToClient){
+                boolean doPacket = Config.doOpeningConfirmationPacket;
+
+                shouldOpenGui = !doPacket;
+                data.queueUpdate(true, doPacket ? moduleId : -1, true);
+            }
+            else{
+                shouldOpenGui = true;
+            }
+
+            if(shouldOpenGui){
+                player.openGui(Rarmor.instance, moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
+            }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void openRarmorFromClient(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
+        PacketHandler.handler.sendToServer(new PacketOpenModule(moduleId, alsoSetData, sendRarmorDataToClient));
     }
 
     @Override

@@ -21,8 +21,6 @@ import de.ellpeck.rarmor.mod.inventory.gui.button.TabButton;
 import de.ellpeck.rarmor.mod.inventory.gui.button.TexturedButton;
 import de.ellpeck.rarmor.mod.misc.Helper;
 import de.ellpeck.rarmor.mod.module.main.GuiModuleMain;
-import de.ellpeck.rarmor.mod.packet.PacketHandler;
-import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import de.ellpeck.rarmor.mod.update.UpdateChecker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -116,7 +114,7 @@ public class GuiRarmor extends GuiContainer{
 
         for(TabButton tabButton : this.tabButtons){
             if(tabButton == button && this.currentData.getSelectedModule() != tabButton.moduleNum){
-                PacketHandler.handler.sendToServer(new PacketOpenModule(tabButton.moduleNum, true, true));
+                RarmorAPI.methodHandler.openRarmorFromClient(tabButton.moduleNum, true, true);
             }
         }
 

@@ -15,8 +15,6 @@ import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.misc.Helper;
-import de.ellpeck.rarmor.mod.packet.PacketHandler;
-import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -56,7 +54,7 @@ public class ClientEvents{
                 if(!player.isSneaking()){
                     IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
                     if(data != null){
-                        PacketHandler.handler.sendToServer(new PacketOpenModule(data.getSelectedModule(), false, true));
+                        RarmorAPI.methodHandler.openRarmorFromClient(data.getSelectedModule(), false, true);
                         event.setCanceled(true);
 
                         if(!hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct){

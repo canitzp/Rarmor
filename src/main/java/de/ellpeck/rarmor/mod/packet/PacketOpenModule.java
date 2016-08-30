@@ -11,11 +11,8 @@
 package de.ellpeck.rarmor.mod.packet;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
-import de.ellpeck.rarmor.api.internal.IRarmorData;
-import de.ellpeck.rarmor.mod.Rarmor;
-import de.ellpeck.rarmor.mod.config.Config;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -58,27 +55,9 @@ public class PacketOpenModule implements IMessage{
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
                 @Override
                 public void run(){
-                    EntityPlayerMP player = context.getServerHandler().playerEntity;
-                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
-                    if(data != null){
-                        if(message.alsoSetData){
-                            data.selectModule(message.moduleId);
-                        }
-
-                        boolean shouldOpenGui;
-                        if(message.sendRarmorDataToClient){
-                            boolean doPacket = Config.doOpeningConfirmationPacket;
-
-                            shouldOpenGui = !doPacket;
-                            data.queueUpdate(true, doPacket ? message.moduleId : -1, true);
-                        }
-                        else{
-                            shouldOpenGui = true;
-                        }
-
-                        if(shouldOpenGui){
-                            player.openGui(Rarmor.instance, message.moduleId, player.worldObj, (int)player.posX, (int)player.posY, (int)player.posZ);
-                        }
+                    EntityPlayer player = context.getServerHandler().playerEntity;
+                    if(player != null){
+                        RarmorAPI.methodHandler.openRarmor(player, message.moduleId, message.alsoSetData, message.sendRarmorDataToClient);
                     }
                 }
             });
