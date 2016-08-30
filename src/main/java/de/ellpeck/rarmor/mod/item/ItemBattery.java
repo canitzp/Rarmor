@@ -31,7 +31,8 @@ import java.util.List;
 public class ItemBattery extends ItemEnergyContainer{
 
     public ItemBattery(String name){
-        super(100000, 500);
+        super(500000, 500);
+        this.setMaxStackSize(1);
 
         this.setRegistryName(RarmorAPI.MOD_ID, name);
         GameRegistry.register(this);
