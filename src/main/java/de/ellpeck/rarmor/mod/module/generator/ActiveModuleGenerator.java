@@ -34,9 +34,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule{
 
-    private static final ItemStack GENERATOR = new ItemStack(ItemRegistry.itemGenerator);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Generator";
-
+    private static final ItemStack GENERATOR = new ItemStack(ItemRegistry.itemGenerator);
     private static final int ENERGY_PER_TICK = 30;
 
     public final BasicInventory inventory = new BasicInventory("input", 1, this.data);

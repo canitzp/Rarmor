@@ -28,6 +28,15 @@ public class CommonEvents{
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    private static void doData(World world){
+        if(!world.isRemote){
+            WorldData data = WorldData.getOrLoadData(world);
+            if(data != null){
+                data.markDirty();
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event){
         doData(event.getWorld());
@@ -36,15 +45,6 @@ public class CommonEvents{
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save event){
         doData(event.getWorld());
-    }
-
-    private static void doData(World world){
-        if(!world.isRemote){
-            WorldData data = WorldData.getOrLoadData(world);
-            if(data != null){
-                data.markDirty();
-            }
-        }
     }
 
     @SubscribeEvent

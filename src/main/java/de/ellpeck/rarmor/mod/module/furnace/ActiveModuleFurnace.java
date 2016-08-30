@@ -34,9 +34,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleFurnace extends ActiveRarmorModule{
 
-    private static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Furnace";
     public static final int TIME_TO_REACH = 150;
+    private static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
     private static final int ENERGY_PER_TICK = 40;
 
     public final BasicInventory inventory = new BasicInventory("furnace", 2, this.data);

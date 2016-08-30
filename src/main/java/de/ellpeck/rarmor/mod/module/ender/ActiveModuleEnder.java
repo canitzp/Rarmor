@@ -30,8 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleEnder extends ActiveRarmorModule{
 
-    private static final ItemStack ENDER_CHEST = new ItemStack(Blocks.ENDER_CHEST);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Ender";
+    private static final ItemStack ENDER_CHEST = new ItemStack(Blocks.ENDER_CHEST);
 
     public ActiveModuleEnder(IRarmorData data){
         super(data);

@@ -35,9 +35,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleSolar extends ActiveRarmorModule{
 
-    private static final ItemStack SOLAR_CELL = new ItemStack(ItemRegistry.itemSolarCell);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Solar";
-
+    private static final ItemStack SOLAR_CELL = new ItemStack(ItemRegistry.itemSolarCell);
     private static final int ENERGY_PER_TICK = 15;
 
     private boolean generatedLastTick;

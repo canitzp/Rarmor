@@ -45,11 +45,9 @@ import java.util.List;
 public class GuiRarmor extends GuiContainer{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorBase");
-
-    private final IRarmorData currentData;
-
-    private final RarmorModuleGui gui;
     public final TabButton[] tabButtons = new TabButton[10];
+    private final IRarmorData currentData;
+    private final RarmorModuleGui gui;
     private GuiButton buttonBackToMainInventory;
 
     private TexturedButton updateButton;

@@ -36,9 +36,9 @@ import java.util.UUID;
 
 public class RarmorData implements IRarmorData{
 
+    public final BasicInventory modules = new BasicInventory("modules", 3, this);
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
     private final String[] moduleIdsForSlots = new String[3];
-    public final BasicInventory modules = new BasicInventory("modules", 3, this);
     private ItemStack stack;
     private boolean isDirty;
 

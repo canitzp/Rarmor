@@ -21,16 +21,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy implements IProxy{
 
-    @Override
-    public void preInit(FMLPreInitializationEvent event){
-        ItemRegistry.preInitClient();
-    }
-
-    @Override
-    public void init(FMLInitializationEvent event){
-        new ClientEvents();
-    }
-
     public static void addLocation(Item item){
         addLocation(item, 0);
     }
@@ -41,5 +31,15 @@ public class ClientProxy implements IProxy{
 
     public static void addLocation(Item item, int meta, ResourceLocation location){
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, "inventory"));
+    }
+
+    @Override
+    public void preInit(FMLPreInitializationEvent event){
+        ItemRegistry.preInitClient();
+    }
+
+    @Override
+    public void init(FMLInitializationEvent event){
+        new ClientEvents();
     }
 }

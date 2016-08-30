@@ -39,10 +39,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
-
-    private static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.CRAFTING_TABLE);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
-
+    private static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.CRAFTING_TABLE);
     public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 
