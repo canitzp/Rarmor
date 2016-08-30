@@ -24,8 +24,21 @@ public final class RarmorAPI{
 
     public static final Map<String, Class<? extends ActiveRarmorModule>> RARMOR_MODULE_REGISTRY = new HashMap<String, Class<? extends ActiveRarmorModule>>();
 
+    /**
+     * The internal method handler.
+     * This can be used to access some methods that might be useful when developing add-ons.
+     * <p>
+     * Do not overwrite this or a kitten will die.
+     */
     public static IMethodHandler methodHandler;
 
+    /**
+     * Registers a Rarmor module
+     *
+     * @param id          The unique id this module should have.
+     *                    Please make sure to somehow have the mod's id or name be part of this to reduce the risk of it not being unique.
+     * @param moduleClass The class the module is contained in
+     */
     public static void registerRarmorModule(String id, Class<? extends ActiveRarmorModule> moduleClass){
         RARMOR_MODULE_REGISTRY.put(id, moduleClass);
     }

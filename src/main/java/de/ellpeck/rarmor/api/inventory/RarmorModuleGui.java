@@ -22,6 +22,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A basic GUI class for a Rarmor module that should have a tab that opens a GUI and Container
+ * <p>
+ * This is similar to Minecraft's GuiContainer as it overrides some of its methods, however, the actual gui
+ * this is contained inside of can be accessed.
+ * <p>
+ * This extends Gui for convenience purposes.
+ */
 @SideOnly(Side.CLIENT)
 public class RarmorModuleGui extends Gui{
 
@@ -72,6 +80,10 @@ public class RarmorModuleGui extends Gui{
 
     }
 
+    /**
+     * Gets if the Rarmor base GUI's power bar should be displayed in this GUI as well.
+     * @return If this should display the power bar
+     */
     public boolean doesDisplayPowerBar(){
         return false;
     }

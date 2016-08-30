@@ -21,6 +21,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A basic Container class for a Rarmor module that should have a tab that opens a GUI and Container
+ * <p>
+ * This is similar to Minecraft's Container as it overrides some of its methods, however, the actual container
+ * this is contained inside of can be accessed.
+ */
 public class RarmorModuleContainer{
 
     public final IRarmorData currentData;
@@ -33,6 +39,10 @@ public class RarmorModuleContainer{
         this.currentData = this.module.data;
     }
 
+    /**
+     * Gets all of the slots that should be displayed in this Container.
+     * @return a list of all of the slots
+     */
     public List<Slot> getSlots(){
         return Collections.emptyList();
     }
