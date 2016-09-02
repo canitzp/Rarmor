@@ -21,14 +21,15 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class ActiveModuleSpeed extends ActiveRarmorModule{
 
+    private static final ItemStack BOOTS = new ItemStack(Items.GOLDEN_BOOTS);
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Speed";
 
     private double lastPlayerX;
@@ -80,12 +81,12 @@ public class ActiveModuleSpeed extends ActiveRarmorModule{
 
     @Override
     public ItemStack getDisplayIcon(){
-        return null;
+        return BOOTS;
     }
 
     @Override
-    public void tick(World world, Entity entity){
-        if(RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.FEET) != null){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        if(isWearingChest && isWearingShoes){
             int use = 1;
             if(this.data.getEnergyStored() >= use){
                 if(entity instanceof EntityPlayer){

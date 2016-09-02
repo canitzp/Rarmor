@@ -136,8 +136,12 @@ public abstract class ActiveRarmorModule{
      *
      * @param world  The world
      * @param entity The entity
+     * @param isWearingHat If the entity is currently wearing the Rarmor hat
+     * @param isWearingChest If the entity is currently wearing the Rarmor chestpalte
+     * @param isWearingPants If the entity is currently wearing the Rarmor pants
+     * @param isWearingShoes If the entity is currently wearing the Rarmor shoes
      */
-    public abstract void tick(World world, Entity entity);
+    public abstract void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes);
 
     /**
      * This can be used to render additional information to the overlay displayed on the top left of the screen

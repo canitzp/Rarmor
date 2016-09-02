@@ -24,7 +24,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -51,8 +50,8 @@ public class ActiveModuleSolar extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity){
-        if(RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != null){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        if(isWearingHat){
             if(!world.isRemote){
                 BlockPos pos = new BlockPos(entity.posX, entity.posY+entity.height, entity.posZ);
                 if(world.canSeeSky(pos) && world.isDaytime() && !world.isRainingAt(pos)){

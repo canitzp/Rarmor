@@ -141,8 +141,12 @@ public interface IRarmorData{
      *
      * @param world  The world
      * @param entity The entity
+     * @param isWearingHat If the entity is currently wearing the Rarmor hat
+     * @param isWearingChest If the entity is currently wearing the Rarmor chestpalte
+     * @param isWearingPants If the entity is currently wearing the Rarmor pants
+     * @param isWearingShoes If the entity is currently wearing the Rarmor shoes
      */
-    void tick(World world, Entity entity);
+    void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes);
 
     /**
      * Queues an update.

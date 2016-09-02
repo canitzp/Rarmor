@@ -85,7 +85,7 @@ public class ActiveModuleEnder extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
 
     }
 

@@ -48,7 +48,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(!world.isRemote){
             boolean canAddEnergy = this.data.getMaxEnergyStored()-this.data.getEnergyStored() >= ENERGY_PER_TICK;
 

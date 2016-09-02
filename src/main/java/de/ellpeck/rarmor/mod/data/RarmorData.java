@@ -194,7 +194,7 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public void tick(World world, Entity entity){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(!world.isRemote){
             if(!this.sentInitialUpdate){
                 this.queueUpdate(true);
@@ -205,7 +205,7 @@ public class RarmorData implements IRarmorData{
         List<ActiveRarmorModule> forUninstall = null;
         for(ActiveRarmorModule module : this.loadedModules){
             if(module != null){
-                module.tick(world, entity);
+                module.tick(world, entity, isWearingHat, isWearingChest, isWearingPants, isWearingShoes);
 
                 if(module.invalid){
                     if(forUninstall == null){

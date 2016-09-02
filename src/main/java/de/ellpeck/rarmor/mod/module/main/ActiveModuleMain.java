@@ -49,7 +49,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(!world.isRemote){
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
                 ItemStack discharge = this.inventory.getStackInSlot(0);

@@ -49,7 +49,11 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
                 data.sendQueuedUpdate((EntityPlayer)entity);
             }
 
-            data.tick(world, entity);
+            boolean hat = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != null;
+            boolean chest = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.CHEST) != null;
+            boolean pants = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.LEGS) != null;
+            boolean shoes = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.FEET) != null;
+            data.tick(world, entity, hat, chest, pants, shoes);
         }
     }
 

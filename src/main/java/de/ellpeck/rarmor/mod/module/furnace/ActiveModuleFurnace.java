@@ -47,7 +47,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity){
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(!world.isRemote){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
                 ItemStack input = this.inventory.getStackInSlot(0);
