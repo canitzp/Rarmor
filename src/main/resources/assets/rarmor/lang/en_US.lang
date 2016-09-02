@@ -18,6 +18,7 @@ item.rarmor.itemModuleEnder.name=Ender Storage Module
 item.rarmor.itemModuleFurnace.name=Smelting Module
 item.rarmor.itemModuleSolar.name=Solar Module
 item.rarmor.itemModuleGenerator.name=Generator Module
+item.rarmor.itemModuleSpeed.name=Running Module
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
@@ -25,6 +26,7 @@ rarmor.stackId=Unique ID
 rarmor.storedEnergy=Tesla/RF stored
 rarmor.noDataYet=No Data present yet
 rarmor.needsHat=Helmet needed
+rarmor.needsShoes=Boots needed
 rarmor.generating=Generating
 rarmor.notGenerating=Not Generating
 
@@ -34,6 +36,7 @@ module.rarmorEnder.name=Ender Chest
 module.rarmorFurnace.name=Furnace
 module.rarmorSolar.name=Solar
 module.rarmorGenerator.name=Generator
+module.rarmorSpeed.name=Running
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!
