@@ -16,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -27,6 +28,13 @@ public final class CraftingRegistry{
         addModuleRecipe(ItemRegistry.itemModuleFurnace, new ItemStack(Blocks.FURNACE));
         addModuleRecipe(ItemRegistry.itemModuleSolar, new ItemStack(ItemRegistry.itemSolarCell));
         addModuleRecipe(ItemRegistry.itemModuleGenerator, new ItemStack(ItemRegistry.itemGenerator));
+
+        //I have no idea how to get a speed potion directly, so I just do it like this. Whatever.
+        ItemStack potion = new ItemStack(Items.POTIONITEM);
+        potion = BrewingRecipeRegistry.getOutput(potion, new ItemStack(Items.NETHER_WART));
+        potion = BrewingRecipeRegistry.getOutput(potion.copy(), new ItemStack(Items.SUGAR));
+        potion = BrewingRecipeRegistry.getOutput(potion.copy(), new ItemStack(Items.GLOWSTONE_DUST));
+        addModuleRecipe(ItemRegistry.itemModuleSpeed, potion.copy());
 
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemGenerator),
                 "IWI", "IFI", "IWI",
