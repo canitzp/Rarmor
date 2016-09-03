@@ -19,6 +19,7 @@ item.rarmor.itemModuleFurnace.name=Smelting Module
 item.rarmor.itemModuleSolar.name=Solar Module
 item.rarmor.itemModuleGenerator.name=Generator Module
 item.rarmor.itemModuleSpeed.name=Running Module
+item.rarmor.itemModuleJump.name=Jumping Module
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
@@ -37,6 +38,7 @@ module.rarmorFurnace.name=Furnace
 module.rarmorSolar.name=Solar
 module.rarmorGenerator.name=Generator
 module.rarmorSpeed.name=Running
+module.rarmorJump.name=Jumping
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!

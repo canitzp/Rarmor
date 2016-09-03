@@ -30,6 +30,7 @@ public final class CraftingRegistry{
         addModuleRecipe(ItemRegistry.itemModuleSolar, new ItemStack(ItemRegistry.itemSolarCell));
         addModuleRecipe(ItemRegistry.itemModuleGenerator, new ItemStack(ItemRegistry.itemGenerator));
         addModuleRecipe(ItemRegistry.itemModuleSpeed, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_SWIFTNESS));
+        addModuleRecipe(ItemRegistry.itemModuleJump, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_LEAPING));
 
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemGenerator),
                 "IWI", "IFI", "IWI",

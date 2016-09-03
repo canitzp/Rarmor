@@ -13,6 +13,7 @@ package de.ellpeck.rarmor.mod.item;
 import de.ellpeck.rarmor.mod.module.ender.ItemModuleEnder;
 import de.ellpeck.rarmor.mod.module.furnace.ItemModuleFurnace;
 import de.ellpeck.rarmor.mod.module.generator.ItemModuleGenerator;
+import de.ellpeck.rarmor.mod.module.jump.ItemModuleJump;
 import de.ellpeck.rarmor.mod.module.solar.ItemModuleSolar;
 import de.ellpeck.rarmor.mod.module.speed.ItemModuleSpeed;
 import de.ellpeck.rarmor.mod.module.storage.ItemModuleStorage;
@@ -43,6 +44,7 @@ public final class ItemRegistry{
     public static Item itemModuleSolar;
     public static Item itemModuleGenerator;
     public static Item itemModuleSpeed;
+    public static Item itemModuleJump;
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
@@ -64,6 +66,7 @@ public final class ItemRegistry{
         itemModuleSolar = new ItemModuleSolar("itemModuleSolar");
         itemModuleGenerator = new ItemModuleGenerator("itemModuleGenerator");
         itemModuleSpeed = new ItemModuleSpeed("itemModuleSpeed");
+        itemModuleJump = new ItemModuleJump("itemModuleJump");
     }
 
     @SideOnly(Side.CLIENT)
