@@ -174,14 +174,15 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public String getActiveModuleForSlot(int slot){
+    public List<String> getActiveModulesForSlot(int slot){
+        List<String> modules = new ArrayList<String>();
         for(String key : this.moduleIdsForSlots.keySet()){
             int id = this.moduleIdsForSlots.get(key);
             if(id == slot){
-                return key;
+                modules.add(key);
             }
         }
-        return null;
+        return modules;
     }
 
     @Override
@@ -354,7 +355,6 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public void uninstallModule(ActiveRarmorModule module, Entity entity, boolean drop){
-        System.out.println("Uninstalling "+module);
         if(module != null && this.loadedModules.contains(module) && this.getInstalledModuleWithId(module.getIdentifier()) != null){
             module.onUninstalled(entity);
             this.loadedModules.remove(module);

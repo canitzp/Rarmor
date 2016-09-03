@@ -64,7 +64,7 @@ public interface IRarmorData{
      * @param slot The slot
      * @return The module that is in the slot
      */
-    String getActiveModuleForSlot(int slot);
+    List<String> getActiveModulesForSlot(int slot);
 
     /**
      * Gets the place in the list of current modules that the currently selected module is in

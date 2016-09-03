@@ -19,6 +19,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlotModule extends Slot{
@@ -69,20 +70,29 @@ public class SlotModule extends Slot{
     }
 
     private void uninstallModule(){
-        this.currentData.uninstallModule(this.getActiveModule(this.getSlotIndex(), this.currentData), this.player, false);
+        List<ActiveRarmorModule> modules = this.getActiveModules(this.getSlotIndex(), this.currentData);
+        for(ActiveRarmorModule module : modules){
+            this.currentData.uninstallModule(module, this.player, false);
+        }
     }
 
-    private ActiveRarmorModule getActiveModule(int slotIndex, IRarmorData data){
-        String identifier = data.getActiveModuleForSlot(slotIndex);
-        if(identifier != null){
-            List<ActiveRarmorModule> modules = data.getCurrentModules();
-            for(ActiveRarmorModule module : modules){
-                if(identifier.equals(module.getIdentifier())){
-                    return module;
+    private List<ActiveRarmorModule> getActiveModules(int slotIndex, IRarmorData data){
+        List<String> identifiers = data.getActiveModulesForSlot(slotIndex);
+        List<ActiveRarmorModule> modules = new ArrayList<ActiveRarmorModule>();
+
+        if(!identifiers.isEmpty()){
+            for(String identifier : identifiers){
+                if(identifier != null){
+                    for(ActiveRarmorModule module : data.getCurrentModules()){
+                        if(identifier.equals(module.getIdentifier())){
+                            modules.add(module);
+                        }
+                    }
                 }
             }
+
         }
-        return null;
+        return modules;
     }
 
     @Override
@@ -110,6 +120,6 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        return stack == null || this.getActiveModule(this.getSlotIndex(), this.currentData) == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
+        return stack == null || this.getActiveModules(this.getSlotIndex(), this.currentData).isEmpty() || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
     }
 }
