@@ -73,7 +73,7 @@ public class SlotModule extends Slot{
     }
 
     private ActiveRarmorModule getActiveModule(int slotIndex, IRarmorData data){
-        String identifier = data.getModulesForSlotsArray()[slotIndex];
+        String identifier = data.getActiveModuleForSlot(slotIndex);
         if(identifier != null){
             List<ActiveRarmorModule> modules = data.getCurrentModules();
             for(ActiveRarmorModule module : modules){
@@ -91,8 +91,16 @@ public class SlotModule extends Slot{
         if(myStack == null || myStack.stackSize <= 0){
             if(stack.getItem() instanceof IRarmorModuleItem){
                 IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
-                if(item.canInstall(this.player, this, stack, this.currentData) && this.currentData.getInstalledModuleWithId(item.getModuleIdentifier(stack)) == null){
-                    return true;
+                if(item.canInstall(this.player, this, stack, this.currentData)){
+                    String[] ids = item.getModuleIdentifiers(stack);
+                    if(ids != null){
+                        for(String id : ids){
+                            if(this.currentData.getInstalledModuleWithId(id) != null){
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
                 }
             }
         }
@@ -102,7 +110,6 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        ActiveRarmorModule module = this.getActiveModule(this.getSlotIndex(), this.currentData);
-        return stack == null || module == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, module, this.currentData);
+        return stack == null || this.getActiveModule(this.getSlotIndex(), this.currentData) == null || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
     }
 }

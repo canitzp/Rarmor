@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * An interface to accesss the Rarmor Data from the API.
@@ -35,17 +36,12 @@ public interface IRarmorData{
     List<ActiveRarmorModule> getCurrentModules();
 
     /**
-     * Gets a list of strings that corresponds to the id of the module loaded in the current slot.
-     * The slot is the place in the array.
-     * <p>
-     * As an example, if the Rarmor Module GUI has three slots, this array will have a length of 3.
-     * If the second slot contains a module whos id is moduleThisAndThat, the first place in this array will have that string inside of it.
-     * <p>
+     * Gets a map of strings that corresponds to the id of the module loaded in the current slot.
      * This shouldn't ever really be useful to anyone who is making an add-on though.
      *
-     * @return The list of strings
+     * @return The map of strings
      */
-    String[] getModulesForSlotsArray();
+    Map<String, Integer> getModuleIdsForSlots();
 
     /**
      * Returns the inventory containing all of the modules that are currently inside the Rarmor
@@ -61,6 +57,14 @@ public interface IRarmorData{
      * @return The slot the module is in, or -1 if none.
      */
     int getSlotForActiveModule(ActiveRarmorModule module);
+
+    /**
+     * Gets the identifier of the module for an item that is in the specified slot
+     *
+     * @param slot The slot
+     * @return The module that is in the slot
+     */
+    String getActiveModuleForSlot(int slot);
 
     /**
      * Gets the place in the list of current modules that the currently selected module is in
@@ -139,9 +143,9 @@ public interface IRarmorData{
      * Ticks this data.
      * For internal use only.
      *
-     * @param world  The world
-     * @param entity The entity
-     * @param isWearingHat If the entity is currently wearing the Rarmor hat
+     * @param world          The world
+     * @param entity         The entity
+     * @param isWearingHat   If the entity is currently wearing the Rarmor hat
      * @param isWearingChest If the entity is currently wearing the Rarmor chestpalte
      * @param isWearingPants If the entity is currently wearing the Rarmor pants
      * @param isWearingShoes If the entity is currently wearing the Rarmor shoes

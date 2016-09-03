@@ -11,7 +11,6 @@
 package de.ellpeck.rarmor.mod.module.furnace;
 
 import de.ellpeck.rarmor.api.internal.IRarmorData;
-import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.item.ItemRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -24,8 +23,8 @@ public class ItemModuleFurnace extends ItemRarmorModule{
     }
 
     @Override
-    public String getModuleIdentifier(ItemStack stack){
-        return ActiveModuleFurnace.IDENTIFIER;
+    public String[] getModuleIdentifiers(ItemStack stack){
+        return new String[]{ActiveModuleFurnace.IDENTIFIER};
     }
 
     @Override
@@ -34,7 +33,7 @@ public class ItemModuleFurnace extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData){
+    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 }

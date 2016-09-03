@@ -27,18 +27,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class RarmorData implements IRarmorData{
 
     public final BasicInventory modules = new BasicInventory("modules", 3, this);
     private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
-    private final String[] moduleIdsForSlots = new String[3];
+    private final Map<String, Integer> moduleIdsForSlots = new HashMap<String, Integer>();
     private ItemStack stack;
     private boolean isDirty;
 
@@ -65,10 +62,11 @@ public class RarmorData implements IRarmorData{
             module.readFromNBT(tag, sync);
         }
 
-        NBTTagList list = compound.getTagList("SlotData", 8);
+        NBTTagList list = compound.getTagList("SlotData", 10);
         for(int i = 0; i < list.tagCount(); i++){
-            String s = list.getStringTagAt(i);
-            this.moduleIdsForSlots[i] = s == null || s.isEmpty() ? null : s;
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+            String s = tag.getString("ID");
+            this.moduleIdsForSlots.put(s == null || s.isEmpty() ? null : s, tag.getInteger("Slot"));
         }
 
         this.selectedModule = compound.getInteger("SelectedModule");
@@ -130,8 +128,11 @@ public class RarmorData implements IRarmorData{
         compound.setTag("ModuleData", data);
 
         NBTTagList list = new NBTTagList();
-        for(String id : this.moduleIdsForSlots){
-            list.appendTag(new NBTTagString(id == null ? "" : id));
+        for(String s : this.moduleIdsForSlots.keySet()){
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString("ID", s);
+            tag.setInteger("Slot", this.moduleIdsForSlots.get(s));
+            list.appendTag(tag);
         }
         compound.setTag("SlotData", list);
 
@@ -152,7 +153,7 @@ public class RarmorData implements IRarmorData{
     }
 
     @Override
-    public String[] getModulesForSlotsArray(){
+    public Map<String, Integer> getModuleIdsForSlots(){
         return this.moduleIdsForSlots;
     }
 
@@ -163,12 +164,24 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public int getSlotForActiveModule(ActiveRarmorModule module){
-        for(int i = 0; i < this.moduleIdsForSlots.length; i++){
-            if(module.getIdentifier().equals(this.moduleIdsForSlots[i])){
-                return i;
+        String id = module.getIdentifier();
+        if(this.moduleIdsForSlots.containsKey(id)){
+            return this.moduleIdsForSlots.get(id);
+        }
+        else{
+            return -1;
+        }
+    }
+
+    @Override
+    public String getActiveModuleForSlot(int slot){
+        for(String key : this.moduleIdsForSlots.keySet()){
+            int id = this.moduleIdsForSlots.get(key);
+            if(id == slot){
+                return key;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override
@@ -179,15 +192,17 @@ public class RarmorData implements IRarmorData{
     @Override
     public void installModule(ItemStack stack, Entity entity, int slotIndex){
         if(stack.getItem() instanceof IRarmorModuleItem){
-            String moduleId = ((IRarmorModuleItem)stack.getItem()).getModuleIdentifier(stack);
-            if(this.getInstalledModuleWithId(moduleId) == null){
-                ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
-                if(module != null && !this.loadedModules.contains(module)){
-                    module.onInstalled(entity);
-                    this.loadedModules.add(module);
-                    this.moduleIdsForSlots[slotIndex] = module.getIdentifier();
+            String[] moduleIds = ((IRarmorModuleItem)stack.getItem()).getModuleIdentifiers(stack);
+            for(String moduleId : moduleIds){
+                if(this.getInstalledModuleWithId(moduleId) == null){
+                    ActiveRarmorModule module = Helper.initiateModuleById(moduleId, this);
+                    if(module != null && !this.loadedModules.contains(module)){
+                        module.onInstalled(entity);
+                        this.loadedModules.add(module);
+                        this.moduleIdsForSlots.put(module.getIdentifier(), slotIndex);
 
-                    this.setDirty();
+                        this.setDirty();
+                    }
                 }
             }
         }
@@ -345,7 +360,7 @@ public class RarmorData implements IRarmorData{
 
             int slot = this.getSlotForActiveModule(module);
             if(slot >= 0){
-                this.moduleIdsForSlots[slot] = null;
+                this.moduleIdsForSlots.remove(module.getIdentifier());
                 if(drop && !entity.worldObj.isRemote){
                     this.modules.dropSingle(entity, slot);
                 }

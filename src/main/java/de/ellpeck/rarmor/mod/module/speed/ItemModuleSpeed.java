@@ -12,7 +12,6 @@ package de.ellpeck.rarmor.mod.module.speed;
 
 import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
-import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.item.ItemRarmorModule;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +29,8 @@ public class ItemModuleSpeed extends ItemRarmorModule{
     }
 
     @Override
-    public String getModuleIdentifier(ItemStack stack){
-        return ActiveModuleSpeed.IDENTIFIER;
+    public String[] getModuleIdentifiers(ItemStack stack){
+        return new String[]{ActiveModuleSpeed.IDENTIFIER};
     }
 
     @Override
@@ -40,7 +39,7 @@ public class ItemModuleSpeed extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData){
+    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 

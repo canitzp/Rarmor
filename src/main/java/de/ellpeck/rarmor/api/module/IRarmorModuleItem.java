@@ -22,12 +22,12 @@ import net.minecraft.item.ItemStack;
 public interface IRarmorModuleItem{
 
     /**
-     * Gets the identifier of the module that this item is representing
+     * Gets the identifiers of the modules that this item is representing
      *
      * @param stack The stack
-     * @return The identifier
+     * @return The identifiers
      */
-    String getModuleIdentifier(ItemStack stack);
+    String[] getModuleIdentifiers(ItemStack stack);
 
     /**
      * Gets if this module can be installed into the given slot
@@ -50,5 +50,5 @@ public interface IRarmorModuleItem{
      * @param currentData The current Rarmor Data
      * @return If this can be uninstalled
      */
-    boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, ActiveRarmorModule module, IRarmorData currentData);
+    boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData);
 }
