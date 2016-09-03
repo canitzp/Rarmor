@@ -10,6 +10,7 @@
 
 package de.ellpeck.rarmor.api.inventory;
 
+import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,5 +80,19 @@ public class RarmorModuleContainer{
 
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
         return null;
+    }
+
+    /**
+     * This is a helper to merge two stacks inside of transferStackInSlot, as the one in Container is protected
+     * and not accessible. This basically does the same thing.
+     *
+     * @param stack            The itemstack to merge into the slots
+     * @param startIndexIncl   The index this should start at, included
+     * @param endIndexExcl     The index this should end at, excluded
+     * @param reverseDirection If this should happen in the opposite direction
+     * @return If this worked or not
+     */
+    public boolean mergeItemStack(ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection){
+        return RarmorAPI.methodHandler.mergeItemStack(this.actualContainer, stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
 }

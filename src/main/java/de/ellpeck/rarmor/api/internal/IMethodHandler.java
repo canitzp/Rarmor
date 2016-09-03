@@ -13,6 +13,7 @@ package de.ellpeck.rarmor.api.internal;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -98,4 +99,19 @@ public interface IMethodHandler{
      */
     @SideOnly(Side.CLIENT)
     void openRarmorFromClient(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
+
+    /**
+     * This is a helper to merge two stacks inside of transferStackInSlot, as the one in Container is protected
+     * and not accessible inside of RarmorModuleContainer. Which is very annoying.
+     * <p>
+     * This only works if the container that is currently open is the Rarmor.
+     *
+     * @param container        The container this is happening in
+     * @param stack            The itemstack to merge into the slots
+     * @param startIndexIncl   The index this should start at, included
+     * @param endIndexExcl     The index this should end at, excluded
+     * @param reverseDirection If this should happen in the opposite direction
+     * @return If this worked or not
+     */
+    boolean mergeItemStack(Container container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection);
 }

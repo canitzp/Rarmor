@@ -17,6 +17,7 @@ import de.ellpeck.rarmor.mod.Rarmor;
 import de.ellpeck.rarmor.mod.config.Config;
 import de.ellpeck.rarmor.mod.data.RarmorData;
 import de.ellpeck.rarmor.mod.data.WorldData;
+import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
 import de.ellpeck.rarmor.mod.item.ItemRarmor;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
 import de.ellpeck.rarmor.mod.packet.PacketHandler;
@@ -24,6 +25,7 @@ import de.ellpeck.rarmor.mod.packet.PacketOpenModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -121,6 +123,11 @@ public class MethodHandler implements IMethodHandler{
     @Override
     public void openRarmorFromClient(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
         PacketHandler.handler.sendToServer(new PacketOpenModule(moduleId, alsoSetData, sendRarmorDataToClient));
+    }
+
+    @Override
+    public boolean mergeItemStack(Container container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection){
+        return container instanceof ContainerRarmor && ((ContainerRarmor)container).mergeItemStack(stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
 
     @Override

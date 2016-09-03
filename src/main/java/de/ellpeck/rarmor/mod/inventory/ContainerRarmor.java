@@ -32,6 +32,10 @@ public class ContainerRarmor extends Container{
         this.container = currentModule.createContainer(player, this);
         this.currentData = currentModule.data;
 
+        for(Slot slot : this.container.getSlots()){
+            this.addSlotToContainer(slot);
+        }
+
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 9; j++){
                 this.addSlotToContainer(new Slot(player.inventory, j+i*9+9, 38+j*18, 147+i*18));
@@ -40,10 +44,6 @@ public class ContainerRarmor extends Container{
 
         for(int k = 0; k < 9; k++){
             this.addSlotToContainer(new Slot(player.inventory, k, 38+k*18, 205));
-        }
-
-        for(Slot slot : this.container.getSlots()){
-            this.addSlotToContainer(slot);
         }
     }
 
@@ -126,5 +126,10 @@ public class ContainerRarmor extends Container{
         }
 
         return stack;
+    }
+
+    @Override
+    public boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection){
+        return super.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
     }
 }

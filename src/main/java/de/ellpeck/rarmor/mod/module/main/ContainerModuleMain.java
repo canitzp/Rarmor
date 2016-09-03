@@ -10,16 +10,22 @@
 
 package de.ellpeck.rarmor.mod.module.main;
 
+import cofh.api.energy.IEnergyContainerItem;
 import de.ellpeck.rarmor.api.inventory.RarmorModuleContainer;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
+import de.ellpeck.rarmor.api.module.IRarmorModuleItem;
+import de.ellpeck.rarmor.mod.compat.Compat;
 import de.ellpeck.rarmor.mod.inventory.ContainerRarmor;
 import de.ellpeck.rarmor.mod.inventory.slot.SlotModule;
+import net.darkhax.tesla.capability.TeslaCapabilities;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -102,5 +108,80 @@ public class ContainerModuleMain extends RarmorModuleContainer{
         });
 
         return slots;
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+        int inventoryStart = 5+5; //because of armor and offhand slots
+        int inventoryEnd = inventoryStart+26;
+        int hotbarStart = inventoryEnd+1;
+        int hotbarEnd = hotbarStart+8;
+
+        Slot theSlot = this.actualContainer.inventorySlots.get(slot);
+
+        if(theSlot != null && theSlot.getHasStack()){
+            ItemStack newStack = theSlot.getStack();
+            ItemStack currentStack = newStack.copy();
+            EntityEquipmentSlot equip = EntityLiving.getSlotForItemStack(newStack);
+
+            if(slot >= inventoryStart){
+                //Change things here
+                if(newStack.getItem() instanceof IRarmorModuleItem && ((IRarmorModuleItem)newStack.getItem()).canInstall(player, theSlot, newStack, this.currentData)){
+                    if(!this.mergeItemStack(newStack, 2, 5, false)){
+                        return null;
+                    }
+                }
+                else if(equip.getSlotType() == EntityEquipmentSlot.Type.ARMOR){
+                    int i = 8-equip.getIndex();
+
+                    if(!this.mergeItemStack(newStack, i, i+1, false)){
+                        return null;
+                    }
+                }
+                else if(newStack.getItem() instanceof IEnergyContainerItem){
+                    if(!this.mergeItemStack(newStack, 0, 2, false)){
+                        return null;
+                    }
+                }
+                else if(Compat.teslaLoaded && newStack.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
+                    if(!this.mergeItemStack(newStack, 0, 1, false)){
+                        return null;
+                    }
+                }
+                else if(Compat.teslaLoaded && newStack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
+                    if(!this.mergeItemStack(newStack, 1, 2, false)){
+                        return null;
+                    }
+                }
+                //Not here anymore
+                else if(slot >= inventoryStart && slot <= inventoryEnd){
+                    if(!this.mergeItemStack(newStack, hotbarStart, hotbarEnd+1, false)){
+                        return null;
+                    }
+                }
+                else if(slot >= inventoryEnd+1 && slot < hotbarEnd+1 && !this.mergeItemStack(newStack, inventoryStart, inventoryEnd+1, false)){
+                    return null;
+                }
+            }
+            else if(!this.mergeItemStack(newStack, inventoryStart, hotbarEnd+1, false)){
+                return null;
+            }
+
+            if(newStack.stackSize <= 0){
+                theSlot.putStack(null);
+            }
+            else{
+                theSlot.onSlotChanged();
+            }
+
+            if(newStack.stackSize == currentStack.stackSize){
+                return null;
+            }
+            theSlot.onPickupFromSlot(player, newStack);
+
+            return currentStack;
+        }
+
+        return null;
     }
 }
