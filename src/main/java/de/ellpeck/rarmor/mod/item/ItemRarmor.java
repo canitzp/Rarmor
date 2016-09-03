@@ -38,6 +38,6 @@ public class ItemRarmor extends ItemArmor{
 
     @Override
     public EnumRarity getRarity(ItemStack stack){
-        return EnumRarity.RARE;
+        return EnumRarity.EPIC;
     }
 }

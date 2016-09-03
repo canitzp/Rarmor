@@ -10,11 +10,14 @@
 
 package de.ellpeck.rarmor.mod.item;
 
+import de.ellpeck.rarmor.mod.module.compound.ItemModuleCompound;
 import de.ellpeck.rarmor.mod.module.ender.ItemModuleEnder;
 import de.ellpeck.rarmor.mod.module.furnace.ItemModuleFurnace;
 import de.ellpeck.rarmor.mod.module.generator.ItemModuleGenerator;
+import de.ellpeck.rarmor.mod.module.jump.ActiveModuleJump;
 import de.ellpeck.rarmor.mod.module.jump.ItemModuleJump;
 import de.ellpeck.rarmor.mod.module.solar.ItemModuleSolar;
+import de.ellpeck.rarmor.mod.module.speed.ActiveModuleSpeed;
 import de.ellpeck.rarmor.mod.module.speed.ItemModuleSpeed;
 import de.ellpeck.rarmor.mod.module.storage.ItemModuleStorage;
 import de.ellpeck.rarmor.mod.proxy.ClientProxy;
@@ -43,8 +46,9 @@ public final class ItemRegistry{
     public static Item itemModuleFurnace;
     public static Item itemModuleSolar;
     public static Item itemModuleGenerator;
-    public static Item itemModuleSpeed;
-    public static Item itemModuleJump;
+    public static ItemModuleSpeed itemModuleSpeed;
+    public static ItemModuleJump itemModuleJump;
+    public static Item itemModuleMovement;
 
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
@@ -67,6 +71,7 @@ public final class ItemRegistry{
         itemModuleGenerator = new ItemModuleGenerator("itemModuleGenerator");
         itemModuleSpeed = new ItemModuleSpeed("itemModuleSpeed");
         itemModuleJump = new ItemModuleJump("itemModuleJump");
+        itemModuleMovement = new ItemModuleCompound("itemModuleMovement", new String[]{ActiveModuleSpeed.IDENTIFIER, ActiveModuleJump.IDENTIFIER}, new ItemRarmorModule[]{itemModuleSpeed, itemModuleJump});
     }
 
     @SideOnly(Side.CLIENT)
@@ -89,6 +94,9 @@ public final class ItemRegistry{
         ClientProxy.addLocation(itemModuleFurnace);
         ClientProxy.addLocation(itemModuleSolar);
         ClientProxy.addLocation(itemModuleGenerator);
+        ClientProxy.addLocation(itemModuleSpeed);
+        ClientProxy.addLocation(itemModuleJump);
+        ClientProxy.addLocation(itemModuleMovement);
     }
 
 }

@@ -354,6 +354,7 @@ public class RarmorData implements IRarmorData{
 
     @Override
     public void uninstallModule(ActiveRarmorModule module, Entity entity, boolean drop){
+        System.out.println("Uninstalling "+module);
         if(module != null && this.loadedModules.contains(module) && this.getInstalledModuleWithId(module.getIdentifier()) != null){
             module.onUninstalled(entity);
             this.loadedModules.remove(module);

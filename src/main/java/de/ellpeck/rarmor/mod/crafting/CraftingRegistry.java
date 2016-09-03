@@ -32,6 +32,13 @@ public final class CraftingRegistry{
         addModuleRecipe(ItemRegistry.itemModuleSpeed, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_SWIFTNESS));
         addModuleRecipe(ItemRegistry.itemModuleJump, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_LEAPING));
 
+        GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemModuleMovement),
+                " W ", "SCJ", " W ",
+                'S', ItemRegistry.itemModuleSpeed,
+                'J', ItemRegistry.itemModuleJump,
+                'C', ItemRegistry.itemControlCircuit,
+                'W', ItemRegistry.itemWire);
+
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemGenerator),
                 "IWI", "IFI", "IWI",
                 'I', Items.IRON_INGOT,

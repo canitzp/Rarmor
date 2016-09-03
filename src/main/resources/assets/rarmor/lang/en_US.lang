@@ -20,6 +20,7 @@ item.rarmor.itemModuleSolar.name=Solar Module
 item.rarmor.itemModuleGenerator.name=Generator Module
 item.rarmor.itemModuleSpeed.name=Running Module
 item.rarmor.itemModuleJump.name=Jumping Module
+item.rarmor.itemModuleMovement.name=Movement Module
 
 rarmor.back=Back to Inventory
 rarmor.installedModules=Installed Modules
@@ -30,6 +31,7 @@ rarmor.needsHat=Helmet needed
 rarmor.needsShoes=Boots needed
 rarmor.generating=Generating
 rarmor.notGenerating=Not Generating
+rarmor.compoundOf=Compound of Modules
 
 module.rarmorMain.name=Overview
 module.rarmorStorage.name=Storage

@@ -23,6 +23,6 @@ public abstract class ItemRarmorModule extends ItemBase implements IRarmorModule
 
     @Override
     public EnumRarity getRarity(ItemStack stack){
-        return EnumRarity.UNCOMMON;
+        return EnumRarity.RARE;
     }
 }
