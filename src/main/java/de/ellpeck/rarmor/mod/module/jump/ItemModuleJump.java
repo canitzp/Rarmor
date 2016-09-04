@@ -84,7 +84,7 @@ public class ItemModuleJump extends ItemRarmorModule{
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
                 if(data != null){
                     if(data.getInstalledModuleWithId(ActiveModuleJump.IDENTIFIER) != null && RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.FEET) != null){
-                        event.setDistance(event.getDistance()-1.65F);
+                        event.setDistance(event.getDistance()-2F);
                     }
                 }
             }
