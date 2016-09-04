@@ -62,6 +62,7 @@ public class RarmorData implements IRarmorData{
             module.readFromNBT(tag, sync);
         }
 
+        this.moduleIdsForSlots.clear();
         NBTTagList list = compound.getTagList("SlotData", 10);
         for(int i = 0; i < list.tagCount(); i++){
             NBTTagCompound tag = list.getCompoundTagAt(i);

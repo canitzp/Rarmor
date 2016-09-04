@@ -67,12 +67,20 @@ public class SlotModule extends Slot{
 
     private void installModule(ItemStack stack){
         this.currentData.installModule(stack, this.player, this.getSlotIndex());
+
+        if(!this.player.worldObj.isRemote){
+            this.currentData.queueUpdate(true, -1, true);
+        }
     }
 
     private void uninstallModule(){
         List<ActiveRarmorModule> modules = this.getActiveModules(this.getSlotIndex(), this.currentData);
         for(ActiveRarmorModule module : modules){
             this.currentData.uninstallModule(module, this.player, false);
+        }
+
+        if(!this.player.worldObj.isRemote){
+            this.currentData.queueUpdate(true, -1, true);
         }
     }
 
