@@ -76,38 +76,40 @@ public class ClientEvents{
             ScaledResolution res = event.getResolution();
             EntityPlayer player = mc.thePlayer;
 
-            if(player != null && player.worldObj != null){
-                ItemStack stack = RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
-                if(stack != null){
-                    IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack, false);
-                    if(data != null){
-                        float scale = Config.rarmorOverlayScale;
-                        int renderX = Config.rarmorOverlayX;
-                        int renderY = Config.rarmorOverlayY;
+            if(!mc.gameSettings.showDebugInfo){
+                if(player != null && player.worldObj != null){
+                    ItemStack stack = RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
+                    if(stack != null){
+                        IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.worldObj, stack, false);
+                        if(data != null){
+                            float scale = Config.rarmorOverlayScale;
+                            int renderX = Config.rarmorOverlayX;
+                            int renderY = Config.rarmorOverlayY;
 
-                        GlStateManager.pushMatrix();
-                        GlStateManager.scale(scale, scale, scale);
+                            GlStateManager.pushMatrix();
+                            GlStateManager.scale(scale, scale, scale);
 
-                        font.drawString(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+": ", renderX+20, renderY, 0xFFFFFF, true);
-                        font.drawString(TextFormatting.YELLOW+""+data.getEnergyStored()+"/"+data.getMaxEnergyStored(), renderX+20, renderY+10, 0xFFFFFF, true);
+                            font.drawString(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+": ", renderX+20, renderY, 0xFFFFFF, true);
+                            font.drawString(TextFormatting.YELLOW+""+data.getEnergyStored()+"/"+data.getMaxEnergyStored(), renderX+20, renderY+10, 0xFFFFFF, true);
 
-                        Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
+                            Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
 
-                        renderY += 26;
+                            renderY += 26;
 
-                        for(ActiveRarmorModule module : data.getCurrentModules()){
-                            if(module.doesRenderOnOverlay(mc, player, data)){
-                                ItemStack display = module.getDisplayIcon();
-                                if(display != null){
-                                    Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                            for(ActiveRarmorModule module : data.getCurrentModules()){
+                                if(module.doesRenderOnOverlay(mc, player, data)){
+                                    ItemStack display = module.getDisplayIcon();
+                                    if(display != null){
+                                        Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                                    }
+
+                                    module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
+                                    renderY += 17;
                                 }
-
-                                module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
-                                renderY += 17;
                             }
-                        }
 
-                        GlStateManager.popMatrix();
+                            GlStateManager.popMatrix();
+                        }
                     }
                 }
             }
