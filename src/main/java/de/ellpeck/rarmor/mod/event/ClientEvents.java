@@ -94,17 +94,19 @@ public class ClientEvents{
 
                             Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
 
-                            renderY += 26;
+                            if(!Config.rarmorOverlayOnlyEnergy){
+                                renderY += 26;
 
-                            for(ActiveRarmorModule module : data.getCurrentModules()){
-                                if(module.doesRenderOnOverlay(mc, player, data)){
-                                    ItemStack display = module.getDisplayIcon();
-                                    if(display != null){
-                                        Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                                for(ActiveRarmorModule module : data.getCurrentModules()){
+                                    if(module.doesRenderOnOverlay(mc, player, data)){
+                                        ItemStack display = module.getDisplayIcon();
+                                        if(display != null){
+                                            Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                                        }
+
+                                        module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
+                                        renderY += 17;
                                     }
-
-                                    module.renderAdditionalOverlay(mc, player, data, res, renderX, renderY, event.getPartialTicks());
-                                    renderY += 17;
                                 }
                             }
 

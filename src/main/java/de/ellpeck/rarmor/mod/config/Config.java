@@ -27,6 +27,7 @@ public final class Config{
     public static int rarmorOverlayX;
     public static int rarmorOverlayY;
     public static float rarmorOverlayScale;
+    public static boolean rarmorOverlayOnlyEnergy;
 
     public Config(File file){
         config = new Configuration(file);
@@ -43,6 +44,7 @@ public final class Config{
         rarmorOverlayX = config.get(Configuration.CATEGORY_GENERAL, "overlayX", 3, "The X position of the Rarmor overlay").getInt();
         rarmorOverlayY = config.get(Configuration.CATEGORY_GENERAL, "overlayY", 3, "The Y position of the Rarmor overlay").getInt();
         rarmorOverlayScale = (float)config.get(Configuration.CATEGORY_GENERAL, "overlayScale", 1.0, "The scale of the Rarmor overlay").getDouble();
+        rarmorOverlayOnlyEnergy = config.get(Configuration.CATEGORY_GENERAL, "overlayOnlyEnergy", false, "If the Rarmor overlay should only show the energy amount").getBoolean();
 
         if(config.hasChanged()){
             config.save();
