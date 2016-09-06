@@ -18,6 +18,10 @@ version = "1.10.2-r1"
 group = "de.ellpeck.rarmor"
 archivesBaseName = "Rarmor"
 
+if(hasProperty('buildnumber')){
+    version = "${version}-${this.properties['buildnumber']}"
+}
+
 minecraft {
     version = "1.10.2-12.18.0.2002-1.10.0"
     runDir = "idea"
@@ -67,4 +71,51 @@ task deobfJar(type: Jar) {
     from sourceSets.main.output
     from sourceSets.main.java
     classifier = 'dev'
+}
+
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.java
+    classifier = 'api'
+    include 'de/ellpeck/rarmor/api/**'
+}
+
+javadoc {
+    include 'de/ellpeck/rarmor/api/**'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from 'build/docs/javadoc'
+    classifier 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.java
+    classifier = 'sources'
+}
+
+artifacts {
+    archives apiJar
+    archives javadocJar
+    archives sourcesJar
+    archives deobfJar
+}
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact apiJar
+            artifact javadocJar
+            artifact sourcesJar
+            artifact deobfJar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///srv/nginx/maven"
+        }
+    }
 }
