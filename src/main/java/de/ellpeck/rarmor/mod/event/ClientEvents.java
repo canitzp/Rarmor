@@ -14,10 +14,15 @@ import de.ellpeck.rarmor.api.RarmorAPI;
 import de.ellpeck.rarmor.api.internal.IRarmorData;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.config.Config;
+import de.ellpeck.rarmor.mod.inventory.gui.button.TexturedButton;
 import de.ellpeck.rarmor.mod.misc.Helper;
+import de.ellpeck.rarmor.mod.module.main.GuiModuleMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -28,17 +33,22 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class ClientEvents{
 
     public static boolean stopGuiOverride;
+    private GuiButton invButton;
 
     private static boolean hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct;
 
@@ -51,19 +61,75 @@ public class ClientEvents{
         if(!stopGuiOverride){
             if(event.getGui() instanceof GuiInventory){
                 EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-                if(!player.isSneaking()){
+                int openingMode = Config.rarmorOpeningMode;
+                boolean sneaking = player.isSneaking();
+                if(openingMode == 2 || (openingMode == 0 && !sneaking) || (openingMode == 1 && sneaking)){
                     IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
                     if(data != null){
-                        RarmorAPI.methodHandler.openRarmorFromClient(data.getSelectedModule(), false, true);
+                        this.openRarmor(player, data);
                         event.setCanceled(true);
-
-                        if(!hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct){
-                            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.1", TextFormatting.GREEN+"github.com/Ellpeck/Rarmor"+TextFormatting.RESET).setStyle(new Style().setColor(TextFormatting.RED)));
-                            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.2").setStyle(new Style().setColor(TextFormatting.GOLD)));
-                            hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct = true;
-                        }
                     }
                 }
+            }
+        }
+    }
+
+    private void openRarmor(EntityPlayer player, IRarmorData data){
+        RarmorAPI.methodHandler.openRarmorFromClient(data.getSelectedModule(), false, true);
+
+        if(!hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct){
+            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.1", TextFormatting.GREEN+"github.com/Ellpeck/Rarmor"+TextFormatting.RESET).setStyle(new Style().setColor(TextFormatting.RED)));
+            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.2").setStyle(new Style().setColor(TextFormatting.GOLD)));
+            hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct = true;
+        }
+    }
+
+    @SubscribeEvent
+    public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event){
+        if(Config.showInventoryButton){
+            GuiScreen gui = event.getGui();
+            boolean creative = gui instanceof GuiContainerCreative;
+            if(gui instanceof GuiInventory || creative){
+                int xSize = creative ? 136 : 176;
+                int ySize = creative ? 195 : 166;
+                int guiLeft = (gui.width-xSize)/2;
+                int guiTop = (gui.height-ySize)/2;
+
+                this.invButton = new TexturedButton(178223, guiLeft-20, guiTop+24, 20, 20, GuiModuleMain.RES_LOC, 0, 176);
+                event.getButtonList().add(this.invButton);
+
+                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, false);
+                this.invButton.visible = data != null;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onActionPerformed(GuiScreenEvent.ActionPerformedEvent event){
+        if(this.invButton != null && this.invButton.visible){
+            if(event.getGui() instanceof GuiInventory){
+                if(event.getButton().id == this.invButton.id){
+                    EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
+                    if(data != null){
+                        this.openRarmor(player, data);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onGuiRender(GuiScreenEvent.DrawScreenEvent.Post event){
+        if(this.invButton != null){
+            if(event.getGui() instanceof GuiInventory){
+                if(this.invButton.visible && this.invButton.isMouseOver()){
+                    Minecraft mc = Minecraft.getMinecraft();
+                    GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".open")), event.getMouseX(), event.getMouseY(), mc.displayWidth, mc.displayHeight, -1, mc.fontRendererObj);
+                }
+
+                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, false);
+                this.invButton.visible = data != null;
             }
         }
     }

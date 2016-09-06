@@ -23,6 +23,7 @@ item.rarmor.itemModuleJump.name=Jumping Module
 item.rarmor.itemModuleMovement.name=Movement Module
 
 rarmor.back=Back to Inventory
+rarmor.open=Open Rarmor Gui
 rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
 rarmor.storedEnergy=Tesla/RF stored

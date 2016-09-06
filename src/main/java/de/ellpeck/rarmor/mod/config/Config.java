@@ -29,6 +29,9 @@ public final class Config{
     public static float rarmorOverlayScale;
     public static boolean rarmorOverlayOnlyEnergy;
 
+    public static int rarmorOpeningMode;
+    public static boolean showInventoryButton;
+
     public Config(File file){
         config = new Configuration(file);
         config.load();
@@ -45,6 +48,9 @@ public final class Config{
         rarmorOverlayY = config.get(Configuration.CATEGORY_GENERAL, "overlayY", 3, "The Y position of the Rarmor overlay. Set this or the x value to a negative number to disable it.").getInt();
         rarmorOverlayScale = (float)config.get(Configuration.CATEGORY_GENERAL, "overlayScale", 1.0, "The scale of the Rarmor overlay").getDouble();
         rarmorOverlayOnlyEnergy = config.get(Configuration.CATEGORY_GENERAL, "overlayOnlyEnergy", false, "If the Rarmor overlay should only show the energy amount").getBoolean();
+
+        rarmorOpeningMode = config.get(Configuration.CATEGORY_GENERAL, "openingMode", 0, "The way the Rarmor GUI can be accessed. 0 is inventory key to open the Rarmor, sneak for normal inventory. 1 is inventory key for normal inventory, sneak to open the Rarmor. 2 is always open the Rarmor, and any other value is never open the Rarmor.").getInt();
+        showInventoryButton = config.get(Configuration.CATEGORY_GENERAL, "showButtonInInventory", true, "Show a button to open the Rarmor GUI in the normal inventory").getBoolean();
 
         if(config.hasChanged()){
             config.save();
