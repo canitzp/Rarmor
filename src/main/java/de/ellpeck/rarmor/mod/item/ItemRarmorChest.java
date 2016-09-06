@@ -33,12 +33,13 @@ import java.util.List;
 
 public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
 
-    private static final int CAPACITY = 300000;
+    public static final int CAPACITY = 300000;
     private static final int MAX_RECEIVE = 1000;
     private static final int MAX_EXTRACT = 1000;
 
     public ItemRarmorChest(String name){
         super(name, EntityEquipmentSlot.CHEST);
+        this.setHasSubtypes(true);
     }
 
     @Override
@@ -98,14 +99,19 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack itemStack){
-        return true;
+    public boolean showDurabilityBar(ItemStack stack){
+        return stack.getItemDamage() != 1;
     }
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack){
-        double max = this.getMaxEnergyStored(stack);
-        return (max-this.getEnergyStored(stack))/max;
+        if(stack.getItemDamage() != 1){
+            double max = this.getMaxEnergyStored(stack);
+            return (max-this.getEnergyStored(stack))/max;
+        }
+        else{
+            return super.getDurabilityForDisplay(stack);
+        }
     }
 
     @Override

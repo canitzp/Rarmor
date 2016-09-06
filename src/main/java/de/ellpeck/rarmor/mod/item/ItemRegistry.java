@@ -77,7 +77,8 @@ public final class ItemRegistry{
     @SideOnly(Side.CLIENT)
     public static void preInitClient(){
         ClientProxy.addLocation(itemRarmorHelmet);
-        ClientProxy.addLocation(itemRarmorChest);
+        ClientProxy.addLocation(itemRarmorChest, 0);
+        ClientProxy.addLocation(itemRarmorChest, 1);
         ClientProxy.addLocation(itemRarmorPants);
         ClientProxy.addLocation(itemRarmorBoots);
 

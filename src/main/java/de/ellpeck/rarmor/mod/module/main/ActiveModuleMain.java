@@ -18,6 +18,7 @@ import de.ellpeck.rarmor.api.inventory.RarmorModuleGui;
 import de.ellpeck.rarmor.api.module.ActiveRarmorModule;
 import de.ellpeck.rarmor.mod.compat.Compat;
 import de.ellpeck.rarmor.mod.inventory.gui.BasicInventory;
+import de.ellpeck.rarmor.mod.item.ItemRegistry;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
@@ -26,7 +27,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
-    private static final ItemStack CRAFTING_TABLE = new ItemStack(Blocks.CRAFTING_TABLE);
+    private static final ItemStack CHESTPLATE = new ItemStack(ItemRegistry.itemRarmorChest, 1, 1);
     public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 
@@ -167,7 +167,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     @Override
     @SideOnly(Side.CLIENT)
     public ItemStack getDisplayIcon(){
-        return CRAFTING_TABLE;
+        return CHESTPLATE;
     }
 
     @Override
