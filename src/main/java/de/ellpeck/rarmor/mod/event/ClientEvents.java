@@ -22,7 +22,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -88,17 +87,14 @@ public class ClientEvents{
     public void onInitGui(GuiScreenEvent.InitGuiEvent.Post event){
         if(Config.showInventoryButton){
             GuiScreen gui = event.getGui();
-            boolean creative = gui instanceof GuiContainerCreative;
-            if(gui instanceof GuiInventory || creative){
-                int xSize = creative ? 136 : 176;
-                int ySize = creative ? 195 : 166;
-                int guiLeft = (gui.width-xSize)/2;
-                int guiTop = (gui.height-ySize)/2;
+            if(gui instanceof GuiInventory){
+                int guiLeft = (gui.width-176)/2;
+                int guiTop = (gui.height-166)/2;
 
                 this.invButton = new TexturedButton(178223, guiLeft-20, guiTop+24, 20, 20, GuiModuleMain.RES_LOC, 0, 176);
                 event.getButtonList().add(this.invButton);
 
-                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, false);
+                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, true);
                 this.invButton.visible = data != null;
             }
         }
@@ -128,7 +124,7 @@ public class ClientEvents{
                     GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".open")), event.getMouseX(), event.getMouseY(), mc.displayWidth, mc.displayHeight, -1, mc.fontRendererObj);
                 }
 
-                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, false);
+                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().thePlayer, true);
                 this.invButton.visible = data != null;
             }
         }
