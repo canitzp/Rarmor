@@ -16,6 +16,10 @@ import de.ellpeck.rarmor.mod.module.furnace.ItemModuleFurnace;
 import de.ellpeck.rarmor.mod.module.generator.ItemModuleGenerator;
 import de.ellpeck.rarmor.mod.module.jump.ActiveModuleJump;
 import de.ellpeck.rarmor.mod.module.jump.ItemModuleJump;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionDiamond;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionGold;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionIron;
+import de.ellpeck.rarmor.mod.module.protection.ItemModuleProtection;
 import de.ellpeck.rarmor.mod.module.solar.ItemModuleSolar;
 import de.ellpeck.rarmor.mod.module.speed.ActiveModuleSpeed;
 import de.ellpeck.rarmor.mod.module.speed.ItemModuleSpeed;
@@ -50,6 +54,10 @@ public final class ItemRegistry{
     public static ItemModuleJump itemModuleJump;
     public static Item itemModuleMovement;
 
+    public static Item itemModuleProtectionIron;
+    public static Item itemModuleProtectionGold;
+    public static Item itemModuleProtectionDiamond;
+
     public static void preInit(){
         itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
         itemRarmorChest = new ItemRarmorChest("itemRarmorChest");
@@ -72,6 +80,10 @@ public final class ItemRegistry{
         itemModuleSpeed = new ItemModuleSpeed("itemModuleSpeed");
         itemModuleJump = new ItemModuleJump("itemModuleJump");
         itemModuleMovement = new ItemModuleCompound("itemModuleMovement", new String[]{ActiveModuleSpeed.IDENTIFIER, ActiveModuleJump.IDENTIFIER}, new ItemRarmorModule[]{itemModuleSpeed, itemModuleJump});
+
+        itemModuleProtectionIron = new ItemModuleProtection("itemModuleProtectionIron", ActiveModuleProtectionIron.IDENTIFIER);
+        itemModuleProtectionGold = new ItemModuleProtection("itemModuleProtectionGold", ActiveModuleProtectionGold.IDENTIFIER);
+        itemModuleProtectionDiamond = new ItemModuleProtection("itemModuleProtectionDiamond", ActiveModuleProtectionDiamond.IDENTIFIER);
     }
 
     @SideOnly(Side.CLIENT)
@@ -98,6 +110,10 @@ public final class ItemRegistry{
         ClientProxy.addLocation(itemModuleSpeed);
         ClientProxy.addLocation(itemModuleJump);
         ClientProxy.addLocation(itemModuleMovement);
+
+        ClientProxy.addLocation(itemModuleProtectionIron);
+        ClientProxy.addLocation(itemModuleProtectionGold);
+        ClientProxy.addLocation(itemModuleProtectionDiamond);
     }
 
 }

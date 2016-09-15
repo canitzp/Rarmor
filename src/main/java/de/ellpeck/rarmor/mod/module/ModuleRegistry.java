@@ -16,6 +16,9 @@ import de.ellpeck.rarmor.mod.module.furnace.ActiveModuleFurnace;
 import de.ellpeck.rarmor.mod.module.generator.ActiveModuleGenerator;
 import de.ellpeck.rarmor.mod.module.jump.ActiveModuleJump;
 import de.ellpeck.rarmor.mod.module.main.ActiveModuleMain;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionDiamond;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionGold;
+import de.ellpeck.rarmor.mod.module.protection.ActiveModuleProtectionIron;
 import de.ellpeck.rarmor.mod.module.solar.ActiveModuleSolar;
 import de.ellpeck.rarmor.mod.module.speed.ActiveModuleSpeed;
 import de.ellpeck.rarmor.mod.module.storage.ActiveModuleStorage;
@@ -24,6 +27,7 @@ public final class ModuleRegistry{
 
     public static void init(){
         RarmorAPI.registerRarmorModule(ActiveModuleMain.IDENTIFIER, ActiveModuleMain.class);
+
         RarmorAPI.registerRarmorModule(ActiveModuleStorage.IDENTIFIER, ActiveModuleStorage.class);
         RarmorAPI.registerRarmorModule(ActiveModuleEnder.IDENTIFIER, ActiveModuleEnder.class);
         RarmorAPI.registerRarmorModule(ActiveModuleFurnace.IDENTIFIER, ActiveModuleFurnace.class);
@@ -31,6 +35,10 @@ public final class ModuleRegistry{
         RarmorAPI.registerRarmorModule(ActiveModuleGenerator.IDENTIFIER, ActiveModuleGenerator.class);
         RarmorAPI.registerRarmorModule(ActiveModuleSpeed.IDENTIFIER, ActiveModuleSpeed.class);
         RarmorAPI.registerRarmorModule(ActiveModuleJump.IDENTIFIER, ActiveModuleJump.class);
+
+        RarmorAPI.registerRarmorModule(ActiveModuleProtectionIron.IDENTIFIER, ActiveModuleProtectionIron.class);
+        RarmorAPI.registerRarmorModule(ActiveModuleProtectionGold.IDENTIFIER, ActiveModuleProtectionGold.class);
+        RarmorAPI.registerRarmorModule(ActiveModuleProtectionDiamond.IDENTIFIER, ActiveModuleProtectionDiamond.class);
     }
 
 }
