@@ -17,7 +17,7 @@ public class ItemWireCutter extends ItemBase{
     public ItemWireCutter(String name){
         super(name);
 
-        this.setMaxDamage(15);
+        this.setMaxDamage(127);
         this.setMaxStackSize(1);
         this.setContainerItem(this);
         this.setNoRepair();
