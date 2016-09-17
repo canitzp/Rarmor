@@ -31,6 +31,9 @@ public final class CraftingRegistry{
         addModuleRecipe(ItemRegistry.itemModuleGenerator, new ItemStack(ItemRegistry.itemGenerator));
         addModuleRecipe(ItemRegistry.itemModuleSpeed, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_SWIFTNESS));
         addModuleRecipe(ItemRegistry.itemModuleJump, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.STRONG_LEAPING));
+        addModuleRecipe(ItemRegistry.itemModuleProtectionIron, new ItemStack(Blocks.IRON_BLOCK));
+        addModuleRecipe(ItemRegistry.itemModuleProtectionGold, new ItemStack(Blocks.GOLD_BLOCK));
+        addModuleRecipe(ItemRegistry.itemModuleProtectionDiamond, new ItemStack(Blocks.DIAMOND_BLOCK));
 
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemModuleMovement),
                 " W ", "SCJ", " W ",

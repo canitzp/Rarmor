@@ -21,6 +21,9 @@ item.rarmor.itemModuleGenerator.name=Generator Module
 item.rarmor.itemModuleSpeed.name=Running Module
 item.rarmor.itemModuleJump.name=Jumping Module
 item.rarmor.itemModuleMovement.name=Movement Module
+item.rarmor.itemModuleProtectionIron.name=Iron Protection Module
+item.rarmor.itemModuleProtectionGold.name=Gold Protection Module
+item.rarmor.itemModuleProtectionDiamond.name=Diamond Protection Module
 
 rarmor.back=Back to Inventory
 rarmor.open=Open Rarmor Gui
@@ -42,6 +45,9 @@ module.rarmorSolar.name=Solar
 module.rarmorGenerator.name=Generator
 module.rarmorSpeed.name=Running
 module.rarmorJump.name=Jumping
+module.rarmorProtectionIron.name=Protection (Iron)
+module.rarmorProtectionGold.name=Protection (Gold)
+module.rarmorProtectionDiamond.name=Protection (Diamond)
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!
