@@ -24,8 +24,8 @@ import de.ellpeck.rarmor.mod.module.main.GuiModuleMain;
 import de.ellpeck.rarmor.mod.update.UpdateChecker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiRarmor extends GuiContainer{
+public class GuiRarmor extends InventoryEffectRenderer{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorBase");
     public final TabButton[] tabButtons = new TabButton[10];
