@@ -1,5 +1,5 @@
 # Rarmor
-A mod about an RF-powered armor that can be upgraded and modified!
+A Minecraft mod about an RF-powered armor that can be upgraded and modified!
 
 For more information, visit the main CurseForge Page by [clicking here](http://minecraft.curseforge.com/projects/rarmor)!
 
