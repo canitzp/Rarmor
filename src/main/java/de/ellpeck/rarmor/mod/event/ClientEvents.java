@@ -28,8 +28,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -48,8 +46,6 @@ public class ClientEvents{
 
     public static boolean stopGuiOverride;
     private GuiButton invButton;
-
-    private static boolean hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct;
 
     public ClientEvents(){
         MinecraftForge.EVENT_BUS.register(this);
@@ -75,12 +71,6 @@ public class ClientEvents{
 
     private void openRarmor(EntityPlayer player, IRarmorData data){
         RarmorAPI.methodHandler.openRarmorFromClient(data.getSelectedModule(), false, true);
-
-        if(!hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct){
-            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.1", TextFormatting.GREEN+"github.com/Ellpeck/Rarmor"+TextFormatting.RESET).setStyle(new Style().setColor(TextFormatting.RED)));
-            player.addChatComponentMessage(new TextComponentTranslation(RarmorAPI.MOD_ID+".notFinishedInfo.2").setStyle(new Style().setColor(TextFormatting.GOLD)));
-            hasAlreadyAnnoyedThePlayerAboutTheFactThatThisIsNotAFinishedProduct = true;
-        }
     }
 
     @SubscribeEvent

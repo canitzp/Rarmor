@@ -1,3 +1,6 @@
+# 1.10.2-r3
+* Remove the annoying message that appears every time you open the Rarmor GUI for the first time
+
 # 1.10.2-r2
 * Added Protection Modules
 * Added invtweaks compatibility
