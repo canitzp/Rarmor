@@ -2,15 +2,18 @@
 {
   "modid": "rarmor",
   "name": "Rarmor",
-  "description": "A Mod for all the players who are searching for a good modular upgradable Armor.",
+  "description": "A mod about an RF-powered armor that can be upgraded and modified!",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "http://github.com/Ellpeck/Rarmor",
   "updateUrl": "",
-  "authorList": ["canitzp"],
-  "credits": "canitzp",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
+  "authorList": [ "Ellpeck", "previously canitzp" ],
+  "credits": "Current Author: Ellpeck; Owners: canitzp & Ellpeck; Textures and Models: BootyToast",
+  "logoFile": "assets/rarmor/textures/logo.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
 }
 ]
