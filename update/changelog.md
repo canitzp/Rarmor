@@ -1,3 +1,8 @@
+# 1.11.2-r4
+* Update to Minecraft 1.11.2
+* Added the coloring tab back
+* The original author is back, bitches
+
 # 1.10.2-r3
 * Remove the annoying message that appears every time you open the Rarmor GUI for the first time
 

@@ -20,7 +20,7 @@ public class ItemBase extends Item{
         this.setRegistryName(RarmorAPI.MOD_ID, name);
         GameRegistry.register(this);
 
-        this.setUnlocalizedName(RarmorAPI.MOD_ID+"."+name);
+        this.setUnlocalizedName(getRegistryName().toString());
         this.setCreativeTab(CreativeTab.INSTANCE);
     }
 }

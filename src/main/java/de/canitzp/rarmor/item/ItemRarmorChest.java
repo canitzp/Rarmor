@@ -9,13 +9,12 @@
 
 package de.canitzp.rarmor.item;
 
-import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.compat.ItemTeslaWrapper;
 import de.canitzp.rarmor.misc.Helper;
+import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -24,13 +23,20 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
+public class ItemRarmorChest extends ItemRarmor{
 
     public static final int CAPACITY = 300000;
     private static final int MAX_RECEIVE = 1000;
@@ -79,7 +85,6 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
         }
     }
 
-    @Override
     public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate){
         if(!stack.hasTagCompound()){
             stack.setTagCompound(new NBTTagCompound());
@@ -113,7 +118,6 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
         }
     }
 
-    @Override
     public int extractEnergy(ItemStack stack, int maxExtract, boolean simulate){
         if(stack.hasTagCompound()){
             NBTTagCompound compound = stack.getTagCompound();
@@ -131,7 +135,6 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
         return 0;
     }
 
-    @Override
     public int getEnergyStored(ItemStack stack){
         if(stack.hasTagCompound()){
             return stack.getTagCompound().getInteger("Energy");
@@ -139,22 +142,111 @@ public class ItemRarmorChest extends ItemRarmor implements IEnergyContainerItem{
         return 0;
     }
 
-    @Override
     public int getMaxEnergyStored(ItemStack stack){
         return CAPACITY;
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
-        return Compat.teslaLoaded ? new ItemTeslaWrapper(stack, this) : super.initCapabilities(stack, compound);
+        return new CapProvider(stack, CAPACITY, MAX_RECEIVE, MAX_EXTRACT);
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems){
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
         super.getSubItems(item, tab, subItems);
 
         ItemStack stack = new ItemStack(item);
         Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
         subItems.add(stack);
+    }
+
+    public static class CapProvider implements ICapabilityProvider{
+
+        private ItemStack stack;
+        private int cap, maxRec, maxTra;
+
+        public CapProvider(ItemStack stack, int cap, int maxRec, int maxTra){
+            this.stack = stack;
+            this.cap = cap;
+            this.maxRec = maxRec;
+            this.maxTra = maxTra;
+        }
+
+        @Override
+        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing){
+            return getCapability(capability, facing) != null;
+        }
+
+        @Nullable
+        @Override
+        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing){
+            EStorage storage = new EStorage(stack, cap, maxRec, maxTra);
+            if(capability == CapabilityEnergy.ENERGY){
+                return (T) storage;
+            } else if(capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER){
+                return (T) new ItemTeslaWrapper(storage);
+            }
+            return null;
+        }
+    }
+
+    public static class EStorage extends EnergyStorage{
+
+        private ItemStack stack;
+
+        public EStorage(ItemStack stack, int capacity){
+            super(capacity);
+            this.stack = stack;
+        }
+
+        public EStorage(ItemStack stack, int capacity, int maxTransfer){
+            super(capacity, maxTransfer);
+            this.stack = stack;
+        }
+
+        public EStorage(ItemStack stack, int capacity, int maxReceive, int maxExtract){
+            super(capacity, maxReceive, maxExtract);
+            this.stack = stack;
+        }
+
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate){
+            if (!canReceive())
+                return 0;
+
+            int energyReceived = Math.min(capacity - getEnergyStored(), Math.min(this.maxReceive, maxReceive));
+            if (!simulate)
+                setEnergy(getEnergyStored() + energyReceived);
+            return energyReceived;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate){
+            if (!canExtract())
+                return 0;
+
+            int energyExtracted = Math.min(getEnergyStored(), Math.min(this.maxExtract, maxExtract));
+            if (!simulate)
+                setEnergy(getEnergyStored() - energyExtracted);
+            return energyExtracted;
+        }
+
+        @Override
+        public int getEnergyStored(){
+            if(stack.hasTagCompound()){
+                return stack.getTagCompound().getInteger("Energy");
+            }
+            else{
+                return 0;
+            }
+        }
+
+        public void setEnergy(int energy){
+            if(!stack.hasTagCompound()){
+                stack.setTagCompound(new NBTTagCompound());
+            }
+
+            stack.getTagCompound().setInteger("Energy", energy);
+        }
     }
 }

@@ -65,18 +65,14 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
             }
             else if(canAddEnergy){
                 ItemStack stack = this.inventory.getStackInSlot(0);
-                if(stack != null){
+                if(!stack.isEmpty()){
                     int time = TileEntityFurnace.getItemBurnTime(stack);
                     if(time > 0){
                         this.currentBurnTime = time;
                         this.burnTimeTickingDownFrom = time;
                         this.data.setDirty();
 
-                        stack.stackSize--;
-
-                        if(stack.stackSize <= 0){
-                            this.inventory.setInventorySlotContents(0, stack.getItem().getContainerItem(stack));
-                        }
+                        stack.shrink(1);
                     }
                 }
             }
@@ -92,7 +88,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
 
         renderX += 20;
         if(this.currentBurnTime > 0 && this.burnTimeTickingDownFrom > 0){
-            FontRenderer font = mc.fontRendererObj;
+            FontRenderer font = mc.fontRenderer;
             String percentage = (int)(((float)this.currentBurnTime/(float)this.burnTimeTickingDownFrom)*100)+"%";
             boolean unicode = font.getUnicodeFlag();
             font.setUnicodeFlag(true);

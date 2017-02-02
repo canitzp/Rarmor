@@ -21,9 +21,11 @@ import de.canitzp.rarmor.update.UpdateChecker;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.event.ClientEvents;
 import de.canitzp.rarmor.misc.Helper;
+import mezz.jei.util.color.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -31,6 +33,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -43,7 +46,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiRarmor extends InventoryEffectRenderer{
 
-    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorBase");
+    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_base");
     public final TabButton[] tabButtons = new TabButton[10];
     private final IRarmorData currentData;
     private final RarmorModuleGui gui;
@@ -82,6 +85,8 @@ public class GuiRarmor extends InventoryEffectRenderer{
 
             int i = this.currentData.getEnergyStored()*132/this.currentData.getMaxEnergyStored();
             if(i > 0){
+                float[] colors = Helper.getColor(Minecraft.getMinecraft().world.getTotalWorldTime() % 256);
+                GlStateManager.color(colors[0]/255F, colors[1]/255F, colors[2]/255F);
                 this.drawTexturedModalRect(this.guiLeft+198, this.guiTop+140-i, 224, 134-i+1, 31, i);
             }
         }
@@ -158,11 +163,11 @@ public class GuiRarmor extends InventoryEffectRenderer{
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         if(this.buttonBackToMainInventory.isMouseOver()){
-            GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".back")), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+            GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".back")), mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRenderer);
         }
 
         if(this.updateButton.visible && this.updateButton.isMouseOver() && this.updateDisplayStrings != null){
-            GuiUtils.drawHoveringText(this.updateDisplayStrings, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+            GuiUtils.drawHoveringText(this.updateDisplayStrings, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRenderer);
         }
 
         this.gui.drawScreen(mouseX, mouseY, partialTicks);
@@ -178,7 +183,7 @@ public class GuiRarmor extends InventoryEffectRenderer{
                     list.add(TextFormatting.YELLOW+""+current+"/"+max);
 
                     list.add(TextFormatting.ITALIC+""+(int)(((float)current/(float)max)*100)+"%");
-                    GuiUtils.drawHoveringText(list, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRendererObj);
+                    GuiUtils.drawHoveringText(list, mouseX, mouseY, this.mc.displayWidth, this.mc.displayHeight, -1, this.mc.fontRenderer);
                 }
             }
         }

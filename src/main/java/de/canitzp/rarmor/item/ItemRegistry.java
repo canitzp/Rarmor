@@ -58,31 +58,31 @@ public final class ItemRegistry{
     public static Item itemModuleProtectionDiamond;
 
     public static void preInit(){
-        itemRarmorHelmet = new ItemRarmor("itemRarmorHelmet", EntityEquipmentSlot.HEAD);
-        itemRarmorChest = new ItemRarmorChest("itemRarmorChest");
-        itemRarmorPants = new ItemRarmor("itemRarmorPants", EntityEquipmentSlot.LEGS);
-        itemRarmorBoots = new ItemRarmor("itemRarmorBoots", EntityEquipmentSlot.FEET);
+        itemRarmorHelmet = new ItemRarmor("item_rarmor_helmet", EntityEquipmentSlot.HEAD);
+        itemRarmorChest = new ItemRarmorChest("item_rarmor_chest");
+        itemRarmorPants = new ItemRarmor("item_rarmor_pants", EntityEquipmentSlot.LEGS);
+        itemRarmorBoots = new ItemRarmor("item_rarmor_boots", EntityEquipmentSlot.FEET);
 
-        itemWireCutter = new ItemWireCutter("itemWireCutter");
-        itemControlCircuit = new ItemBase("itemControlCircuit");
-        itemWire = new ItemBase("itemWire");
-        itemConnector = new ItemBase("itemConnector");
-        itemSolarCell = new ItemBase("itemSolarCell");
-        itemGenerator = new ItemBase("itemGenerator");
-        itemBattery = new ItemBattery("itemBattery");
+        itemWireCutter = new ItemWireCutter("item_wire_cutter");
+        itemControlCircuit = new ItemBase("item_control_circuit");
+        itemWire = new ItemBase("item_wire");
+        itemConnector = new ItemBase("item_connector");
+        itemSolarCell = new ItemBase("item_solar_cell");
+        itemGenerator = new ItemBase("item_generator");
+        itemBattery = new ItemBattery("item_battery");
 
-        itemModuleStorage = new ItemModuleStorage("itemModuleStorage");
-        itemModuleEnder = new ItemModuleEnder("itemModuleEnder");
-        itemModuleFurnace = new ItemModuleFurnace("itemModuleFurnace");
-        itemModuleSolar = new ItemModuleSolar("itemModuleSolar");
-        itemModuleGenerator = new ItemModuleGenerator("itemModuleGenerator");
-        itemModuleSpeed = new ItemModuleSpeed("itemModuleSpeed");
-        itemModuleJump = new ItemModuleJump("itemModuleJump");
-        itemModuleMovement = new ItemModuleCompound("itemModuleMovement", new String[]{ActiveModuleSpeed.IDENTIFIER, ActiveModuleJump.IDENTIFIER}, new ItemRarmorModule[]{itemModuleSpeed, itemModuleJump});
+        itemModuleStorage = new ItemModuleStorage("storage");
+        itemModuleEnder = new ItemModuleEnder("ender");
+        itemModuleFurnace = new ItemModuleFurnace("furnace");
+        itemModuleSolar = new ItemModuleSolar("solar");
+        itemModuleGenerator = new ItemModuleGenerator("generator");
+        itemModuleSpeed = new ItemModuleSpeed("speed");
+        itemModuleJump = new ItemModuleJump("jump");
+        itemModuleMovement = new ItemModuleCompound("movement", new String[]{ActiveModuleSpeed.IDENTIFIER, ActiveModuleJump.IDENTIFIER}, new ItemRarmorModule[]{itemModuleSpeed, itemModuleJump});
 
-        itemModuleProtectionIron = new ItemModuleProtection("itemModuleProtectionIron", ActiveModuleProtectionIron.IDENTIFIER);
-        itemModuleProtectionGold = new ItemModuleProtection("itemModuleProtectionGold", ActiveModuleProtectionGold.IDENTIFIER);
-        itemModuleProtectionDiamond = new ItemModuleProtection("itemModuleProtectionDiamond", ActiveModuleProtectionDiamond.IDENTIFIER);
+        itemModuleProtectionIron = new ItemModuleProtection("protection_iron", ActiveModuleProtectionIron.IDENTIFIER);
+        itemModuleProtectionGold = new ItemModuleProtection("protection_gold", ActiveModuleProtectionGold.IDENTIFIER);
+        itemModuleProtectionDiamond = new ItemModuleProtection("protection_diamond", ActiveModuleProtectionDiamond.IDENTIFIER);
     }
 
     @SideOnly(Side.CLIENT)

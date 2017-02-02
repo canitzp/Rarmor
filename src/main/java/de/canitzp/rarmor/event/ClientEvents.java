@@ -110,7 +110,7 @@ public class ClientEvents{
             if(event.getGui() instanceof GuiInventory){
                 if(this.invButton.visible && this.invButton.isMouseOver()){
                     Minecraft mc = Minecraft.getMinecraft();
-                    GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".open")), event.getMouseX(), event.getMouseY(), mc.displayWidth, mc.displayHeight, -1, mc.fontRendererObj);
+                    GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID+".open")), event.getMouseX(), event.getMouseY(), mc.displayWidth, mc.displayHeight, -1, mc.fontRenderer);
                 }
 
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getMinecraft().player, true);
@@ -123,7 +123,7 @@ public class ClientEvents{
     public void onRenderOverlay(RenderGameOverlayEvent.Pre event){
         if(event.getType() == ElementType.HOTBAR){
             Minecraft mc = Minecraft.getMinecraft();
-            FontRenderer font = mc.fontRendererObj;
+            FontRenderer font = mc.fontRenderer;
             ScaledResolution res = event.getResolution();
             EntityPlayer player = mc.player;
 
@@ -135,7 +135,7 @@ public class ClientEvents{
                 if(!mc.gameSettings.showDebugInfo){
                     if(player != null && player.getEntityWorld() != null){
                         ItemStack stack = RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
-                        if(stack != null){
+                        if(!stack.isEmpty()){
                             IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
                             if(data != null){
                                 GlStateManager.pushMatrix();

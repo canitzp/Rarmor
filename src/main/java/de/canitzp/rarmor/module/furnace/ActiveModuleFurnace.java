@@ -50,22 +50,22 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         if(!world.isRemote){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
                 ItemStack input = this.inventory.getStackInSlot(0);
-                if(input != null){
+                if(!input.isEmpty()){
                     ItemStack output = FurnaceRecipes.instance().getSmeltingResult(input);
-                    if(output != null){
+                    if(!output.isEmpty()){
                         ItemStack outputSlot = this.inventory.getStackInSlot(1);
-                        if(outputSlot == null || Helper.canBeStacked(output, outputSlot)){
+                        if(outputSlot.isEmpty() || Helper.canBeStacked(output, outputSlot)){
                             this.burnTime++;
                             this.data.setDirty();
 
                             this.data.extractEnergy(ENERGY_PER_TICK, false);
 
                             if(this.burnTime >= TIME_TO_REACH){
-                                if(outputSlot == null){
+                                if(outputSlot.isEmpty()){
                                     this.inventory.setInventorySlotContents(1, output.copy());
                                 }
                                 else{
-                                    outputSlot.stackSize += output.stackSize;
+                                    outputSlot.grow(output.getCount());
                                 }
 
                                 this.inventory.decrStackSize(0, 1);
@@ -93,7 +93,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         renderY += 5;
 
         if(this.burnTime > 0){
-            FontRenderer font = mc.fontRendererObj;
+            FontRenderer font = mc.fontRenderer;
             String percentage = (int)(((float)this.burnTime/(float)TIME_TO_REACH)*100)+"%";
             boolean unicode = font.getUnicodeFlag();
             font.setUnicodeFlag(true);
@@ -102,7 +102,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         }
 
         ItemStack input = this.inventory.getStackInSlot(0);
-        if(input != null){
+        if(!input.isEmpty()){
             Helper.renderStackToGui(input, renderX, renderY, 0.7F);
             renderX += 18;
         }

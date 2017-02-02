@@ -15,6 +15,7 @@ import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.config.Config;
 import de.canitzp.rarmor.data.WorldData;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
+import de.canitzp.rarmor.module.color.ActiveModuleColor;
 import de.canitzp.rarmor.module.main.ActiveModuleMain;
 import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.Rarmor;
@@ -42,20 +43,20 @@ public class MethodHandler implements IMethodHandler {
     public ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot){
         if(entity instanceof EntityLivingBase){
             ItemStack stack = ((EntityLivingBase)entity).getItemStackFromSlot(slot);
-            if(stack != null){
+            if(!stack.isEmpty()){
                 Item item = stack.getItem();
                 if(item instanceof ItemRarmor && ((ItemRarmor)item).armorType == slot){
                     return stack;
                 }
             }
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
     public IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent){
         ItemStack stack = this.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
-        if(stack != null){
+        if(!stack.isEmpty()){
             return this.getDataForStack(player.getEntityWorld(), stack, createIfAbsent);
         }
         return null;
@@ -139,9 +140,15 @@ public class MethodHandler implements IMethodHandler {
                 if(createIfAbsent){
                     data = new RarmorData(stack);
 
-                    ActiveRarmorModule module = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, data);
-                    module.onInstalled(null);
-                    data.getCurrentModules().add(module);
+                    //main module
+                    ActiveRarmorModule mainModule = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, data);
+                    mainModule.onInstalled(null);
+                    data.getCurrentModules().add(mainModule);
+                    //color module
+                    ActiveRarmorModule colorModule = Helper.initiateModuleById(ActiveModuleColor.IDENTIFIER, data);
+                    colorModule.onInstalled(null);
+                    data.getCurrentModules().add(colorModule);
+
                     data.setDirty(false);
 
                     allData.put(stackId, data);

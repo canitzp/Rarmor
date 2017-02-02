@@ -9,14 +9,12 @@
 
 package de.canitzp.rarmor.module.main;
 
-import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaProducer;
@@ -32,6 +30,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -52,24 +52,14 @@ public class ActiveModuleMain extends ActiveRarmorModule{
         if(!world.isRemote){
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
                 ItemStack discharge = this.inventory.getStackInSlot(0);
-                if(discharge != null){
-                    Item item = discharge.getItem();
-                    if(item instanceof IEnergyContainerItem){
-                        IEnergyContainerItem container = (IEnergyContainerItem)item;
-                        int canDischarge = container.extractEnergy(discharge, Integer.MAX_VALUE, true);
-                        if(canDischarge > 0){
-                            int discharged = this.data.receiveEnergy(canDischarge, false);
-                            container.extractEnergy(discharge, discharged, false);
-                            this.data.setDirty();
-                        }
-                    }
-                    else if(Compat.teslaLoaded && discharge.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
-                        ITeslaProducer cap = discharge.getCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN);
-                        if(cap != null){
-                            int canDischarge = (int)cap.takePower(Integer.MAX_VALUE, true);
+                if(!discharge.isEmpty()){
+                    if(discharge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
+                        IEnergyStorage storage = discharge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
+                        if(storage != null){
+                            int canDischarge = storage.extractEnergy(Integer.MAX_VALUE, true);
                             if(canDischarge > 0){
                                 int discharged = this.data.receiveEnergy(canDischarge, false);
-                                cap.takePower(discharged, false);
+                                storage.extractEnergy(discharged, false);
                                 this.data.setDirty();
                             }
                         }
@@ -79,24 +69,14 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
             if(this.data.getEnergyStored() > 0){
                 ItemStack charge = this.inventory.getStackInSlot(1);
-                if(charge != null){
-                    Item item = charge.getItem();
-                    if(item instanceof IEnergyContainerItem){
-                        IEnergyContainerItem container = (IEnergyContainerItem)item;
-                        int canCharge = container.receiveEnergy(charge, Integer.MAX_VALUE, true);
-                        if(canCharge > 0){
-                            int charged = this.data.extractEnergy(canCharge, false);
-                            container.receiveEnergy(charge, charged, false);
-                            this.data.setDirty();
-                        }
-                    }
-                    else if(Compat.teslaLoaded && charge.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
-                        ITeslaConsumer cap = charge.getCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN);
-                        if(cap != null){
-                            int canCharge = (int)cap.givePower(Integer.MAX_VALUE, true);
-                            if(canCharge > 0){
-                                int charged = this.data.extractEnergy(canCharge, false);
-                                cap.givePower(charged, false);
+                if(!charge.isEmpty()){
+                    if(charge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
+                        IEnergyStorage storage = charge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
+                        if(storage != null){
+                            int canDischarge = storage.receiveEnergy(Integer.MAX_VALUE, true);
+                            if(canDischarge > 0){
+                                int discharged = this.data.extractEnergy(canDischarge, false);
+                                storage.receiveEnergy(discharged, false);
                                 this.data.setDirty();
                             }
                         }

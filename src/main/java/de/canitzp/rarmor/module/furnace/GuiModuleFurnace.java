@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiModuleFurnace extends RarmorModuleGui{
 
-    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorFurnace");
+    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_furnace");
 
     public GuiModuleFurnace(GuiContainer gui, ActiveRarmorModule module){
         super(gui, module);

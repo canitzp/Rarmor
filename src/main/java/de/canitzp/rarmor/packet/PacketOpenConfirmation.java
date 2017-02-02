@@ -46,7 +46,7 @@ public class PacketOpenConfirmation implements IMessage{
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
                 @Override
                 public void run(){
-                    EntityPlayerMP player = context.getServerHandler().playerEntity;
+                    EntityPlayerMP player = context.getServerHandler().player;
                     player.openGui(Rarmor.instance, message.moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
                 }
             });

@@ -14,12 +14,15 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+
 
 /**
  * A basic Container class for a Rarmor module that should have a tab that opens a GUI and Container
@@ -28,6 +31,8 @@ import java.util.List;
  * this is contained inside of can be accessed.
  */
 public class RarmorModuleContainer{
+
+    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
     public final IRarmorData currentData;
     public final Container actualContainer;
@@ -52,7 +57,7 @@ public class RarmorModuleContainer{
     }
 
     public ItemStack transferStackInSlot(EntityPlayer player, int index){
-        return null;
+        return ItemStack.EMPTY;
     }
 
     public void onContainerClosed(EntityPlayer player){
@@ -78,7 +83,7 @@ public class RarmorModuleContainer{
     }
 
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
-        return null;
+        return ItemStack.EMPTY;
     }
 
     /**
@@ -94,4 +99,60 @@ public class RarmorModuleContainer{
     public boolean mergeItemStack(ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection){
         return RarmorAPI.methodHandler.mergeItemStack(this.actualContainer, stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
+
+    public void addArmorSlotsAt(EntityPlayer player, List<Slot> slots, int x, int y){
+        for(int i = 0; i < 4; i++){
+            final EntityEquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];
+            slots.add(new Slot(player.inventory, 36+(3-i), x, y+i*18){
+                @Override
+                public int getSlotStackLimit(){
+                    return 1;
+                }
+
+                @Override
+                public boolean isItemValid(ItemStack stack){
+                    return slot != EntityEquipmentSlot.CHEST && !stack.isEmpty() && stack.getItem().isValidArmor(stack, slot, player);
+                }
+
+                @Override
+                @SideOnly(Side.CLIENT)
+                public String getSlotTexture(){
+                    return ItemArmor.EMPTY_SLOT_NAMES[slot.getIndex()];
+                }
+
+                @Override
+                public ItemStack decrStackSize(int amount){
+                    return slot == EntityEquipmentSlot.CHEST ? null : super.decrStackSize(amount);
+                }
+
+                @Override
+                public void putStack(@Nullable ItemStack stack){
+                    if(slot != EntityEquipmentSlot.CHEST){
+                        super.putStack(stack);
+                    }
+                }
+
+                @Override
+                public boolean canTakeStack(EntityPlayer playerIn){
+                    return slot != EntityEquipmentSlot.CHEST;
+                }
+            });
+        }
+    }
+
+    public void addSecondHandSlot(EntityPlayer player, List<Slot> slots, int x, int y){
+        slots.add(new Slot(player.inventory, 40, x, y){
+            @Override
+            public boolean isItemValid(ItemStack stack){
+                return super.isItemValid(stack);
+            }
+
+            @Override
+            @SideOnly(Side.CLIENT)
+            public String getSlotTexture(){
+                return "minecraft:items/empty_armor_slot_shield";
+            }
+        });
+    }
+
 }

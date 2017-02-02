@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiModuleGenerator extends RarmorModuleGui{
 
-    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorGenerator");
+    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_generator");
 
     public GuiModuleGenerator(GuiContainer gui, ActiveRarmorModule module){
         super(gui, module);

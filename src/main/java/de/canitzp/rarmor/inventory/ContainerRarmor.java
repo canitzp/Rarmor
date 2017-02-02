@@ -17,8 +17,11 @@ import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @InventoryContainer(showOptions = false)
 public class ContainerRarmor extends Container{
@@ -66,10 +69,11 @@ public class ContainerRarmor extends Container{
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public void putStacksInSlots(ItemStack[] stack){
+    public void setAll(List<ItemStack> stack){
         this.isPuttingStacksInSlots = true;
-        super.putStacksInSlots(stack);
+        super.setAll(stack);
         this.isPuttingStacksInSlots = false;
     }
 
@@ -113,7 +117,7 @@ public class ContainerRarmor extends Container{
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
         ItemStack stack = this.container.slotClick(slotId, dragType, clickType, player);
-        if(stack == null){
+        if(stack.isEmpty()){
             stack = super.slotClick(slotId, dragType, clickType, player);
         }
 

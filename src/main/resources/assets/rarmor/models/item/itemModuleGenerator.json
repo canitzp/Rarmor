@@ -1,6 +1,0 @@
-{
-  "parent": "rarmor:item/standardItem",
-  "textures": {
-    "layer0": "rarmor:items/itemModuleGenerator"
-  }
-}

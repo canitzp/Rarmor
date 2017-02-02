@@ -49,7 +49,7 @@ public class TabButton extends TexturedButton{
             actualV += this.height;
         }
         this.drawTexturedModalRect(this.xPosition, this.yPosition, this.u, actualV, this.width, this.height);
-        mc.fontRendererObj.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+8, this.yPosition+6, 0);
+        mc.fontRenderer.drawString(I18n.format("module."+this.moduleName+".name"), this.xPosition+8, this.yPosition+6, 0);
     }
 
     @Override

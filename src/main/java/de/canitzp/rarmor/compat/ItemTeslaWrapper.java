@@ -9,44 +9,41 @@
 
 package de.canitzp.rarmor.compat;
 
-import cofh.api.energy.IEnergyContainerItem;
+import de.canitzp.rarmor.item.ItemRarmorChest;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 public class ItemTeslaWrapper implements ITeslaProducer, ITeslaHolder, ITeslaConsumer, ICapabilityProvider{
 
-    private final ItemStack stack;
-    private final IEnergyContainerItem item;
+    private final ItemRarmorChest.EStorage storage;
 
-    public ItemTeslaWrapper(ItemStack stack, IEnergyContainerItem item){
-        this.stack = stack;
-        this.item = item;
+    public ItemTeslaWrapper(ItemRarmorChest.EStorage storage){
+       this.storage = storage;
     }
 
     @Override
     public long givePower(long power, boolean simulated){
-        return this.item.receiveEnergy(this.stack, (int)power, simulated);
+        return this.storage.receiveEnergy((int)power, simulated);
     }
 
     @Override
     public long getStoredPower(){
-        return this.item.getEnergyStored(this.stack);
+        return this.storage.getEnergyStored();
     }
 
     @Override
     public long getCapacity(){
-        return this.item.getMaxEnergyStored(this.stack);
+        return this.storage.getMaxEnergyStored();
     }
 
     @Override
     public long takePower(long power, boolean simulated){
-        return this.item.extractEnergy(this.stack, (int)power, simulated);
+        return this.storage.extractEnergy((int)power, simulated);
     }
 
     @Override

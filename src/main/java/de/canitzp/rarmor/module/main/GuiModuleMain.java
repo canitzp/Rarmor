@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiModuleMain extends RarmorModuleGui{
 
-    public static final ResourceLocation RES_LOC = Helper.getGuiLocation("guiRarmorMain");
+    public static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_main");
 
     public GuiModuleMain(GuiContainer container, ActiveRarmorModule module){
         super(container, module);

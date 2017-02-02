@@ -10,6 +10,7 @@
 package de.canitzp.rarmor.module;
 
 import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.module.color.ActiveModuleColor;
 import de.canitzp.rarmor.module.ender.ActiveModuleEnder;
 import de.canitzp.rarmor.module.furnace.ActiveModuleFurnace;
 import de.canitzp.rarmor.module.generator.ActiveModuleGenerator;
@@ -26,6 +27,7 @@ public final class ModuleRegistry{
 
     public static void init(){
         RarmorAPI.registerRarmorModule(ActiveModuleMain.IDENTIFIER, ActiveModuleMain.class);
+        RarmorAPI.registerRarmorModule(ActiveModuleColor.IDENTIFIER, ActiveModuleColor.class);
 
         RarmorAPI.registerRarmorModule(ActiveModuleStorage.IDENTIFIER, ActiveModuleStorage.class);
         RarmorAPI.registerRarmorModule(ActiveModuleEnder.IDENTIFIER, ActiveModuleEnder.class);

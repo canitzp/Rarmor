@@ -91,7 +91,7 @@ public class PacketSyncRarmorData implements IMessage{
                     EntityPlayer player = mc.player;
                     for(int i = 0; i < player.inventory.getSizeInventory(); i++){
                         ItemStack stack = player.inventory.getStackInSlot(i);
-                        if(stack != null){
+                        if(!stack.isEmpty()){
                             if(message.stackId.equals(RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false))){
                                 IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.world, stack, true);
                                 if(data != null){

@@ -1,0 +1,6 @@
+{
+  "parent": "rarmor:item/standard_item",
+  "textures": {
+    "layer0": "rarmor:items/item_module_movement"
+  }
+}

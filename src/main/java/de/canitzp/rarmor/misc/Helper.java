@@ -16,9 +16,11 @@ import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +66,7 @@ public final class Helper{
 
     @SideOnly(Side.CLIENT)
     public static void renderStackToGui(ItemStack stack, float x, float y, float scale){
-        if(stack != null && stack.getItem() != null){
+        if(!stack.isEmpty()){
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -76,7 +78,7 @@ public final class Helper{
 
             Minecraft mc = Minecraft.getMinecraft();
             mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
-            mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRendererObj, stack, 0, 0, null);
+            mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
 
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
@@ -109,4 +111,25 @@ public final class Helper{
         }
         stack.getTagCompound().setInteger("Energy", energy);
     }
+
+    @SideOnly(Side.CLIENT)
+    public static int getRGBDurabilityForDisplay(){
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        if(player != null && player.world != null){
+            float[] color = getColor(player.world.getTotalWorldTime()%256);
+            return MathHelper.rgb(color[0]/255F, color[1]/255F, color[2]/255F);
+        }
+        return 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static float[] getColor(float pos){
+        if(pos < 85.0f){
+            return new float[]{pos*3.0F, 255.0f-pos*3.0f, 0.0f};
+        } else if(pos < 170.0f){
+            return new float[]{255.0f-(pos -= 85.0f)*3.0f, 0.0f, pos*3.0f};
+        }
+        return new float[]{0.0f, (pos -= 170.0f)*3.0f, 255.0f-pos*3.0f};
+    }
+
 }

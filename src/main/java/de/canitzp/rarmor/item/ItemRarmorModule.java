@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
     public ItemRarmorModule(String name){
-        super(name);
+        super("item_module_" + name);
         this.setMaxStackSize(1);
     }
 

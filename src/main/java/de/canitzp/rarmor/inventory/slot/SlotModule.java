@@ -35,10 +35,9 @@ public class SlotModule extends Slot{
     }
 
     @Override
-    public void onPickupFromSlot(EntityPlayer player, ItemStack someStack){
-        super.onPickupFromSlot(player, someStack);
-
+    public ItemStack onTake(EntityPlayer player, ItemStack someStack){
         this.uninstallModule();
+        return super.onTake(player, someStack);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class SlotModule extends Slot{
         super.putStack(newStack);
 
         if(!this.container.isPuttingStacksInSlots){
-            if(newStack != null){
+            if(!newStack.isEmpty()){
                 this.installModule(newStack);
             }
         }
@@ -57,7 +56,7 @@ public class SlotModule extends Slot{
         ItemStack toReturn = super.decrStackSize(amount);
 
         ItemStack stack = this.getStack();
-        if(stack == null || stack.stackSize <= 0){
+        if(!stack.isEmpty() || stack.getCount() <= 0){
             this.uninstallModule();
         }
 
@@ -105,7 +104,7 @@ public class SlotModule extends Slot{
     @Override
     public boolean isItemValid(ItemStack stack){
         ItemStack myStack = this.getStack();
-        if(myStack == null || myStack.stackSize <= 0){
+        if(!myStack.isEmpty() || myStack.getCount() <= 0){
             if(stack.getItem() instanceof IRarmorModuleItem){
                 IRarmorModuleItem item = (IRarmorModuleItem)stack.getItem();
                 if(item.canInstall(this.player, this, stack, this.currentData)){
@@ -127,6 +126,6 @@ public class SlotModule extends Slot{
     @Override
     public boolean canTakeStack(EntityPlayer player){
         ItemStack stack = this.getStack();
-        return stack == null || this.getActiveModules(this.getSlotIndex(), this.currentData).isEmpty() || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
+        return stack.isEmpty() || this.getActiveModules(this.getSlotIndex(), this.currentData).isEmpty() || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
     }
 }

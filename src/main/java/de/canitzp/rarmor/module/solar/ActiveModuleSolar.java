@@ -79,7 +79,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
         renderX += 19;
         renderY += 5;
 
-        FontRenderer font = mc.fontRendererObj;
+        FontRenderer font = mc.fontRenderer;
         boolean unicode = font.getUnicodeFlag();
         font.setUnicodeFlag(true);
         TextFormatting color = this.generatedLastTick ? TextFormatting.GREEN : TextFormatting.RED;

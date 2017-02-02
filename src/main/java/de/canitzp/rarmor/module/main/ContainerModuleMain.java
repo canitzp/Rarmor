@@ -9,10 +9,8 @@
 
 package de.canitzp.rarmor.module.main;
 
-import cofh.api.energy.IEnergyContainerItem;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.slot.SlotModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
@@ -25,6 +23,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerModuleMain extends RarmorModuleContainer {
-
-    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
     private final EntityPlayer player;
 
@@ -55,56 +53,8 @@ public class ContainerModuleMain extends RarmorModuleContainer {
             slots.add(new SlotModule(this.currentData.getModuleStacks(), this.player, this.currentData, (ContainerRarmor)this.actualContainer, i, 8, 7+i*22));
         }
 
-        for(int i = 0; i < 4; i++){
-            final EntityEquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];
-            slots.add(new Slot(ContainerModuleMain.this.player.inventory, 36+(3-i), 49, 16+i*18){
-                @Override
-                public int getSlotStackLimit(){
-                    return 1;
-                }
-
-                @Override
-                public boolean isItemValid(ItemStack stack){
-                    return slot != EntityEquipmentSlot.CHEST && stack != null && stack.getItem().isValidArmor(stack, slot, ContainerModuleMain.this.player);
-                }
-
-                @Override
-                @SideOnly(Side.CLIENT)
-                public String getSlotTexture(){
-                    return ItemArmor.EMPTY_SLOT_NAMES[slot.getIndex()];
-                }
-
-                @Override
-                public ItemStack decrStackSize(int amount){
-                    return slot == EntityEquipmentSlot.CHEST ? null : super.decrStackSize(amount);
-                }
-
-                @Override
-                public void putStack(@Nullable ItemStack stack){
-                    if(slot != EntityEquipmentSlot.CHEST){
-                        super.putStack(stack);
-                    }
-                }
-
-                @Override
-                public boolean canTakeStack(EntityPlayer playerIn){
-                    return slot != EntityEquipmentSlot.CHEST;
-                }
-            });
-        }
-
-        slots.add(new Slot(ContainerModuleMain.this.player.inventory, 40, 49, 94){
-            @Override
-            public boolean isItemValid(ItemStack stack){
-                return super.isItemValid(stack);
-            }
-
-            @Override
-            @SideOnly(Side.CLIENT)
-            public String getSlotTexture(){
-                return "minecraft:items/empty_armor_slot_shield";
-            }
-        });
+        this.addArmorSlotsAt(ContainerModuleMain.this.player, slots, 49, 16);
+        this.addSecondHandSlot(ContainerModuleMain.this.player, slots, 49, 94);
 
         return slots;
     }
@@ -127,60 +77,52 @@ public class ContainerModuleMain extends RarmorModuleContainer {
                 //Change things here
                 if(newStack.getItem() instanceof IRarmorModuleItem && ((IRarmorModuleItem)newStack.getItem()).canInstall(player, theSlot, newStack, this.currentData)){
                     if(!this.mergeItemStack(newStack, 2, 5, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if(equip.getSlotType() == EntityEquipmentSlot.Type.ARMOR){
                     int i = 8-equip.getIndex();
 
                     if(!this.mergeItemStack(newStack, i, i+1, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
-                else if(newStack.getItem() instanceof IEnergyContainerItem){
-                    if(!this.mergeItemStack(newStack, 0, 2, false)){
-                        return null;
-                    }
-                }
-                else if(Compat.teslaLoaded && newStack.hasCapability(TeslaCapabilities.CAPABILITY_PRODUCER, EnumFacing.DOWN)){
+                /* To not annoy anyone who tries to shit a battery into the inventory or hotbar
+                else if(newStack.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
-                else if(Compat.teslaLoaded && newStack.hasCapability(TeslaCapabilities.CAPABILITY_CONSUMER, EnumFacing.DOWN)){
-                    if(!this.mergeItemStack(newStack, 1, 2, false)){
-                        return null;
-                    }
-                }
+                */
                 //Not here anymore
                 else if(slot >= inventoryStart && slot <= inventoryEnd){
                     if(!this.mergeItemStack(newStack, hotbarStart, hotbarEnd+1, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if(slot >= inventoryEnd+1 && slot < hotbarEnd+1 && !this.mergeItemStack(newStack, inventoryStart, inventoryEnd+1, false)){
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
             else if(!this.mergeItemStack(newStack, inventoryStart, hotbarEnd+1, false)){
-                return null;
+                return ItemStack.EMPTY;
             }
 
-            if(newStack.stackSize <= 0){
-                theSlot.putStack(null);
+            if(newStack.getCount() <= 0){
+                theSlot.putStack(ItemStack.EMPTY);
             }
             else{
                 theSlot.onSlotChanged();
             }
 
-            if(newStack.stackSize == currentStack.stackSize){
-                return null;
+            if(newStack.getCount() == currentStack.getCount()){
+                return ItemStack.EMPTY;
             }
-            theSlot.onPickupFromSlot(player, newStack);
+            theSlot.onTake(player, newStack);
 
             return currentStack;
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 }

@@ -56,40 +56,40 @@ public class ContainerModuleFurnace extends RarmorModuleContainer {
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(FurnaceRecipes.instance().getSmeltingResult(newStack) != null){
+                if(!FurnaceRecipes.instance().getSmeltingResult(newStack).isEmpty()){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 //Not here anymore
                 else if(slot >= inventoryStart && slot <= inventoryEnd){
                     if(!this.mergeItemStack(newStack, hotbarStart, hotbarEnd+1, false)){
-                        return null;
+                        return ItemStack.EMPTY;
                     }
                 }
                 else if(slot >= inventoryEnd+1 && slot < hotbarEnd+1 && !this.mergeItemStack(newStack, inventoryStart, inventoryEnd+1, false)){
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
             else if(!this.mergeItemStack(newStack, inventoryStart, hotbarEnd+1, false)){
-                return null;
+                return ItemStack.EMPTY;
             }
 
-            if(newStack.stackSize <= 0){
-                theSlot.putStack(null);
+            if(newStack.getCount() <= 0){
+                theSlot.putStack(ItemStack.EMPTY);
             }
             else{
                 theSlot.onSlotChanged();
             }
 
-            if(newStack.stackSize == currentStack.stackSize){
-                return null;
+            if(newStack.getCount() == currentStack.getCount()){
+                return ItemStack.EMPTY;
             }
-            theSlot.onPickupFromSlot(player, newStack);
+            theSlot.onTake(player, newStack);
 
             return currentStack;
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 }

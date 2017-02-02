@@ -55,7 +55,7 @@ public class CommonEvents{
 
                 for(int i = 0; i < player.inventory.getSizeInventory(); i++){
                     ItemStack stack = player.inventory.getStackInSlot(i);
-                    if(stack != null){
+                    if(!stack.isEmpty()){
                         IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
                         if(data != null){
                             data.queueUpdate(true);

@@ -1,35 +1,35 @@
 itemGroup.rarmor=Rarmor
 
-item.rarmor.itemRarmorHelmet.name=Rarmor Helmet
-item.rarmor.itemRarmorChest.name=Rarmor Chestplate
-item.rarmor.itemRarmorPants.name=Rarmor Pants
-item.rarmor.itemRarmorBoots.name=Rarmor Boots
+item.rarmor:item_rarmor_helmet.name=Rarmor Helmet
+item.rarmor:item_rarmor_chest.name=Rarmor Chestplate
+item.rarmor:item_rarmor_pants.name=Rarmor Pants
+item.rarmor:item_rarmor_boots.name=Rarmor Boots
 
-item.rarmor.itemWireCutter.name=Wire Cutter
-item.rarmor.itemControlCircuit.name=Control Circuit
-item.rarmor.itemWire.name=Wire
-item.rarmor.itemConnector.name=Connector
-item.rarmor.itemSolarCell.name=Solar Cell
-item.rarmor.itemGenerator.name=Generator
-item.rarmor.itemBattery.name=Battery
+item.rarmor:item_wire_cutter.name=Wire Cutter
+item.rarmor:item_control_circuit.name=Control Circuit
+item.rarmor:item_wire.name=Wire
+item.rarmor:item_connector.name=Connector
+item.rarmor:item_solar_cell.name=Solar Cell
+item.rarmor:item_generator.name=Generator
+item.rarmor:item_battery.name=Battery
 
-item.rarmor.itemModuleStorage.name=Storage Module
-item.rarmor.itemModuleEnder.name=Ender Storage Module
-item.rarmor.itemModuleFurnace.name=Smelting Module
-item.rarmor.itemModuleSolar.name=Solar Module
-item.rarmor.itemModuleGenerator.name=Generator Module
-item.rarmor.itemModuleSpeed.name=Running Module
-item.rarmor.itemModuleJump.name=Jumping Module
-item.rarmor.itemModuleMovement.name=Movement Module
-item.rarmor.itemModuleProtectionIron.name=Iron Protection Module
-item.rarmor.itemModuleProtectionGold.name=Gold Protection Module
-item.rarmor.itemModuleProtectionDiamond.name=Diamond Protection Module
+item.rarmor:item_module_storage.name=Storage Module
+item.rarmor:item_module_ender.name=Ender Storage Module
+item.rarmor:item_module_furnace.name=Smelting Module
+item.rarmor:item_module_solar.name=Solar Module
+item.rarmor:item_module_generator.name=Generator Module
+item.rarmor:item_module_speed.name=Running Module
+item.rarmor:item_module_jump.name=Jumping Module
+item.rarmor:item_module_movement.name=Movement Module
+item.rarmor:item_module_protectionIron.name=Iron Protection Module
+item.rarmor:item_module_protectionGold.name=Gold Protection Module
+item.rarmor:item_module_protectionDiamond.name=Diamond Protection Module
 
 rarmor.back=Back to Inventory
 rarmor.open=Open Rarmor Gui
 rarmor.installedModules=Installed Modules
 rarmor.stackId=Unique ID
-rarmor.storedEnergy=Tesla/RF stored
+rarmor.storedEnergy=Crystal Flux stored
 rarmor.noDataYet=No Data present yet
 rarmor.needsHat=Helmet needed
 rarmor.needsShoes=Boots needed
@@ -48,6 +48,7 @@ module.rarmorJump.name=Jumping
 module.rarmorProtectionIron.name=Protection (Iron)
 module.rarmorProtectionGold.name=Protection (Gold)
 module.rarmorProtectionDiamond.name=Protection (Diamond)
+module.rarmorColor.name=Color
 
 rarmor.checkFailed=The Update Check for %s failed! See the log for more info!
 rarmor.notifyUpdate.1=There is an Update for %s available!

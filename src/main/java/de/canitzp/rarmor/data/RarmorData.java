@@ -344,7 +344,7 @@ public class RarmorData implements IRarmorData {
     }
 
     private ItemRarmorChest getEnergyContainer(){
-        if(this.stack != null){
+        if(!stack.isEmpty()){
             Item item = this.stack.getItem();
             if(item instanceof ItemRarmorChest){
                 return (ItemRarmorChest)item;

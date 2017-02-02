@@ -54,7 +54,7 @@ public class PacketOpenModule implements IMessage{
             FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
                 @Override
                 public void run(){
-                    EntityPlayer player = context.getServerHandler().playerEntity;
+                    EntityPlayer player = context.getServerHandler().player;
                     if(player != null){
                         RarmorAPI.methodHandler.openRarmor(player, message.moduleId, message.alsoSetData, message.sendRarmorDataToClient);
                     }

@@ -9,9 +9,6 @@
 
 package de.canitzp.rarmor.item;
 
-import cofh.api.energy.ItemEnergyContainer;
-import de.canitzp.rarmor.compat.Compat;
-import de.canitzp.rarmor.compat.ItemTeslaWrapper;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
 import de.canitzp.rarmor.misc.Helper;
@@ -21,29 +18,27 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
 
-public class ItemBattery extends ItemEnergyContainer{
+public class ItemBattery extends ItemBase{
+
+    public static final int CAPACITY = 500000;
+    public static final int TRANSFER = 500;
 
     public ItemBattery(String name){
-        super(500000, 500);
+        super(name);
         this.setMaxStackSize(1);
-
-        this.setRegistryName(RarmorAPI.MOD_ID, name);
-        GameRegistry.register(this);
-
-        this.setUnlocalizedName(RarmorAPI.MOD_ID+"."+name);
-        this.setCreativeTab(CreativeTab.INSTANCE);
     }
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
         tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
-        tooltip.add(TextFormatting.YELLOW+"   "+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
+        tooltip.add(TextFormatting.YELLOW+"   "+this.getEnergyStored(stack)+"/"+CAPACITY);
     }
 
     @Override
@@ -53,21 +48,29 @@ public class ItemBattery extends ItemEnergyContainer{
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack){
-        double max = this.getMaxEnergyStored(stack);
+        double max = CAPACITY;
         return (max-this.getEnergyStored(stack))/max;
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
-        return Compat.teslaLoaded ? new ItemTeslaWrapper(stack, this) : super.initCapabilities(stack, compound);
+        return new ItemRarmorChest.CapProvider(stack, CAPACITY, TRANSFER, TRANSFER);
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems){
+    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
         super.getSubItems(item, tab, subItems);
 
         ItemStack stack = new ItemStack(item);
-        Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
+        Helper.setItemEnergy(stack, CAPACITY);
         subItems.add(stack);
     }
+
+    public int getEnergyStored(ItemStack stack){
+        if(stack.hasTagCompound()){
+            return stack.getTagCompound().getInteger("Energy");
+        }
+        return 0;
+    }
+
 }
