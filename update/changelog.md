@@ -1,3 +1,6 @@
+# 1.11.2-r4.1
+* Fixed server errors, including startup crash
+
 # 1.11.2-r4
 * Update to Minecraft 1.11.2
 * Added the coloring tab back

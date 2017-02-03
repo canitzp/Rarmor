@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author canitzp
@@ -20,6 +22,7 @@ public class PacketSyncColor implements IMessage, IMessageHandler<PacketSyncColo
 
     public PacketSyncColor(){}
 
+    @SideOnly(Side.CLIENT)
     public PacketSyncColor(EntityEquipmentSlot slot){
         this.slot = slot.ordinal();
         EntityPlayer player = Minecraft.getMinecraft().player;
@@ -34,6 +37,7 @@ public class PacketSyncColor implements IMessage, IMessageHandler<PacketSyncColo
         this.playerID = buf.readInt();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void toBytes(ByteBuf buf){
         buf.writeInt(this.slot);

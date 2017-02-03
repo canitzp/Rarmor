@@ -27,7 +27,6 @@ import java.util.Random;
 public class ActiveModuleColor extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Color";
-    @SideOnly(Side.CLIENT)
     public ItemStack stack = new ItemStack(Items.DYE, 1, 6);
 
     public ActiveModuleColor(IRarmorData data){
@@ -54,6 +53,7 @@ public class ActiveModuleColor extends ActiveRarmorModule{
         return new ContainerModuleColor(player, container, this);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public RarmorModuleGui createGui(GuiContainer gui){
         return new GuiModuleColor(gui, this);
@@ -85,6 +85,7 @@ public class ActiveModuleColor extends ActiveRarmorModule{
 
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
 

@@ -35,11 +35,11 @@ public class ThreadUpdateChecker extends Thread{
             String currentMcVersion = Helper.getMcVersion();
             String newestVersionProp = updateProperties.getProperty(currentMcVersion);
 
-            int updateVersionInt = Integer.parseInt(newestVersionProp);
+            float updateVersionInt = Float.parseFloat(newestVersionProp);
             UpdateChecker.updateVersionString = currentMcVersion+"-r"+newestVersionProp;
 
             String clientVersionString = Helper.getMajorModVersion();
-            int clientVersion = Integer.parseInt(clientVersionString);
+            float clientVersion = Float.parseFloat(clientVersionString);
             if(updateVersionInt > clientVersion){
                 UpdateChecker.needsUpdateNotify = true;
             }
