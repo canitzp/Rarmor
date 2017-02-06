@@ -20,7 +20,7 @@ compileJava {
 }
 
 
-version = "1.11.2-r4.1"
+version = "1.11.2-r4.2"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 

@@ -1,3 +1,6 @@
+# 1.11.2-r4.2
+* Fixed a crash with the armor if Tesla isn't loaded
+
 # 1.11.2-r4.1
 * Fixed server errors, including startup crash
 
