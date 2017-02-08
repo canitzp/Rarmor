@@ -152,7 +152,7 @@ public class ClientEvents{
                                     for(ActiveRarmorModule module : data.getCurrentModules()){
                                         if(module.doesRenderOnOverlay(mc, player, data)){
                                             ItemStack display = module.getDisplayIcon();
-                                            if(display != null){
+                                            if(!display.isEmpty()){
                                                 Helper.renderStackToGui(display, renderX, renderY, 1.0F);
                                             }
 

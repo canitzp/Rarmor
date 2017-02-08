@@ -90,4 +90,9 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
 
     }
+
+    @Override
+    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data) {
+        return false;
+    }
 }

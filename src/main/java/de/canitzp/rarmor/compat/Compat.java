@@ -9,6 +9,9 @@
 
 package de.canitzp.rarmor.compat;
 
+import net.darkhax.tesla.capability.TeslaCapabilities;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Loader;
 
 public final class Compat{
@@ -17,6 +20,10 @@ public final class Compat{
 
     public static void preInit(){
         teslaLoaded = Loader.isModLoaded("tesla") || Loader.isModLoaded("Tesla");
+    }
+
+    public static boolean isTeslaCapability(Capability capability, EnumFacing side){
+        return teslaLoaded && (capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER);
     }
 
 }

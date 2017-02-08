@@ -1,3 +1,8 @@
+# 1.11.2-r4.3
+* Now really fixed the Tesla problem
+* Solar module shows if the energy storage is full
+* Color tab now doesn't render the blue dye in the main frame
+
 # 1.11.2-r4.2
 * Fixed a crash with the armor if Tesla isn't loaded
 

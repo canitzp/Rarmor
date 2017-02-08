@@ -35,6 +35,7 @@ rarmor.needsHat=Helmet needed
 rarmor.needsShoes=Boots needed
 rarmor.generating=Generating
 rarmor.notGenerating=Not Generating
+rarmor.full=Full of Energy
 rarmor.compoundOf=Compound of Modules
 
 module.rarmorMain.name=Overview

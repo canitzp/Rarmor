@@ -15,7 +15,6 @@ import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.compat.ItemTeslaWrapper;
 import de.canitzp.rarmor.misc.Helper;
-import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -32,7 +31,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -185,7 +183,7 @@ public class ItemRarmorChest extends ItemRarmor{
             EStorage storage = new EStorage(stack, cap, maxRec, maxTra);
             if(capability == CapabilityEnergy.ENERGY){
                 return (T) storage;
-            } else if(Compat.teslaLoaded && capability == TeslaCapabilities.CAPABILITY_PRODUCER || capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER){
+            } else if(Compat.isTeslaCapability(capability, facing)){
                 return (T) new ItemTeslaWrapper(storage);
             }
             return null;

@@ -25,6 +25,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * A basic class for a Rarmor module. The way this works is similar to a TileEntity in that every module is a seperate
  * instance of this class.
@@ -122,6 +124,7 @@ public abstract class ActiveRarmorModule{
      * @return The Item to be displayed.
      */
     @SideOnly(Side.CLIENT)
+    @Nonnull
     public abstract ItemStack getDisplayIcon();
 
     @Override

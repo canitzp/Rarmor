@@ -84,6 +84,10 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
         font.setUnicodeFlag(true);
         TextFormatting color = this.generatedLastTick ? TextFormatting.GREEN : TextFormatting.RED;
         String key = this.generatedLastTick ? "generating" : "notGenerating";
+        if(data.getEnergyStored() == data.getMaxEnergyStored()){
+            color = TextFormatting.BLUE;
+            key = "full";
+        }
         font.drawString(color+I18n.format(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF, true);
         font.setUnicodeFlag(unicode);
     }
