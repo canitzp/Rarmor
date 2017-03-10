@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.event;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.data.WorldData;
@@ -55,7 +56,7 @@ public class CommonEvents{
 
                 for(int i = 0; i < player.inventory.getSizeInventory(); i++){
                     ItemStack stack = player.inventory.getStackInSlot(i);
-                    if(!stack.isEmpty()){
+                    if(!CompatUtil.isEmpty(stack)){
                         IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
                         if(data != null){
                             data.queueUpdate(true);

@@ -9,9 +9,10 @@
 
 package de.canitzp.rarmor.packet;
 
+import de.canitzp.rarmor.CompatUtil;
+import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
-import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -91,7 +92,7 @@ public class PacketSyncRarmorData implements IMessage{
                     EntityPlayer player = mc.player;
                     for(int i = 0; i < player.inventory.getSizeInventory(); i++){
                         ItemStack stack = player.inventory.getStackInSlot(i);
-                        if(!stack.isEmpty()){
+                        if(!CompatUtil.isEmpty(stack)){
                             if(message.stackId.equals(RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false))){
                                 IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.world, stack, true);
                                 if(data != null){

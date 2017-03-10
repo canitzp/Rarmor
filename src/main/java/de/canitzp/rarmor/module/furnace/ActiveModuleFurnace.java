@@ -9,11 +9,12 @@
 
 package de.canitzp.rarmor.module.furnace;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.Minecraft;
@@ -50,22 +51,23 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         if(!world.isRemote){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
                 ItemStack input = this.inventory.getStackInSlot(0);
-                if(!input.isEmpty()){
+                if(!CompatUtil.isEmpty(input)){
                     ItemStack output = FurnaceRecipes.instance().getSmeltingResult(input);
-                    if(!output.isEmpty()){
+                    if(!CompatUtil.isEmpty(output)){
                         ItemStack outputSlot = this.inventory.getStackInSlot(1);
-                        if(outputSlot.isEmpty() || Helper.canBeStacked(output, outputSlot)){
+                        if(CompatUtil.isEmpty(outputSlot) || Helper.canBeStacked(output, outputSlot)){
                             this.burnTime++;
                             this.data.setDirty();
 
                             this.data.extractEnergy(ENERGY_PER_TICK, false);
 
                             if(this.burnTime >= TIME_TO_REACH){
-                                if(outputSlot.isEmpty()){
+                                if(CompatUtil.isEmpty(outputSlot)){
                                     this.inventory.setInventorySlotContents(1, output.copy());
                                 }
                                 else{
-                                    outputSlot.grow(output.getCount());
+                                    CompatUtil.growStack(outputSlot, CompatUtil.getStackCount(output));
+                                    //outputSlot.grow(output.getCount());
                                 }
 
                                 this.inventory.decrStackSize(0, 1);
@@ -102,7 +104,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         }
 
         ItemStack input = this.inventory.getStackInSlot(0);
-        if(!input.isEmpty()){
+        if(!CompatUtil.isEmpty(input)){
             Helper.renderStackToGui(input, renderX, renderY, 0.7F);
             renderX += 18;
         }

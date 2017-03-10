@@ -9,18 +9,19 @@
 
 package de.canitzp.rarmor.misc;
 
+import de.canitzp.rarmor.CompatUtil;
+import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.internal.IMethodHandler;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.config.Config;
+import de.canitzp.rarmor.data.RarmorData;
 import de.canitzp.rarmor.data.WorldData;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
+import de.canitzp.rarmor.item.ItemRarmor;
 import de.canitzp.rarmor.module.color.ActiveModuleColor;
 import de.canitzp.rarmor.module.main.ActiveModuleMain;
 import de.canitzp.rarmor.packet.PacketHandler;
-import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.data.RarmorData;
-import de.canitzp.rarmor.item.ItemRarmor;
 import de.canitzp.rarmor.packet.PacketOpenModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,20 +44,20 @@ public class MethodHandler implements IMethodHandler {
     public ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot){
         if(entity instanceof EntityLivingBase){
             ItemStack stack = ((EntityLivingBase)entity).getItemStackFromSlot(slot);
-            if(!stack.isEmpty()){
+            if(!CompatUtil.isEmpty(stack)){
                 Item item = stack.getItem();
                 if(item instanceof ItemRarmor && ((ItemRarmor)item).armorType == slot){
                     return stack;
                 }
             }
         }
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 
     @Override
     public IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent){
         ItemStack stack = this.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
-        if(!stack.isEmpty()){
+        if(!CompatUtil.isEmpty(stack)){
             return this.getDataForStack(player.getEntityWorld(), stack, createIfAbsent);
         }
         return null;

@@ -9,11 +9,12 @@
 
 package de.canitzp.rarmor.module.main;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.api.module.IRarmorModuleItem;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.slot.SlotModule;
-import de.canitzp.rarmor.api.module.IRarmorModuleItem;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -69,14 +70,14 @@ public class ContainerModuleMain extends RarmorModuleContainer {
                 //Change things here
                 if(newStack.getItem() instanceof IRarmorModuleItem && ((IRarmorModuleItem)newStack.getItem()).canInstall(player, theSlot, newStack, this.currentData)){
                     if(!this.mergeItemStack(newStack, 2, 5, false)){
-                        return ItemStack.EMPTY;
+                        return CompatUtil.getEmpty();
                     }
                 }
                 else if(equip.getSlotType() == EntityEquipmentSlot.Type.ARMOR){
                     int i = 8-equip.getIndex();
 
                     if(!this.mergeItemStack(newStack, i, i+1, false)){
-                        return ItemStack.EMPTY;
+                        return CompatUtil.getEmpty();
                     }
                 }
                 /* To not annoy anyone who tries to shit a battery into the inventory or hotbar
@@ -89,32 +90,32 @@ public class ContainerModuleMain extends RarmorModuleContainer {
                 //Not here anymore
                 else if(slot >= inventoryStart && slot <= inventoryEnd){
                     if(!this.mergeItemStack(newStack, hotbarStart, hotbarEnd+1, false)){
-                        return ItemStack.EMPTY;
+                        return CompatUtil.getEmpty();
                     }
                 }
                 else if(slot >= inventoryEnd+1 && slot < hotbarEnd+1 && !this.mergeItemStack(newStack, inventoryStart, inventoryEnd+1, false)){
-                    return ItemStack.EMPTY;
+                    return CompatUtil.getEmpty();
                 }
             }
             else if(!this.mergeItemStack(newStack, inventoryStart, hotbarEnd+1, false)){
-                return ItemStack.EMPTY;
+                return CompatUtil.getEmpty();
             }
 
-            if(newStack.getCount() <= 0){
-                theSlot.putStack(ItemStack.EMPTY);
+            if(CompatUtil.getStackCount(newStack) <= 0){
+                theSlot.putStack(CompatUtil.getEmpty());
             }
             else{
                 theSlot.onSlotChanged();
             }
 
-            if(newStack.getCount() == currentStack.getCount()){
-                return ItemStack.EMPTY;
+            if(CompatUtil.getStackCount(newStack) == CompatUtil.getStackCount(currentStack)){
+                return CompatUtil.getEmpty();
             }
-            theSlot.onTake(player, newStack);
+            CompatUtil.onTakeSlot(theSlot, player, newStack);
 
             return currentStack;
         }
 
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 }

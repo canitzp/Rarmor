@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.misc;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
@@ -66,7 +67,7 @@ public final class Helper{
 
     @SideOnly(Side.CLIENT)
     public static void renderStackToGui(ItemStack stack, float x, float y, float scale){
-        if(!stack.isEmpty()){
+        if(!CompatUtil.isEmpty(stack)){
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

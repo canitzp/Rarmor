@@ -9,13 +9,14 @@
 
 package de.canitzp.rarmor.module.main;
 
-import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.item.ItemRegistry;
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
+import de.canitzp.rarmor.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -48,7 +49,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
         if(!world.isRemote){
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
                 ItemStack discharge = this.inventory.getStackInSlot(0);
-                if(!discharge.isEmpty()){
+                if(!CompatUtil.isEmpty(discharge)){
                     if(discharge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
                         IEnergyStorage storage = discharge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
                         if(storage != null){
@@ -65,7 +66,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
             if(this.data.getEnergyStored() > 0){
                 ItemStack charge = this.inventory.getStackInSlot(1);
-                if(!charge.isEmpty()){
+                if(!CompatUtil.isEmpty(charge)){
                     if(charge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
                         IEnergyStorage storage = charge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
                         if(storage != null){

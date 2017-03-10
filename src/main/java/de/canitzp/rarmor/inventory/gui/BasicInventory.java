@@ -9,6 +9,8 @@
 
 package de.canitzp.rarmor.inventory.gui;
 
+import de.canitzp.rarmor.CompatUtil;
+import de.canitzp.rarmor.NonNullList;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +18,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -28,7 +29,7 @@ public class BasicInventory implements IInventory{
 
     public BasicInventory(String name, int slotAmount, IRarmorData data){
         this.name = name;
-        this.slots = NonNullList.withSize(slotAmount, ItemStack.EMPTY);
+        this.slots = NonNullList.withSize(slotAmount, CompatUtil.getEmpty());
         this.data = data;
     }
 
@@ -85,7 +86,7 @@ public class BasicInventory implements IInventory{
     @Override
     public void clear(){
         for(int i = 0; i < this.slots.size(); i++){
-            this.slots.set(i, ItemStack.EMPTY);
+            this.slots.set(i, CompatUtil.getEmpty());
         }
         this.markDirty();
     }
@@ -101,10 +102,10 @@ public class BasicInventory implements IInventory{
         return this.slots.size();
     }
 
-    @Override
+    //@Override
     public boolean isEmpty(){
         for (ItemStack itemstack : this.slots){
-            if (!itemstack.isEmpty()){
+            if (!CompatUtil.isEmpty(itemstack)){
                 return false;
             }
         }
@@ -116,35 +117,35 @@ public class BasicInventory implements IInventory{
         if(i < this.getSizeInventory()){
             return this.slots.get(i);
         }
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 
     @Override
     public ItemStack decrStackSize(int i, int j){
-        if(!this.slots.get(i).isEmpty()){
+        if(!CompatUtil.isEmpty(this.slots.get(i))){
             ItemStack stackAt;
-            if(this.slots.get(i).getCount() <= j){
+            if(CompatUtil.getStackCount(this.slots.get(i)) <= j){
                 stackAt = this.slots.get(i);
-                this.slots.set(i, ItemStack.EMPTY);
+                this.slots.set(i, CompatUtil.getEmpty());
                 this.markDirty();
                 return stackAt;
             }
             else{
                 stackAt = this.slots.get(i).splitStack(j);
-                if(this.slots.get(i).getCount() <= 0){
-                    this.slots.set(i, ItemStack.EMPTY);
+                if(CompatUtil.getStackCount(this.slots.get(i)) <= 0){
+                    this.slots.set(i, CompatUtil.getEmpty());
                 }
                 this.markDirty();
                 return stackAt;
             }
         }
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index){
         ItemStack stack = this.slots.get(index);
-        this.slots.set(index, ItemStack.EMPTY);
+        this.slots.set(index, CompatUtil.getEmpty());
         return stack;
     }
 
@@ -177,7 +178,7 @@ public class BasicInventory implements IInventory{
             NBTTagList tagList = compound.getTagList("Items", 10);
             for(int i = 0; i < this.slots.size(); i++){
                 NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-                this.slots.set(i, tagCompound != null && tagCompound.hasKey("id") ? new ItemStack(tagCompound) : ItemStack.EMPTY);
+                this.slots.set(i, tagCompound != null && tagCompound.hasKey("id") ? CompatUtil.fromNBT(tagCompound) : CompatUtil.getEmpty());
             }
         }
     }
@@ -191,9 +192,9 @@ public class BasicInventory implements IInventory{
     }
 
     public void dropSingle(Entity entity, int i){
-        if(!this.slots.get(i).isEmpty()){
+        if(!CompatUtil.isEmpty(this.slots.get(i))){
             entity.entityDropItem(this.slots.get(i).copy(), 0);
-            this.slots.set(i, ItemStack.EMPTY);
+            this.slots.set(i, CompatUtil.getEmpty());
 
             this.markDirty();
         }

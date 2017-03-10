@@ -9,15 +9,15 @@
 
 package de.canitzp.rarmor.inventory;
 
-import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.inventory.slot.SlotModule;
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.inventory.slot.SlotModule;
 import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -70,10 +70,18 @@ public class ContainerRarmor extends Container{
     }
 
     @SideOnly(Side.CLIENT)
-    @Override
+    //@Override
     public void setAll(List<ItemStack> stack){
         this.isPuttingStacksInSlots = true;
-        super.setAll(stack);
+        //super.setAll(stack);
+        this.isPuttingStacksInSlots = false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void func_75131_a(ItemStack[] stacks) {
+        this.isPuttingStacksInSlots = true;
+        super.func_75131_a(stacks);
         this.isPuttingStacksInSlots = false;
     }
 
@@ -117,7 +125,7 @@ public class ContainerRarmor extends Container{
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
         ItemStack stack = this.container.slotClick(slotId, dragType, clickType, player);
-        if(stack.isEmpty()){
+        if(CompatUtil.isEmpty(stack)){
             stack = super.slotClick(slotId, dragType, clickType, player);
         }
 

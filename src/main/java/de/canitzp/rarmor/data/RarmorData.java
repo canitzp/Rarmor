@@ -9,15 +9,16 @@
 
 package de.canitzp.rarmor.data;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.item.ItemRarmorChest;
+import de.canitzp.rarmor.misc.Helper;
 import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.packet.PacketSyncRarmorData;
-import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -344,7 +345,7 @@ public class RarmorData implements IRarmorData {
     }
 
     private ItemRarmorChest getEnergyContainer(){
-        if(!stack.isEmpty()){
+        if(!CompatUtil.isEmpty(stack)){
             Item item = this.stack.getItem();
             if(item instanceof ItemRarmorChest){
                 return (ItemRarmorChest)item;

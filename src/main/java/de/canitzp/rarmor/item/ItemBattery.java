@@ -9,8 +9,8 @@
 
 package de.canitzp.rarmor.item;
 
+import de.canitzp.rarmor.NonNullList;
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.misc.CreativeTab;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,10 +18,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -57,11 +57,20 @@ public class ItemBattery extends ItemBase{
         return new ItemRarmorChest.CapProvider(stack, CAPACITY, TRANSFER, TRANSFER);
     }
 
-    @Override
+    //@Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-        super.getSubItems(item, tab, subItems);
+        //super.getSubItems(item, tab, subItems);
 
         ItemStack stack = new ItemStack(item);
+        Helper.setItemEnergy(stack, CAPACITY);
+        subItems.add(stack);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        super.getSubItems(itemIn, tab, subItems);
+        ItemStack stack = new ItemStack(itemIn);
         Helper.setItemEnergy(stack, CAPACITY);
         subItems.add(stack);
     }

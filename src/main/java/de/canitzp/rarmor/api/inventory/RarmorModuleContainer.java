@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.api.inventory;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
@@ -57,7 +58,7 @@ public class RarmorModuleContainer{
     }
 
     public ItemStack transferStackInSlot(EntityPlayer player, int index){
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 
     public void onContainerClosed(EntityPlayer player){
@@ -83,7 +84,7 @@ public class RarmorModuleContainer{
     }
 
     public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 
     /**
@@ -111,7 +112,7 @@ public class RarmorModuleContainer{
 
                 @Override
                 public boolean isItemValid(ItemStack stack){
-                    return slot != EntityEquipmentSlot.CHEST && !stack.isEmpty() && stack.getItem().isValidArmor(stack, slot, player);
+                    return slot != EntityEquipmentSlot.CHEST && !CompatUtil.isEmpty(stack) && stack.getItem().isValidArmor(stack, slot, player);
                 }
 
                 @Override

@@ -13,7 +13,6 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.item.ItemRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class CreativeTab extends CreativeTabs{
 
@@ -23,8 +22,13 @@ public class CreativeTab extends CreativeTabs{
         super(RarmorAPI.MOD_ID);
     }
 
-    @Override
+    /*@Override
     public ItemStack getTabIconItem(){
         return new ItemStack(ItemRegistry.itemRarmorChest);
+    }*/
+
+    @Override
+    public Item getTabIconItem() {
+        return ItemRegistry.itemRarmorChest;
     }
 }

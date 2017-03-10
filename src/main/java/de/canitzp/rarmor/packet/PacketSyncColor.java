@@ -26,7 +26,8 @@ public class PacketSyncColor implements IMessage, IMessageHandler<PacketSyncColo
     public PacketSyncColor(EntityEquipmentSlot slot){
         this.slot = slot.ordinal();
         EntityPlayer player = Minecraft.getMinecraft().player;
-        this.hex = player.inventory.armorInventory.get(slot.getIndex()).getTagCompound().getInteger("Color");
+        //this.hex = player.inventory.armorInventory.get(slot.getIndex()).getTagCompound().getInteger("Color");
+        this.hex = player.inventory.armorInventory[slot.getIndex()].getTagCompound().getInteger("Color");
         this.playerID = player.getEntityId();
     }
 
@@ -50,7 +51,7 @@ public class PacketSyncColor implements IMessage, IMessageHandler<PacketSyncColo
         EntityPlayerMP player = ctx.getServerHandler().player;
         if(player.getEntityId() == message.playerID){
             EntityEquipmentSlot slot = EntityEquipmentSlot.values()[message.slot];
-            ItemStack stack = player.inventory.armorInventory.get(slot.getIndex());
+            ItemStack stack = player.inventory.armorInventory[slot.getIndex()];
             NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
             nbt.setInteger("Color", message.hex);
             stack.setTagCompound(nbt);

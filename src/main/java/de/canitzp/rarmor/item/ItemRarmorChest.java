@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.item;
 
+import de.canitzp.rarmor.NonNullList;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
@@ -24,13 +25,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -151,11 +153,20 @@ public class ItemRarmorChest extends ItemRarmor{
         return new CapProvider(stack, CAPACITY, MAX_RECEIVE, MAX_EXTRACT);
     }
 
-    @Override
+    //@Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-        super.getSubItems(item, tab, subItems);
+        //super.getSubItems(item, tab, subItems);
 
         ItemStack stack = new ItemStack(item);
+        Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
+        subItems.add(stack);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        super.getSubItems(itemIn, tab, subItems);
+        ItemStack stack = new ItemStack(itemIn);
         Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
         subItems.add(stack);
     }

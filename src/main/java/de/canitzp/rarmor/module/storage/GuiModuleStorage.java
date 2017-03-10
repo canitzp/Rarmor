@@ -9,8 +9,8 @@
 
 package de.canitzp.rarmor.module.storage;
 
-import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiModuleStorage extends RarmorModuleGui{
 
-    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_Storage");
+    private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_storage");
 
     public GuiModuleStorage(GuiContainer gui, ActiveRarmorModule module){
         super(gui, module);

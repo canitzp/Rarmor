@@ -9,13 +9,14 @@
 
 package de.canitzp.rarmor.event;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.config.Config;
 import de.canitzp.rarmor.inventory.gui.button.TexturedButton;
-import de.canitzp.rarmor.module.main.GuiModuleMain;
 import de.canitzp.rarmor.misc.Helper;
+import de.canitzp.rarmor.module.main.GuiModuleMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -135,7 +136,7 @@ public class ClientEvents{
                 if(!mc.gameSettings.showDebugInfo){
                     if(player != null && player.getEntityWorld() != null){
                         ItemStack stack = RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
-                        if(!stack.isEmpty()){
+                        if(!CompatUtil.isEmpty(stack)){
                             IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
                             if(data != null){
                                 GlStateManager.pushMatrix();
@@ -152,7 +153,7 @@ public class ClientEvents{
                                     for(ActiveRarmorModule module : data.getCurrentModules()){
                                         if(module.doesRenderOnOverlay(mc, player, data)){
                                             ItemStack display = module.getDisplayIcon();
-                                            if(!display.isEmpty()){
+                                            if(!CompatUtil.isEmpty(display)){
                                                 Helper.renderStackToGui(display, renderX, renderY, 1.0F);
                                             }
 

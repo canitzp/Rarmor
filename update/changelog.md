@@ -1,3 +1,7 @@
+# 1.10.2-rc5
+####This is not a stable version, it's a candidate for it. Report bugs at the GitHub page!
+* Backport of the 1.11.2 version to 1.10.2
+
 # 1.11.2-r4.3
 * Now really fixed the Tesla problem
 * Solar module shows if the energy storage is full

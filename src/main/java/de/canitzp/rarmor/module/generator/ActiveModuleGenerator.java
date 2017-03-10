@@ -9,13 +9,14 @@
 
 package de.canitzp.rarmor.module.generator;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
+import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -65,14 +66,14 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
             }
             else if(canAddEnergy){
                 ItemStack stack = this.inventory.getStackInSlot(0);
-                if(!stack.isEmpty()){
+                if(!CompatUtil.isEmpty(stack)){
                     int time = TileEntityFurnace.getItemBurnTime(stack);
                     if(time > 0){
                         this.currentBurnTime = time;
                         this.burnTimeTickingDownFrom = time;
                         this.data.setDirty();
 
-                        stack.shrink(1);
+                        CompatUtil.shrinkStack(stack, 1);
                     }
                 }
             }

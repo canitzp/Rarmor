@@ -20,7 +20,7 @@ compileJava {
 }
 
 
-version = "1.11.2-r4.3"
+version = "1.10.2-rc5.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
@@ -29,7 +29,8 @@ if(hasProperty('buildnumber')){
 }
 
 minecraft {
-    version = "1.11.2-13.20.0.2226"
+    //version = "1.11.2-13.20.0.2226"
+    version = "1.10.2-12.18.3.2254"
     runDir = "idea"
 
     mappings = "snapshot_20170201"

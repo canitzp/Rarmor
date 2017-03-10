@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.module.furnace;
 
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,40 +57,41 @@ public class ContainerModuleFurnace extends RarmorModuleContainer {
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(!FurnaceRecipes.instance().getSmeltingResult(newStack).isEmpty()){
+                if(!CompatUtil.isEmpty(FurnaceRecipes.instance().getSmeltingResult(newStack))){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
-                        return ItemStack.EMPTY;
+                        return CompatUtil.getEmpty();
                     }
                 }
                 //Not here anymore
                 else if(slot >= inventoryStart && slot <= inventoryEnd){
                     if(!this.mergeItemStack(newStack, hotbarStart, hotbarEnd+1, false)){
-                        return ItemStack.EMPTY;
+                        return CompatUtil.getEmpty();
                     }
                 }
                 else if(slot >= inventoryEnd+1 && slot < hotbarEnd+1 && !this.mergeItemStack(newStack, inventoryStart, inventoryEnd+1, false)){
-                    return ItemStack.EMPTY;
+                    return CompatUtil.getEmpty();
                 }
             }
             else if(!this.mergeItemStack(newStack, inventoryStart, hotbarEnd+1, false)){
-                return ItemStack.EMPTY;
+                return CompatUtil.getEmpty();
             }
 
-            if(newStack.getCount() <= 0){
-                theSlot.putStack(ItemStack.EMPTY);
+            if(CompatUtil.getStackCount(newStack) <= 0){
+                theSlot.putStack(CompatUtil.getEmpty());
             }
             else{
                 theSlot.onSlotChanged();
             }
 
-            if(newStack.getCount() == currentStack.getCount()){
-                return ItemStack.EMPTY;
+            if(CompatUtil.getStackCount(newStack) == CompatUtil.getStackCount(currentStack)){
+                return CompatUtil.getEmpty();
             }
-            theSlot.onTake(player, newStack);
+            //theSlot.onTake(player, newStack);
+            theSlot.func_82870_a(player, newStack);
 
             return currentStack;
         }
 
-        return ItemStack.EMPTY;
+        return CompatUtil.getEmpty();
     }
 }

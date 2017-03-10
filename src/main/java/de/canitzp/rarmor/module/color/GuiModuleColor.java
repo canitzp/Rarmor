@@ -1,6 +1,6 @@
 package de.canitzp.rarmor.module.color;
 
-import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.CompatUtil;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.misc.Helper;
@@ -113,7 +113,7 @@ public class GuiModuleColor extends RarmorModuleGui{
     @Override
     public void updateScreen(){
         if(isColorDirty && Minecraft.getMinecraft().world.getTotalWorldTime() % 3 == 0){
-            ItemStack armor = Minecraft.getMinecraft().player.inventory.armorInventory.get(activeSlot.getIndex());
+            ItemStack armor = Minecraft.getMinecraft().player.inventory.armorInventory[activeSlot.getIndex()];
             NBTTagCompound nbt = armor.hasTagCompound() ? armor.getTagCompound() : new NBTTagCompound();
             nbt.setInteger("Color", hex);
             armor.setTagCompound(nbt);
@@ -130,7 +130,7 @@ public class GuiModuleColor extends RarmorModuleGui{
 
     private void recolor(){
         ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(activeSlot.getIndex());
-        if(!armor.isEmpty() && armor.hasTagCompound() && armor.getTagCompound().hasKey("Color", 3)){
+        if(!CompatUtil.isEmpty(armor) && armor.hasTagCompound() && armor.getTagCompound().hasKey("Color", 3)){
             this.hex = armor.getTagCompound().getInteger("Color");
         }
         this.setBackHex(this.hex);
@@ -139,10 +139,10 @@ public class GuiModuleColor extends RarmorModuleGui{
     private void copyColor(EntityEquipmentSlot from){
         createColorTag(from);
         ItemStack fromStack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(from.getIndex());
-        if(!fromStack.isEmpty() && fromStack.hasTagCompound() && fromStack.getTagCompound().hasKey("Color", 3)){
+        if(!CompatUtil.isEmpty(fromStack) && fromStack.hasTagCompound() && fromStack.getTagCompound().hasKey("Color", 3)){
             createColorTag(activeSlot);
             ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(activeSlot.getIndex());
-            if(!armor.isEmpty()){
+            if(!CompatUtil.isEmpty(armor)){
                 this.hex = fromStack.getTagCompound().getInteger("Color");
                 armor.getTagCompound().setInteger("Color", this.hex);
                 this.isColorDirty = true;
@@ -152,7 +152,7 @@ public class GuiModuleColor extends RarmorModuleGui{
 
     private void createColorTag(EntityEquipmentSlot slot){
         ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(slot.getIndex());
-        if(!armor.isEmpty()){
+        if(!CompatUtil.isEmpty(armor)){
             NBTTagCompound nbt;
             if(!armor.hasTagCompound()){
                 armor.setTagCompound(nbt = new NBTTagCompound());

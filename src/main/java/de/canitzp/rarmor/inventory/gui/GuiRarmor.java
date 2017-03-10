@@ -9,19 +9,18 @@
 
 package de.canitzp.rarmor.inventory.gui;
 
+import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.event.ClientEvents;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.gui.button.TabButton;
 import de.canitzp.rarmor.inventory.gui.button.TexturedButton;
+import de.canitzp.rarmor.misc.Helper;
 import de.canitzp.rarmor.module.main.GuiModuleMain;
 import de.canitzp.rarmor.update.UpdateChecker;
-import de.canitzp.rarmor.Rarmor;
-import de.canitzp.rarmor.event.ClientEvents;
-import de.canitzp.rarmor.misc.Helper;
-import mezz.jei.util.color.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -33,7 +32,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
