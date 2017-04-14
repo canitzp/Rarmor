@@ -1,0 +1,60 @@
+itemGroup.rarmor=Rarmor
+
+item.rarmor:item_rarmor_helmet.name=Rarmor 头盔
+item.rarmor:item_rarmor_chest.name=Rarmor 胸甲
+item.rarmor:item_rarmor_pants.name=Rarmor 护腿
+item.rarmor:item_rarmor_boots.name=Rarmor 靴子
+
+item.rarmor:item_wire_cutter.name=线缆钳
+item.rarmor:item_control_circuit.name=控制电路板
+item.rarmor:item_wire.name=线缆
+item.rarmor:item_connector.name=连接器
+item.rarmor:item_solar_cell.name=太阳能电池
+item.rarmor:item_generator.name=发电机
+item.rarmor:item_battery.name=电池
+
+item.rarmor:item_module_storage.name=存储模块
+item.rarmor:item_module_ender.name=末影存储模块
+item.rarmor:item_module_furnace.name=熔炉模块
+item.rarmor:item_module_solar.name=太阳能模块
+item.rarmor:item_module_generator.name=发电机模块
+item.rarmor:item_module_speed.name=奔跑模块
+item.rarmor:item_module_jump.name=跳跃模块
+item.rarmor:item_module_movement.name=运动模块
+item.rarmor:item_module_protectionIron.name=铁护甲模块
+item.rarmor:item_module_protectionGold.name=金护甲模块
+item.rarmor:item_module_protectionDiamond.name=钻石护甲模块
+
+rarmor.back=返回物品栏
+rarmor.open=打开 Rarmor 界面
+rarmor.installedModules=已安装模块
+rarmor.stackId=唯一 ID
+rarmor.storedEnergy=存储的 Crystal Flux
+rarmor.noDataYet=无数据
+rarmor.needsHat=需要头盔
+rarmor.needsShoes=需要靴子
+rarmor.generating=正在发电
+rarmor.notGenerating=停止发电
+rarmor.full=能量满
+rarmor.compoundOf=复合的模块
+
+module.rarmorMain.name=概览
+module.rarmorStorage.name=存储
+module.rarmorEnder.name=末影箱
+module.rarmorFurnace.name=熔炉
+module.rarmorSolar.name=太阳能
+module.rarmorGenerator.name=发电
+module.rarmorSpeed.name=奔跑
+module.rarmorJump.name=跳跃
+module.rarmorProtectionIron.name=护甲（铁）
+module.rarmorProtectionGold.name=护甲（金）
+module.rarmorProtectionDiamond.name=护甲（钻石）
+module.rarmorColor.name=颜色
+
+rarmor.checkFailed=检查 %s 更新失败，查看日志获得更多信息！
+rarmor.notifyUpdate.1=%s 有更新！
+rarmor.notifyUpdate.2=当前版本: %s
+rarmor.notifyUpdate.3=最新版本: %s
+rarmor.clickInfo.1=点击查看更新日志
+rarmor.clickInfo.2=按住 Shift 点击下载
+rarmor.clickInfo.3=按住 Ctrl 忽略消息
