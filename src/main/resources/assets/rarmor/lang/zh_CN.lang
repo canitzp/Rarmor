@@ -5,7 +5,7 @@ item.rarmor:item_rarmor_chest.name=Rarmor 胸甲
 item.rarmor:item_rarmor_pants.name=Rarmor 护腿
 item.rarmor:item_rarmor_boots.name=Rarmor 靴子
 
-item.rarmor:item_wire_cutter.name=线缆钳
+item.rarmor:item_wire_cutter.name=线缆剪
 item.rarmor:item_control_circuit.name=控制电路板
 item.rarmor:item_wire.name=线缆
 item.rarmor:item_connector.name=连接器
@@ -21,9 +21,9 @@ item.rarmor:item_module_generator.name=发电机模块
 item.rarmor:item_module_speed.name=奔跑模块
 item.rarmor:item_module_jump.name=跳跃模块
 item.rarmor:item_module_movement.name=运动模块
-item.rarmor:item_module_protectionIron.name=铁护甲模块
-item.rarmor:item_module_protectionGold.name=金护甲模块
-item.rarmor:item_module_protectionDiamond.name=钻石护甲模块
+item.rarmor:item_module_protection_iron.name=铁级护甲模块
+item.rarmor:item_module_protection_gold.name=金级护甲模块
+item.rarmor:item_module_protection_diamond.name=钻石级护甲模块
 
 rarmor.back=返回物品栏
 rarmor.open=打开 Rarmor 界面
