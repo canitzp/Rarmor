@@ -13,6 +13,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,9 +21,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBattery extends ItemBase{
@@ -36,7 +39,7 @@ public class ItemBattery extends ItemBase{
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
         tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
         tooltip.add(TextFormatting.YELLOW+"   "+this.getEnergyStored(stack)+"/"+CAPACITY);
     }
@@ -58,12 +61,14 @@ public class ItemBattery extends ItemBase{
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-        super.getSubItems(item, tab, subItems);
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems){
+        super.getSubItems(tab, subItems);
 
-        ItemStack stack = new ItemStack(item);
-        Helper.setItemEnergy(stack, CAPACITY);
-        subItems.add(stack);
+        if(this.isInCreativeTab(tab)){
+            ItemStack stack = new ItemStack(this);
+            Helper.setItemEnergy(stack, CAPACITY);
+            subItems.add(stack);
+        }
     }
 
     public int getEnergyStored(ItemStack stack){

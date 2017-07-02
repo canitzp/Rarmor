@@ -21,7 +21,6 @@ import de.canitzp.rarmor.update.UpdateChecker;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.event.ClientEvents;
 import de.canitzp.rarmor.misc.Helper;
-import mezz.jei.util.color.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -33,7 +32,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -187,6 +185,8 @@ public class GuiRarmor extends InventoryEffectRenderer{
                 }
             }
         }
+
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     @Override

@@ -21,9 +21,9 @@ item.rarmor:item_module_generator.name=Generator Module
 item.rarmor:item_module_speed.name=Running Module
 item.rarmor:item_module_jump.name=Jumping Module
 item.rarmor:item_module_movement.name=Movement Module
-item.rarmor:item_module_protectionIron.name=Iron Protection Module
-item.rarmor:item_module_protectionGold.name=Gold Protection Module
-item.rarmor:item_module_protectionDiamond.name=Diamond Protection Module
+item.rarmor:item_module_protection_iron.name=Iron Protection Module
+item.rarmor:item_module_protection_gold.name=Gold Protection Module
+item.rarmor:item_module_protection_diamond.name=Diamond Protection Module
 
 rarmor.back=Back to Inventory
 rarmor.open=Open Rarmor Gui

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,10 @@ public class ContainerModuleStorage extends RarmorModuleContainer {
 
     @Override
     public void onCraftMatrixChanged(IInventory inventory){
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.player.getEntityWorld()));
+        IRecipe recipe =  CraftingManager.findMatchingRecipe(this.craftMatrix, this.player.getEntityWorld());
+        if(recipe != null){
+            this.craftResult.setInventorySlotContents(0, recipe.getRecipeOutput());
+        }
     }
 
     @Override

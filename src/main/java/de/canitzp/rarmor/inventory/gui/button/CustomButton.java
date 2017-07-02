@@ -20,11 +20,11 @@ public abstract class CustomButton extends GuiButton{
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY){
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks){
         if(this.visible){
             mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition+this.width && mouseY < this.yPosition+this.height;
+            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x+this.width && mouseY < this.y+this.height;
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

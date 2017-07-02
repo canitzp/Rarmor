@@ -35,7 +35,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
-    private static final ItemStack CHESTPLATE = new ItemStack(ItemRegistry.itemRarmorChest, 1, 1);
+    private static final ItemStack CHESTPLATE = new ItemStack(ItemRegistry.itemRarmorChest, 1, 0);
     public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 

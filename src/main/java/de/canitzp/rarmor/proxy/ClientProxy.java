@@ -9,6 +9,8 @@
 
 package de.canitzp.rarmor.proxy;
 
+import de.canitzp.rarmor.IRenderItem;
+import de.canitzp.rarmor.item.ItemBase;
 import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.event.ClientEvents;
 import net.minecraft.client.Minecraft;
@@ -17,10 +19,14 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class ClientProxy implements IProxy{
 
     public static void addLocation(Item item){
@@ -49,5 +55,14 @@ public class ClientProxy implements IProxy{
                 return stack.hasTagCompound() && stack.getTagCompound().hasKey("Color", 3) ? stack.getTagCompound().getInteger("Color") : 0xFFFFFFFF;
             }
         }, ItemRegistry.itemRarmorBoots, ItemRegistry.itemRarmorChest, ItemRegistry.itemRarmorHelmet, ItemRegistry.itemRarmorPants);
+    }
+
+    @SubscribeEvent
+    public static void modelRegistryEvet(ModelRegistryEvent event){
+        for(Item item : ItemBase.ITEMS_TO_REGISTER){
+            if(item instanceof IRenderItem){
+                ((IRenderItem) item).initModel();
+            }
+        }
     }
 }

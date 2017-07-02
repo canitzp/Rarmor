@@ -9,21 +9,24 @@
 
 package de.canitzp.rarmor.item;
 
+import de.canitzp.rarmor.IRenderItem;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.awt.*;
 import java.util.Locale;
 
-public class ItemRarmor extends ItemArmor{
+public class ItemRarmor extends ItemArmor implements IRenderItem {
 
     private static final ArmorMaterial RARMOR_MATERIAL = EnumHelper.addArmorMaterial(RarmorAPI.MOD_ID.toUpperCase(Locale.ROOT)+"_MATERIAL", RarmorAPI.MOD_ID+":rarmor", 0, new int[]{2, 5, 6, 2}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
 
@@ -31,7 +34,7 @@ public class ItemRarmor extends ItemArmor{
         super(RARMOR_MATERIAL, -1, slot);
 
         this.setRegistryName(RarmorAPI.MOD_ID, name);
-        GameRegistry.register(this);
+        ItemBase.ITEMS_TO_REGISTER.add(this);
 
         this.setUnlocalizedName(this.getRegistryName().toString());
         this.setCreativeTab(CreativeTab.INSTANCE);
@@ -52,4 +55,8 @@ public class ItemRarmor extends ItemArmor{
         return stack.hasTagCompound() ? stack.getTagCompound().hasKey("Color") ? stack.getTagCompound().getInteger("Color") : super.getColor(stack) : super.getColor(stack);
     }
 
+    @Override
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+    }
 }

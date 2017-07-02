@@ -9,18 +9,31 @@
 
 package de.canitzp.rarmor.item;
 
+import de.canitzp.rarmor.IRenderItem;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ItemBase extends Item{
+import java.util.ArrayList;
+import java.util.List;
+
+public class ItemBase extends Item implements IRenderItem{
+
+    public static List<Item> ITEMS_TO_REGISTER = new ArrayList<>();
 
     public ItemBase(String name){
         this.setRegistryName(RarmorAPI.MOD_ID, name);
-        GameRegistry.register(this);
+        ITEMS_TO_REGISTER.add(this);
 
         this.setUnlocalizedName(getRegistryName().toString());
         this.setCreativeTab(CreativeTab.INSTANCE);
+    }
+
+    @Override
+    public void initModel() {
+        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
 }

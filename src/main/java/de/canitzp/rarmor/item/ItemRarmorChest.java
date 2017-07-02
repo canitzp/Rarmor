@@ -16,6 +16,7 @@ import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.compat.ItemTeslaWrapper;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +32,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,33 +58,36 @@ public class ItemRarmorChest extends ItemRarmor{
                 data.sendQueuedUpdate((EntityPlayer)entity);
             }
 
-            boolean hat = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != null;
-            boolean chest = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.CHEST) != null;
-            boolean pants = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.LEGS) != null;
-            boolean shoes = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.FEET) != null;
+            boolean hat = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != ItemStack.EMPTY;
+            boolean chest = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.CHEST) != ItemStack.EMPTY;
+            boolean pants = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.LEGS) != ItemStack.EMPTY;
+            boolean shoes = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.FEET) != ItemStack.EMPTY;
             data.tick(world, entity, hat, chest, pants, shoes);
         }
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
-        String s = "   ";
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+        if(worldIn != null){
+            String s = "   ";
 
-        tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
-        tooltip.add(TextFormatting.YELLOW+s+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
+            tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
+            tooltip.add(TextFormatting.YELLOW+s+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
 
-        IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
-        if(data != null){
-            tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
-            for(ActiveRarmorModule module : data.getCurrentModules()){
-                tooltip.add(TextFormatting.YELLOW+s+"-"+I18n.format("module."+module.getIdentifier()+".name"));
+            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(worldIn, stack, false);
+            if(data != null){
+                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
+                for(ActiveRarmorModule module : data.getCurrentModules()){
+                    tooltip.add(TextFormatting.YELLOW+s+"-"+I18n.format("module."+module.getIdentifier()+".name"));
+                }
+
+                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
+                tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
             }
-
-            tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
-            tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
-        }
-        else{
-            tooltip.add(TextFormatting.RED+""+TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
+            else{
+                tooltip.add(TextFormatting.RED+""+TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
+            }
         }
     }
 
@@ -152,12 +158,14 @@ public class ItemRarmorChest extends ItemRarmor{
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-        super.getSubItems(item, tab, subItems);
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems){
+        super.getSubItems(tab, subItems);
 
-        ItemStack stack = new ItemStack(item);
-        Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
-        subItems.add(stack);
+        if(this.isInCreativeTab(tab)){
+            ItemStack stack = new ItemStack(this);
+            Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
+            subItems.add(stack);
+        }
     }
 
     public static class CapProvider implements ICapabilityProvider{

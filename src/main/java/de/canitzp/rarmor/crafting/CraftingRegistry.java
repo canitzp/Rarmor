@@ -34,6 +34,7 @@ public final class CraftingRegistry{
         addModuleRecipe(ItemRegistry.itemModuleProtectionGold, new ItemStack(Blocks.GOLD_BLOCK));
         addModuleRecipe(ItemRegistry.itemModuleProtectionDiamond, new ItemStack(Blocks.DIAMOND_BLOCK));
 
+        /*
         GameRegistry.addRecipe(new ItemStack(ItemRegistry.itemModuleMovement),
                 " W ", "SCJ", " W ",
                 'S', ItemRegistry.itemModuleSpeed,
@@ -106,14 +107,17 @@ public final class CraftingRegistry{
                 'I', Items.IRON_INGOT,
                 'R', new ItemStack(Items.DYE, 1, EnumDyeColor.RED.getDyeDamage()),
                 'F', Items.FLINT);
+                */
     }
 
     private static void addModuleRecipe(Item output, ItemStack input){
+        /*
         GameRegistry.addRecipe(new ItemStack(output),
                 "OWO", "CXC", "OWO",
                 'C', ItemRegistry.itemControlCircuit,
                 'W', ItemRegistry.itemWire,
                 'O', ItemRegistry.itemConnector,
                 'X', input);
+                */
     }
 }

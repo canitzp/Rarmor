@@ -93,7 +93,7 @@ public class ActiveModuleSpeed extends ActiveRarmorModule {
                     if((player.onGround || player.capabilities.isFlying) && !player.isInsideOfMaterial(Material.WATER)){
                         if(world.isRemote){
                             if(player.moveForward > 0){
-                                player.moveRelative(0F, 1F, 0.075F);
+                                player.moveRelative(0F, 1F, 0.075F, 0F); // TODO this shit doesn't work
                             }
                         }
                         else{

@@ -33,6 +33,6 @@ public class TexturedButton extends CustomButton{
         if(this.hovered){
             actualV += this.height;
         }
-        this.drawTexturedModalRect(this.xPosition, this.yPosition, this.u, actualV, this.width, this.height);
+        this.drawTexturedModalRect(this.x, this.y, this.u, actualV, this.width, this.height);
     }
 }

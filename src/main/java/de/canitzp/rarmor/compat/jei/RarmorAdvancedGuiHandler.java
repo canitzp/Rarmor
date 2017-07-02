@@ -34,7 +34,7 @@ public class RarmorAdvancedGuiHandler implements IAdvancedGuiHandler<GuiRarmor>{
 
         for(TabButton button : gui.tabButtons){
             if(button.visible){
-                list.add(new Rectangle(button.xPosition, button.yPosition, button.width, button.height));
+                list.add(new Rectangle(button.x, button.y, button.width, button.height));
             }
         }
 
