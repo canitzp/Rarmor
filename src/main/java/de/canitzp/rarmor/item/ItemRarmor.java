@@ -36,7 +36,7 @@ public class ItemRarmor extends ItemArmor implements IRenderItem {
         this.setRegistryName(RarmorAPI.MOD_ID, name);
         ItemBase.ITEMS_TO_REGISTER.add(this);
 
-        this.setUnlocalizedName(this.getRegistryName().toString());
+        this.setTranslationKey(this.getRegistryName().toString());
         this.setCreativeTab(CreativeTab.INSTANCE);
     }
 

@@ -64,7 +64,7 @@ public final class ItemRegistry{
         itemRarmorBoots = new ItemRarmor("item_rarmor_boots", EntityEquipmentSlot.FEET);
 
         itemWireCutter = new ItemWireCutter("item_wire_cutter");
-        itemControlCircuit = new ItemBase("item_control_circuit");
+        itemControlCircuit = new ItemBase("item_control_circuit").addOreDict("circuitBasic");
         itemWire = new ItemBase("item_wire");
         itemConnector = new ItemBase("item_connector");
         itemSolarCell = new ItemBase("item_solar_cell");
@@ -83,38 +83,6 @@ public final class ItemRegistry{
         itemModuleProtectionIron = new ItemModuleProtection("protection_iron", ActiveModuleProtectionIron.IDENTIFIER);
         itemModuleProtectionGold = new ItemModuleProtection("protection_gold", ActiveModuleProtectionGold.IDENTIFIER);
         itemModuleProtectionDiamond = new ItemModuleProtection("protection_diamond", ActiveModuleProtectionDiamond.IDENTIFIER);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void preInitClient(){
-        /*
-        ClientProxy.addLocation(itemRarmorHelmet);
-        ClientProxy.addLocation(itemRarmorChest, 0);
-        ClientProxy.addLocation(itemRarmorChest, 1);
-        ClientProxy.addLocation(itemRarmorPants);
-        ClientProxy.addLocation(itemRarmorBoots);
-
-        ClientProxy.addLocation(itemWireCutter);
-        ClientProxy.addLocation(itemControlCircuit);
-        ClientProxy.addLocation(itemWire);
-        ClientProxy.addLocation(itemConnector);
-        ClientProxy.addLocation(itemSolarCell);
-        ClientProxy.addLocation(itemGenerator);
-        ClientProxy.addLocation(itemBattery);
-
-        ClientProxy.addLocation(itemModuleStorage);
-        ClientProxy.addLocation(itemModuleEnder);
-        ClientProxy.addLocation(itemModuleFurnace);
-        ClientProxy.addLocation(itemModuleSolar);
-        ClientProxy.addLocation(itemModuleGenerator);
-        ClientProxy.addLocation(itemModuleSpeed);
-        ClientProxy.addLocation(itemModuleJump);
-        ClientProxy.addLocation(itemModuleMovement);
-
-        ClientProxy.addLocation(itemModuleProtectionIron);
-        ClientProxy.addLocation(itemModuleProtectionGold);
-        ClientProxy.addLocation(itemModuleProtectionDiamond);
-        */
     }
 
 }

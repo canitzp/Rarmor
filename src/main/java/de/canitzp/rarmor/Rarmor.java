@@ -10,7 +10,6 @@
 package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.compat.Compat;
 import de.canitzp.rarmor.config.Config;
 import de.canitzp.rarmor.event.CommonEvents;
 import de.canitzp.rarmor.inventory.GuiHandler;
@@ -29,11 +28,19 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+
 @Mod.EventBusSubscriber
-@Mod(modid = RarmorAPI.MOD_ID, name = Rarmor.MOD_NAME, version = Rarmor.VERSION, guiFactory = "de.canitzp.rarmor.config.ConfigGuiFactory")
+@Mod(modid = RarmorAPI.MOD_ID,
+    name = Rarmor.MOD_NAME,
+    version = Rarmor.VERSION,
+    guiFactory = "de.canitzp.rarmor.config.ConfigGuiFactory",
+    acceptedMinecraftVersions = "[1.12,)",
+    dependencies = "required-after:forge@[14.23.4.2705,);")
 public final class Rarmor{
 
     public static final String MOD_NAME = "Rarmor";
@@ -55,7 +62,6 @@ public final class Rarmor{
 
         new Config(event.getSuggestedConfigurationFile());
         ItemRegistry.preInit();
-        Compat.preInit();
         new GuiHandler();
         new UpdateChecker();
         proxy.preInit(event);
@@ -65,9 +71,18 @@ public final class Rarmor{
     public void init(FMLInitializationEvent event){
         ModuleRegistry.init();
         PacketHandler.init();
-        CraftingRegistry.init();
         new CommonEvents();
         proxy.init(event);
+        for(Item item : ItemBase.ITEMS_TO_REGISTER){
+            if(item instanceof IOreDictItem){
+                List<String> names = ((IOreDictItem) item).getOreDictNames();
+                if(names != null && !names.isEmpty()){
+                    for(String name : names){
+                        OreDictionary.registerOre(name, item);
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent

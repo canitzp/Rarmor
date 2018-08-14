@@ -21,20 +21,21 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Mod.EventBusSubscriber
 public class ItemModuleJump extends ItemRarmorModule {
 
     public ItemModuleJump(String name){
         super(name);
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -52,13 +53,14 @@ public class ItemModuleJump extends ItemRarmorModule {
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
         tooltip.add(TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".needsShoes"));
     }
 
     @SubscribeEvent
-    public void onJump(LivingEvent.LivingJumpEvent event){
+    public static void onJump(LivingEvent.LivingJumpEvent event){
         Entity entity = event.getEntity();
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer)entity;
@@ -78,7 +80,7 @@ public class ItemModuleJump extends ItemRarmorModule {
     }
 
     @SubscribeEvent
-    public void onFall(LivingFallEvent event){
+    public static void onFall(LivingFallEvent event){
         Entity entity = event.getEntity();
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer)entity;

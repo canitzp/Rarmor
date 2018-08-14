@@ -12,8 +12,6 @@ package de.canitzp.rarmor.item;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.compat.Compat;
-import de.canitzp.rarmor.compat.ItemTeslaWrapper;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,7 +19,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -191,8 +188,6 @@ public class ItemRarmorChest extends ItemRarmor{
             EStorage storage = new EStorage(stack, cap, maxRec, maxTra);
             if(capability == CapabilityEnergy.ENERGY){
                 return (T) storage;
-            } else if(Compat.isTeslaCapability(capability, facing)){
-                return (T) new ItemTeslaWrapper(storage);
             }
             return null;
         }
