@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.item;
 
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.module.generator.ItemModuleGenerator;
 import de.canitzp.rarmor.module.compound.ItemModuleCompound;
 import de.canitzp.rarmor.module.ender.ItemModuleEnder;
@@ -29,27 +30,32 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
 public final class ItemRegistry{
+    
+    public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, RarmorAPI.MOD_ID);
 
-    public static Item itemRarmorHelmet;
-    public static Item itemRarmorChest;
-    public static Item itemRarmorPants;
-    public static Item itemRarmorBoots;
+    public static RegistryObject<ItemRarmor> itemRarmorHelmet = ITEM_REGISTRY.register("item_rarmor_helmet", () -> new ItemRarmor(EquipmentSlotType.HEAD));
+    public static RegistryObject<ItemRarmorChest> itemRarmorChest = ITEM_REGISTRY.register("item_rarmor_chest", ItemRarmorChest::new);
+    public static RegistryObject<ItemRarmor> itemRarmorPants = ITEM_REGISTRY.register("item_rarmor_pants", () -> new ItemRarmor(EquipmentSlotType.LEGS));
+    public static RegistryObject<ItemRarmor> itemRarmorBoots = ITEM_REGISTRY.register("item_rarmor_boots", () -> new ItemRarmor(EquipmentSlotType.FEET));
 
-    public static Item itemWireCutter;
-    public static Item itemControlCircuit;
-    public static Item itemWire;
-    public static Item itemConnector;
-    public static Item itemSolarCell;
-    public static Item itemGenerator;
-    public static Item itemBattery;
+    public static RegistryObject<ItemWireCutter> itemWireCutter = ITEM_REGISTRY.register("item_wire_cutter", ItemWireCutter::new);
+    public static RegistryObject<ItemBase> itemControlCircuit = ITEM_REGISTRY.register("item_control_circuit", ItemBase::new);
+    public static RegistryObject<ItemBase> itemWire = ITEM_REGISTRY.register("item_wire", ItemBase::new);
+    public static RegistryObject<ItemBase> itemConnector = ITEM_REGISTRY.register("item_connector", ItemBase::new);
+    public static RegistryObject<ItemBase> itemSolarCell = ITEM_REGISTRY.register("item_solar_cell", ItemBase::new);
+    public static RegistryObject<ItemBase> itemGenerator = ITEM_REGISTRY.register("item_generator", ItemBase::new);
+    public static RegistryObject<ItemBattery> itemBattery = ITEM_REGISTRY.register("item_battery", ItemBattery::new);
 
-    public static Item itemModuleStorage;
+    public static RegistryObject<ItemModuleStorage> itemModuleStorage = ITEM_REGISTRY.register("item_module_storage", ItemModuleStorage::new);
     public static Item itemModuleEnder;
     public static Item itemModuleFurnace;
     public static Item itemModuleSolar;
@@ -63,20 +69,6 @@ public final class ItemRegistry{
     public static Item itemModuleProtectionDiamond;
 
     public static void preInit(){
-        itemRarmorHelmet = new ItemRarmor("item_rarmor_helmet", EquipmentSlotType.HEAD);
-        itemRarmorChest = new ItemRarmorChest("item_rarmor_chest");
-        itemRarmorPants = new ItemRarmor("item_rarmor_pants", EquipmentSlotType.LEGS);
-        itemRarmorBoots = new ItemRarmor("item_rarmor_boots", EquipmentSlotType.FEET);
-
-        itemWireCutter = new ItemWireCutter("item_wire_cutter");
-        itemControlCircuit = new ItemBase("item_control_circuit", new Item.Properties()).addOreDict("circuitBasic");
-        itemWire = new ItemBase("item_wire", new Item.Properties());
-        itemConnector = new ItemBase("item_connector", new Item.Properties());
-        itemSolarCell = new ItemBase("item_solar_cell", new Item.Properties());
-        itemGenerator = new ItemBase("item_generator", new Item.Properties());
-        itemBattery = new ItemBattery("item_battery");
-
-        itemModuleStorage = new ItemModuleStorage("storage");
         itemModuleEnder = new ItemModuleEnder("ender");
         itemModuleFurnace = new ItemModuleFurnace("furnace");
         itemModuleSolar = new ItemModuleSolar("solar");

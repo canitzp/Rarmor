@@ -22,10 +22,12 @@ public class ItemBase extends Item implements IOreDictItem{
     
     private List<String> oreDictNames = new ArrayList<>();
     
-    public ItemBase(String name, Properties properties){
+    public ItemBase(){
+        this(new Properties());
+    }
+    
+    public ItemBase(Properties properties){
         super(properties.group(CreativeTab.INSTANCE));
-        
-        this.setRegistryName(RarmorAPI.MOD_ID, name);
     }
     
     public ItemBase addOreDict(String... names){

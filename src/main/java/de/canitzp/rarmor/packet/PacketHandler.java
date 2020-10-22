@@ -19,11 +19,12 @@ public final class PacketHandler{
     public static SimpleChannel channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(RarmorAPI.MOD_ID, "network"), () -> "1.0.0", s -> true, s -> true);
 
     public static void init(){
-        channel.registerMessage(0, PacketOpenModule.class, PacketOpenModule::toBytes, PacketOpenModule::fromBuffer, PacketOpenModule::handle); // Server side
+        channel.registerMessage(0, PacketOpenModule.class, PacketOpenModule::toBuffer, PacketOpenModule::fromBuffer, PacketOpenModule::handle); // Server side
+        
+        channel.registerMessage(3, PacketSyncColor.class, PacketSyncColor::toBuffer, PacketSyncColor::new, PacketSyncColor::handle); // Server side
 
         handler.registerMessage(PacketSyncRarmorData.Handler.class, PacketSyncRarmorData.class, 1, Side.CLIENT);
         handler.registerMessage(PacketOpenConfirmation.Handler.class, PacketOpenConfirmation.class, 2, Side.SERVER);
-        handler.registerMessage(PacketSyncColor.class, PacketSyncColor.class, 3, Side.SERVER);
     }
 
 }

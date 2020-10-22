@@ -13,19 +13,14 @@ import net.minecraft.item.ItemStack;
 
 public class ItemWireCutter extends ItemBase{
 
-    public ItemWireCutter(String name){
-        super(name);
-
-        this.setMaxDamage(127);
-        this.setMaxStackSize(1);
-        this.setContainerItem(this);
-        this.setNoRepair();
+    public ItemWireCutter(){
+        super(new Properties().maxStackSize(1).containerItem(ItemRegistry.itemWireCutter.get()).setNoRepair().maxDamage(127));
     }
 
     @Override
     public ItemStack getContainerItem(ItemStack stack){
         ItemStack copy = stack.copy();
-        copy.setItemDamage(copy.getItemDamage()+1);
+        copy.setDamage(copy.getDamage()+1);
         return copy;
     }
 }

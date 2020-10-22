@@ -9,48 +9,60 @@
 
 package de.canitzp.rarmor.packet;
 
-import de.canitzp.rarmor.Rarmor;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import de.canitzp.rarmor.api.RarmorAPI;
+import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketOpenConfirmation implements IMessage{
+import java.util.function.Supplier;
+
+public class PacketOpenConfirmation {
 
     private int moduleId;
 
-    public PacketOpenConfirmation(){
-
+    public PacketOpenConfirmation(){}
+    
+    public PacketOpenConfirmation(PacketBuffer buf){
+        this.moduleId = buf.readInt();
     }
 
     public PacketOpenConfirmation(int moduleId){
         this.moduleId = moduleId;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf){
-        this.moduleId = buf.readInt();
+    public static void toBuffer(PacketOpenConfirmation packet, PacketBuffer buf){
+        buf.writeInt(packet.moduleId);
+    }
+    
+    public static void handle(PacketOpenConfirmation packet, Supplier<NetworkEvent.Context> ctx){
+        ctx.get().enqueueWork(() -> {
+            ServerPlayerEntity sender = ctx.get().getSender();
+            if(sender != null){
+                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(sender, true);
+                ActiveRarmorModule activeRarmorModule = data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule());
+                sender.openContainer(new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName(){
+                        return new StringTextComponent("");
+                    }
+    
+                    @Override
+                    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player){
+                        return new ContainerRarmor(windowId, player, activeRarmorModule);
+                    }
+                });
+            }
+        });
+        ctx.get().setPacketHandled(true);
     }
 
-    @Override
-    public void toBytes(ByteBuf buf){
-        buf.writeInt(this.moduleId);
-    }
-
-    public static class Handler implements IMessageHandler<PacketOpenConfirmation, IMessage>{
-
-        @Override
-        public IMessage onMessage(final PacketOpenConfirmation message, final MessageContext context){
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
-                @Override
-                public void run(){
-                    EntityPlayerMP player = context.getServerHandler().player;
-                    player.openGui(Rarmor.INSTANCE, message.moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
-                }
-            });
-            return null;
-        }
-    }
 }

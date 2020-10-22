@@ -40,7 +40,7 @@ public class PacketOpenModule{
         return pom;
     }
 
-    public static void toBytes(PacketOpenModule packet, PacketBuffer buf){
+    public static void toBuffer(PacketOpenModule packet, PacketBuffer buf){
         buf.writeInt(packet.moduleId);
         buf.writeBoolean(packet.alsoSetData);
         buf.writeBoolean(packet.sendRarmorDataToClient);

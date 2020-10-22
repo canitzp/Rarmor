@@ -40,8 +40,8 @@ public class ItemRarmorChest extends ItemRarmor{
     private static final int MAX_RECEIVE = 1000;
     private static final int MAX_EXTRACT = 1000;
 
-    public ItemRarmorChest(String name){
-        super(name, EquipmentSlotType.CHEST);
+    public ItemRarmorChest(){
+        super(EquipmentSlotType.CHEST);
     }
 
     @Override

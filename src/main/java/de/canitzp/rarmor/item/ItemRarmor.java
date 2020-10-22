@@ -17,10 +17,8 @@ import net.minecraft.item.*;
 
 public class ItemRarmor extends DyeableArmorItem {
     
-    public ItemRarmor(String name, EquipmentSlotType slot){
+    public ItemRarmor(EquipmentSlotType slot){
         super(RarmorArmorMaterial.INSTANCE, slot, new Properties().group(CreativeTab.INSTANCE));
-
-        this.setRegistryName(RarmorAPI.MOD_ID, name);
     }
 
     @Override

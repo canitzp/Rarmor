@@ -5,7 +5,7 @@
  * View the source code at https://github.com/Ellpeck/Rarmor
  *
  * © 2015-2016 canitzp & Ellpeck
- */
+ */IronShulkerBoxContainer.createGoldContainer
 
 package de.canitzp.rarmor.inventory;
 
@@ -40,7 +40,7 @@ public class GuiHandler implements IGuiHandler{
         IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
         ActiveRarmorModule module = this.getModuleToOpen(data);
         if(module != null && module.hasTab(player)){
-            return new GuiRarmor(new ContainerRarmor(player, module), module);
+            return new GuiRarmor(new ContainerRarmor(player, module), module, p_create_3_);
         }
         return null;
     }

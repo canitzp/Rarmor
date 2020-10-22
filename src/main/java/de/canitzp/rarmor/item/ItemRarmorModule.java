@@ -15,8 +15,8 @@ import net.minecraft.item.Rarity;
 
 public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
-    public ItemRarmorModule(String name){
-        super("item_module_" + name, new Properties().maxStackSize(1));
+    public ItemRarmorModule(){
+        super(new Properties().maxStackSize(1));
     }
 
     @Override

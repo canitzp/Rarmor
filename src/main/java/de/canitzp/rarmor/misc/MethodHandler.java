@@ -25,13 +25,21 @@ import de.canitzp.rarmor.packet.PacketOpenModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -96,7 +104,7 @@ public class MethodHandler implements IMethodHandler {
     }
 
     @Override
-    public void openRarmor(EntityPlayer player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
+    public void openRarmor(PlayerEntity player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
         IRarmorData data = this.getDataForChestplate(player, true);
         if(data != null){
             if(alsoSetData){
@@ -115,15 +123,25 @@ public class MethodHandler implements IMethodHandler {
             }
 
             if(shouldOpenGui){
-                player.openGui(Rarmor.INSTANCE, moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
+                player.openContainer(new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName(){
+                        return new StringTextComponent("");
+                    }
+    
+                    @Override
+                    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player){
+                        return new ContainerRarmor(windowId, player, data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule()));
+                    }
+                });
             }
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void openRarmorFromClient(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
-        PacketHandler.handler.sendToServer(new PacketOpenModule(moduleId, alsoSetData, sendRarmorDataToClient));
+        PacketHandler.channel.sendToServer(new PacketOpenModule(moduleId, alsoSetData, sendRarmorDataToClient));
     }
 
     @Override

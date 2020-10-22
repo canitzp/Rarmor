@@ -12,14 +12,21 @@ package de.canitzp.rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.config.Config;
 import de.canitzp.rarmor.event.CommonEvents;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.ContainerTypes;
 import de.canitzp.rarmor.inventory.GuiHandler;
+import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import de.canitzp.rarmor.item.ItemBase;
 import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.misc.MethodHandler;
 import de.canitzp.rarmor.module.ModuleRegistry;
 import de.canitzp.rarmor.packet.PacketHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -51,6 +58,7 @@ public final class Rarmor{
     
         // Registry handler
         ContainerTypes.CONTAINERS.register(modEventBus);
+        ScreenManager.registerFactory(ContainerTypes.RARMOR_CONTAINER.get(), GuiRarmor::new);
         
         // Register API
         RarmorAPI.methodHandler = new MethodHandler();
@@ -62,8 +70,6 @@ public final class Rarmor{
         
         
         ItemRegistry.preInit();
-        new GuiHandler();
-        new UpdateChecker();
         proxy.preInit(event);
     }
 

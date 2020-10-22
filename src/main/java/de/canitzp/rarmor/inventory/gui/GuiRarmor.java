@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -49,10 +49,12 @@ public class GuiRarmor extends DisplayEffectsScreen<ContainerRarmor> {
     private boolean doesUpdateAnimate;
     private int updateTimer;
 
-    public GuiRarmor(ContainerRarmor container, PlayerEntity player, ActiveRarmorModule currentModule){
-        super(container, player.inventory, new StringTextComponent(""));
-        this.currentData = currentModule.data;
-        this.gui = currentModule.createGui(this);
+    public GuiRarmor(ContainerRarmor container, PlayerInventory playerInventory, ITextComponent title){
+        super(container, playerInventory, title);
+        IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getInstance().player, true);
+        ActiveRarmorModule activeRarmorModule = data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule());
+        this.currentData = activeRarmorModule.data;
+        this.gui = activeRarmorModule.createGui(this);
 
         this.xSize = 236;
         this.ySize = 229;

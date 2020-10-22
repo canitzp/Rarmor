@@ -33,9 +33,8 @@ public class ItemBattery extends ItemBase{
     public static final int CAPACITY = 500000;
     public static final int TRANSFER = 500;
 
-    public ItemBattery(String name){
-        super(name);
-        this.setMaxStackSize(1);
+    public ItemBattery(){
+        super(new Properties().maxStackSize(1));
     }
 
     @Override
