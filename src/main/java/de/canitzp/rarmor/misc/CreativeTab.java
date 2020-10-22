@@ -11,11 +11,10 @@ package de.canitzp.rarmor.misc;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.item.ItemRegistry;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
-public class CreativeTab extends CreativeTabs{
+public class CreativeTab extends ItemGroup {
 
     public static final CreativeTab INSTANCE = new CreativeTab();
 

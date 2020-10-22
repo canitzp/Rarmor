@@ -10,17 +10,17 @@
 package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public final class PacketHandler{
 
-    public static SimpleNetworkWrapper handler;
+    public static SimpleChannel channel = NetworkRegistry.newSimpleChannel(new ResourceLocation(RarmorAPI.MOD_ID, "network"), () -> "1.0.0", s -> true, s -> true);
 
     public static void init(){
-        handler = new SimpleNetworkWrapper(RarmorAPI.MOD_ID+"network");
+        channel.registerMessage(0, PacketOpenModule.class, PacketOpenModule::toBytes, PacketOpenModule::fromBuffer, PacketOpenModule::handle); // Server side
 
-        handler.registerMessage(PacketOpenModule.Handler.class, PacketOpenModule.class, 0, Side.SERVER);
         handler.registerMessage(PacketSyncRarmorData.Handler.class, PacketSyncRarmorData.class, 1, Side.CLIENT);
         handler.registerMessage(PacketOpenConfirmation.Handler.class, PacketOpenConfirmation.class, 2, Side.SERVER);
         handler.registerMessage(PacketSyncColor.class, PacketSyncColor.class, 3, Side.SERVER);

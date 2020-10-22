@@ -11,14 +11,12 @@ package de.canitzp.rarmor.inventory.gui;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 
 public class BasicInventory implements IInventory{
 
@@ -33,11 +31,6 @@ public class BasicInventory implements IInventory{
     }
 
     @Override
-    public String getName(){
-        return this.name;
-    }
-
-    @Override
     public int getInventoryStackLimit(){
         return 64;
     }
@@ -46,40 +39,15 @@ public class BasicInventory implements IInventory{
     public void markDirty(){
         this.data.setDirty();
     }
-
+    
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(PlayerEntity player){
         return true;
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player){
-
-    }
-
-    @Override
-    public void closeInventory(EntityPlayer player){
-
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack){
         return true;
-    }
-
-    @Override
-    public int getField(int id){
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value){
-
-    }
-
-    @Override
-    public int getFieldCount(){
-        return 0;
     }
 
     @Override
@@ -130,7 +98,7 @@ public class BasicInventory implements IInventory{
                 return stackAt;
             }
             else{
-                stackAt = this.slots.get(i).splitStack(j);
+                stackAt = this.slots.get(i).split(j);
                 if(this.slots.get(i).getCount() <= 0){
                     this.slots.set(i, ItemStack.EMPTY);
                 }
@@ -148,36 +116,26 @@ public class BasicInventory implements IInventory{
         return stack;
     }
 
-    @Override
-    public boolean hasCustomName(){
-        return false;
-    }
-
-    @Override
-    public ITextComponent getDisplayName(){
-        return new TextComponentTranslation(this.getName());
-    }
-
-    public void saveSlots(NBTTagCompound compound){
+    public void saveSlots(CompoundNBT compound){
         if(this.slots != null && this.slots.size() > 0){
-            NBTTagList tagList = new NBTTagList();
+            ListNBT tagList = new ListNBT();
             for(ItemStack slot : this.slots){
-                NBTTagCompound tagCompound = new NBTTagCompound();
+                CompoundNBT tagCompound = new CompoundNBT();
                 if(slot != null){
-                    slot.writeToNBT(tagCompound);
+                    slot.write(tagCompound);
                 }
-                tagList.appendTag(tagCompound);
+                tagList.add(tagCompound);
             }
-            compound.setTag("Items", tagList);
+            compound.put("Items", tagList);
         }
     }
 
-    public void loadSlots(NBTTagCompound compound){
+    public void loadSlots(CompoundNBT compound){
         if(this.slots != null && this.slots.size() > 0){
-            NBTTagList tagList = compound.getTagList("Items", 10);
+            ListNBT tagList = compound.getList("Items", 10);
             for(int i = 0; i < this.slots.size(); i++){
-                NBTTagCompound tagCompound = tagList.getCompoundTagAt(i);
-                this.slots.set(i, tagCompound != null && tagCompound.hasKey("id") ? new ItemStack(tagCompound) : ItemStack.EMPTY);
+                CompoundNBT tagCompound = tagList.getCompound(i);
+                this.slots.set(i, tagCompound != null && tagCompound.contains("id") ? ItemStack.read(tagCompound) : ItemStack.EMPTY);
             }
         }
     }

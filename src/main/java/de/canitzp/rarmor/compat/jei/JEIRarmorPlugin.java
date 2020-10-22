@@ -11,10 +11,16 @@ package de.canitzp.rarmor.compat.jei;
 
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 
-@JEIPlugin
+@JeiPlugin
 public class JEIRarmorPlugin implements IModPlugin{
-
+    
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration){
+        registration.
+    }
+    
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
 

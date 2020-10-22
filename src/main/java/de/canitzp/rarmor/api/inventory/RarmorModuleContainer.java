@@ -12,12 +12,13 @@ package de.canitzp.rarmor.api.inventory;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.*;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.inventory.container.*;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -32,7 +33,8 @@ import java.util.List;
  */
 public class RarmorModuleContainer{
 
-    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+    private static final EquipmentSlotType[] VALID_EQUIPMENT_SLOTS = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
+    private static final String[] ARMOR_SLOT_TEXTURES = new String[]{"item/empty_armor_slot_boots", "item/empty_armor_slot_leggings", "item/empty_armor_slot_chestplate", "item/empty_armor_slot_helmet"};
 
     public final IRarmorData currentData;
     public final Container actualContainer;
@@ -56,11 +58,11 @@ public class RarmorModuleContainer{
 
     }
 
-    public ItemStack transferStackInSlot(EntityPlayer player, int index){
+    public ItemStack transferStackInSlot(PlayerEntity player, int index){
         return ItemStack.EMPTY;
     }
 
-    public void onContainerClosed(EntityPlayer player){
+    public void onContainerClosed(PlayerEntity player){
 
     }
 
@@ -68,7 +70,7 @@ public class RarmorModuleContainer{
 
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void updateProgressBar(int id, int data){
 
     }
@@ -77,12 +79,12 @@ public class RarmorModuleContainer{
 
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void removeListener(IContainerListener listener){
 
     }
 
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, EntityPlayer player){
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, PlayerEntity player){
         return ItemStack.EMPTY;
     }
 
@@ -100,9 +102,9 @@ public class RarmorModuleContainer{
         return RarmorAPI.methodHandler.mergeItemStack(this.actualContainer, stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
 
-    public void addArmorSlotsAt(EntityPlayer player, List<Slot> slots, int x, int y){
+    public void addArmorSlotsAt(PlayerEntity player, List<Slot> slots, int x, int y){
         for(int i = 0; i < 4; i++){
-            final EntityEquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];
+            final EquipmentSlotType slot = VALID_EQUIPMENT_SLOTS[i];
             slots.add(new Slot(player.inventory, 36+(3-i), x, y+i*18){
                 @Override
                 public int getSlotStackLimit(){
@@ -111,36 +113,36 @@ public class RarmorModuleContainer{
 
                 @Override
                 public boolean isItemValid(ItemStack stack){
-                    return slot != EntityEquipmentSlot.CHEST && !stack.isEmpty() && stack.getItem().isValidArmor(stack, slot, player);
+                    return slot != EquipmentSlotType.CHEST && !stack.isEmpty() && stack.canEquip(slot, player);
                 }
 
                 @Override
-                @SideOnly(Side.CLIENT)
+                @OnlyIn(Dist.CLIENT)
                 public String getSlotTexture(){
-                    return ItemArmor.EMPTY_SLOT_NAMES[slot.getIndex()];
+                    return ARMOR_SLOT_TEXTURES[slot.getIndex()];
                 }
 
                 @Override
                 public ItemStack decrStackSize(int amount){
-                    return slot == EntityEquipmentSlot.CHEST ? null : super.decrStackSize(amount);
+                    return slot == EquipmentSlotType.CHEST ? null : super.decrStackSize(amount);
                 }
 
                 @Override
                 public void putStack(@Nullable ItemStack stack){
-                    if(slot != EntityEquipmentSlot.CHEST){
+                    if(slot != EquipmentSlotType.CHEST){
                         super.putStack(stack);
                     }
                 }
 
                 @Override
-                public boolean canTakeStack(EntityPlayer playerIn){
-                    return slot != EntityEquipmentSlot.CHEST;
+                public boolean canTakeStack(PlayerEntity playerIn){
+                    return slot != EquipmentSlotType.CHEST;
                 }
             });
         }
     }
 
-    public void addSecondHandSlot(EntityPlayer player, List<Slot> slots, int x, int y){
+    public void addSecondHandSlot(PlayerEntity player, List<Slot> slots, int x, int y){
         slots.add(new Slot(player.inventory, 40, x, y){
             @Override
             public boolean isItemValid(ItemStack stack){
@@ -148,7 +150,7 @@ public class RarmorModuleContainer{
             }
 
             @Override
-            @SideOnly(Side.CLIENT)
+            @OnlyIn(Dist.CLIENT)
             public String getSlotTexture(){
                 return "minecraft:items/empty_armor_slot_shield";
             }

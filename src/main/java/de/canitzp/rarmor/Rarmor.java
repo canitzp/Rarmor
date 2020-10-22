@@ -12,55 +12,55 @@ package de.canitzp.rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.config.Config;
 import de.canitzp.rarmor.event.CommonEvents;
+import de.canitzp.rarmor.inventory.ContainerTypes;
 import de.canitzp.rarmor.inventory.GuiHandler;
 import de.canitzp.rarmor.item.ItemBase;
 import de.canitzp.rarmor.item.ItemRegistry;
 import de.canitzp.rarmor.misc.MethodHandler;
 import de.canitzp.rarmor.module.ModuleRegistry;
 import de.canitzp.rarmor.packet.PacketHandler;
-import de.canitzp.rarmor.proxy.IProxy;
-import de.canitzp.rarmor.update.UpdateChecker;
-import de.canitzp.rarmor.crafting.CraftingRegistry;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Mod(modid = RarmorAPI.MOD_ID,
-    name = Rarmor.MOD_NAME,
-    version = Rarmor.VERSION,
-    guiFactory = "de.canitzp.rarmor.config.ConfigGuiFactory",
-    acceptedMinecraftVersions = "[1.12,)",
-    dependencies = "required-after:forge@[14.23.4.2705,);")
+@Mod(RarmorAPI.MOD_ID)
 public final class Rarmor{
 
     public static final String MOD_NAME = "Rarmor";
-    public static final String VERSION = "@VERSION@";
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
-    @Mod.Instance(RarmorAPI.MOD_ID)
-    public static Rarmor instance;
-
-    @SidedProxy(clientSide = "de.canitzp.rarmor.proxy.ClientProxy", serverSide = "de.canitzp.rarmor.proxy.ServerProxy")
-    public static IProxy proxy;
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public static Rarmor INSTANCE;
+    
+    public Rarmor(){
+        Rarmor.INSTANCE = this;
+    
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    
+        // Register config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.FORGE_CONFIG_SPEC);
+    
+        // Registry handler
+        ContainerTypes.CONTAINERS.register(modEventBus);
+        
+        // Register API
+        RarmorAPI.methodHandler = new MethodHandler();
+    }
+    
+    public void preInit(FML event){
         LOGGER.info("Starting "+MOD_NAME+"...");
 
-        RarmorAPI.methodHandler = new MethodHandler();
-
-        new Config(event.getSuggestedConfigurationFile());
+        
+        
         ItemRegistry.preInit();
         new GuiHandler();
         new UpdateChecker();

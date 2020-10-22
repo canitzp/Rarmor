@@ -31,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -104,7 +105,7 @@ public class MethodHandler implements IMethodHandler {
 
             boolean shouldOpenGui;
             if(sendRarmorDataToClient){
-                boolean doPacket = Config.doOpeningConfirmationPacket;
+                boolean doPacket = Config.GENERAL.OPEN_CONFIRMATION_PACKET.get();
 
                 shouldOpenGui = !doPacket;
                 data.queueUpdate(true, doPacket ? moduleId : -1, true);
@@ -114,7 +115,7 @@ public class MethodHandler implements IMethodHandler {
             }
 
             if(shouldOpenGui){
-                player.openGui(Rarmor.instance, moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
+                player.openGui(Rarmor.INSTANCE, moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
             }
         }
     }
@@ -133,8 +134,8 @@ public class MethodHandler implements IMethodHandler {
     @Override
     public IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent){
         UUID stackId = this.checkAndSetRarmorId(stack, !world.isRemote && createIfAbsent);
-        if(stackId != null){
-            Map<UUID, IRarmorData> allData = WorldData.getRarmorData(world);
+        if(stackId != null && world instanceof ServerWorld){
+            Map<UUID, IRarmorData> allData = WorldData.getRarmorData((ServerWorld) world);
             IRarmorData data = allData.get(stackId);
             if(data == null){
                 if(createIfAbsent){

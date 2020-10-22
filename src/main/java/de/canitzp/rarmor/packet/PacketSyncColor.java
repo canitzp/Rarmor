@@ -4,9 +4,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -16,17 +20,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author canitzp
  */
-public class PacketSyncColor implements IMessage, IMessageHandler<PacketSyncColor, IMessage>{
+public class PacketSyncColor{
 
     private int slot, hex, playerID;
 
     public PacketSyncColor(){}
 
-    @SideOnly(Side.CLIENT)
-    public PacketSyncColor(EntityEquipmentSlot slot){
+    @OnlyIn(Dist.CLIENT)
+    public PacketSyncColor(EquipmentSlotType slot){
         this.slot = slot.ordinal();
-        EntityPlayer player = Minecraft.getMinecraft().player;
-        this.hex = player.inventory.armorInventory.get(slot.getIndex()).getTagCompound().getInteger("Color");
+        PlayerEntity player = Minecraft.getInstance().player;
+        this.hex = player.inventory.armorInventory.get(slot.getIndex()).getTag().getInteger("Color");
         this.playerID = player.getEntityId();
     }
 

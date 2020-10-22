@@ -9,57 +9,56 @@
 
 package de.canitzp.rarmor.config;
 
-import de.canitzp.rarmor.api.RarmorAPI;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.io.File;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public final class Config{
-
-    public static Configuration config;
-
-    public static boolean doOpeningConfirmationPacket;
-    public static boolean doUpdateCheck;
-    public static int rarmorOverlayX;
-    public static int rarmorOverlayY;
-    public static float rarmorOverlayScale;
-    public static boolean rarmorOverlayOnlyEnergy;
-
-    public static int rarmorOpeningMode;
-    public static boolean showInventoryButton;
-
-    public Config(File file){
-        config = new Configuration(file);
-        config.load();
-        this.config();
-
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    private void config(){
-        doOpeningConfirmationPacket = config.get(Configuration.CATEGORY_GENERAL, "openingConfirmation", true, "Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI. Turning this off might reduce server load, but could cause bugs. Use at your own risk.").getBoolean();
-        doUpdateCheck = config.get(Configuration.CATEGORY_GENERAL, "updateCheck", true, "Turn this off to disable the Update Checker").getBoolean();
-
-        rarmorOverlayX = config.get(Configuration.CATEGORY_GENERAL, "overlayX", 3, "The X position of the Rarmor overlay. Set this or the y value to a negative number to disable it.").getInt();
-        rarmorOverlayY = config.get(Configuration.CATEGORY_GENERAL, "overlayY", 3, "The Y position of the Rarmor overlay. Set this or the x value to a negative number to disable it.").getInt();
-        rarmorOverlayScale = (float)config.get(Configuration.CATEGORY_GENERAL, "overlayScale", 1.0, "The scale of the Rarmor overlay").getDouble();
-        rarmorOverlayOnlyEnergy = config.get(Configuration.CATEGORY_GENERAL, "overlayOnlyEnergy", false, "If the Rarmor overlay should only show the energy amount").getBoolean();
-
-        rarmorOpeningMode = config.get(Configuration.CATEGORY_GENERAL, "openingMode", 0, "The way the Rarmor GUI can be accessed. 0 is inventory key to open the Rarmor, sneak for normal inventory. 1 is inventory key for normal inventory, sneak to open the Rarmor. 2 is always open the Rarmor, and any other value is never open the Rarmor.").getInt();
-        showInventoryButton = config.get(Configuration.CATEGORY_GENERAL, "showButtonInInventory", true, "Show a button to open the Rarmor GUI in the normal inventory").getBoolean();
-
-        if(config.hasChanged()){
-            config.save();
+    
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec FORGE_CONFIG_SPEC = BUILDER.build();
+    
+    public static final General GENERAL = new General(BUILDER);
+    
+    public static class General {
+        public final ForgeConfigSpec.BooleanValue OPEN_CONFIRMATION_PACKET;
+        public final ForgeConfigSpec.IntValue OVERLAY_X;
+        public final ForgeConfigSpec.IntValue OVERLAY_Y;
+        public final ForgeConfigSpec.DoubleValue OVERLAY_SCALE;
+        public final ForgeConfigSpec.BooleanValue OVERLAY_ENERGY_ONLY;
+        public final ForgeConfigSpec.IntValue INVENTORY_OPENING_MODE;
+        public final ForgeConfigSpec.BooleanValue SHOW_INVENTORY_BUTTON;
+        
+        public General(ForgeConfigSpec.Builder builder){
+            OPEN_CONFIRMATION_PACKET = builder
+                .comment("Turn this off to disable the packet that gets sent from the client back to the server to ensure that it has gotten all of the data a Rarmor contains before opening its GUI.",
+                "Turning this off might reduce server load, but could cause bugs.",
+                "Use at your own risk.")
+                .translation("Open Confirmation Packet")
+                .define("open_confirmation_packet", true);
+            OVERLAY_X = builder
+                .comment("The X position of the Rarmor overlay. Set this or the y value to a negative number to disable it.")
+                .translation("Overlay X")
+                .defineInRange("rarmor_overlay_x", 3, 0, 10000);
+            OVERLAY_Y = builder
+                .comment("The Y position of the Rarmor overlay. Set this or the x value to a negative number to disable it.")
+                .translation("Overlay Y")
+                .defineInRange("rarmor_overlay_y", 3, 0, 10000);
+            OVERLAY_SCALE = builder
+                .comment("The scale of the Rarmor overlay")
+                .translation("Overlay Scale")
+                .defineInRange("rarmor_overlay_scale", 1.0, 0.1, 10.0);
+            OVERLAY_ENERGY_ONLY = builder
+                .comment("If the Rarmor overlay should only show the energy amount")
+                .translation("Overlay Energy only")
+                .define("rarmor_overlay_energy_only", false);
+            INVENTORY_OPENING_MODE = builder
+                .comment("The way the Rarmor GUI can be accessed. 0 is inventory key to open the Rarmor, sneak for normal inventory. 1 is inventory key for normal inventory, sneak to open the Rarmor. 2 is always open the Rarmor, and any other value is never open the Rarmor.")
+                .translation("Inventory opening mode")
+                .defineInRange("opening_mode", 0, 0, 2);
+            SHOW_INVENTORY_BUTTON = builder
+                .comment("Show a button to open the Rarmor GUI in the normal inventory")
+                .translation("Show inventory button")
+                .define("show_inventory_button", true);
         }
     }
-
-    @SubscribeEvent
-    public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event){
-        if(RarmorAPI.MOD_ID.equalsIgnoreCase(event.getModID())){
-            this.config();
-        }
-    }
+    
 }

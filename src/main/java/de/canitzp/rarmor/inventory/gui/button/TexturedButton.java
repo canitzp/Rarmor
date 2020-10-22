@@ -9,30 +9,34 @@
 
 package de.canitzp.rarmor.inventory.gui.button;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
-public class TexturedButton extends CustomButton{
+public class TexturedButton extends Button {
 
     protected final ResourceLocation resLoc;
     public int u;
     public int v;
 
-    public TexturedButton(int buttonId, int x, int y, int width, int height, ResourceLocation resLoc, int u, int v){
-        super(buttonId, x, y, width, height);
+    public TexturedButton(int x, int y, int width, int height, ResourceLocation resLoc, int u, int v, ITextComponent title, IPressable onPress){
+        super(x, y, width, height, title, onPress);
         this.resLoc = resLoc;
         this.u = u;
         this.v = v;
     }
-
+    
     @Override
-    protected void drawCustom(Minecraft mc, int mouseX, int mouseY){
-        mc.getTextureManager().bindTexture(this.resLoc);
-
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        Minecraft.getInstance().getTextureManager().bindTexture(this.resLoc);
+        
         int actualV = this.v;
-        if(this.hovered){
+        if(this.isHovered()){
             actualV += this.height;
         }
-        this.drawTexturedModalRect(this.x, this.y, this.u, actualV, this.width, this.height);
+        blit(matrixStack, this.x, this.y, this.u, actualV, this.width, this.height);
     }
+    
 }

@@ -12,6 +12,12 @@ package de.canitzp.rarmor.compat.jei;
 import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import de.canitzp.rarmor.inventory.gui.button.TabButton;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
+import mezz.jei.api.gui.handlers.IGuiClickableArea;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
+import mezz.jei.api.gui.handlers.IScreenHandler;
+import mezz.jei.api.recipe.IFocusFactory;
+import mezz.jei.api.runtime.IRecipesGui;
+import net.minecraft.client.renderer.Rectangle2d;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +25,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RarmorAdvancedGuiHandler implements IAdvancedGuiHandler<GuiRarmor>{
+public class RarmorAdvancedGuiHandler implements IGuiContainerHandler<GuiRarmor> {
 
     @Nonnull
     @Override
@@ -46,4 +52,5 @@ public class RarmorAdvancedGuiHandler implements IAdvancedGuiHandler<GuiRarmor>{
     public Object getIngredientUnderMouse(GuiRarmor guiContainer, int mouseX, int mouseY) {
         return null;
     }
+    
 }

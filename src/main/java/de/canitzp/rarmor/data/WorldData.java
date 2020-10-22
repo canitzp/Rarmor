@@ -11,9 +11,10 @@ package de.canitzp.rarmor.data;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.Rarmor;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
 
 import java.util.Map;
@@ -26,13 +27,13 @@ public class WorldData extends WorldSavedData {
     private static final String NAME = Rarmor.MOD_NAME+"Data";
 
     private final Map<UUID, IRarmorData> rarmorData = new ConcurrentHashMap<UUID, IRarmorData>();
-    private NBTTagCompound compoundRead;
+    private CompoundNBT compoundRead;
 
-    public WorldData(String name){
-        super(name);
+    public WorldData(){
+        super(NAME);
     }
 
-    public static Map<UUID, IRarmorData> getRarmorData(World world){
+    public static Map<UUID, IRarmorData> getRarmorData(ServerWorld world){
         WorldData data = getOrLoadData(world);
         if(data != null){
             return data.rarmorData;
@@ -40,29 +41,21 @@ public class WorldData extends WorldSavedData {
         return null;
     }
 
-    public static WorldData getOrLoadData(World world){
+    public static WorldData getOrLoadData(ServerWorld world){
         if(world != null){
-            MapStorage storage = world.getMapStorage();
+            DimensionSavedDataManager storage = world.getSavedData();
             if(storage != null){
-                WorldSavedData data = storage.getOrLoadData(WorldData.class, NAME);
-                if(data instanceof WorldData){
-                    return (WorldData)data;
-                }
-                else{
-                    WorldData newData = new WorldData(NAME);
-                    storage.setData(NAME, newData);
-                    return newData;
-                }
+                return storage.getOrCreate(WorldData::new, NAME);
             }
         }
         return null;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound){
+    public void read(CompoundNBT compound){
         this.rarmorData.clear();
 
-        Set<String> keys = compound.getKeySet();
+        Set<String> keys = compound.keySet();
         for(String key : keys){
             UUID id = null;
             try{
@@ -73,7 +66,7 @@ public class WorldData extends WorldSavedData {
             }
 
             if(id != null){
-                NBTTagCompound tag = compound.getCompoundTag(key);
+                CompoundNBT tag = compound.getCompound(key);
 
                 RarmorData data = new RarmorData(null);
                 data.readFromNBT(tag, false);
@@ -86,7 +79,7 @@ public class WorldData extends WorldSavedData {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound){
+    public CompoundNBT write(CompoundNBT compound){
         //To re-save old data even if it wasn't marked dirty a second time
         //This is due to the compound being put into another compound by MC
         //causing all of the data that was previously on there to be lost :v
@@ -97,9 +90,9 @@ public class WorldData extends WorldSavedData {
         for(UUID id : this.rarmorData.keySet()){
             IRarmorData data = this.rarmorData.get(id);
             if(data != null && data.getDirty()){
-                NBTTagCompound tag = new NBTTagCompound();
+                CompoundNBT tag = new CompoundNBT();
                 data.writeToNBT(tag, false);
-                compound.setTag(id.toString(), tag);
+                compound.put(id.toString(), tag);
 
                 data.setDirty(false);
             }

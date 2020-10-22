@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.inventory.gui.button;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.misc.Helper;
@@ -17,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 
 public class TabButton extends TexturedButton{
 
@@ -25,8 +27,8 @@ public class TabButton extends TexturedButton{
     private String moduleName;
     private ItemStack tabIcon;
 
-    public TabButton(int buttonId, int x, int y){
-        super(buttonId, x, y, 94, 20, GuiModuleMain.RES_LOC, 20, 216);
+    public TabButton(int x, int y, ITextComponent title, IPressable onPress){
+        super(x, y, 94, 20, GuiModuleMain.RES_LOC, 20, 216, title, onPress);
     }
 
     public void setModule(IRarmorData data, int selectedModule){
@@ -37,25 +39,26 @@ public class TabButton extends TexturedButton{
         this.moduleName = module.getIdentifier();
         this.tabIcon = module.getDisplayIcon();
     }
-
+    
     @Override
-    protected void drawCustom(Minecraft mc, int mouseX, int mouseY){
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         Helper.renderStackToGui(this.tabIcon, this.x+75, this.y+1.5F, 1F);
-
-        mc.getTextureManager().bindTexture(this.resLoc);
-
+    
+        Minecraft.getInstance().getTextureManager().bindTexture(this.resLoc);
+    
         int actualV = this.v;
-        if(this.moduleNum == this.data.getSelectedModule() || this.hovered){
+        if(this.moduleNum == this.data.getSelectedModule() || this.isHovered()){
             actualV += this.height;
         }
-        this.drawTexturedModalRect(this.x, this.y, this.u, actualV, this.width, this.height);
-        mc.fontRenderer.drawString(I18n.format("module."+this.moduleName+".name"), this.x+8, this.y+6, 0);
+        blit(matrixStack, this.x, this.y, this.u, actualV, this.width, this.height);
+        Minecraft.getInstance().fontRenderer.drawString(matrixStack, I18n.format("module."+this.moduleName+".name"), this.x+8, this.y+6, 0);
     }
-
+    
     @Override
-    public void playPressSound(SoundHandler handler){
+    public void playDownSound(SoundHandler handler){
         if(this.moduleNum != this.data.getSelectedModule()){
-            super.playPressSound(handler);
+            super.playDownSound(handler);
         }
     }
+    
 }

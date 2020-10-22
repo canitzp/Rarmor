@@ -19,12 +19,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import java.awt.*;
-
 public class GuiHandler implements IGuiHandler{
 
     public GuiHandler(){
-        NetworkRegistry.INSTANCE.registerGuiHandler(Rarmor.instance, this);
+        NetworkRegistry.INSTANCE.registerGuiHandler(Rarmor.INSTANCE, this);
     }
 
     @Override

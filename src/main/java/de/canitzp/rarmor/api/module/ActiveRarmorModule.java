@@ -13,17 +13,17 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -61,7 +61,7 @@ public abstract class ActiveRarmorModule{
      * @param compound The compound of NBT to read from
      * @param sync     If this is for syncing or for saving to disc
      */
-    public abstract void readFromNBT(NBTTagCompound compound, boolean sync);
+    public abstract void readFromNBT(CompoundNBT compound, boolean sync);
 
     /**
      * Writes this module to NBT.
@@ -69,7 +69,7 @@ public abstract class ActiveRarmorModule{
      * @param compound The compound of NBT to write to
      * @param sync     If this is for syncing or for saving to disc
      */
-    public abstract void writeToNBT(NBTTagCompound compound, boolean sync);
+    public abstract void writeToNBT(CompoundNBT compound, boolean sync);
 
     /**
      * Creates a new container when opening this' tab.
@@ -79,7 +79,7 @@ public abstract class ActiveRarmorModule{
      * @param container The base Rarmor container the tab is opened on
      * @return A new module container
      */
-    public abstract RarmorModuleContainer createContainer(EntityPlayer player, Container container);
+    public abstract RarmorModuleContainer createContainer(PlayerEntity player, Container container);
 
     /**
      * Creates a new GUI when opening this' tab.
@@ -88,8 +88,8 @@ public abstract class ActiveRarmorModule{
      * @param gui The base Rarmor GUI the tab is opened on
      * @return A new module container
      */
-    @SideOnly(Side.CLIENT)
-    public abstract RarmorModuleGui createGui(GuiContainer gui);
+    @OnlyIn(Dist.CLIENT)
+    public abstract <T extends Container> RarmorModuleGui<T> createGui(ContainerScreen<T> gui);
 
     /**
      * Called when this module is installed into a Rarmor
@@ -111,7 +111,7 @@ public abstract class ActiveRarmorModule{
      * @param player The player that is trying to have a tab
      * @return If this module has a tab
      */
-    public abstract boolean hasTab(EntityPlayer player);
+    public abstract boolean hasTab(PlayerEntity player);
 
     /**
      * Gets the icon that is displayed in the overlay on the top left of the screen
@@ -123,7 +123,7 @@ public abstract class ActiveRarmorModule{
      *
      * @return The Item to be displayed.
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Nonnull
     public abstract ItemStack getDisplayIcon();
 
@@ -151,13 +151,13 @@ public abstract class ActiveRarmorModule{
      * @param mc The Minecraft instance
      * @param player The player that is wearing the Rarmor
      * @param data The data (same as this' data variable)
-     * @param resolution The current resolution
+     * @param window The current window
      * @param renderX The x position to render this module at
      * @param renderY The y position to render this module at
      * @param partialTicks The amount of partial ticks
      */
-    @SideOnly(Side.CLIENT)
-    public abstract void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks);
+    @OnlyIn(Dist.CLIENT)
+    public abstract void renderAdditionalOverlay(Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks);
 
     /**
      * Gets if this module should appear on the overlay on the top left of the screen
@@ -166,8 +166,8 @@ public abstract class ActiveRarmorModule{
      * @param data The data (same as this' data variable)
      * @return If this should be displayed
      */
-    @SideOnly(Side.CLIENT)
-    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data){
+    @OnlyIn(Dist.CLIENT)
+    public boolean doesRenderOnOverlay(Minecraft mc, PlayerEntity player, IRarmorData data){
         return true;
     }
 }

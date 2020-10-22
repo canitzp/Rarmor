@@ -10,18 +10,17 @@
 package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 
 public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
     public ItemRarmorModule(String name){
-        super("item_module_" + name);
-        this.setMaxStackSize(1);
+        super("item_module_" + name, new Properties().maxStackSize(1));
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack stack){
-        return EnumRarity.RARE;
+    public Rarity getRarity(ItemStack stack){
+        return Rarity.RARE;
     }
 }

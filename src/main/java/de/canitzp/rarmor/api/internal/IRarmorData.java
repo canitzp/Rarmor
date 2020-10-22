@@ -11,10 +11,10 @@ package de.canitzp.rarmor.api.internal;
 
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -78,7 +78,7 @@ public interface IRarmorData{
      * @param compound The compound of NBT to write to
      * @param sync     If this is for syncing or for saving to disc
      */
-    void writeToNBT(NBTTagCompound compound, boolean sync);
+    void writeToNBT(CompoundNBT compound, boolean sync);
 
     /**
      * Reads this Data from NBT.
@@ -86,7 +86,7 @@ public interface IRarmorData{
      * @param compound The compound of NBT to read from
      * @param sync     If this is for syncing or for saving to disc
      */
-    void readFromNBT(NBTTagCompound compound, boolean sync);
+    void readFromNBT(CompoundNBT compound, boolean sync);
 
     /**
      * Selects a module.
@@ -118,7 +118,7 @@ public interface IRarmorData{
      *
      * @param player The player to send the update to
      */
-    void sendQueuedUpdate(EntityPlayer player);
+    void sendQueuedUpdate(PlayerEntity player);
 
     /**
      * Uninstalls a module.

@@ -1,39 +1,39 @@
 package de.canitzp.rarmor.module.color;
 
-import de.canitzp.rarmor.api.RarmorAPI;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.misc.Helper;
 import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.packet.PacketSyncColor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
-import java.io.IOException;
 
 /**
  * @author canitzp
  */
-@SideOnly(Side.CLIENT)
-public class GuiModuleColor extends RarmorModuleGui{
+@OnlyIn(Dist.CLIENT)
+public class GuiModuleColor extends RarmorModuleGui<ContainerRarmor>{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_color");
     private int backHex = 0xFFFFFC30;
 
     private boolean isColorDirty = false;
     private int hex;
-    private EntityEquipmentSlot activeSlot = EntityEquipmentSlot.CHEST;
+    private EquipmentSlotType activeSlot = EquipmentSlotType.CHEST;
     private Robot robot;
 
-    public GuiModuleColor(GuiContainer gui, ActiveRarmorModule module){
+    public GuiModuleColor(ContainerScreen<ContainerRarmor> gui, ActiveRarmorModule module){
         super(gui, module);
         try{
             robot = new Robot();
@@ -42,82 +42,80 @@ public class GuiModuleColor extends RarmorModuleGui{
         }
         this.recolor();
     }
-
+    
     @Override
-    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
+        super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+    
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+6, this.guiTop+5, 0, 0, 250, 136);
-
-        switch(activeSlot){
+        blit(matrixStack, this.guiLeft + 6, this.guiTop + 5, 0, 0, 250, 136);
+    
+        switch(this.activeSlot){
             case HEAD:{
-                this.drawGradientRect(this.guiLeft + 37, this.guiTop + 12, this.guiLeft + 125, this.guiTop + 47, backHex, backHex);
+                this.blit(matrixStack, this.guiLeft + 37, this.guiTop + 12, this.guiLeft + 125, this.guiTop + 47, backHex, backHex);
                 break;
             }
             case CHEST:{
-                this.drawGradientRect(this.guiLeft + 37, this.guiTop + 48, this.guiLeft + 125, this.guiTop + 85, backHex, backHex);
+                this.blit(matrixStack, this.guiLeft + 37, this.guiTop + 48, this.guiLeft + 125, this.guiTop + 85, backHex, backHex);
                 break;
             }
             case LEGS:{
-                this.drawGradientRect(this.guiLeft + 37, this.guiTop + 86, this.guiLeft + 125, this.guiTop + 110, backHex, backHex);
+                this.blit(matrixStack, this.guiLeft + 37, this.guiTop + 86, this.guiLeft + 125, this.guiTop + 110, backHex, backHex);
                 break;
             }
             case FEET:{
-                this.drawGradientRect(this.guiLeft + 37, this.guiTop + 111, this.guiLeft + 125, this.guiTop + 140, backHex, backHex);
+                this.blit(matrixStack, this.guiLeft + 37, this.guiTop + 111, this.guiLeft + 125, this.guiTop + 140, backHex, backHex);
                 break;
             }
         }
-
-        GuiInventory.drawEntityOnScreen(this.guiLeft+80, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.player);
+        InventoryScreen.drawEntityOnScreen(this.guiLeft+80, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.player);
     }
-
+    
     @Override
-    public void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick){
-        super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
-        mouseX -= this.guiLeft;
-        mouseY -= this.guiTop;
-        if(mouseX >= 135 && mouseY >= 32 && mouseX <= 227 && mouseY <= 123){
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY){
+        if(mouseX - this.guiLeft >= 135 && mouseY - this.guiTop >= 32 && mouseX - this.guiLeft <= 227 && mouseY - this.guiTop <= 123){
             Point point = MouseInfo.getPointerInfo().getLocation();
             hex = robot.getPixelColor(point.x, point.y).getRGB();
             isColorDirty = true;
+            return true;
         }
-
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
-
+    
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException{
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        mouseX -= this.guiLeft;
-        mouseY -= this.guiTop;
-        if(mouseX >= 37 && mouseX <= 125){
-            EntityEquipmentSlot slot = null;
-            if(mouseY >= 12 && mouseY <= 47){
-                slot = EntityEquipmentSlot.HEAD;
-            } else if(mouseY >= 48 && mouseY <= 85){
-                slot = EntityEquipmentSlot.CHEST;
-            } else if(mouseY >= 86 && mouseY <= 110){
-                slot = EntityEquipmentSlot.LEGS;
-            } else if(mouseY >= 111 && mouseY <= 140){
-                slot = EntityEquipmentSlot.FEET;
+    public boolean mouseClicked(double mouseX, double mouseY, int button){
+        if(mouseX - this.guiLeft >= 37 && mouseX - this.guiLeft <= 125){
+            EquipmentSlotType slot = null;
+            if(mouseY - this.guiTop >= 12 && mouseY - this.guiTop <= 47){
+                slot = EquipmentSlotType.HEAD;
+            } else if(mouseY - this.guiTop >= 48 && mouseY - this.guiTop <= 85){
+                slot = EquipmentSlotType.CHEST;
+            } else if(mouseY - this.guiTop >= 86 && mouseY - this.guiTop <= 110){
+                slot = EquipmentSlotType.LEGS;
+            } else if(mouseY - this.guiTop >= 111 && mouseY - this.guiTop <= 140){
+                slot = EquipmentSlotType.FEET;
             }
             if(slot != null){
-                if(mouseButton == 0){
+                if(button == 0){
                     this.activeSlot = slot;
                     this.recolor();
-                } else if(mouseButton == 1){
+                } else if(button == 1){
                     copyColor(slot);
                 }
+                return true;
             }
         }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public void updateScreen(){
-        if(isColorDirty && Minecraft.getMinecraft().world.getTotalWorldTime() % 3 == 0){
-            ItemStack armor = Minecraft.getMinecraft().player.inventory.armorInventory.get(activeSlot.getIndex());
-            NBTTagCompound nbt = armor.hasTagCompound() ? armor.getTagCompound() : new NBTTagCompound();
-            nbt.setInteger("Color", hex);
-            armor.setTagCompound(nbt);
-            PacketHandler.handler.sendToServer(new PacketSyncColor(activeSlot));
+        if(isColorDirty && Minecraft.getInstance().world.getGameTime() % 3 == 0){
+            ItemStack armor = Minecraft.getInstance().player.inventory.armorInventory.get(activeSlot.getIndex());
+            CompoundNBT nbt = armor.hasTag() ? armor.getTag() : new CompoundNBT();
+            nbt.putInt("Color", hex);
+            armor.setTag(nbt);
+            PacketHandler.channel.sendToServer(new PacketSyncColor(activeSlot));
             isColorDirty = false;
         }
         this.recolor();
@@ -129,38 +127,38 @@ public class GuiModuleColor extends RarmorModuleGui{
     }
 
     private void recolor(){
-        ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(activeSlot.getIndex());
-        if(!armor.isEmpty() && armor.hasTagCompound() && armor.getTagCompound().hasKey("Color", 3)){
-            this.hex = armor.getTagCompound().getInteger("Color");
+        ItemStack armor = Minecraft.getInstance().player.inventory.armorItemInSlot(activeSlot.getIndex());
+        if(!armor.isEmpty() && armor.hasTag() && armor.getTag().contains("Color", 3)){
+            this.hex = armor.getTag().getInt("Color");
         }
         this.setBackHex(this.hex);
     }
 
-    private void copyColor(EntityEquipmentSlot from){
+    private void copyColor(EquipmentSlotType from){
         createColorTag(from);
-        ItemStack fromStack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(from.getIndex());
-        if(!fromStack.isEmpty() && fromStack.hasTagCompound() && fromStack.getTagCompound().hasKey("Color", 3)){
+        ItemStack fromStack = Minecraft.getInstance().player.inventory.armorItemInSlot(from.getIndex());
+        if(!fromStack.isEmpty() && fromStack.hasTag() && fromStack.getTag().contains("Color", 3)){
             createColorTag(activeSlot);
-            ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(activeSlot.getIndex());
+            ItemStack armor = Minecraft.getInstance().player.inventory.armorItemInSlot(activeSlot.getIndex());
             if(!armor.isEmpty()){
-                this.hex = fromStack.getTagCompound().getInteger("Color");
-                armor.getTagCompound().setInteger("Color", this.hex);
+                this.hex = fromStack.getTag().getInt("Color");
+                armor.getTag().putInt("Color", this.hex);
                 this.isColorDirty = true;
             }
         }
     }
 
-    private void createColorTag(EntityEquipmentSlot slot){
-        ItemStack armor = Minecraft.getMinecraft().player.inventory.armorItemInSlot(slot.getIndex());
+    private void createColorTag(EquipmentSlotType slot){
+        ItemStack armor = Minecraft.getInstance().player.inventory.armorItemInSlot(slot.getIndex());
         if(!armor.isEmpty()){
-            NBTTagCompound nbt;
-            if(!armor.hasTagCompound()){
-                armor.setTagCompound(nbt = new NBTTagCompound());
+            CompoundNBT nbt;
+            if(!armor.hasTag()){
+                armor.setTag(nbt = new CompoundNBT());
             } else {
-                nbt = armor.getTagCompound();
+                nbt = armor.getTag();
             }
-            if(!nbt.hasKey("Color", 3)){
-                nbt.setInteger("Color", 0xFFFFFFFF);
+            if(!nbt.contains("Color", 3)){
+                nbt.putInt("Color", 0xFFFFFFFF);
             }
         }
     }

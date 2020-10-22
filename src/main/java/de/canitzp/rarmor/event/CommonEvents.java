@@ -13,13 +13,13 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.data.WorldData;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CommonEvents{
 
@@ -27,31 +27,33 @@ public class CommonEvents{
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private static void doData(World world){
-        if(!world.isRemote){
-            WorldData data = WorldData.getOrLoadData(world);
-            if(data != null){
-                data.markDirty();
-            }
+    private static void doData(ServerWorld world){
+        WorldData data = WorldData.getOrLoadData(world);
+        if(data != null){
+            data.markDirty();
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event){
-        doData(event.getWorld());
+        if(event.getWorld() instanceof ServerWorld){
+            doData((ServerWorld) event.getWorld());
+        }
     }
 
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save event){
-        doData(event.getWorld());
+        if(event.getWorld() instanceof ServerWorld){
+            doData((ServerWorld) event.getWorld());
+        }
     }
 
     @SubscribeEvent
     public void onPlayerJoin(EntityJoinWorldEvent event){
         if(!event.getWorld().isRemote){
             Entity entity = event.getEntity();
-            if(entity instanceof EntityPlayer){
-                EntityPlayer player = (EntityPlayer)entity;
+            if(entity instanceof PlayerEntity){
+                PlayerEntity player = (PlayerEntity)entity;
 
                 for(int i = 0; i < player.inventory.getSizeInventory(); i++){
                     ItemStack stack = player.inventory.getStackInSlot(i);

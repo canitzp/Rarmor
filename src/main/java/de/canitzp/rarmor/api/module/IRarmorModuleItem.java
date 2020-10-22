@@ -10,8 +10,8 @@
 package de.canitzp.rarmor.api.module;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -37,7 +37,7 @@ public interface IRarmorModuleItem{
      * @param currentData The current Rarmor Data
      * @return If this can be installed
      */
-    boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData);
+    boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData);
 
     /**
      * Gets if this module can be uninstalled from the given slot
@@ -49,5 +49,5 @@ public interface IRarmorModuleItem{
      * @param currentData The current Rarmor Data
      * @return If this can be uninstalled
      */
-    boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData);
+    boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData);
 }

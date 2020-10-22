@@ -13,35 +13,37 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SlotModule extends Slot{
+public class SlotModule extends Slot {
 
     private final IRarmorData currentData;
-    private final EntityPlayer player;
+    private final PlayerEntity player;
     private final ContainerRarmor container;
 
-    public SlotModule(IInventory inventory, EntityPlayer player, IRarmorData currentData, ContainerRarmor container, int index, int xPosition, int yPosition){
+    public SlotModule(IInventory inventory, PlayerEntity player, IRarmorData currentData, ContainerRarmor container, int index, int xPosition, int yPosition){
         super(inventory, index, xPosition, yPosition);
         this.player = player;
         this.currentData = currentData;
         this.container = container;
     }
 
+    @Nonnull
     @Override
-    public ItemStack onTake(EntityPlayer player, ItemStack someStack){
+    public ItemStack onTake(@Nonnull PlayerEntity player, @Nonnull ItemStack someStack){
         this.uninstallModule();
         return super.onTake(player, someStack);
     }
 
     @Override
-    public void putStack(ItemStack newStack){
+    public void putStack(@Nonnull ItemStack newStack){
         super.putStack(newStack);
 
         if(!this.container.isPuttingStacksInSlots){
@@ -51,6 +53,7 @@ public class SlotModule extends Slot{
         }
     }
 
+    @Nonnull
     @Override
     public ItemStack decrStackSize(int amount){
         ItemStack toReturn = super.decrStackSize(amount);
@@ -102,7 +105,7 @@ public class SlotModule extends Slot{
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack){
+    public boolean isItemValid(@Nonnull ItemStack stack){
         ItemStack myStack = this.getStack();
         if(!myStack.isEmpty() || myStack.getCount() <= 0){
             if(stack.getItem() instanceof IRarmorModuleItem){
@@ -124,7 +127,7 @@ public class SlotModule extends Slot{
     }
 
     @Override
-    public boolean canTakeStack(EntityPlayer player){
+    public boolean canTakeStack(@Nonnull PlayerEntity player){
         ItemStack stack = this.getStack();
         return stack.isEmpty() || this.getActiveModules(this.getSlotIndex(), this.currentData).isEmpty() || !(stack.getItem() instanceof IRarmorModuleItem) || ((IRarmorModuleItem)stack.getItem()).canUninstall(player, this, stack, this.currentData);
     }

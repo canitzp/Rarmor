@@ -1,71 +1,117 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
-sourceCompatibility = targetCompatibility = "1.8"
-sourceCompatibility = targetCompatibility = "1.8"
 
-version = "1.12.2-2.0.0"
+version = "1.16.3-2.1.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 if(hasProperty('buildnumber')){
     version = "${version}-${this.properties['buildnumber']}"
 }
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
-    runDir = "idea"
 
-    mappings = "snapshot_20180813"
-    makeObfSourceJar = false
+	mappings channel: 'snapshot', version: '20200916-1.16.2'
+	
+	runs {
+        client {
+            workingDirectory project.file('run')
 
-    replaceIn "Rarmor.java"
-    replace "@VERSION@", project.version.toString()
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 repositories {
     maven {
-        url "http://dvs1.progwml6.com/files/maven"
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
     }
     maven {
-        url "http://maven.epoxide.xyz"
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
     }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.11.0.212"
-}
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 }
 
 jar {
-
+    manifest {
+        attributes([
+            "Specification-Title": "rarmor",
+            "Specification-Vendor": "canitzp",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"canitzp",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
 task deobfJar(type: Jar) {
@@ -94,8 +140,6 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.java
     classifier = 'sources'
 }
-
-apply plugin: 'maven-publish'
 
 publishing {
     publications {

@@ -9,54 +9,33 @@
 
 package de.canitzp.rarmor.item;
 
-import de.canitzp.rarmor.IRenderItem;
+import de.canitzp.rarmor.RarmorArmorMaterial;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
 
-import java.awt.*;
-import java.util.Locale;
-
-public class ItemRarmor extends ItemArmor implements IRenderItem {
-
-    private static final ArmorMaterial RARMOR_MATERIAL = EnumHelper.addArmorMaterial(RarmorAPI.MOD_ID.toUpperCase(Locale.ROOT)+"_MATERIAL", RarmorAPI.MOD_ID+":rarmor", 0, new int[]{2, 5, 6, 2}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0);
-
-    public ItemRarmor(String name, EntityEquipmentSlot slot){
-        super(RARMOR_MATERIAL, -1, slot);
+public class ItemRarmor extends DyeableArmorItem {
+    
+    public ItemRarmor(String name, EquipmentSlotType slot){
+        super(RarmorArmorMaterial.INSTANCE, slot, new Properties().group(CreativeTab.INSTANCE));
 
         this.setRegistryName(RarmorAPI.MOD_ID, name);
-        ItemBase.ITEMS_TO_REGISTER.add(this);
-
-        this.setTranslationKey(this.getRegistryName().toString());
-        this.setCreativeTab(CreativeTab.INSTANCE);
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack stack){
-        return EnumRarity.EPIC;
+    public Rarity getRarity(ItemStack stack){
+        return Rarity.EPIC;
     }
 
+    
     @Override
     public boolean hasColor(ItemStack stack){
-        return stack.hasTagCompound() && stack.getTagCompound().getInteger("Color") != 0;
+        return stack.hasTag() && stack.getTag().getInt("Color") != 0;
     }
 
     @Override
     public int getColor(ItemStack stack){
-        return stack.hasTagCompound() ? stack.getTagCompound().hasKey("Color") ? stack.getTagCompound().getInteger("Color") : super.getColor(stack) : super.getColor(stack);
-    }
-
-    @Override
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        return stack.hasTag() ? stack.getTag().contains("Color") ? stack.getTag().getInt("Color") : super.getColor(stack) : super.getColor(stack);
     }
 }

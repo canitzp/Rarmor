@@ -11,28 +11,26 @@ package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
-import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -43,94 +41,77 @@ public class ItemRarmorChest extends ItemRarmor{
     private static final int MAX_EXTRACT = 1000;
 
     public ItemRarmorChest(String name){
-        super(name, EntityEquipmentSlot.CHEST);
-        this.setHasSubtypes(true);
+        super(name, EquipmentSlotType.CHEST);
     }
 
     @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected){
         IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack, !world.isRemote);
         if(data != null){
-            if(!world.isRemote && entity instanceof EntityPlayer){
-                data.sendQueuedUpdate((EntityPlayer)entity);
+            if(!world.isRemote && entity instanceof PlayerEntity){
+                data.sendQueuedUpdate((PlayerEntity) entity);
             }
 
-            boolean hat = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.HEAD) != ItemStack.EMPTY;
-            boolean chest = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.CHEST) != ItemStack.EMPTY;
-            boolean pants = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.LEGS) != ItemStack.EMPTY;
-            boolean shoes = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EntityEquipmentSlot.FEET) != ItemStack.EMPTY;
+            boolean hat = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EquipmentSlotType.HEAD) != ItemStack.EMPTY;
+            boolean chest = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EquipmentSlotType.CHEST) != ItemStack.EMPTY;
+            boolean pants = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EquipmentSlotType.LEGS) != ItemStack.EMPTY;
+            boolean shoes = RarmorAPI.methodHandler.getHasRarmorInSlot(entity, EquipmentSlotType.FEET) != ItemStack.EMPTY;
             data.tick(world, entity, hat, chest, pants, shoes);
         }
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
         if(worldIn != null){
             String s = "   ";
-
-            tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".storedEnergy")+":");
-            tooltip.add(TextFormatting.YELLOW+s+this.getEnergyStored(stack)+"/"+this.getMaxEnergyStored(stack));
-
+    
+            // todo redo
+            /*tooltip.add(new TranslationTextComponent("%s%s.stored_energy:", TextFormatting.GOLD, RarmorAPI.MOD_ID));
+            tooltip.add(new TranslationTextComponent("%s%s%d/%d", TextFormatting.YELLOW, s, this.getEnergyStored(stack), this.getMaxEnergyStored(stack)));
+    
             IRarmorData data = RarmorAPI.methodHandler.getDataForStack(worldIn, stack, false);
             if(data != null){
-                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".installedModules")+":");
+                tooltip.add(new TranslationTextComponent("%s%s.installed_modules:", TextFormatting.GOLD, RarmorAPI.MOD_ID));
                 for(ActiveRarmorModule module : data.getCurrentModules()){
-                    tooltip.add(TextFormatting.YELLOW+s+"-"+I18n.format("module."+module.getIdentifier()+".name"));
+                    tooltip.add(new TranslationTextComponent("%s%s-module.%s.name", TextFormatting.YELLOW, s, module.getIdentifier()));
                 }
-
-                tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".stackId")+":");
-                tooltip.add(TextFormatting.YELLOW+s+RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
-            }
-            else{
-                tooltip.add(TextFormatting.RED+""+TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".noDataYet"));
-            }
+    
+                tooltip.add(new TranslationTextComponent("%s%s.stack_id:")TextFormatting.GOLD + I18n.format(RarmorAPI.MOD_ID + ".stackId") + ":");
+                tooltip.add(TextFormatting.YELLOW + s + RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
+            } else{
+                tooltip.add(TextFormatting.RED + "" + TextFormatting.ITALIC + I18n.format(RarmorAPI.MOD_ID + ".noDataYet"));
+            }*/
         }
     }
 
     public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate){
-        if(!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
+        if(!stack.hasTag()){
+            stack.setTag(new CompoundNBT());
         }
-        NBTTagCompound compound = stack.getTagCompound();
+        CompoundNBT compound = stack.getTag();
 
-        int energy = compound.getInteger("Energy");
+        int energy = compound.getInt("Energy");
         int energyReceived = Math.min(CAPACITY-energy, Math.min(MAX_RECEIVE, maxReceive));
 
         if(!simulate){
             energy += energyReceived;
-            compound.setInteger("Energy", energy);
+            compound.putInt("Energy", energy);
         }
 
         return energyReceived;
     }
 
-    @Override
-    public boolean showDurabilityBar(ItemStack stack){
-        return stack.getItemDamage() != 1;
-    }
-
-    @Override
-    public double getDurabilityForDisplay(ItemStack stack){
-        if(stack.getItemDamage() != 1){
-            double max = this.getMaxEnergyStored(stack);
-            return (max-this.getEnergyStored(stack))/max;
-        }
-        else{
-            return super.getDurabilityForDisplay(stack);
-        }
-    }
-
     public int extractEnergy(ItemStack stack, int maxExtract, boolean simulate){
-        if(stack.hasTagCompound()){
-            NBTTagCompound compound = stack.getTagCompound();
+        if(stack.hasTag()){
+            CompoundNBT compound = stack.getTag();
 
-            int energy = compound.getInteger("Energy");
+            int energy = compound.getInt("Energy");
             int energyExtracted = Math.min(energy, Math.min(MAX_EXTRACT, maxExtract));
 
             if(!simulate){
                 energy -= energyExtracted;
-                compound.setInteger("Energy", energy);
+                compound.putInt("Energy", energy);
             }
 
             return energyExtracted;
@@ -139,8 +120,8 @@ public class ItemRarmorChest extends ItemRarmor{
     }
 
     public int getEnergyStored(ItemStack stack){
-        if(stack.hasTagCompound()){
-            return stack.getTagCompound().getInteger("Energy");
+        if(stack.hasTag()){
+            return stack.getTag().getInt("Energy");
         }
         return 0;
     }
@@ -150,15 +131,15 @@ public class ItemRarmorChest extends ItemRarmor{
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound compound){
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT compound){
         return new CapProvider(stack, CAPACITY, MAX_RECEIVE, MAX_EXTRACT);
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems){
-        super.getSubItems(tab, subItems);
+    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> subItems){
+        super.fillItemGroup(group, subItems);
 
-        if(this.isInCreativeTab(tab)){
+        if(this.isInGroup(group)){
             ItemStack stack = new ItemStack(this);
             Helper.setItemEnergy(stack, this.getMaxEnergyStored(stack));
             subItems.add(stack);
@@ -176,20 +157,13 @@ public class ItemRarmorChest extends ItemRarmor{
             this.maxRec = maxRec;
             this.maxTra = maxTra;
         }
-
+        
         @Override
-        public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing){
-            return getCapability(capability, facing) != null;
-        }
-
-        @Nullable
-        @Override
-        public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing){
-            EStorage storage = new EStorage(stack, cap, maxRec, maxTra);
+        public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side){
             if(capability == CapabilityEnergy.ENERGY){
-                return (T) storage;
+                return LazyOptional.of(() -> (T) new EStorage(stack, cap, maxRec, maxTra));
             }
-            return null;
+            return LazyOptional.empty();
         }
     }
 
@@ -236,8 +210,8 @@ public class ItemRarmorChest extends ItemRarmor{
 
         @Override
         public int getEnergyStored(){
-            if(stack.hasTagCompound()){
-                return stack.getTagCompound().getInteger("Energy");
+            if(stack.hasTag()){
+                return stack.getTag().getInt("Energy");
             }
             else{
                 return 0;
@@ -245,11 +219,11 @@ public class ItemRarmorChest extends ItemRarmor{
         }
 
         public void setEnergy(int energy){
-            if(!stack.hasTagCompound()){
-                stack.setTagCompound(new NBTTagCompound());
+            if(!stack.hasTag()){
+                stack.setTag(new CompoundNBT());
             }
 
-            stack.getTagCompound().setInteger("Energy", energy);
+            stack.getTag().putInt("Energy", energy);
         }
     }
 }

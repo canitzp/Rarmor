@@ -10,39 +10,22 @@
 package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.IOreDictItem;
-import de.canitzp.rarmor.IRenderItem;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ItemBase extends Item implements IRenderItem, IOreDictItem{
-
-    public static List<Item> ITEMS_TO_REGISTER = new ArrayList<>();
+public class ItemBase extends Item implements IOreDictItem{
     
     private List<String> oreDictNames = new ArrayList<>();
     
-    public ItemBase(String name){
+    public ItemBase(String name, Properties properties){
+        super(properties.group(CreativeTab.INSTANCE));
+        
         this.setRegistryName(RarmorAPI.MOD_ID, name);
-        ITEMS_TO_REGISTER.add(this);
-
-        this.setTranslationKey(getRegistryName().toString());
-        this.setCreativeTab(CreativeTab.INSTANCE);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
     
     public ItemBase addOreDict(String... names){

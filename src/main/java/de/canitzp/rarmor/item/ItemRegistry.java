@@ -25,10 +25,15 @@ import de.canitzp.rarmor.module.speed.ItemModuleSpeed;
 import de.canitzp.rarmor.module.storage.ItemModuleStorage;
 import de.canitzp.rarmor.proxy.ClientProxy;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Mod.EventBusSubscriber
 public final class ItemRegistry{
 
     public static Item itemRarmorHelmet;
@@ -58,17 +63,17 @@ public final class ItemRegistry{
     public static Item itemModuleProtectionDiamond;
 
     public static void preInit(){
-        itemRarmorHelmet = new ItemRarmor("item_rarmor_helmet", EntityEquipmentSlot.HEAD);
+        itemRarmorHelmet = new ItemRarmor("item_rarmor_helmet", EquipmentSlotType.HEAD);
         itemRarmorChest = new ItemRarmorChest("item_rarmor_chest");
-        itemRarmorPants = new ItemRarmor("item_rarmor_pants", EntityEquipmentSlot.LEGS);
-        itemRarmorBoots = new ItemRarmor("item_rarmor_boots", EntityEquipmentSlot.FEET);
+        itemRarmorPants = new ItemRarmor("item_rarmor_pants", EquipmentSlotType.LEGS);
+        itemRarmorBoots = new ItemRarmor("item_rarmor_boots", EquipmentSlotType.FEET);
 
         itemWireCutter = new ItemWireCutter("item_wire_cutter");
-        itemControlCircuit = new ItemBase("item_control_circuit").addOreDict("circuitBasic");
-        itemWire = new ItemBase("item_wire");
-        itemConnector = new ItemBase("item_connector");
-        itemSolarCell = new ItemBase("item_solar_cell");
-        itemGenerator = new ItemBase("item_generator");
+        itemControlCircuit = new ItemBase("item_control_circuit", new Item.Properties()).addOreDict("circuitBasic");
+        itemWire = new ItemBase("item_wire", new Item.Properties());
+        itemConnector = new ItemBase("item_connector", new Item.Properties());
+        itemSolarCell = new ItemBase("item_solar_cell", new Item.Properties());
+        itemGenerator = new ItemBase("item_generator", new Item.Properties());
         itemBattery = new ItemBattery("item_battery");
 
         itemModuleStorage = new ItemModuleStorage("storage");
@@ -85,4 +90,9 @@ public final class ItemRegistry{
         itemModuleProtectionDiamond = new ItemModuleProtection("protection_diamond", ActiveModuleProtectionDiamond.IDENTIFIER);
     }
 
+    @SubscribeEvent
+    public static void registerItemsEvent(RegistryEvent.Register<Item> event){
+        // tod register Items
+    }
+    
 }

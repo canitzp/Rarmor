@@ -19,14 +19,15 @@ import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.packet.PacketSyncRarmorData;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -52,28 +53,28 @@ public class RarmorData implements IRarmorData {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
-        NBTTagList data = compound.getTagList("ModuleData", 10);
-        for(int i = 0; i < data.tagCount(); i++){
-            NBTTagCompound tag = data.getCompoundTagAt(i);
+    public void readFromNBT(CompoundNBT compound, boolean sync){
+        ListNBT data = compound.getList("ModuleData", Constants.NBT.TAG_COMPOUND);
+        for(int i = 0; i < data.size(); i++){
+            CompoundNBT tag = data.getCompound(i);
 
             ActiveRarmorModule module = this.findOrCreateModule(tag.getString("ModuleId"));
             module.readFromNBT(tag, sync);
         }
 
         this.moduleIdsForSlots.clear();
-        NBTTagList list = compound.getTagList("SlotData", 10);
-        for(int i = 0; i < list.tagCount(); i++){
-            NBTTagCompound tag = list.getCompoundTagAt(i);
+        ListNBT list = compound.getList("SlotData", Constants.NBT.TAG_COMPOUND);
+        for(int i = 0; i < list.size(); i++){
+            CompoundNBT tag = list.getCompound(i);
             String s = tag.getString("ID");
-            this.moduleIdsForSlots.put(s == null || s.isEmpty() ? null : s, tag.getInteger("Slot"));
+            this.moduleIdsForSlots.put(s == null || s.isEmpty() ? null : s, tag.getInt("Slot"));
         }
 
-        this.selectedModule = compound.getInteger("SelectedModule");
-        this.totalTickedTicks = compound.getInteger("TotalTicks");
+        this.selectedModule = compound.getInt("SelectedModule");
+        this.totalTickedTicks = compound.getInt("TotalTicks");
 
         if(sync){
-            this.setEnergy(compound.getInteger("EnergyStored"));
+            this.setEnergy(compound.getInt("EnergyStored"));
         }
         else{
             this.modules.loadSlots(compound);
@@ -105,42 +106,42 @@ public class RarmorData implements IRarmorData {
     }
 
     @Override
-    public void sendQueuedUpdate(EntityPlayer player){
-        if(this.isUpdateQueued && player instanceof EntityPlayerMP){
+    public void sendQueuedUpdate(PlayerEntity player){
+        if(this.isUpdateQueued && player instanceof ServerPlayerEntity){
             UUID id = RarmorAPI.methodHandler.checkAndSetRarmorId(this.stack, false);
-            PacketHandler.handler.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (EntityPlayerMP)player);
+            PacketHandler.handler.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (ServerPlayerEntity)player);
 
             this.isUpdateQueued = false;
         }
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
-        NBTTagList data = new NBTTagList();
+    public void writeToNBT(CompoundNBT compound, boolean sync){
+        ListNBT data = new ListNBT();
         for(ActiveRarmorModule module : this.loadedModules){
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundNBT tag = new CompoundNBT();
 
             module.writeToNBT(tag, sync);
-            tag.setString("ModuleId", module.getIdentifier());
+            tag.putString("ModuleId", module.getIdentifier());
 
-            data.appendTag(tag);
+            data.add(tag);
         }
-        compound.setTag("ModuleData", data);
+        compound.put("ModuleData", data);
 
-        NBTTagList list = new NBTTagList();
+        ListNBT list = new ListNBT();
         for(String s : this.moduleIdsForSlots.keySet()){
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setString("ID", s);
-            tag.setInteger("Slot", this.moduleIdsForSlots.get(s));
-            list.appendTag(tag);
+            CompoundNBT tag = new CompoundNBT();
+            tag.putString("ID", s);
+            tag.putInt("Slot", this.moduleIdsForSlots.get(s));
+            list.add(tag);
         }
-        compound.setTag("SlotData", list);
+        compound.put("SlotData", list);
 
-        compound.setInteger("SelectedModule", this.selectedModule);
-        compound.setInteger("TotalTicks", this.totalTickedTicks);
+        compound.putInt("SelectedModule", this.selectedModule);
+        compound.putInt("TotalTicks", this.totalTickedTicks);
 
         if(sync){
-            compound.setInteger("EnergyStored", this.getEnergyStored());
+            compound.putInt("EnergyStored", this.getEnergyStored());
         }
         else{
             this.modules.saveSlots(compound);

@@ -11,13 +11,13 @@ package de.canitzp.rarmor.api.internal;
 
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
@@ -36,7 +36,7 @@ public interface IMethodHandler{
      * @param slot   The slot
      * @return The rarmor item if the entity has it in the slot, otherwise null
      */
-    ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot);
+    ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlotType slot);
 
     /**
      * Gets the Rarmor Data for the chestplate a player is wearing
@@ -45,7 +45,7 @@ public interface IMethodHandler{
      * @param createIfAbsent If new data should be created if there is none available
      * @return The data for the chestplate the player is wearing, null if not available
      */
-    IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent);
+    IRarmorData getDataForChestplate(PlayerEntity player, boolean createIfAbsent);
 
     /**
      * Gets the Rarmor Data for a given stack in the given world
@@ -85,7 +85,7 @@ public interface IMethodHandler{
      * @param sendRarmorDataToClient If the data the Rarmor has should be sent to the client
      *                               (possibly confirmation packet is enabled, so there might be a delay)
      */
-    void openRarmor(EntityPlayer player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
+    void openRarmor(PlayerEntity player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
 
     /**
      * Opens the Rarmor GUI for the Rarmor Minecraft.getMinecraft().thePlayeris currently wearing in their chestplate slot.
@@ -96,7 +96,7 @@ public interface IMethodHandler{
      * @param sendRarmorDataToClient If the data the Rarmor has should be sent to the client
      *                               (possibly confirmation packet is enabled, so there might be a delay)
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void openRarmorFromClient(int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
 
     /**

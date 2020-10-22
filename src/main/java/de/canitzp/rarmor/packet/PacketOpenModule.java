@@ -10,14 +10,13 @@
 package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PacketOpenModule implements IMessage{
+import java.util.function.Supplier;
+
+public class PacketOpenModule{
 
     private int moduleId;
     private boolean alsoSetData;
@@ -32,35 +31,29 @@ public class PacketOpenModule implements IMessage{
         this.alsoSetData = alsoSetData;
         this.sendRarmorDataToClient = sendRarmorDataToClient;
     }
-
-    @Override
-    public void fromBytes(ByteBuf buf){
-        this.moduleId = buf.readInt();
-        this.alsoSetData = buf.readBoolean();
-        this.sendRarmorDataToClient = buf.readBoolean();
+    
+    public static PacketOpenModule fromBuffer(PacketBuffer buf){
+        PacketOpenModule pom = new PacketOpenModule();
+        pom.moduleId = buf.readInt();
+        pom.alsoSetData = buf.readBoolean();
+        pom.sendRarmorDataToClient = buf.readBoolean();
+        return pom;
     }
 
-    @Override
-    public void toBytes(ByteBuf buf){
-        buf.writeInt(this.moduleId);
-        buf.writeBoolean(this.alsoSetData);
-        buf.writeBoolean(this.sendRarmorDataToClient);
+    public static void toBytes(PacketOpenModule packet, PacketBuffer buf){
+        buf.writeInt(packet.moduleId);
+        buf.writeBoolean(packet.alsoSetData);
+        buf.writeBoolean(packet.sendRarmorDataToClient);
     }
-
-    public static class Handler implements IMessageHandler<PacketOpenModule, IMessage>{
-
-        @Override
-        public IMessage onMessage(final PacketOpenModule message, final MessageContext context){
-            FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(new Runnable(){
-                @Override
-                public void run(){
-                    EntityPlayer player = context.getServerHandler().player;
-                    if(player != null){
-                        RarmorAPI.methodHandler.openRarmor(player, message.moduleId, message.alsoSetData, message.sendRarmorDataToClient);
-                    }
-                }
-            });
-            return null;
-        }
+    
+    public static void handle(PacketOpenModule packet, Supplier<NetworkEvent.Context> ctx){
+        ctx.get().enqueueWork(() -> {
+            ServerPlayerEntity sender = ctx.get().getSender();
+            if(sender != null){
+                RarmorAPI.methodHandler.openRarmor(sender, packet.moduleId, packet.alsoSetData, packet.sendRarmorDataToClient);
+            }
+        });
+        ctx.get().setPacketHandled(true);
     }
+    
 }

@@ -47,7 +47,7 @@ public class PacketOpenConfirmation implements IMessage{
                 @Override
                 public void run(){
                     EntityPlayerMP player = context.getServerHandler().player;
-                    player.openGui(Rarmor.instance, message.moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
+                    player.openGui(Rarmor.INSTANCE, message.moduleId, player.getEntityWorld(), (int)player.posX, (int)player.posY, (int)player.posZ);
                 }
             });
             return null;
