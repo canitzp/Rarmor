@@ -13,21 +13,20 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemModuleProtection extends ItemRarmorModule{
 
     private final String identifier;
     private static boolean eventRegistered;
 
-    public ItemModuleProtection(String name, String identifier){
-        super(name);
+    public ItemModuleProtection(String identifier){
         this.identifier = identifier;
 
         if(!eventRegistered){
@@ -38,9 +37,9 @@ public class ItemModuleProtection extends ItemRarmorModule{
 
     @SubscribeEvent
     public void onHurt(LivingHurtEvent event){
-        EntityLivingBase entity = event.getEntityLiving();
-        if(!entity.getEntityWorld().isRemote && entity instanceof EntityPlayer){
-            EntityPlayer player = (EntityPlayer)entity;
+        LivingEntity entity = event.getEntityLiving();
+        if(!entity.getEntityWorld().isRemote && entity instanceof PlayerEntity){
+            PlayerEntity player = (PlayerEntity)entity;
             IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
             if(data != null){
                 float damageReduct = 0F;
@@ -70,7 +69,7 @@ public class ItemModuleProtection extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         for(ActiveRarmorModule module : currentData.getCurrentModules()){
             if(module instanceof ActiveModuleProtection){
                 return false;
@@ -80,7 +79,7 @@ public class ItemModuleProtection extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 }

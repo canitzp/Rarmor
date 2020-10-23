@@ -9,20 +9,22 @@
 
 package de.canitzp.rarmor.misc;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 public final class Helper{
@@ -59,70 +61,54 @@ public final class Helper{
         }
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static ResourceLocation getGuiLocation(String guiName){
         return new ResourceLocation(RarmorAPI.MOD_ID, "textures/gui/"+guiName+".png");
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void renderStackToGui(ItemStack stack, float x, float y, float scale){
+    @OnlyIn(Dist.CLIENT)
+    public static void renderStackToGui(MatrixStack matrixStack, ItemStack stack, float x, float y, float scale){
         if(!stack.isEmpty()){
-            GlStateManager.pushMatrix();
+            matrixStack.push();
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableDepth();
-            GlStateManager.enableRescaleNormal();
-            GlStateManager.translate(x, y, 0);
-            GlStateManager.scale(scale, scale, scale);
+            RenderHelper.enableStandardItemLighting();
+            RenderSystem.enableDepthTest();
+            //GlStateManager.enableRescaleNormal();
+            matrixStack.translate(x, y, 0);
+            matrixStack.scale(scale, scale, scale);
 
-            Minecraft mc = Minecraft.getMinecraft();
-            mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 0, 0);
-            mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
+            Minecraft mc = Minecraft.getInstance();
+            mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, 0, 0);
+            mc.getItemRenderer().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
 
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.popMatrix();
+            matrixStack.pop();
         }
     }
-
-    public static boolean isDevVersion(){
-        return Rarmor.VERSION.equals("@VERSION@");
-    }
-
-    private static String[] splitVersion(){
-        return Rarmor.VERSION.split("-");
-    }
-
-    public static String getMcVersion(){
-        return splitVersion()[0];
-    }
-
-    public static String getMajorModVersion(){
-        return splitVersion()[1].substring(1);
-    }
-
+    
     public static boolean canBeStacked(ItemStack stack1, ItemStack stack2){
         return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
     public static void setItemEnergy(ItemStack stack, int energy){
-        if(!stack.hasTagCompound()){
-            stack.setTagCompound(new NBTTagCompound());
+        if(!stack.hasTag()){
+            stack.setTag(new CompoundNBT());
         }
-        stack.getTagCompound().setInteger("Energy", energy);
+        stack.getTag().putInt("Energy", energy);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static int getRGBDurabilityForDisplay(){
-        EntityPlayer player = Minecraft.getMinecraft().player;
+        PlayerEntity player = Minecraft.getInstance().player;
         if(player != null && player.world != null){
-            float[] color = getColor(player.world.getTotalWorldTime()%256);
+            float[] color = getColor(player.world.getGameTime()%256);
             return MathHelper.rgb(color[0]/255F, color[1]/255F, color[2]/255F);
         }
         return 0;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static float[] getColor(float pos){
         if(pos < 85.0f){
             return new float[]{pos*3.0F, 255.0f-pos*3.0f, 0.0f};

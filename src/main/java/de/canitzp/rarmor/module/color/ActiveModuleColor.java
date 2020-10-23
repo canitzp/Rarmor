@@ -5,21 +5,15 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Random;
+import net.minecraft.item.Items;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * @author canitzp
@@ -27,7 +21,7 @@ import java.util.Random;
 public class ActiveModuleColor extends ActiveRarmorModule{
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Color";
-    public ItemStack stack = new ItemStack(Items.DYE, 1, 6);
+    public ItemStack stack = new ItemStack(Items.BLACK_DYE);
 
     public ActiveModuleColor(IRarmorData data){
         super(data);
@@ -39,60 +33,29 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
-
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
-
-    }
-
-    @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return new ContainerModuleColor(player, container, this);
     }
-
-    @SideOnly(Side.CLIENT)
+    
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public RarmorModuleGui createGui(GuiContainer gui){
+    public RarmorModuleGui<ContainerRarmor> createGui(ContainerScreen<ContainerRarmor> gui){
         return new GuiModuleColor(gui, this);
     }
-
+    
     @Override
-    public void onInstalled(Entity entity){
-
-    }
-
-    @Override
-    public void onUninstalled(Entity entity){
-
-    }
-
-    @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
         return stack;
     }
-
+    
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
-
-    }
-
-    @Override
-    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data) {
+    public boolean doesRenderOnOverlay(Minecraft mc, PlayerEntity player, IRarmorData data) {
         return false;
     }
 }

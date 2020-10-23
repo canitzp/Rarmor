@@ -12,15 +12,16 @@ package de.canitzp.rarmor.module.compound;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemModuleCompound extends ItemRarmorModule {
@@ -28,8 +29,7 @@ public class ItemModuleCompound extends ItemRarmorModule {
     private final String[] identifiers;
     private final ItemRarmorModule[] items;
 
-    public ItemModuleCompound(String name, String[] identifiers, ItemRarmorModule[] items){
-        super(name);
+    public ItemModuleCompound(String[] identifiers, ItemRarmorModule[] items){
         this.identifiers = identifiers;
         this.items = items;
     }
@@ -40,7 +40,7 @@ public class ItemModuleCompound extends ItemRarmorModule {
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         for(ItemRarmorModule module : this.items){
             if(!module.canInstall(player, slot, stack, currentData)){
                 return false;
@@ -50,7 +50,7 @@ public class ItemModuleCompound extends ItemRarmorModule {
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         for(ItemRarmorModule module : this.items){
             if(!module.canUninstall(player, slot, stack, currentData)){
                 return false;
@@ -58,13 +58,14 @@ public class ItemModuleCompound extends ItemRarmorModule {
         }
         return true;
     }
-
+    
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-        tooltip.add(TextFormatting.GOLD+I18n.format(RarmorAPI.MOD_ID+".compoundOf")+":");
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+        tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID+".compoundOf")));
         for(String id : this.identifiers){
-            tooltip.add(TextFormatting.YELLOW+"   "+I18n.format("module."+id+".name"));
+            tooltip.add(new StringTextComponent(TextFormatting.YELLOW.toString() + "   ").append(new TranslationTextComponent("module."+id+".name")));
         }
-        tooltip.add(TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".needsShoes"));
+        tooltip.add(new StringTextComponent(TextFormatting.ITALIC.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID+".needsShoes")));
     }
+    
 }

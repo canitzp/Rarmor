@@ -11,6 +11,7 @@ package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.misc.Helper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -22,6 +23,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -31,6 +35,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -62,26 +67,21 @@ public class ItemRarmorChest extends ItemRarmor{
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-        if(worldIn != null){
-            String s = "   ";
-    
-            // todo redo
-            /*tooltip.add(new TranslationTextComponent("%s%s.stored_energy:", TextFormatting.GOLD, RarmorAPI.MOD_ID));
-            tooltip.add(new TranslationTextComponent("%s%s%d/%d", TextFormatting.YELLOW, s, this.getEnergyStored(stack), this.getMaxEnergyStored(stack)));
-    
-            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(worldIn, stack, false);
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, @Nonnull ITooltipFlag flag){
+        tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID + ".stored_energy")).appendString(":"));
+        tooltip.add(new StringTextComponent(TextFormatting.YELLOW.toString() + "   " + this.getEnergyStored(stack) + "/" + this.getMaxEnergyStored(stack)));
+        if(world != null){
+            IRarmorData data = RarmorAPI.methodHandler.getDataForStack(world, stack, false);
             if(data != null){
-                tooltip.add(new TranslationTextComponent("%s%s.installed_modules:", TextFormatting.GOLD, RarmorAPI.MOD_ID));
+                tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID + ".installed_modules")).appendString(":"));
                 for(ActiveRarmorModule module : data.getCurrentModules()){
-                    tooltip.add(new TranslationTextComponent("%s%s-module.%s.name", TextFormatting.YELLOW, s, module.getIdentifier()));
+                    tooltip.add(new StringTextComponent(TextFormatting.YELLOW.toString() + "   -").append(new TranslationTextComponent("module." + module.getIdentifier() + ".name")));
                 }
-    
-                tooltip.add(new TranslationTextComponent("%s%s.stack_id:")TextFormatting.GOLD + I18n.format(RarmorAPI.MOD_ID + ".stackId") + ":");
-                tooltip.add(TextFormatting.YELLOW + s + RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false));
-            } else{
-                tooltip.add(TextFormatting.RED + "" + TextFormatting.ITALIC + I18n.format(RarmorAPI.MOD_ID + ".noDataYet"));
-            }*/
+                tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID + ".stackId")).appendString(":"));
+                tooltip.add(new StringTextComponent(TextFormatting.YELLOW.toString() + "   " + RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false)));
+            } else {
+                tooltip.add(new StringTextComponent(TextFormatting.RED.toString() + TextFormatting.ITALIC.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID + ".noDataYet")));
+            }
         }
     }
 

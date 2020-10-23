@@ -11,6 +11,8 @@ package de.canitzp.rarmor.api;
 
 import de.canitzp.rarmor.api.internal.IMethodHandler;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +21,10 @@ public final class RarmorAPI{
 
     public static final String MOD_ID = "rarmor";
     public static final String API_NAME = MOD_ID+"api";
-    public static final String API_VERSION = "1";
+    public static final String API_VERSION = "2";
 
     public static final Map<String, Class<? extends ActiveRarmorModule>> RARMOR_MODULE_REGISTRY = new HashMap<String, Class<? extends ActiveRarmorModule>>();
-
+    
     /**
      * The internal method handler.
      * This can be used to access some methods that might be useful when developing add-ons.

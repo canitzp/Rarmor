@@ -36,11 +36,11 @@ public class ContainerRarmor extends Container {
     public boolean isPuttingStacksInSlots;
 
     public ContainerRarmor(int windowId, PlayerInventory playerInventory){
-        super(ContainerTypes.RARMOR_CONTAINER.get(), windowId);
+        super(RarmorContainerRegistry.RARMOR_CONTAINER.get(), windowId);
     }
     
     public ContainerRarmor(int windowId, PlayerEntity player, ActiveRarmorModule currentModule){
-        super(ContainerTypes.RARMOR_CONTAINER.get(), windowId);
+        super(RarmorContainerRegistry.RARMOR_CONTAINER.get(), windowId);
         this.container = currentModule.createContainer(player, this);
         this.currentData = currentModule.data;
 

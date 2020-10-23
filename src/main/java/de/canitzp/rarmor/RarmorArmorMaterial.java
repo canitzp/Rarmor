@@ -53,4 +53,9 @@ public class RarmorArmorMaterial implements IArmorMaterial {
     public float getToughness(){
         return TOUGHNESS;
     }
+    
+    @Override
+    public float getKnockbackResistance(){
+        return 0.1F; // same as netherite
+    }
 }

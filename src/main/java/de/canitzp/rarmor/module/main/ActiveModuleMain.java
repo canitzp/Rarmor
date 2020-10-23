@@ -10,7 +10,7 @@
 package de.canitzp.rarmor.module.main;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
-import de.canitzp.rarmor.item.ItemRegistry;
+import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
@@ -35,7 +35,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
-    private static final ItemStack CHESTPLATE = new ItemStack(ItemRegistry.itemRarmorChest, 1, 0);
+    private static final ItemStack CHESTPLATE = new ItemStack(RarmorItemRegistry.itemRarmorChest, 1, 0);
     public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 

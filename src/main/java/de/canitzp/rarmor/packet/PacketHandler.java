@@ -20,11 +20,9 @@ public final class PacketHandler{
 
     public static void init(){
         channel.registerMessage(0, PacketOpenModule.class, PacketOpenModule::toBuffer, PacketOpenModule::fromBuffer, PacketOpenModule::handle); // Server side
-        
+        channel.registerMessage(1, PacketSyncRarmorData.class, PacketSyncRarmorData::toBuffer, PacketSyncRarmorData::new, PacketSyncRarmorData::handle); // Client side
+        channel.registerMessage(2, PacketOpenConfirmation.class, PacketOpenConfirmation::toBuffer, PacketOpenConfirmation::new, PacketOpenConfirmation::handle); // Server side
         channel.registerMessage(3, PacketSyncColor.class, PacketSyncColor::toBuffer, PacketSyncColor::new, PacketSyncColor::handle); // Server side
-
-        handler.registerMessage(PacketSyncRarmorData.Handler.class, PacketSyncRarmorData.class, 1, Side.CLIENT);
-        handler.registerMessage(PacketOpenConfirmation.Handler.class, PacketOpenConfirmation.class, 2, Side.SERVER);
     }
-
+    
 }

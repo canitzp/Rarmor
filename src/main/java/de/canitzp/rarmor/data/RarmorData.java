@@ -28,6 +28,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.network.NetworkDirection;
 
 import java.util.*;
 
@@ -109,7 +110,7 @@ public class RarmorData implements IRarmorData {
     public void sendQueuedUpdate(PlayerEntity player){
         if(this.isUpdateQueued && player instanceof ServerPlayerEntity){
             UUID id = RarmorAPI.methodHandler.checkAndSetRarmorId(this.stack, false);
-            PacketHandler.handler.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), (ServerPlayerEntity)player);
+            PacketHandler.channel.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), ((ServerPlayerEntity) player).connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
 
             this.isUpdateQueued = false;
         }

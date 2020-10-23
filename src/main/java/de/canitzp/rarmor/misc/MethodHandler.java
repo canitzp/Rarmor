@@ -18,30 +18,25 @@ import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.module.color.ActiveModuleColor;
 import de.canitzp.rarmor.module.main.ActiveModuleMain;
 import de.canitzp.rarmor.packet.PacketHandler;
-import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.data.RarmorData;
 import de.canitzp.rarmor.item.ItemRarmor;
 import de.canitzp.rarmor.packet.PacketOpenModule;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 import java.util.UUID;
@@ -49,12 +44,12 @@ import java.util.UUID;
 public class MethodHandler implements IMethodHandler {
 
     @Override
-    public ItemStack getHasRarmorInSlot(Entity entity, EntityEquipmentSlot slot){
-        if(entity instanceof EntityLivingBase){
-            ItemStack stack = ((EntityLivingBase)entity).getItemStackFromSlot(slot);
+    public ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlotType slot){
+        if(entity instanceof LivingEntity){
+            ItemStack stack = ((LivingEntity)entity).getItemStackFromSlot(slot);
             if(!stack.isEmpty()){
                 Item item = stack.getItem();
-                if(item instanceof ItemRarmor && ((ItemRarmor)item).armorType == slot){
+                if(item instanceof ItemRarmor && ((ItemRarmor)item).getEquipmentSlot() == slot){
                     return stack;
                 }
             }
@@ -63,8 +58,8 @@ public class MethodHandler implements IMethodHandler {
     }
 
     @Override
-    public IRarmorData getDataForChestplate(EntityPlayer player, boolean createIfAbsent){
-        ItemStack stack = this.getHasRarmorInSlot(player, EntityEquipmentSlot.CHEST);
+    public IRarmorData getDataForChestplate(PlayerEntity player, boolean createIfAbsent){
+        ItemStack stack = this.getHasRarmorInSlot(player, EquipmentSlotType.CHEST);
         if(!stack.isEmpty()){
             return this.getDataForStack(player.getEntityWorld(), stack, createIfAbsent);
         }
@@ -74,31 +69,27 @@ public class MethodHandler implements IMethodHandler {
     @Override
     public UUID checkAndSetRarmorId(ItemStack stack, boolean createIfAbsent){
         if(stack.getItem() instanceof ItemRarmor){
-            if(!stack.hasTagCompound()){
+            if(!stack.hasTag()){
                 if(createIfAbsent){
-                    stack.setTagCompound(new NBTTagCompound());
-                }
-                else{
+                    stack.setTag(new CompoundNBT());
+                } else {
                     return null;
                 }
             }
-
-            NBTTagCompound compound = stack.getTagCompound();
+    
+            CompoundNBT compound = stack.getTag();
             if(!compound.hasUniqueId("RarmorId")){
                 if(createIfAbsent){
                     UUID id = UUID.randomUUID();
-                    compound.setUniqueId("RarmorId", id);
+                    compound.putUniqueId("RarmorId", id);
                     return id;
-                }
-                else{
+                } else {
                     return null;
                 }
-            }
-            else{
+            } else {
                 return compound.getUniqueId("RarmorId");
             }
-        }
-        else{
+        } else {
             return null;
         }
     }
@@ -126,7 +117,7 @@ public class MethodHandler implements IMethodHandler {
                 player.openContainer(new INamedContainerProvider() {
                     @Override
                     public ITextComponent getDisplayName(){
-                        return new StringTextComponent("");
+                        return new StringTextComponent("Rarmor");
                     }
     
                     @Override

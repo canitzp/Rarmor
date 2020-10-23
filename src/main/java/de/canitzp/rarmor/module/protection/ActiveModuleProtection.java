@@ -13,14 +13,14 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 public abstract class ActiveModuleProtection extends ActiveRarmorModule {
@@ -40,25 +40,25 @@ public abstract class ActiveModuleProtection extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
 
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
 
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return null;
     }
-
+    
     @Override
-    public RarmorModuleGui createGui(GuiContainer gui){
+    public <T extends Container> RarmorModuleGui<T> createGui(ContainerScreen<T> gui){
         return null;
     }
-
+    
     @Override
     public void onInstalled(Entity entity){
 
@@ -70,7 +70,7 @@ public abstract class ActiveModuleProtection extends ActiveRarmorModule {
     }
 
     @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return false;
     }
 
@@ -85,7 +85,7 @@ public abstract class ActiveModuleProtection extends ActiveRarmorModule {
     }
 
     @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow resolution, int renderX, int renderY, float partialTicks){
 
     }
 

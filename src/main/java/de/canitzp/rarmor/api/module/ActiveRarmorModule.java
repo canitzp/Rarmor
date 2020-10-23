@@ -13,6 +13,7 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -24,6 +25,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +36,7 @@ import javax.annotation.Nonnull;
  * <p>
  * Extend this to make a custom module. The class then has to be registered using the RarmorAPI.registerRarmorModule method.
  */
-public abstract class ActiveRarmorModule{
+public abstract class ActiveRarmorModule {
 
     public final IRarmorData data;
     /**
@@ -61,7 +63,7 @@ public abstract class ActiveRarmorModule{
      * @param compound The compound of NBT to read from
      * @param sync     If this is for syncing or for saving to disc
      */
-    public abstract void readFromNBT(CompoundNBT compound, boolean sync);
+    public void readFromNBT(CompoundNBT compound, boolean sync){}
 
     /**
      * Writes this module to NBT.
@@ -69,7 +71,7 @@ public abstract class ActiveRarmorModule{
      * @param compound The compound of NBT to write to
      * @param sync     If this is for syncing or for saving to disc
      */
-    public abstract void writeToNBT(CompoundNBT compound, boolean sync);
+    public void writeToNBT(CompoundNBT compound, boolean sync){}
 
     /**
      * Creates a new container when opening this' tab.
@@ -79,7 +81,9 @@ public abstract class ActiveRarmorModule{
      * @param container The base Rarmor container the tab is opened on
      * @return A new module container
      */
-    public abstract RarmorModuleContainer createContainer(PlayerEntity player, Container container);
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+        return null;
+    }
 
     /**
      * Creates a new GUI when opening this' tab.
@@ -89,21 +93,23 @@ public abstract class ActiveRarmorModule{
      * @return A new module container
      */
     @OnlyIn(Dist.CLIENT)
-    public abstract <T extends Container> RarmorModuleGui<T> createGui(ContainerScreen<T> gui);
+    public RarmorModuleGui<ContainerRarmor> createGui(ContainerScreen<ContainerRarmor> gui){
+        return null;
+    }
 
     /**
      * Called when this module is installed into a Rarmor
      *
      * @param entity The entity that is installing this
      */
-    public abstract void onInstalled(Entity entity);
+    public void onInstalled(Entity entity){}
 
     /**
      * Called when this module is uninstalled from a Rarmor
      *
      * @param entity The entity that is uninstalling this
      */
-    public abstract void onUninstalled(Entity entity);
+    public void onUninstalled(Entity entity){}
 
     /**
      * Gets if this module should have an openable tab on the side of the Rarmor.
@@ -111,7 +117,9 @@ public abstract class ActiveRarmorModule{
      * @param player The player that is trying to have a tab
      * @return If this module has a tab
      */
-    public abstract boolean hasTab(PlayerEntity player);
+    public boolean hasTab(PlayerEntity player){
+        return false;
+    }
 
     /**
      * Gets the icon that is displayed in the overlay on the top left of the screen
@@ -143,7 +151,7 @@ public abstract class ActiveRarmorModule{
      * @param isWearingPants If the entity is currently wearing the Rarmor pants
      * @param isWearingShoes If the entity is currently wearing the Rarmor shoes
      */
-    public abstract void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes);
+    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){}
 
     /**
      * This can be used to render additional information to the overlay displayed on the top left of the screen
@@ -157,7 +165,7 @@ public abstract class ActiveRarmorModule{
      * @param partialTicks The amount of partial ticks
      */
     @OnlyIn(Dist.CLIENT)
-    public abstract void renderAdditionalOverlay(Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks);
+    public void renderAdditionalOverlay(Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){}
 
     /**
      * Gets if this module should appear on the overlay on the top left of the screen

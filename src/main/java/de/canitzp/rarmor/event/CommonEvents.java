@@ -16,17 +16,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = RarmorAPI.MOD_ID)
 public class CommonEvents{
-
-    public CommonEvents(){
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-
     private static void doData(ServerWorld world){
         WorldData data = WorldData.getOrLoadData(world);
         if(data != null){
@@ -35,21 +31,21 @@ public class CommonEvents{
     }
 
     @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load event){
+    public static void onWorldLoad(WorldEvent.Load event){
         if(event.getWorld() instanceof ServerWorld){
             doData((ServerWorld) event.getWorld());
         }
     }
 
     @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save event){
+    public static void onWorldSave(WorldEvent.Save event){
         if(event.getWorld() instanceof ServerWorld){
             doData((ServerWorld) event.getWorld());
         }
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(EntityJoinWorldEvent event){
+    public static void onPlayerJoin(EntityJoinWorldEvent event){
         if(!event.getWorld().isRemote){
             Entity entity = event.getEntity();
             if(entity instanceof PlayerEntity){

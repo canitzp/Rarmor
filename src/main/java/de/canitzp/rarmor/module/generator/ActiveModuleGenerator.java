@@ -13,7 +13,7 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.item.ItemRegistry;
+import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ActiveModuleGenerator extends ActiveRarmorModule {
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Generator";
-    private static final ItemStack GENERATOR = new ItemStack(ItemRegistry.itemGenerator);
+    private static final ItemStack GENERATOR = new ItemStack(RarmorItemRegistry.itemGenerator);
     private static final int ENERGY_PER_TICK = 30;
 
     public final BasicInventory inventory = new BasicInventory("input", 1, this.data);

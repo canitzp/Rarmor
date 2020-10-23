@@ -9,7 +9,7 @@
 
 package de.canitzp.rarmor.event;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
@@ -27,7 +27,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -35,7 +37,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collections;
@@ -77,26 +79,15 @@ public class ClientEvents {
                 int guiLeft = (gui.width - 176) / 2;
                 int guiTop = (gui.height - 166) / 2;
     
-                invButton = new TexturedButton(178223, guiLeft - 20, guiTop + 24, 20, 20, GuiModuleMain.RES_LOC, 0, 176);
-                event.getButtonList().add(invButton);
-    
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getInstance().player, true);
-                invButton.visible = data != null;
-            }
-        }
-    }
-    
-    @SubscribeEvent
-    public static void onActionPerformed(GuiScreenEvent.ActionPerformedEvent event){
-        if(invButton != null && invButton.visible){
-            if(event.getGui() instanceof InventoryScreen){
-                if(event.getButton() == invButton){
-                    PlayerEntity player = Minecraft.getInstance().player;
-                    IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, true);
+                
+                invButton = new TexturedButton(guiLeft - 20, guiTop + 24, 20, 20, GuiModuleMain.RES_LOC, 0, 176, new StringTextComponent(""), button -> {
                     if(data != null){
-                        openRarmor(player, data);
+                        openRarmor(Minecraft.getInstance().player, data);
                     }
-                }
+                });
+    
+                invButton.visible = data != null;
             }
         }
     }
@@ -105,9 +96,9 @@ public class ClientEvents {
     public static void onGuiRender(GuiScreenEvent.DrawScreenEvent.Post event){
         if(invButton != null){
             if(event.getGui() instanceof InventoryScreen){
-                if(invButton.visible && invButton.isMouseOver()){
+                if(invButton.visible && invButton.isMouseOver(event.getMouseX(), event.getMouseY())){
                     Minecraft mc = Minecraft.getInstance();
-                    GuiUtils.drawHoveringText(Collections.singletonList(I18n.format(RarmorAPI.MOD_ID + ".open")), event.getMouseX(), event.getMouseY(), mc.mainWindow.getWidth(), mc.mainWindow.getHeight(), -1, mc.fontRenderer);
+                    GuiUtils.drawHoveringText(event.getMatrixStack(), Collections.singletonList(new TranslationTextComponent(RarmorAPI.MOD_ID + ".open")), event.getMouseX(), event.getMouseY(), mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight(), -1, mc.fontRenderer);
                 }
     
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getInstance().player, true);
@@ -120,11 +111,12 @@ public class ClientEvents {
     public static void onRenderOverlay(RenderGameOverlayEvent.Pre event){
         if(event.getType() == ElementType.HOTBAR){
             Minecraft mc = Minecraft.getInstance();
+            MatrixStack matrixStack = event.getMatrixStack();
             FontRenderer font = mc.fontRenderer;
-            MainWindow mainWindow = mc.mainWindow;
+            MainWindow mainWindow = mc.getMainWindow();
             PlayerEntity player = mc.player;
     
-            double scale = Config.GENERAL.OVERLAY_SCALE.get();
+            float scale = Config.GENERAL.OVERLAY_SCALE.get().floatValue();
             int renderX = Config.GENERAL.OVERLAY_X.get();
             int renderY = Config.GENERAL.OVERLAY_Y.get();
     
@@ -135,13 +127,13 @@ public class ClientEvents {
                         if(!stack.isEmpty()){
                             IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
                             if(data != null){
-                                GlStateManager.pushMatrix();
-                                GlStateManager.scaled(scale, scale, scale);
+                                matrixStack.push();
+                                matrixStack.scale(scale, scale, scale);
     
-                                font.drawStringWithShadow(TextFormatting.GOLD + I18n.format(RarmorAPI.MOD_ID + ".storedEnergy") + ": ", renderX + 20, renderY, 0xFFFFFF);
-                                font.drawStringWithShadow(TextFormatting.YELLOW + "" + data.getEnergyStored() + "/" + data.getMaxEnergyStored(), renderX + 20, renderY + 10, 0xFFFFFF);
+                                font.drawStringWithShadow(matrixStack, TextFormatting.GOLD + I18n.format(RarmorAPI.MOD_ID + ".storedEnergy") + ": ", renderX + 20, renderY, 0xFFFFFF);
+                                font.drawStringWithShadow(matrixStack, TextFormatting.YELLOW + "" + data.getEnergyStored() + "/" + data.getMaxEnergyStored(), renderX + 20, renderY + 10, 0xFFFFFF);
     
-                                Helper.renderStackToGui(stack, renderX, renderY, 1.0F);
+                                Helper.renderStackToGui(matrixStack, stack, renderX, renderY, 1.0F);
     
                                 if(!Config.GENERAL.OVERLAY_ENERGY_ONLY.get()){
                                     renderY += 26;
@@ -150,7 +142,7 @@ public class ClientEvents {
                                         if(module.doesRenderOnOverlay(mc, player, data)){
                                             ItemStack display = module.getDisplayIcon();
                                             if(!display.isEmpty()){
-                                                Helper.renderStackToGui(display, renderX, renderY, 1.0F);
+                                                Helper.renderStackToGui(matrixStack, display, renderX, renderY, 1.0F);
                                             }
     
                                             module.renderAdditionalOverlay(mc, player, data, mainWindow, renderX, renderY, event.getPartialTicks());
@@ -159,7 +151,7 @@ public class ClientEvents {
                                     }
                                 }
     
-                                GlStateManager.popMatrix();
+                                matrixStack.pop();
                             }
                         }
                     }

@@ -11,28 +11,24 @@ package de.canitzp.rarmor.module.furnace;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ItemModuleFurnace extends ItemRarmorModule{
-
-    public ItemModuleFurnace(String name){
-        super(name);
-    }
-
+    
     @Override
     public String[] getModuleIdentifiers(ItemStack stack){
         return new String[]{ActiveModuleFurnace.IDENTIFIER};
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 }

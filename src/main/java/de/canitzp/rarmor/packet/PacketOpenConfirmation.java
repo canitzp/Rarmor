@@ -10,33 +10,22 @@
 package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.api.internal.IRarmorData;
-import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.inventory.ContainerRarmor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketOpenConfirmation {
 
-    private int moduleId;
-
-    public PacketOpenConfirmation(){}
+    private final int moduleId;
     
-    public PacketOpenConfirmation(PacketBuffer buf){
-        this.moduleId = buf.readInt();
-    }
-
     public PacketOpenConfirmation(int moduleId){
         this.moduleId = moduleId;
+    }
+
+    public PacketOpenConfirmation(PacketBuffer buf){
+        this.moduleId = buf.readInt();
     }
 
     public static void toBuffer(PacketOpenConfirmation packet, PacketBuffer buf){
@@ -47,19 +36,7 @@ public class PacketOpenConfirmation {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity sender = ctx.get().getSender();
             if(sender != null){
-                IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(sender, true);
-                ActiveRarmorModule activeRarmorModule = data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule());
-                sender.openContainer(new INamedContainerProvider() {
-                    @Override
-                    public ITextComponent getDisplayName(){
-                        return new StringTextComponent("");
-                    }
-    
-                    @Override
-                    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player){
-                        return new ContainerRarmor(windowId, player, activeRarmorModule);
-                    }
-                });
+                RarmorAPI.methodHandler.openRarmor(sender, packet.moduleId, true, true);
             }
         });
         ctx.get().setPacketHandled(true);

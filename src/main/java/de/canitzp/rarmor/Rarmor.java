@@ -11,32 +11,26 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.config.Config;
-import de.canitzp.rarmor.event.CommonEvents;
-import de.canitzp.rarmor.inventory.ContainerRarmor;
-import de.canitzp.rarmor.inventory.ContainerTypes;
-import de.canitzp.rarmor.inventory.GuiHandler;
+import de.canitzp.rarmor.inventory.RarmorContainerRegistry;
 import de.canitzp.rarmor.inventory.gui.GuiRarmor;
-import de.canitzp.rarmor.item.ItemBase;
-import de.canitzp.rarmor.item.ItemRegistry;
+import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.misc.MethodHandler;
 import de.canitzp.rarmor.module.ModuleRegistry;
 import de.canitzp.rarmor.packet.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber
 @Mod(RarmorAPI.MOD_ID)
@@ -57,45 +51,25 @@ public final class Rarmor{
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.FORGE_CONFIG_SPEC);
     
         // Registry handler
-        ContainerTypes.CONTAINERS.register(modEventBus);
-        ScreenManager.registerFactory(ContainerTypes.RARMOR_CONTAINER.get(), GuiRarmor::new);
+        RarmorItemRegistry.REGISTRY.register(modEventBus);
+        RarmorContainerRegistry.REGISTRY.register(modEventBus);
+        ScreenManager.registerFactory(RarmorContainerRegistry.RARMOR_CONTAINER.get(), GuiRarmor::new);
+        
+        // Register Network
+        PacketHandler.init();
         
         // Register API
         RarmorAPI.methodHandler = new MethodHandler();
+        ModuleRegistry.init();
+    
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {
+            Minecraft.getInstance().getItemColors().register(new IItemColor() {
+                @Override
+                public int getColor(ItemStack stack, int tintIndex){
+                    return stack.hasTag() && stack.getTag().contains("Color", Constants.NBT.TAG_INT) ? stack.getTag().getInt("Color") : 0xFFFFFFFF;
+                }
+            }, RarmorItemRegistry.itemRarmorBoots.get(), RarmorItemRegistry.itemRarmorChest.get(), RarmorItemRegistry.itemRarmorHelmet.get(), RarmorItemRegistry.itemRarmorPants.get());
+        });
     }
     
-    public void preInit(FML event){
-        LOGGER.info("Starting "+MOD_NAME+"...");
-
-        
-        
-        ItemRegistry.preInit();
-        proxy.preInit(event);
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event){
-        ModuleRegistry.init();
-        PacketHandler.init();
-        new CommonEvents();
-        proxy.init(event);
-        for(Item item : ItemBase.ITEMS_TO_REGISTER){
-            if(item instanceof IOreDictItem){
-                List<String> names = ((IOreDictItem) item).getOreDictNames();
-                if(names != null && !names.isEmpty()){
-                    for(String name : names){
-                        OreDictionary.registerOre(name, item);
-                    }
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void registerEvent(RegistryEvent.Register<Item> event){
-        for(Item item : ItemBase.ITEMS_TO_REGISTER){
-            event.getRegistry().register(item);
-        }
-    }
-
 }

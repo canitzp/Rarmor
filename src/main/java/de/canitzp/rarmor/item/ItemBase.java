@@ -9,18 +9,13 @@
 
 package de.canitzp.rarmor.item;
 
-import de.canitzp.rarmor.IOreDictItem;
-import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
 import net.minecraft.item.Item;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ItemBase extends Item implements IOreDictItem{
-    
-    private List<String> oreDictNames = new ArrayList<>();
+public class ItemBase extends Item {
     
     public ItemBase(){
         this(new Properties());
@@ -30,13 +25,4 @@ public class ItemBase extends Item implements IOreDictItem{
         super(properties.group(CreativeTab.INSTANCE));
     }
     
-    public ItemBase addOreDict(String... names){
-        this.oreDictNames.addAll(Arrays.asList(names));
-        return this;
-    }
-    
-    @Override
-    public List<String> getOreDictNames(){
-        return this.oreDictNames;
-    }
 }

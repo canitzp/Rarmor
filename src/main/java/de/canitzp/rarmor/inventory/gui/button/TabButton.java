@@ -42,7 +42,7 @@ public class TabButton extends TexturedButton{
     
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
-        Helper.renderStackToGui(this.tabIcon, this.x+75, this.y+1.5F, 1F);
+        Helper.renderStackToGui(matrixStack, this.tabIcon, this.x+75, this.y+1.5F, 1F);
     
         Minecraft.getInstance().getTextureManager().bindTexture(this.resLoc);
     

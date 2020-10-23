@@ -12,41 +12,39 @@ package de.canitzp.rarmor.module.speed;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemModuleSpeed extends ItemRarmorModule {
-
-    public ItemModuleSpeed(String name){
-        super(name);
-    }
-
+    
     @Override
     public String[] getModuleIdentifiers(ItemStack stack){
         return new String[]{ActiveModuleSpeed.IDENTIFIER};
     }
 
     @Override
-    public boolean canInstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
-        return RarmorAPI.methodHandler.getHasRarmorInSlot(player, EntityEquipmentSlot.FEET) != null;
+    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+        return RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlotType.FEET) != null;
     }
 
     @Override
-    public boolean canUninstall(EntityPlayer player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
-
+    
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-        tooltip.add(TextFormatting.ITALIC+I18n.format(RarmorAPI.MOD_ID+".needsShoes"));
+    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
+        tooltip.add(new StringTextComponent(TextFormatting.ITALIC.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID+".needsShoes")));
     }
+    
 }

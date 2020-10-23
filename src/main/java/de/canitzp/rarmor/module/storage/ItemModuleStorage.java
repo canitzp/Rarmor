@@ -16,11 +16,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ItemModuleStorage extends ItemRarmorModule {
-
-    public ItemModuleStorage(){
-        super();
-    }
-
+    
     @Override
     public String[] getModuleIdentifiers(ItemStack stack){
         return new String[]{ActiveModuleStorage.IDENTIFIER};
