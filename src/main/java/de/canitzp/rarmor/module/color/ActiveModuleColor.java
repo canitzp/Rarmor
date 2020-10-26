@@ -5,9 +5,7 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.inventory.ContainerRarmor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
@@ -39,8 +37,8 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     
     @OnlyIn(Dist.CLIENT)
     @Override
-    public RarmorModuleGui<ContainerRarmor> createGui(ContainerScreen<ContainerRarmor> gui){
-        return new GuiModuleColor(gui, this);
+    public RarmorModuleGui createGui(){
+        return new GuiModuleColor(this);
     }
     
     @Override

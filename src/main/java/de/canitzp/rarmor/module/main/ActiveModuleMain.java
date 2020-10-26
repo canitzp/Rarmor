@@ -17,25 +17,22 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
-    private static final ItemStack CHESTPLATE = new ItemStack(RarmorItemRegistry.itemRarmorChest, 1, 0);
+    private static final ItemStack CHESTPLATE = new ItemStack(RarmorItemRegistry.itemRarmorChest.get());
     public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
     private int lastEnergy;
 
@@ -49,34 +46,28 @@ public class ActiveModuleMain extends ActiveRarmorModule{
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
                 ItemStack discharge = this.inventory.getStackInSlot(0);
                 if(!discharge.isEmpty()){
-                    if(discharge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
-                        IEnergyStorage storage = discharge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
-                        if(storage != null){
-                            int canDischarge = storage.extractEnergy(Integer.MAX_VALUE, true);
-                            if(canDischarge > 0){
-                                int discharged = this.data.receiveEnergy(canDischarge, false);
-                                storage.extractEnergy(discharged, false);
-                                this.data.setDirty();
-                            }
+                    discharge.getCapability(CapabilityEnergy.ENERGY).ifPresent(storage -> {
+                        int canDischarge = storage.extractEnergy(Integer.MAX_VALUE, true);
+                        if(canDischarge > 0){
+                            int discharged = this.data.receiveEnergy(canDischarge, false);
+                            storage.extractEnergy(discharged, false);
+                            this.data.setDirty();
                         }
-                    }
+                    });
                 }
             }
 
             if(this.data.getEnergyStored() > 0){
                 ItemStack charge = this.inventory.getStackInSlot(1);
                 if(!charge.isEmpty()){
-                    if(charge.hasCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN)){
-                        IEnergyStorage storage = charge.getCapability(CapabilityEnergy.ENERGY, EnumFacing.DOWN);
-                        if(storage != null){
-                            int canDischarge = storage.receiveEnergy(Integer.MAX_VALUE, true);
-                            if(canDischarge > 0){
-                                int discharged = this.data.extractEnergy(canDischarge, false);
-                                storage.receiveEnergy(discharged, false);
-                                this.data.setDirty();
-                            }
+                    charge.getCapability(CapabilityEnergy.ENERGY).ifPresent(storage -> {
+                        int canDischarge = storage.receiveEnergy(Integer.MAX_VALUE, true);
+                        if(canDischarge > 0){
+                            int discharged = this.data.extractEnergy(canDischarge, false);
+                            storage.receiveEnergy(discharged, false);
+                            this.data.setDirty();
                         }
-                    }
+                    });
                 }
             }
 
@@ -87,66 +78,46 @@ public class ActiveModuleMain extends ActiveRarmorModule{
             }
         }
     }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
-
-    }
-
+    
     @Override
     public String getIdentifier(){
         return IDENTIFIER;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
         if(!sync){
             this.inventory.loadSlots(compound);
         }
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
         if(!sync){
             this.inventory.saveSlots(compound);
         }
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return new ContainerModuleMain(player, container, this);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
-    public RarmorModuleGui createGui(GuiContainer container){
-        return new GuiModuleMain(container, this);
+    public RarmorModuleGui createGui(){
+        return new GuiModuleMain(this);
     }
 
     @Override
-    public void onInstalled(Entity entity){
-        //Called with null player for this module
-    }
-
-    @Override
-    public void onUninstalled(Entity entity){
-        //Not called for this module
-    }
-
-    @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return true;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
     public ItemStack getDisplayIcon(){
         return CHESTPLATE;
     }
 
-    @Override
-    public boolean doesRenderOnOverlay(Minecraft mc, EntityPlayer player, IRarmorData data){
-        return false;
-    }
 }

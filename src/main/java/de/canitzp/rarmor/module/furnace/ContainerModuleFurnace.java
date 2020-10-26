@@ -11,21 +11,21 @@ package de.canitzp.rarmor.module.furnace;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotFurnaceOutput;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.FurnaceResultSlot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.item.crafting.IRecipeType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerModuleFurnace extends RarmorModuleContainer {
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
-    public ContainerModuleFurnace(EntityPlayer player, Container container, ActiveRarmorModule module){
+    public ContainerModuleFurnace(PlayerEntity player, Container container, ActiveRarmorModule module){
         super(container, module);
         this.player = player;
     }
@@ -36,13 +36,13 @@ public class ContainerModuleFurnace extends RarmorModuleContainer {
 
         ActiveModuleFurnace module = (ActiveModuleFurnace)this.module;
         slots.add(new Slot(module.inventory, 0, 82, 58));
-        slots.add(new SlotFurnaceOutput(this.player, module.inventory, 1, 132, 58));
+        slots.add(new FurnaceResultSlot(this.player, module.inventory, 1, 132, 58));
 
         return slots;
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
         int inventoryStart = 2;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
@@ -56,7 +56,7 @@ public class ContainerModuleFurnace extends RarmorModuleContainer {
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(!FurnaceRecipes.instance().getSmeltingResult(newStack).isEmpty()){
+                if(player.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, theSlot.inventory, player.world).isPresent()){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
                         return ItemStack.EMPTY;
                     }

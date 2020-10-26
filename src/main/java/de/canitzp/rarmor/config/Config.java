@@ -14,9 +14,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public final class Config{
     
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec FORGE_CONFIG_SPEC = BUILDER.build();
-    
     public static final General GENERAL = new General(BUILDER);
+    public static final ForgeConfigSpec FORGE_CONFIG_SPEC = BUILDER.build();
     
     public static class General {
         public final ForgeConfigSpec.BooleanValue OPEN_CONFIRMATION_PACKET;

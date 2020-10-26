@@ -11,37 +11,40 @@ package de.canitzp.rarmor.module.storage;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.*;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.CraftingResultSlot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerModuleStorage extends RarmorModuleContainer {
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
-    public InventoryCrafting craftMatrix = new InventoryCrafting(this.actualContainer, 3, 3);
-    public InventoryCraftResult craftResult = new InventoryCraftResult();
+    public CraftingInventory craftMatrix = new CraftingInventory(this.actualContainer, 3, 3);
+    public CraftResultInventory craftResult = new CraftResultInventory();
 
-    public ContainerModuleStorage(EntityPlayer player, Container container, ActiveRarmorModule module){
+    public ContainerModuleStorage(PlayerEntity player, Container container, ActiveRarmorModule module){
         super(container, module);
         this.player = player;
     }
 
     @Override
     public void onCraftMatrixChanged(IInventory inventory){
-        IRecipe recipe =  CraftingManager.findMatchingRecipe(this.craftMatrix, this.player.getEntityWorld());
+        ICraftingRecipe recipe = this.player.world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, this.craftMatrix, this.player.world).orElse(null);
         if(recipe != null){
             this.craftResult.setInventorySlotContents(0, recipe.getRecipeOutput());
         }
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player){
+    public void onContainerClosed(PlayerEntity player){
         ActiveModuleStorage module = (ActiveModuleStorage)this.module;
         for(int i = 0; i < this.craftMatrix.getSizeInventory(); i++){
             module.inventory.setInventorySlotContents(i+36, this.craftMatrix.getStackInSlot(i));
@@ -60,7 +63,7 @@ public class ContainerModuleStorage extends RarmorModuleContainer {
             }
         }
 
-        slots.add(new SlotCrafting(this.player, this.craftMatrix, this.craftResult, 0, 195, 99));
+        slots.add(new CraftingResultSlot(this.player, this.craftMatrix, this.craftResult, 0, 195, 99));
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
                 slots.add(new Slot(this.craftMatrix, j+i*3, 176+j*18, 25+i*18));
@@ -76,7 +79,7 @@ public class ContainerModuleStorage extends RarmorModuleContainer {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
         int inventoryStart = 46;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;

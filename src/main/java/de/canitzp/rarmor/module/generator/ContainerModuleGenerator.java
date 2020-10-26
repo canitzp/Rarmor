@@ -11,11 +11,10 @@ package de.canitzp.rarmor.module.generator;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityFurnace;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +31,7 @@ public class ContainerModuleGenerator extends RarmorModuleContainer {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
         int inventoryStart = 1;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
@@ -46,7 +45,7 @@ public class ContainerModuleGenerator extends RarmorModuleContainer {
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(TileEntityFurnace.getItemBurnTime(newStack) > 0){
+                if(newStack.getBurnTime() > 0){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
                         return ItemStack.EMPTY;
                     }

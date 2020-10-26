@@ -15,18 +15,14 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ActiveModuleStorage extends ActiveRarmorModule{
 
@@ -45,33 +41,28 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
         if(!sync){
             this.inventory.loadSlots(compound);
         }
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
         if(!sync){
             this.inventory.saveSlots(compound);
         }
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return new ContainerModuleStorage(player, container, this);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
-    public RarmorModuleGui createGui(GuiContainer gui){
-        return new GuiModuleStorage(gui, this);
-    }
-
-    @Override
-    public void onInstalled(Entity entity){
-
+    public RarmorModuleGui createGui(){
+        return new GuiModuleStorage(this);
     }
 
     @Override
@@ -80,24 +71,14 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return true;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
     public ItemStack getDisplayIcon(){
         return CHEST;
     }
 
-    @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
-
-    }
 }

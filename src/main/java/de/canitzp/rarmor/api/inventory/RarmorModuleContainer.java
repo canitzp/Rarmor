@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.api.inventory;
 
+import com.mojang.datafixers.util.Pair;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
@@ -17,6 +18,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.inventory.container.*;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -34,7 +36,7 @@ import java.util.List;
 public class RarmorModuleContainer{
 
     private static final EquipmentSlotType[] VALID_EQUIPMENT_SLOTS = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
-    private static final String[] ARMOR_SLOT_TEXTURES = new String[]{"item/empty_armor_slot_boots", "item/empty_armor_slot_leggings", "item/empty_armor_slot_chestplate", "item/empty_armor_slot_helmet"};
+    private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET};
 
     public final IRarmorData currentData;
     public final Container actualContainer;
@@ -115,13 +117,12 @@ public class RarmorModuleContainer{
                 public boolean isItemValid(ItemStack stack){
                     return slot != EquipmentSlotType.CHEST && !stack.isEmpty() && stack.canEquip(slot, player);
                 }
-
+    
                 @Override
-                @OnlyIn(Dist.CLIENT)
-                public String getSlotTexture(){
-                    return ARMOR_SLOT_TEXTURES[slot.getIndex()];
+                public Pair<ResourceLocation, ResourceLocation> getBackground(){
+                    return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, ARMOR_SLOT_TEXTURES[slot.getIndex()]);
                 }
-
+                
                 @Override
                 public ItemStack decrStackSize(int amount){
                     return slot == EquipmentSlotType.CHEST ? null : super.decrStackSize(amount);
@@ -148,11 +149,10 @@ public class RarmorModuleContainer{
             public boolean isItemValid(ItemStack stack){
                 return super.isItemValid(stack);
             }
-
+    
             @Override
-            @OnlyIn(Dist.CLIENT)
-            public String getSlotTexture(){
-                return "minecraft:items/empty_armor_slot_shield";
+            public Pair<ResourceLocation, ResourceLocation> getBackground(){
+                return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
     }

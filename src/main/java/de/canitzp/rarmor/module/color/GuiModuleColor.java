@@ -23,7 +23,7 @@ import java.awt.*;
  * @author canitzp
  */
 @OnlyIn(Dist.CLIENT)
-public class GuiModuleColor extends RarmorModuleGui<ContainerRarmor>{
+public class GuiModuleColor extends RarmorModuleGui {
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_color");
     private int backHex = 0xFFFFFC30;
@@ -33,8 +33,8 @@ public class GuiModuleColor extends RarmorModuleGui<ContainerRarmor>{
     private EquipmentSlotType activeSlot = EquipmentSlotType.CHEST;
     private Robot robot;
 
-    public GuiModuleColor(ContainerScreen<ContainerRarmor> gui, ActiveRarmorModule module){
-        super(gui, module);
+    public GuiModuleColor(ActiveRarmorModule module){
+        super(module);
         try{
             robot = new Robot();
         } catch(AWTException e){

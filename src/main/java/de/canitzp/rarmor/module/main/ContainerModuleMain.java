@@ -14,11 +14,13 @@ import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.slot.SlotModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -26,9 +28,9 @@ import java.util.List;
 
 public class ContainerModuleMain extends RarmorModuleContainer {
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
-    public ContainerModuleMain(EntityPlayer player, Container actualContainer, ActiveRarmorModule module){
+    public ContainerModuleMain(PlayerEntity player, Container actualContainer, ActiveRarmorModule module){
         super(actualContainer, module);
         this.player = player;
     }
@@ -52,7 +54,7 @@ public class ContainerModuleMain extends RarmorModuleContainer {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
         int inventoryStart = 5+5; //because of armor and offhand slots
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
@@ -63,7 +65,7 @@ public class ContainerModuleMain extends RarmorModuleContainer {
         if(theSlot != null && theSlot.getHasStack()){
             ItemStack newStack = theSlot.getStack();
             ItemStack currentStack = newStack.copy();
-            EntityEquipmentSlot equip = EntityLiving.getSlotForItemStack(newStack);
+            EquipmentSlotType equip = MobEntity.getSlotForItemStack(newStack);
 
             if(slot >= inventoryStart){
                 //Change things here
@@ -72,7 +74,7 @@ public class ContainerModuleMain extends RarmorModuleContainer {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if(equip.getSlotType() == EntityEquipmentSlot.Type.ARMOR){
+                else if(equip.getSlotType() == EquipmentSlotType.Group.ARMOR){
                     int i = 8-equip.getIndex();
 
                     if(!this.mergeItemStack(newStack, i, i+1, false)){

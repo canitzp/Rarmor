@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 public class ItemWireCutter extends ItemBase{
 
     public ItemWireCutter(){
-        super(new Properties().maxStackSize(1).containerItem(RarmorItemRegistry.itemWireCutter.get()).setNoRepair().maxDamage(127));
+        super(new Properties().maxStackSize(1).setNoRepair().maxDamage(127));
     }
 
     @Override

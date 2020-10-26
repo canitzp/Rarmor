@@ -12,9 +12,11 @@ package de.canitzp.rarmor.api.inventory;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
+import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.StringTextComponent;
@@ -33,21 +35,19 @@ import java.util.List;
  * This extends Gui for convenience purposes.
  */
 @OnlyIn(Dist.CLIENT)
-public class RarmorModuleGui<T extends Container> extends Screen {
+public class RarmorModuleGui extends Screen {
 
     public final IRarmorData currentData;
     public final ActiveRarmorModule module;
-    public final ContainerScreen<T> actualGui;
-    public List<Button> buttonList;
+    public List<Widget> buttonList;
     public Minecraft mc;
 
     public int guiLeft;
     public int guiTop;
 
-    public RarmorModuleGui(ContainerScreen<T> gui, ActiveRarmorModule module){
+    public RarmorModuleGui(ActiveRarmorModule module){
         super(new StringTextComponent(""));
         this.module = module;
-        this.actualGui = gui;
         this.currentData = module.data;
     }
 

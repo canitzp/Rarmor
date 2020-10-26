@@ -12,7 +12,6 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-
 version = "1.16.3-2.1.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
@@ -24,53 +23,36 @@ if(hasProperty('buildnumber')){
 }
 
 minecraft {
-
 	mappings channel: 'snapshot', version: '20200916-1.16.2'
 	
 	runs {
         client {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
+            workingDirectory project.file('run/client')
+            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
             mods {
-                examplemod {
+                rarmor {
                     source sourceSets.main
                 }
             }
         }
         server {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
+            workingDirectory project.file('run/server')
+            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
             mods {
-                examplemod {
+                rarmor {
                     source sourceSets.main
                 }
             }
         }
         data {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
+            workingDirectory project.file('run/data')
+            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
-
+            args '--mod', 'rarmor', '--all', '--output', file('src/generated/resources/')
             mods {
-                examplemod {
+                rarmor {
                     source sourceSets.main
                 }
             }
@@ -155,5 +137,11 @@ publishing {
         maven {
             url "file:///srv/nginx/maven"
         }
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
     }
 }

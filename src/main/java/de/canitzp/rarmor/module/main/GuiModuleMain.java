@@ -9,30 +9,30 @@
 
 package de.canitzp.rarmor.module.main;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiModuleMain extends RarmorModuleGui{
 
     public static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_main");
 
-    public GuiModuleMain(GuiContainer container, ActiveRarmorModule module){
-        super(container, module);
+    public GuiModuleMain(ActiveRarmorModule module){
+        super(module);
     }
-
+    
     @Override
-    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+6, this.guiTop+5, 0, 0, 190, 136);
-
-        GuiInventory.drawEntityOnScreen(this.guiLeft+118, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.player);
+        this.blit(matrixStack, this.guiLeft+6, this.guiTop+5, 0, 0, 190, 136);
+    
+        InventoryScreen.drawEntityOnScreen(this.guiLeft+118, this.guiTop+128, 55, (float)(this.guiLeft+118)-mouseX, (float)(this.guiTop+45)-mouseY, this.mc.player);
     }
 
     @Override

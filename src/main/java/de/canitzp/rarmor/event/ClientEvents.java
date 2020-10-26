@@ -145,7 +145,7 @@ public class ClientEvents {
                                                 Helper.renderStackToGui(matrixStack, display, renderX, renderY, 1.0F);
                                             }
     
-                                            module.renderAdditionalOverlay(mc, player, data, mainWindow, renderX, renderY, event.getPartialTicks());
+                                            module.renderAdditionalOverlay(matrixStack, mc, player, data, mainWindow, renderX, renderY, event.getPartialTicks());
                                             renderY += 17;
                                         }
                                     }

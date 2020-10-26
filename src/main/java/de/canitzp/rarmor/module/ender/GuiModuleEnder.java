@@ -9,26 +9,27 @@
 
 package de.canitzp.rarmor.module.ender;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiModuleEnder extends RarmorModuleGui{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_ender");
 
-    public GuiModuleEnder(GuiContainer gui, ActiveRarmorModule module){
-        super(gui, module);
+    public GuiModuleEnder(ActiveRarmorModule module){
+        super(module);
     }
-
+    
     @Override
-    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+37, this.guiTop+25, 0, 0, 162, 54);
+        this.blit(matrixStack, this.guiLeft+37, this.guiTop+25, 0, 0, 162, 54);
     }
+    
 }

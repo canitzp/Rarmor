@@ -11,18 +11,10 @@ package de.canitzp.rarmor.module.jump;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
-import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
 import net.minecraft.world.World;
 
 public class ActiveModuleJump extends ActiveRarmorModule {
@@ -40,41 +32,6 @@ public class ActiveModuleJump extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
-
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
-
-    }
-
-    @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
-        return null;
-    }
-
-    @Override
-    public RarmorModuleGui createGui(GuiContainer gui){
-        return null;
-    }
-
-    @Override
-    public void onInstalled(Entity entity){
-
-    }
-
-    @Override
-    public void onUninstalled(Entity entity){
-
-    }
-
-    @Override
-    public boolean hasTab(EntityPlayer player){
-        return false;
-    }
-
-    @Override
     public ItemStack getDisplayIcon(){
         return RABBIT_FOOT;
     }
@@ -86,8 +43,4 @@ public class ActiveModuleJump extends ActiveRarmorModule {
         }
     }
 
-    @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
-
-    }
 }

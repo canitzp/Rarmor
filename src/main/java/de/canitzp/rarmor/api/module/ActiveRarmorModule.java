@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.api.module;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
@@ -25,7 +26,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
 
@@ -89,11 +89,10 @@ public abstract class ActiveRarmorModule {
      * Creates a new GUI when opening this' tab.
      * This is only needed when the hasTab method returns true.
      *
-     * @param gui The base Rarmor GUI the tab is opened on
      * @return A new module container
      */
     @OnlyIn(Dist.CLIENT)
-    public RarmorModuleGui<ContainerRarmor> createGui(ContainerScreen<ContainerRarmor> gui){
+    public RarmorModuleGui createGui(){
         return null;
     }
 
@@ -156,6 +155,7 @@ public abstract class ActiveRarmorModule {
     /**
      * This can be used to render additional information to the overlay displayed on the top left of the screen
      *
+     * @param matrixStack
      * @param mc The Minecraft instance
      * @param player The player that is wearing the Rarmor
      * @param data The data (same as this' data variable)
@@ -165,7 +165,7 @@ public abstract class ActiveRarmorModule {
      * @param partialTicks The amount of partial ticks
      */
     @OnlyIn(Dist.CLIENT)
-    public void renderAdditionalOverlay(Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){}
+    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){}
 
     /**
      * Gets if this module should appear on the overlay on the top left of the screen

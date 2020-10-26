@@ -9,6 +9,7 @@
 
 package de.canitzp.rarmor.module.generator;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
@@ -17,24 +18,22 @@ import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule {
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Generator";
-    private static final ItemStack GENERATOR = new ItemStack(RarmorItemRegistry.itemGenerator);
+    private static final ItemStack GENERATOR = new ItemStack(RarmorItemRegistry.itemGenerator.get());
     private static final int ENERGY_PER_TICK = 30;
 
     public final BasicInventory inventory = new BasicInventory("input", 1, this.data);
@@ -66,7 +65,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
             else if(canAddEnergy){
                 ItemStack stack = this.inventory.getStackInSlot(0);
                 if(!stack.isEmpty()){
-                    int time = TileEntityFurnace.getItemBurnTime(stack);
+                    int time = stack.getBurnTime();
                     if(time > 0){
                         this.currentBurnTime = time;
                         this.burnTimeTickingDownFrom = time;
@@ -78,22 +77,19 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
             }
         }
     }
-
-    @SideOnly(Side.CLIENT)
+    
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 2;
-        Helper.renderStackToGui(this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
-
+        Helper.renderStackToGui(matrixStack, this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
+    
         renderX += 20;
         if(this.currentBurnTime > 0 && this.burnTimeTickingDownFrom > 0){
             FontRenderer font = mc.fontRenderer;
             String percentage = (int)(((float)this.currentBurnTime/(float)this.burnTimeTickingDownFrom)*100)+"%";
-            boolean unicode = font.getUnicodeFlag();
-            font.setUnicodeFlag(true);
-            font.drawString(percentage, renderX-font.getStringWidth(percentage)/2, renderY, 0xFFFFFF, true);
-            font.setUnicodeFlag(unicode);
+            font.drawString(matrixStack, percentage, renderX-font.getStringWidth(percentage)/2, renderY, 0xFFFFFF);
         }
     }
 
@@ -103,33 +99,28 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
         this.inventory.loadSlots(compound);
-        this.currentBurnTime = compound.getInteger("BurnTime");
-        this.burnTimeTickingDownFrom = compound.getInteger("BurnTimeFrom");
+        this.currentBurnTime = compound.getInt("BurnTime");
+        this.burnTimeTickingDownFrom = compound.getInt("BurnTimeFrom");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
         this.inventory.saveSlots(compound);
-        compound.setInteger("BurnTime", this.currentBurnTime);
-        compound.setInteger("BurnTimeFrom", this.burnTimeTickingDownFrom);
+        compound.putInt("BurnTime", this.currentBurnTime);
+        compound.putInt("BurnTimeFrom", this.burnTimeTickingDownFrom);
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return new ContainerModuleGenerator(container, this);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public RarmorModuleGui createGui(GuiContainer gui){
-        return new GuiModuleGenerator(gui, this);
-    }
-
-    @Override
-    public void onInstalled(Entity entity){
-
+    public RarmorModuleGui createGui(){
+        return new GuiModuleGenerator(this);
     }
 
     @Override
@@ -138,11 +129,11 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     }
 
     @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return true;
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
         return GENERATOR;

@@ -22,12 +22,14 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,16 +46,19 @@ public final class Rarmor{
     
     public Rarmor(){
         Rarmor.INSTANCE = this;
-    
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-    
+        
         // Register config
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.FORGE_CONFIG_SPEC);
-    
+        
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            modEventBus.addListener(this::clientSetup);
+        });
+        
         // Registry handler
         RarmorItemRegistry.REGISTRY.register(modEventBus);
         RarmorContainerRegistry.REGISTRY.register(modEventBus);
-        ScreenManager.registerFactory(RarmorContainerRegistry.RARMOR_CONTAINER.get(), GuiRarmor::new);
         
         // Register Network
         PacketHandler.init();
@@ -61,15 +66,18 @@ public final class Rarmor{
         // Register API
         RarmorAPI.methodHandler = new MethodHandler();
         ModuleRegistry.init();
+    }
     
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {
-            Minecraft.getInstance().getItemColors().register(new IItemColor() {
-                @Override
-                public int getColor(ItemStack stack, int tintIndex){
-                    return stack.hasTag() && stack.getTag().contains("Color", Constants.NBT.TAG_INT) ? stack.getTag().getInt("Color") : 0xFFFFFFFF;
-                }
-            }, RarmorItemRegistry.itemRarmorBoots.get(), RarmorItemRegistry.itemRarmorChest.get(), RarmorItemRegistry.itemRarmorHelmet.get(), RarmorItemRegistry.itemRarmorPants.get());
-        });
+    @OnlyIn(Dist.CLIENT)
+    private void clientSetup(FMLClientSetupEvent event){
+        ScreenManager.registerFactory(RarmorContainerRegistry.RARMOR_CONTAINER.get(), GuiRarmor::new);
+    
+        Minecraft.getInstance().getItemColors().register(new IItemColor() {
+            @Override
+            public int getColor(ItemStack stack, int tintIndex){
+                return stack.hasTag() && stack.getTag().contains("Color", Constants.NBT.TAG_INT) ? stack.getTag().getInt("Color") : 0xFFFFFFFF;
+            }
+        }, RarmorItemRegistry.itemRarmorBoots.get(), RarmorItemRegistry.itemRarmorChest.get(), RarmorItemRegistry.itemRarmorHelmet.get(), RarmorItemRegistry.itemRarmorPants.get());
     }
     
 }

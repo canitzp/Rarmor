@@ -54,7 +54,7 @@ public class GuiRarmor extends DisplayEffectsScreen<ContainerRarmor> {
         IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(Minecraft.getInstance().player, true);
         ActiveRarmorModule activeRarmorModule = data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule());
         this.currentData = activeRarmorModule.data;
-        this.gui = activeRarmorModule.createGui(this);
+        this.gui = activeRarmorModule.createGui();
 
         this.xSize = 236;
         this.ySize = 229;

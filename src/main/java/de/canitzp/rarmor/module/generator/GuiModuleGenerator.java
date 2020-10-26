@@ -9,29 +9,29 @@
 
 package de.canitzp.rarmor.module.generator;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiModuleGenerator extends RarmorModuleGui{
 
     private static final ResourceLocation RES_LOC = Helper.getGuiLocation("gui_rarmor_generator");
 
-    public GuiModuleGenerator(GuiContainer gui, ActiveRarmorModule module){
-        super(gui, module);
+    public GuiModuleGenerator(ActiveRarmorModule module){
+        super(module);
     }
-
+    
     @Override
-    public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY){
+    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
         this.mc.getTextureManager().bindTexture(RES_LOC);
-        this.drawTexturedModalRect(this.guiLeft+109, this.guiTop+48, 0, 0, 18, 34);
-
+        this.blit(matrixStack, this.guiLeft+109, this.guiTop+48, 0, 0, 18, 34);
+    
         ActiveModuleGenerator gen = (ActiveModuleGenerator)this.module;
         if(gen.currentBurnTime > 0 && gen.burnTimeTickingDownFrom > 0){
             int i = gen.currentBurnTime*13/gen.burnTimeTickingDownFrom;
-            this.drawTexturedModalRect(this.guiLeft+110, this.guiTop+48+12-i, 176, 12-i, 14, i+1);
+            this.blit(matrixStack, this.guiLeft+110, this.guiTop+48+12-i, 176, 12-i, 14, i+1);
         }
     }
 

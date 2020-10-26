@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[34,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/canitzp/Rarmor/issues"
+[[mods]]
+modId="rarmor"
+version="${file.jarVersion}"
+displayName="Rarmor"
+# A URL to query for updates for this mod. See the JSON update specification <here>
+#updateJSONURL=""
+displayURL="https://www.curseforge.com/minecraft/mc-mods/rarmor"
+#logoFile="assets/rarmor/textures/logo.png"
+credits="Current Author: canitzp; Owners: canitzp & Ellpeck; Textures and Models: BootyToast"
+authors="Current Author: canitzp; Owners: canitzp & Ellpeck; Textures and Models: BootyToast"
+description='''A mod about an RF-powered armor that can be upgraded and modified!'''
+
+[[dependencies.rarmor]]
+modId="forge"
+mandatory=true
+versionRange="[34,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.rarmor]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.3]"
+ordering="NONE"
+side="BOTH"

@@ -9,27 +9,30 @@
 
 package de.canitzp.rarmor.module.furnace;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ActiveModuleFurnace extends ActiveRarmorModule {
 
@@ -49,17 +52,17 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(!world.isRemote){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
-                ItemStack input = this.inventory.getStackInSlot(0);
-                if(!input.isEmpty()){
-                    ItemStack output = FurnaceRecipes.instance().getSmeltingResult(input);
+                FurnaceRecipe furnaceRecipe = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this.inventory, world).orElse(null);
+                if(furnaceRecipe != null){
+                    ItemStack output = furnaceRecipe.getRecipeOutput();
                     if(!output.isEmpty()){
                         ItemStack outputSlot = this.inventory.getStackInSlot(1);
                         if(outputSlot.isEmpty() || Helper.canBeStacked(output, outputSlot)){
                             this.burnTime++;
                             this.data.setDirty();
-
+        
                             this.data.extractEnergy(ENERGY_PER_TICK, false);
-
+        
                             if(this.burnTime >= TIME_TO_REACH){
                                 if(outputSlot.isEmpty()){
                                     this.inventory.setInventorySlotContents(1, output.copy());
@@ -67,15 +70,15 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
                                 else{
                                     outputSlot.grow(output.getCount());
                                 }
-
+            
                                 this.inventory.decrStackSize(0, 1);
                                 this.burnTime = 0;
                             }
-
+        
                             if(this.data.getTotalTickedTicks()%10 == 0){
                                 this.data.queueUpdate();
                             }
-
+        
                             return;
                         }
                     }
@@ -85,28 +88,25 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
             }
         }
     }
-
+    
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 5;
-
+        
         if(this.burnTime > 0){
             FontRenderer font = mc.fontRenderer;
             String percentage = (int)(((float)this.burnTime/(float)TIME_TO_REACH)*100)+"%";
-            boolean unicode = font.getUnicodeFlag();
-            font.setUnicodeFlag(true);
-            font.drawString(percentage, renderX+15-font.getStringWidth(percentage)/2, renderY-5, 0xFFFFFF, true);
-            font.setUnicodeFlag(unicode);
+            font.drawString(matrixStack, percentage, renderX+15-font.getStringWidth(percentage)/2, renderY-5, 0xFFFFFF);
         }
-
+    
         ItemStack input = this.inventory.getStackInSlot(0);
         if(!input.isEmpty()){
-            Helper.renderStackToGui(input, renderX, renderY, 0.7F);
+            Helper.renderStackToGui(matrixStack, input, renderX, renderY, 0.7F);
             renderX += 18;
         }
-        Helper.renderStackToGui(this.inventory.getStackInSlot(1), renderX, renderY, 0.7F);
+        Helper.renderStackToGui(matrixStack, this.inventory.getStackInSlot(1), renderX, renderY, 0.7F);
     }
 
     @Override
@@ -115,31 +115,26 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
         this.inventory.loadSlots(compound);
-        this.burnTime = compound.getInteger("BurnTime");
+        this.burnTime = compound.getInt("BurnTime");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
         this.inventory.saveSlots(compound);
-        compound.setInteger("BurnTime", this.burnTime);
+        compound.putInt("BurnTime", this.burnTime);
     }
 
     @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
+    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
         return new ContainerModuleFurnace(player, container, this);
     }
-
+    
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
-    public RarmorModuleGui createGui(GuiContainer gui){
-        return new GuiModuleFurnace(gui, this);
-    }
-
-    @Override
-    public void onInstalled(Entity entity){
-
+    public RarmorModuleGui createGui(){
+        return new GuiModuleFurnace(this);
     }
 
     @Override
@@ -148,12 +143,12 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     }
 
     @Override
-    public boolean hasTab(EntityPlayer player){
+    public boolean hasTab(PlayerEntity player){
         return true;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    @SideOnly(Side.CLIENT)
     public ItemStack getDisplayIcon(){
         return FURNACE;
     }

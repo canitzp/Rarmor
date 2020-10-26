@@ -9,32 +9,29 @@
 
 package de.canitzp.rarmor.module.solar;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.canitzp.rarmor.api.internal.IRarmorData;
-import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.RarmorAPI;
-import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ActiveModuleSolar extends ActiveRarmorModule {
 
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Solar";
-    private static final ItemStack SOLAR_CELL = new ItemStack(RarmorItemRegistry.itemSolarCell);
+    private static final ItemStack SOLAR_CELL = new ItemStack(RarmorItemRegistry.itemSolarCell.get());
     private static final int ENERGY_PER_TICK = 15;
 
     private boolean generatedLastTick;
@@ -52,7 +49,7 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
     public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(isWearingHat){
             if(!world.isRemote){
-                BlockPos pos = new BlockPos(entity.posX, entity.posY+entity.height, entity.posZ);
+                BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY()+entity.getHeight(), entity.getPosZ());
                 if(world.canSeeSky(pos) && world.isDaytime() && !world.isRainingAt(pos)){
                     if(this.data.getMaxEnergyStored()-this.data.getEnergyStored() >= ENERGY_PER_TICK){
                         this.data.receiveEnergy(ENERGY_PER_TICK, false);
@@ -72,67 +69,37 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
             this.invalid = true;
         }
     }
-
-    @SideOnly(Side.CLIENT)
+    
     @Override
-    public void renderAdditionalOverlay(Minecraft mc, EntityPlayer player, IRarmorData data, ScaledResolution resolution, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 5;
-
+    
         FontRenderer font = mc.fontRenderer;
-        boolean unicode = font.getUnicodeFlag();
-        font.setUnicodeFlag(true);
         TextFormatting color = this.generatedLastTick ? TextFormatting.GREEN : TextFormatting.RED;
         String key = this.generatedLastTick ? "generating" : "notGenerating";
         if(data.getEnergyStored() == data.getMaxEnergyStored()){
             color = TextFormatting.BLUE;
             key = "full";
         }
-        font.drawString(color+I18n.format(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF, true);
-        font.setUnicodeFlag(unicode);
+        font.drawString(matrixStack, color+I18n.format(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF);
     }
-
+    
     @Override
-    public void readFromNBT(NBTTagCompound compound, boolean sync){
+    public void readFromNBT(CompoundNBT compound, boolean sync){
         if(sync){
             this.generatedLastTick = compound.getBoolean("GenLastTick");
         }
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound compound, boolean sync){
+    public void writeToNBT(CompoundNBT compound, boolean sync){
         if(sync){
-            compound.setBoolean("GenLastTick", this.generatedLastTick);
+            compound.putBoolean("GenLastTick", this.generatedLastTick);
         }
     }
 
-    @Override
-    public RarmorModuleContainer createContainer(EntityPlayer player, Container container){
-        return null;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public RarmorModuleGui createGui(GuiContainer gui){
-        return null;
-    }
-
-    @Override
-    public void onInstalled(Entity entity){
-
-    }
-
-    @Override
-    public void onUninstalled(Entity entity){
-
-    }
-
-    @Override
-    public boolean hasTab(EntityPlayer player){
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public ItemStack getDisplayIcon(){
         return SOLAR_CELL;

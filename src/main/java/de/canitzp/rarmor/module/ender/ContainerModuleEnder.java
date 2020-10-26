@@ -11,10 +11,10 @@ package de.canitzp.rarmor.module.ender;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EnderChestInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import java.util.List;
 
 public class ContainerModuleEnder extends RarmorModuleContainer {
 
-    private final EntityPlayer player;
+    private final PlayerEntity player;
 
-    public ContainerModuleEnder(EntityPlayer player, Container container, ActiveRarmorModule module){
+    public ContainerModuleEnder(PlayerEntity player, Container container, ActiveRarmorModule module){
         super(container, module);
         this.player = player;
     }
@@ -33,19 +33,18 @@ public class ContainerModuleEnder extends RarmorModuleContainer {
     public List<Slot> getSlots(){
         List<Slot> slots = new ArrayList<Slot>();
 
-        InventoryEnderChest ender = this.player.getInventoryEnderChest();
+        EnderChestInventory ender = this.player.getInventoryEnderChest();
         for(int j = 0; j < 3; j++){
             for(int k = 0; k < 9; k++){
                 slots.add(new Slot(ender, k+j*9, 38+k*18, 26+j*18));
             }
         }
-
-
+        
         return slots;
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slot){
+    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
         int inventoryStart = 27;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
