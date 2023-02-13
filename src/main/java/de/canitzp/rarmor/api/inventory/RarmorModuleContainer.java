@@ -13,12 +13,12 @@ import com.mojang.datafixers.util.Pair;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.*;
-import net.minecraft.inventory.container.*;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,14 +35,14 @@ import java.util.List;
  */
 public class RarmorModuleContainer{
 
-    private static final EquipmentSlotType[] VALID_EQUIPMENT_SLOTS = new EquipmentSlotType[]{EquipmentSlotType.HEAD, EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
-    private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS, PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS, PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE, PlayerContainer.EMPTY_ARMOR_SLOT_HELMET};
+    private static final EquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET};
 
     public final IRarmorData currentData;
-    public final Container actualContainer;
+    public final AbstractContainerMenu actualContainer;
     public final ActiveRarmorModule module;
 
-    public RarmorModuleContainer(Container container, ActiveRarmorModule module){
+    public RarmorModuleContainer(AbstractContainerMenu container, ActiveRarmorModule module){
         this.module = module;
         this.actualContainer = container;
         this.currentData = this.module.data;
@@ -60,33 +60,28 @@ public class RarmorModuleContainer{
 
     }
 
-    public ItemStack transferStackInSlot(PlayerEntity player, int index){
+    public ItemStack transferStackInSlot(Player player, int index){
         return ItemStack.EMPTY;
     }
 
-    public void onContainerClosed(PlayerEntity player){
+    public void onContainerClosed(Player player){
 
     }
 
-    public void onCraftMatrixChanged(IInventory inventory){
+    public void onCraftMatrixChanged(Container inventory){
 
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void updateProgressBar(int id, int data){
-
-    }
-
-    public void addListener(IContainerListener listener){
+    public void addListener(ContainerListener listener){
 
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void removeListener(IContainerListener listener){
+    public void removeListener(ContainerListener listener){
 
     }
 
-    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, PlayerEntity player){
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickType, Player player){
         return ItemStack.EMPTY;
     }
 
@@ -104,55 +99,41 @@ public class RarmorModuleContainer{
         return RarmorAPI.methodHandler.mergeItemStack(this.actualContainer, stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
 
-    public void addArmorSlotsAt(PlayerEntity player, List<Slot> slots, int x, int y){
+    public void addArmorSlotsAt(Player player, List<Slot> slots, int x, int y){
         for(int i = 0; i < 4; i++){
-            final EquipmentSlotType slot = VALID_EQUIPMENT_SLOTS[i];
-            slots.add(new Slot(player.inventory, 36+(3-i), x, y+i*18){
-                @Override
-                public int getSlotStackLimit(){
-                    return 1;
-                }
+            final EquipmentSlot slot = VALID_EQUIPMENT_SLOTS[i];
+            slots.add(new Slot(player.getInventory(), 36+(3-i), x, y+i*18){
 
                 @Override
-                public boolean isItemValid(ItemStack stack){
-                    return slot != EquipmentSlotType.CHEST && !stack.isEmpty() && stack.canEquip(slot, player);
+                public int getMaxStackSize() {
+                    return 1;
                 }
     
                 @Override
-                public Pair<ResourceLocation, ResourceLocation> getBackground(){
-                    return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, ARMOR_SLOT_TEXTURES[slot.getIndex()]);
-                }
-                
-                @Override
-                public ItemStack decrStackSize(int amount){
-                    return slot == EquipmentSlotType.CHEST ? null : super.decrStackSize(amount);
+                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon(){
+                    return Pair.of(InventoryMenu.BLOCK_ATLAS, ARMOR_SLOT_TEXTURES[slot.getIndex()]);
                 }
 
                 @Override
-                public void putStack(@Nullable ItemStack stack){
-                    if(slot != EquipmentSlotType.CHEST){
-                        super.putStack(stack);
+                public void set(@Nullable ItemStack stack){
+                    if(slot != EquipmentSlot.CHEST){
+                        super.set(stack);
                     }
                 }
 
                 @Override
-                public boolean canTakeStack(PlayerEntity playerIn){
-                    return slot != EquipmentSlotType.CHEST;
+                public boolean allowModification(Player player) {
+                    return slot != EquipmentSlot.CHEST && super.allowModification(player);
                 }
             });
         }
     }
 
-    public void addSecondHandSlot(PlayerEntity player, List<Slot> slots, int x, int y){
-        slots.add(new Slot(player.inventory, 40, x, y){
+    public void addSecondHandSlot(Player player, List<Slot> slots, int x, int y){
+        slots.add(new Slot(player.getInventory(), 40, x, y){
             @Override
-            public boolean isItemValid(ItemStack stack){
-                return super.isItemValid(stack);
-            }
-    
-            @Override
-            public Pair<ResourceLocation, ResourceLocation> getBackground(){
-                return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PlayerContainer.EMPTY_ARMOR_SLOT_SHIELD);
+            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon(){
+                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
             }
         });
     }

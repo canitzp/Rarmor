@@ -10,13 +10,13 @@
 package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 
 public abstract class ItemRarmorModule extends ItemBase implements IRarmorModuleItem{
 
     public ItemRarmorModule(){
-        super(new Properties().maxStackSize(1));
+        super(new Properties().stacksTo(1));
     }
 
     @Override

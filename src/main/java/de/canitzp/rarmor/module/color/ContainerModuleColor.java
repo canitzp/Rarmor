@@ -2,9 +2,9 @@ package de.canitzp.rarmor.module.color;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class ContainerModuleColor extends RarmorModuleContainer{
 
-    private PlayerEntity player;
+    private Player player;
 
-    public ContainerModuleColor(PlayerEntity player, Container container, ActiveRarmorModule module){
+    public ContainerModuleColor(Player player, AbstractContainerMenu container, ActiveRarmorModule module){
         super(container, module);
         this.player = player;
     }

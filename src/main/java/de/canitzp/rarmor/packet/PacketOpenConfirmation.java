@@ -10,9 +10,9 @@
 package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -24,19 +24,19 @@ public class PacketOpenConfirmation {
         this.moduleId = moduleId;
     }
 
-    public PacketOpenConfirmation(PacketBuffer buf){
+    public PacketOpenConfirmation(FriendlyByteBuf buf){
         this.moduleId = buf.readInt();
     }
 
-    public static void toBuffer(PacketOpenConfirmation packet, PacketBuffer buf){
+    public static void toBuffer(PacketOpenConfirmation packet, FriendlyByteBuf buf){
         buf.writeInt(packet.moduleId);
     }
     
     public static void handle(PacketOpenConfirmation packet, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity sender = ctx.get().getSender();
+            ServerPlayer sender = ctx.get().getSender();
             if(sender != null){
-                RarmorAPI.methodHandler.openRarmor(sender, packet.moduleId, true, true);
+                RarmorAPI.methodHandler.openRarmor(sender, packet.moduleId, false, false);
             }
         });
         ctx.get().setPacketHandled(true);

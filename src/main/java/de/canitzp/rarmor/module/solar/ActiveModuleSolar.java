@@ -9,22 +9,22 @@
 
 package de.canitzp.rarmor.module.solar;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.RarmorAPI;
-import net.minecraft.client.MainWindow;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,11 +46,11 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
     }
 
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+    public void tick(Level world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
         if(isWearingHat){
-            if(!world.isRemote){
-                BlockPos pos = new BlockPos(entity.getPosX(), entity.getPosY()+entity.getHeight(), entity.getPosZ());
-                if(world.canSeeSky(pos) && world.isDaytime() && !world.isRainingAt(pos)){
+            if(!world.isClientSide()){
+                BlockPos pos = new BlockPos(entity.getX(), entity.getY()+entity.getEyeHeight(), entity.getZ());
+                if(world.canSeeSky(pos) && world.isDay() && !world.isRainingAt(pos)){
                     if(this.data.getMaxEnergyStored()-this.data.getEnergyStored() >= ENERGY_PER_TICK){
                         this.data.receiveEnergy(ENERGY_PER_TICK, false);
 
@@ -71,29 +71,29 @@ public class ActiveModuleSolar extends ActiveRarmorModule {
     }
     
     @Override
-    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(PoseStack matrixStack, Minecraft mc, Player player, IRarmorData data, Window window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 5;
     
-        FontRenderer font = mc.fontRenderer;
-        TextFormatting color = this.generatedLastTick ? TextFormatting.GREEN : TextFormatting.RED;
+        Font font = mc.font;
+        ChatFormatting color = this.generatedLastTick ? ChatFormatting.GREEN : ChatFormatting.RED;
         String key = this.generatedLastTick ? "generating" : "notGenerating";
         if(data.getEnergyStored() == data.getMaxEnergyStored()){
-            color = TextFormatting.BLUE;
+            color = ChatFormatting.BLUE;
             key = "full";
         }
-        font.drawString(matrixStack, color+I18n.format(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF);
+        font.draw(matrixStack, color+ I18n.get(RarmorAPI.MOD_ID+"."+key), renderX, renderY, 0xFFFFFF);
     }
     
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
+    public void readFromNBT(CompoundTag compound, boolean sync){
         if(sync){
             this.generatedLastTick = compound.getBoolean("GenLastTick");
         }
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
+    public void writeToNBT(CompoundTag compound, boolean sync){
         if(sync){
             compound.putBoolean("GenLastTick", this.generatedLastTick);
         }

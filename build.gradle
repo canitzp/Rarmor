@@ -5,52 +5,57 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
-version = "1.16.3-2.1.0"
+version = "40.0.0"
 group = "de.canitzp.rarmor"
 archivesBaseName = "Rarmor"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 if(hasProperty('buildnumber')){
     version = "${version}-${this.properties['buildnumber']}"
 }
 
 minecraft {
-	mappings channel: 'snapshot', version: '20200916-1.16.2'
+	mappings channel: 'official', version: '1.18.2'
 	
 	runs {
         client {
-            workingDirectory project.file('run/client')
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
+
             mods {
                 rarmor {
                     source sourceSets.main
                 }
             }
         }
+
         server {
-            workingDirectory project.file('run/server')
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            workingDirectory project.file('run_server')
             property 'forge.logging.console.level', 'debug'
+
             mods {
                 rarmor {
                     source sourceSets.main
                 }
             }
         }
+
         data {
-            workingDirectory project.file('run/data')
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'rarmor', '--all', '--output', file('src/generated/resources/')
+
+            args '--mod', 'rarmor', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
             mods {
                 rarmor {
                     source sourceSets.main
@@ -59,6 +64,8 @@ minecraft {
         }
     }
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
@@ -74,12 +81,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.3-34.1.0'
-
-    // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-    // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    minecraft "net.minecraftforge:forge:${project.forge_version}"
+    implementation fg.deobf("mezz.jei:jei-${project.jei_version}")
 }
 
 jar {

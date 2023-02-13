@@ -11,14 +11,16 @@ package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
+import de.canitzp.rarmor.data.RarmorDataCapability;
 import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -30,7 +32,7 @@ public class PacketSyncRarmorData{
     private boolean shouldReloadTabs;
     private int moduleIdForConfirmation;
 
-    private CompoundNBT receivedDataCompound;
+    private CompoundTag receivedDataCompound;
 
     public PacketSyncRarmorData(){}
     
@@ -41,40 +43,41 @@ public class PacketSyncRarmorData{
         this.moduleIdForConfirmation = moduleIdForConfirmation;
     }
 
-    public PacketSyncRarmorData(PacketBuffer buf){
+    public PacketSyncRarmorData(FriendlyByteBuf buf){
         this.shouldReloadTabs = buf.readBoolean();
         this.moduleIdForConfirmation = buf.readInt();
-        this.stackId = buf.readUniqueId();
-        this.receivedDataCompound = buf.readCompoundTag();
+        this.stackId = buf.readUUID();
+        this.receivedDataCompound = buf.readAnySizeNbt();
     }
     
-    public static void toBuffer(PacketSyncRarmorData packet, PacketBuffer buf){
+    public static void toBuffer(PacketSyncRarmorData packet, FriendlyByteBuf buf){
         buf.writeBoolean(packet.shouldReloadTabs);
         buf.writeInt(packet.moduleIdForConfirmation);
-        buf.writeUniqueId(packet.stackId);
+        buf.writeUUID(packet.stackId);
 
-        CompoundNBT compound = new CompoundNBT();
+        CompoundTag compound = new CompoundTag();
         packet.data.writeToNBT(compound, true);
-        buf.writeCompoundTag(compound);
+        buf.writeNbt(compound);
     }
     
     public static void handle(PacketSyncRarmorData packet, Supplier<NetworkEvent.Context> ctx){
         if(ctx.get().getDirection() == NetworkDirection.PLAY_TO_CLIENT){
             ctx.get().enqueueWork(() -> {
                 Minecraft mc = Minecraft.getInstance();
-                ClientPlayerEntity player = mc.player;
+                LocalPlayer player = mc.player;
                 if(player != null){
-                    for(int i = 0; i < player.inventory.getSizeInventory(); i++){
-                        ItemStack stack = player.inventory.getStackInSlot(i);
+                    for(int i = 0; i < player.getInventory().getContainerSize(); i++){
+                        ItemStack stack = player.getInventory().getItem(i);
                         if(!stack.isEmpty()){
                             if(packet.stackId.equals(RarmorAPI.methodHandler.checkAndSetRarmorId(stack, false))){
-                                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.world, stack, true);
+                                IRarmorData data = RarmorAPI.methodHandler.getDataForStack(mc.level, stack, true);
                                 if(data != null){
+                                    System.out.println("handle: " + packet.receivedDataCompound);
                                     data.readFromNBT(packet.receivedDataCompound, true);
                     
                                     if(packet.shouldReloadTabs){
-                                        if(mc.currentScreen instanceof GuiRarmor){
-                                            ((GuiRarmor)mc.currentScreen).updateTabs();
+                                        if(mc.screen instanceof GuiRarmor){
+                                            ((GuiRarmor)mc.screen).updateTabs();
                                         }
                                     }
                     

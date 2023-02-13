@@ -12,49 +12,43 @@ package de.canitzp.rarmor.event;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.data.WorldData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = RarmorAPI.MOD_ID)
 public class CommonEvents{
-    private static void doData(ServerWorld world){
-        WorldData data = WorldData.getOrLoadData(world);
-        if(data != null){
-            data.markDirty();
-        }
-    }
 
-    @SubscribeEvent
-    public static void onWorldLoad(WorldEvent.Load event){
-        if(event.getWorld() instanceof ServerWorld){
-            doData((ServerWorld) event.getWorld());
+/*    @SubscribeEvent
+    public static void attachWorldCapability(AttachCapabilitiesEvent<Level> event) {
+        if(event.getObject().dimension() == Level.OVERWORLD){ // only save once; data is the same for every dimension
+            event.addCapability(WorldData.KEY, WorldData.INSTANCE);
         }
-    }
-
-    @SubscribeEvent
-    public static void onWorldSave(WorldEvent.Save event){
-        if(event.getWorld() instanceof ServerWorld){
-            doData((ServerWorld) event.getWorld());
-        }
-    }
+    }*/
 
     @SubscribeEvent
     public static void onPlayerJoin(EntityJoinWorldEvent event){
-        if(!event.getWorld().isRemote){
+        if(!event.getWorld().isClientSide()){
             Entity entity = event.getEntity();
-            if(entity instanceof PlayerEntity){
-                PlayerEntity player = (PlayerEntity)entity;
+            if(entity instanceof Player){
+                Player player = (Player)entity;
 
-                for(int i = 0; i < player.inventory.getSizeInventory(); i++){
-                    ItemStack stack = player.inventory.getStackInSlot(i);
+                for(int i = 0; i < player.getInventory().getContainerSize(); i++){
+                    ItemStack stack = player.getInventory().getItem(i);
                     if(!stack.isEmpty()){
-                        IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getEntityWorld(), stack, false);
+                        IRarmorData data = RarmorAPI.methodHandler.getDataForStack(player.getLevel(), stack, false);
                         if(data != null){
                             data.queueUpdate(true);
                         }

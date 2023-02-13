@@ -9,11 +9,12 @@
 
 package de.canitzp.rarmor.module.ender;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,8 +28,8 @@ public class GuiModuleEnder extends RarmorModuleGui{
     }
     
     @Override
-    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
-        this.mc.getTextureManager().bindTexture(RES_LOC);
+    public void drawGuiContainerBackgroundLayer(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY){
+        RenderSystem.setShaderTexture(0, RES_LOC);
         this.blit(matrixStack, this.guiLeft+37, this.guiTop+25, 0, 0, 162, 54);
     }
     

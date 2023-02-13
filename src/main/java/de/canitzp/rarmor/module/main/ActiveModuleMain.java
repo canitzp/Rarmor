@@ -16,24 +16,24 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 
 public class ActiveModuleMain extends ActiveRarmorModule{
 
     public static final int MODULE_SLOT_AMOUNT = 3;
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Main";
     private static final ItemStack CHESTPLATE = new ItemStack(RarmorItemRegistry.itemRarmorChest.get());
-    public final BasicInventory inventory = new BasicInventory("main", 2, this.data);
+    public final SimpleContainer inventory = new SimpleContainer(2);
     private int lastEnergy;
 
     public ActiveModuleMain(IRarmorData data){
@@ -41,10 +41,10 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-        if(!world.isRemote){
+    public void tick(Level world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        if(!world.isClientSide()){
             if(this.data.getEnergyStored() < this.data.getMaxEnergyStored()){
-                ItemStack discharge = this.inventory.getStackInSlot(0);
+                ItemStack discharge = this.inventory.getItem(0);
                 if(!discharge.isEmpty()){
                     discharge.getCapability(CapabilityEnergy.ENERGY).ifPresent(storage -> {
                         int canDischarge = storage.extractEnergy(Integer.MAX_VALUE, true);
@@ -58,7 +58,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
             }
 
             if(this.data.getEnergyStored() > 0){
-                ItemStack charge = this.inventory.getStackInSlot(1);
+                ItemStack charge = this.inventory.getItem(1);
                 if(!charge.isEmpty()){
                     charge.getCapability(CapabilityEnergy.ENERGY).ifPresent(storage -> {
                         int canDischarge = storage.receiveEnergy(Integer.MAX_VALUE, true);
@@ -85,21 +85,21 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
+    public void readFromNBT(CompoundTag compound, boolean sync){
         if(!sync){
-            this.inventory.loadSlots(compound);
+            this.inventory.fromTag(compound.getList("Items", Tag.TAG_COMPOUND));
         }
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
+    public void writeToNBT(CompoundTag compound, boolean sync){
         if(!sync){
-            this.inventory.saveSlots(compound);
+            compound.put("Items", this.inventory.createTag());
         }
     }
 
     @Override
-    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+    public RarmorModuleContainer createContainer(Player player, AbstractContainerMenu container){
         return new ContainerModuleMain(player, container, this);
     }
 
@@ -110,7 +110,7 @@ public class ActiveModuleMain extends ActiveRarmorModule{
     }
 
     @Override
-    public boolean hasTab(PlayerEntity player){
+    public boolean hasTab(Player player){
         return true;
     }
 

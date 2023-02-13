@@ -12,17 +12,17 @@ package de.canitzp.rarmor.module.jump;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,32 +39,32 @@ public class ItemModuleJump extends ItemRarmorModule {
     }
 
     @Override
-    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
-        return RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlotType.FEET) != null;
+    public boolean canInstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
+        return RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlot.FEET) != null;
     }
 
     @Override
-    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
     
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn){
-        tooltip.add(new StringTextComponent(TextFormatting.ITALIC.toString()).append(new TranslationTextComponent(RarmorAPI.MOD_ID+".needsShoes")));
+    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn){
+        tooltip.add(new TextComponent(ChatFormatting.ITALIC.toString()).append(new TranslatableComponent(RarmorAPI.MOD_ID+".needsShoes")));
     }
 
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity)entity;
-            if(!player.isSneaking()){
+        if(entity instanceof Player){
+            Player player = (Player)entity;
+            if(!player.isCrouching()){
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
                 if(data != null){
                     int use = 50;
                     if(data.getEnergyStored() >= use){
-                        if(data.getInstalledModuleWithId(ActiveModuleJump.IDENTIFIER) != null && RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlotType.FEET) != null){
-                            player.setMotion(player.getMotion().add(0, 0.3, 0));
+                        if(data.getInstalledModuleWithId(ActiveModuleJump.IDENTIFIER) != null && RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlot.FEET) != null){
+                            player.setDeltaMovement(player.getDeltaMovement().add(0, 0.3, 0));
                             data.extractEnergy(use, false);
                         }
                     }
@@ -76,12 +76,12 @@ public class ItemModuleJump extends ItemRarmorModule {
     @SubscribeEvent
     public static void onFall(LivingFallEvent event){
         Entity entity = event.getEntity();
-        if(entity instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity)entity;
-            if(!player.isSneaking()){
+        if(entity instanceof Player){
+            Player player = (Player)entity;
+            if(!player.isCrouching()){
                 IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
                 if(data != null){
-                    if(data.getInstalledModuleWithId(ActiveModuleJump.IDENTIFIER) != null && RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlotType.FEET) != null){
+                    if(data.getInstalledModuleWithId(ActiveModuleJump.IDENTIFIER) != null && RarmorAPI.methodHandler.getHasRarmorInSlot(player, EquipmentSlot.FEET) != null){
                         event.setDistance(event.getDistance()-2F);
                     }
                 }

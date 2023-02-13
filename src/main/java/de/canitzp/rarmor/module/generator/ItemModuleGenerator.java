@@ -11,9 +11,9 @@ package de.canitzp.rarmor.module.generator;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemModuleGenerator extends ItemRarmorModule{
     
@@ -23,12 +23,12 @@ public class ItemModuleGenerator extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canInstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 
     @Override
-    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 }

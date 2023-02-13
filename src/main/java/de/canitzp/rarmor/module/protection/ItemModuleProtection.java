@@ -13,10 +13,10 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.item.ItemRarmorModule;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,8 +38,8 @@ public class ItemModuleProtection extends ItemRarmorModule{
     @SubscribeEvent
     public void onHurt(LivingHurtEvent event){
         LivingEntity entity = event.getEntityLiving();
-        if(!entity.getEntityWorld().isRemote && entity instanceof PlayerEntity){
-            PlayerEntity player = (PlayerEntity)entity;
+        if(!entity.getLevel().isClientSide() && entity instanceof Player){
+            Player player = (Player)entity;
             IRarmorData data = RarmorAPI.methodHandler.getDataForChestplate(player, false);
             if(data != null){
                 float damageReduct = 0F;
@@ -69,7 +69,7 @@ public class ItemModuleProtection extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canInstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canInstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
         for(ActiveRarmorModule module : currentData.getCurrentModules()){
             if(module instanceof ActiveModuleProtection){
                 return false;
@@ -79,7 +79,7 @@ public class ItemModuleProtection extends ItemRarmorModule{
     }
 
     @Override
-    public boolean canUninstall(PlayerEntity player, Slot slot, ItemStack stack, IRarmorData currentData){
+    public boolean canUninstall(Player player, Slot slot, ItemStack stack, IRarmorData currentData){
         return true;
     }
 }

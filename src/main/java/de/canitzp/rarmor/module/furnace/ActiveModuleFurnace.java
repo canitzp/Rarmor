@@ -9,28 +9,27 @@
 
 package de.canitzp.rarmor.module.furnace;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
-import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.Font;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,7 +40,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     private static final ItemStack FURNACE = new ItemStack(Blocks.FURNACE);
     private static final int ENERGY_PER_TICK = 40;
 
-    public final BasicInventory inventory = new BasicInventory("furnace", 2, this.data);
+    public final BasicInventory inventory = new BasicInventory( 2, this.data);
     public int burnTime;
 
     public ActiveModuleFurnace(IRarmorData data){
@@ -49,12 +48,12 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     }
 
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-        if(!world.isRemote){
+    public void tick(Level world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        /*if(!world.isClientSide()){
             if(this.data.getEnergyStored() >= ENERGY_PER_TICK){
-                FurnaceRecipe furnaceRecipe = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, this.inventory, world).orElse(null);
+                SmeltingRecipe furnaceRecipe = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.inventory, world).orElse(null);
                 if(furnaceRecipe != null){
-                    ItemStack output = furnaceRecipe.getRecipeOutput();
+                    ItemStack output = furnaceRecipe.getResultItem();
                     if(!output.isEmpty()){
                         ItemStack outputSlot = this.inventory.getStackInSlot(1);
                         if(outputSlot.isEmpty() || Helper.canBeStacked(output, outputSlot)){
@@ -65,13 +64,13 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
         
                             if(this.burnTime >= TIME_TO_REACH){
                                 if(outputSlot.isEmpty()){
-                                    this.inventory.setInventorySlotContents(1, output.copy());
+                                    this.inventory.setStackInSlot(1, output.copy());
                                 }
                                 else{
                                     outputSlot.grow(output.getCount());
                                 }
             
-                                this.inventory.decrStackSize(0, 1);
+                                this.inventory.getStackInSlot(0).shrink(1);
                                 this.burnTime = 0;
                             }
         
@@ -86,19 +85,19 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
                 this.burnTime = 0;
                 this.data.setDirty();
             }
-        }
+        }*/
     }
     
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(PoseStack matrixStack, Minecraft mc, Player player, IRarmorData data, Window window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 5;
         
         if(this.burnTime > 0){
-            FontRenderer font = mc.fontRenderer;
+            Font font = mc.font;
             String percentage = (int)(((float)this.burnTime/(float)TIME_TO_REACH)*100)+"%";
-            font.drawString(matrixStack, percentage, renderX+15-font.getStringWidth(percentage)/2, renderY-5, 0xFFFFFF);
+            font.draw(matrixStack, percentage, renderX+15-font.width(percentage)/2, renderY-5, 0xFFFFFF);
         }
     
         ItemStack input = this.inventory.getStackInSlot(0);
@@ -115,19 +114,19 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
-        this.inventory.loadSlots(compound);
+    public void readFromNBT(CompoundTag compound, boolean sync){
+        this.inventory.deserializeNBT(compound.getCompound("Items"));
         this.burnTime = compound.getInt("BurnTime");
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
-        this.inventory.saveSlots(compound);
+    public void writeToNBT(CompoundTag compound, boolean sync){
+        compound.put("Items", this.inventory.serializeNBT());
         compound.putInt("BurnTime", this.burnTime);
     }
 
     @Override
-    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+    public RarmorModuleContainer createContainer(Player player, AbstractContainerMenu container){
         return new ContainerModuleFurnace(player, container, this);
     }
     
@@ -143,7 +142,7 @@ public class ActiveModuleFurnace extends ActiveRarmorModule {
     }
 
     @Override
-    public boolean hasTab(PlayerEntity player){
+    public boolean hasTab(Player player){
         return true;
     }
 

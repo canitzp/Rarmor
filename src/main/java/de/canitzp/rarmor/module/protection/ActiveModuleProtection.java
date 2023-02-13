@@ -11,7 +11,7 @@ package de.canitzp.rarmor.module.protection;
 
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class ActiveModuleProtection extends ActiveRarmorModule {
 

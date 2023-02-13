@@ -10,15 +10,18 @@
 package de.canitzp.rarmor.item;
 
 import de.canitzp.rarmor.RarmorArmorMaterial;
-import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.misc.CreativeTab;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 
 public class ItemRarmor extends DyeableArmorItem {
-    
-    public ItemRarmor(EquipmentSlotType slot){
-        super(RarmorArmorMaterial.INSTANCE, slot, new Properties().group(CreativeTab.INSTANCE));
+
+    public static final int DEFAULT_ARMOR_COLOR = 0xFFFFFFFF;
+
+    public ItemRarmor(EquipmentSlot slot){
+        super(RarmorArmorMaterial.INSTANCE, slot, new Properties().tab(CreativeTab.INSTANCE));
     }
 
     @Override
@@ -26,14 +29,19 @@ public class ItemRarmor extends DyeableArmorItem {
         return Rarity.EPIC;
     }
 
-    
-    @Override
-    public boolean hasColor(ItemStack stack){
-        return stack.hasTag() && stack.getTag().getInt("Color") != 0;
+    public static int getArmorColor(ItemStack stack){
+        if(!stack.isEmpty() && stack.getItem() instanceof ItemRarmor item){
+            if(item.hasCustomColor(stack)){
+                return item.getColor(stack);
+            }
+        }
+        return DEFAULT_ARMOR_COLOR;
     }
 
-    @Override
-    public int getColor(ItemStack stack){
-        return stack.hasTag() ? stack.getTag().contains("Color") ? stack.getTag().getInt("Color") : super.getColor(stack) : super.getColor(stack);
+    public static void setArmorColor(ItemStack stack, int color){
+        if(!stack.isEmpty() && stack.getItem() instanceof ItemRarmor item){
+            item.setColor(stack, color);
+        }
     }
+
 }

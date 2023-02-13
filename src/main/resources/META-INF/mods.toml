@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[34,)"
+loaderVersion="[40,)"
 license="All rights reserved"
 issueTrackerURL="https://github.com/canitzp/Rarmor/issues"
 [[mods]]
@@ -17,13 +17,13 @@ description='''A mod about an RF-powered armor that can be upgraded and modified
 [[dependencies.rarmor]]
 modId="forge"
 mandatory=true
-versionRange="[34,)"
+versionRange="[40,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.rarmor]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.16.3]"
+versionRange="[1.18.2,1.19]"
 ordering="NONE"
 side="BOTH"

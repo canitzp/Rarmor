@@ -9,7 +9,8 @@
 
 package de.canitzp.rarmor.module.generator;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
@@ -18,17 +19,19 @@ import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.Font;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeHooks;
 
 public class ActiveModuleGenerator extends ActiveRarmorModule {
 
@@ -36,7 +39,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     private static final ItemStack GENERATOR = new ItemStack(RarmorItemRegistry.itemGenerator.get());
     private static final int ENERGY_PER_TICK = 30;
 
-    public final BasicInventory inventory = new BasicInventory("input", 1, this.data);
+    public final BasicInventory inventory = new BasicInventory(1, this.data);
 
     public int currentBurnTime;
     public int burnTimeTickingDownFrom;
@@ -46,8 +49,8 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     }
 
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-        if(!world.isRemote){
+    public void tick(Level world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        if(!world.isClientSide()){
             boolean canAddEnergy = this.data.getMaxEnergyStored()-this.data.getEnergyStored() >= ENERGY_PER_TICK;
 
             if(this.currentBurnTime > 0){
@@ -65,7 +68,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
             else if(canAddEnergy){
                 ItemStack stack = this.inventory.getStackInSlot(0);
                 if(!stack.isEmpty()){
-                    int time = stack.getBurnTime();
+                    int time = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING);
                     if(time > 0){
                         this.currentBurnTime = time;
                         this.burnTimeTickingDownFrom = time;
@@ -80,16 +83,16 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void renderAdditionalOverlay(MatrixStack matrixStack, Minecraft mc, PlayerEntity player, IRarmorData data, MainWindow window, int renderX, int renderY, float partialTicks){
+    public void renderAdditionalOverlay(PoseStack matrixStack, Minecraft mc, Player player, IRarmorData data, Window window, int renderX, int renderY, float partialTicks){
         renderX += 19;
         renderY += 2;
         Helper.renderStackToGui(matrixStack, this.inventory.getStackInSlot(0), renderX, renderY, 0.7F);
     
         renderX += 20;
         if(this.currentBurnTime > 0 && this.burnTimeTickingDownFrom > 0){
-            FontRenderer font = mc.fontRenderer;
+            Font font = mc.font;
             String percentage = (int)(((float)this.currentBurnTime/(float)this.burnTimeTickingDownFrom)*100)+"%";
-            font.drawString(matrixStack, percentage, renderX-font.getStringWidth(percentage)/2, renderY, 0xFFFFFF);
+            font.draw(matrixStack, percentage, renderX-font.width(percentage)/2, renderY, 0xFFFFFF);
         }
     }
 
@@ -99,21 +102,21 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     }
 
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
-        this.inventory.loadSlots(compound);
+    public void readFromNBT(CompoundTag compound, boolean sync){
+        this.inventory.deserializeNBT(compound.getCompound("Items"));
         this.currentBurnTime = compound.getInt("BurnTime");
         this.burnTimeTickingDownFrom = compound.getInt("BurnTimeFrom");
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
-        this.inventory.saveSlots(compound);
+    public void writeToNBT(CompoundTag compound, boolean sync){
+        compound.put("Items", this.inventory.serializeNBT());
         compound.putInt("BurnTime", this.currentBurnTime);
         compound.putInt("BurnTimeFrom", this.burnTimeTickingDownFrom);
     }
 
     @Override
-    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+    public RarmorModuleContainer createContainer(Player player, AbstractContainerMenu container){
         return new ContainerModuleGenerator(container, this);
     }
 
@@ -129,7 +132,7 @@ public class ActiveModuleGenerator extends ActiveRarmorModule {
     }
 
     @Override
-    public boolean hasTab(PlayerEntity player){
+    public boolean hasTab(Player player){
         return true;
     }
 

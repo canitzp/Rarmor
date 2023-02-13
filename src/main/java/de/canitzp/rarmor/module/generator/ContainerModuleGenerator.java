@@ -11,41 +11,44 @@ package de.canitzp.rarmor.module.generator;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ContainerModuleGenerator extends RarmorModuleContainer {
 
-    public ContainerModuleGenerator(Container container, ActiveRarmorModule module){
+    public ContainerModuleGenerator(AbstractContainerMenu container, ActiveRarmorModule module){
         super(container, module);
     }
 
     @Override
     public List<Slot> getSlots(){
-        return Collections.singletonList(new Slot(((ActiveModuleGenerator)this.module).inventory, 0, 110, 65));
+        return Collections.singletonList(new SlotItemHandler(((ActiveModuleGenerator)this.module).inventory, 0, 110, 65));
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
+    public ItemStack transferStackInSlot(Player player, int slot){
         int inventoryStart = 1;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
         int hotbarEnd = hotbarStart+8;
 
-        Slot theSlot = this.actualContainer.inventorySlots.get(slot);
+        Slot theSlot = this.actualContainer.slots.get(slot);
 
-        if(theSlot != null && theSlot.getHasStack()){
-            ItemStack newStack = theSlot.getStack();
+        if(theSlot != null && theSlot.hasItem()){
+            ItemStack newStack = theSlot.getItem();
             ItemStack currentStack = newStack.copy();
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(newStack.getBurnTime() > 0){
+                if(ForgeHooks.getBurnTime(newStack, RecipeType.SMELTING) > 0){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
                         return ItemStack.EMPTY;
                     }
@@ -65,10 +68,10 @@ public class ContainerModuleGenerator extends RarmorModuleContainer {
             }
 
             if(newStack.getCount() <= 0){
-                theSlot.putStack(ItemStack.EMPTY);
+                theSlot.set(ItemStack.EMPTY);
             }
             else{
-                theSlot.onSlotChanged();
+                theSlot.setChanged();
             }
 
             if(newStack.getCount() == currentStack.getCount()){

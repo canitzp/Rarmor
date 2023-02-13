@@ -10,12 +10,12 @@
 package de.canitzp.rarmor.api.internal;
 
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,7 +36,7 @@ public interface IMethodHandler{
      * @param slot   The slot
      * @return The rarmor item if the entity has it in the slot, otherwise null
      */
-    ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlotType slot);
+    ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlot slot);
 
     /**
      * Gets the Rarmor Data for the chestplate a player is wearing
@@ -45,7 +45,7 @@ public interface IMethodHandler{
      * @param createIfAbsent If new data should be created if there is none available
      * @return The data for the chestplate the player is wearing, null if not available
      */
-    IRarmorData getDataForChestplate(PlayerEntity player, boolean createIfAbsent);
+    IRarmorData getDataForChestplate(Player player, boolean createIfAbsent);
 
     /**
      * Gets the Rarmor Data for a given stack in the given world
@@ -55,7 +55,7 @@ public interface IMethodHandler{
      * @param createIfAbsent If new data should be created if there is none available
      * @return The data for the given stack, null if not available
      */
-    IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent);
+    IRarmorData getDataForStack(Level world, ItemStack stack, boolean createIfAbsent);
 
     /**
      * Internal method, compares two rarmor modules
@@ -85,7 +85,7 @@ public interface IMethodHandler{
      * @param sendRarmorDataToClient If the data the Rarmor has should be sent to the client
      *                               (possibly confirmation packet is enabled, so there might be a delay)
      */
-    void openRarmor(PlayerEntity player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
+    void openRarmor(Player player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient);
 
     /**
      * Opens the Rarmor GUI for the Rarmor Minecraft.getMinecraft().thePlayeris currently wearing in their chestplate slot.
@@ -112,5 +112,5 @@ public interface IMethodHandler{
      * @param reverseDirection If this should happen in the opposite direction
      * @return If this worked or not
      */
-    boolean mergeItemStack(Container container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection);
+    boolean mergeItemStack(AbstractContainerMenu container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection);
 }

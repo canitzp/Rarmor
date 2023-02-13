@@ -6,10 +6,10 @@ import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -31,7 +31,7 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     }
 
     @Override
-    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+    public RarmorModuleContainer createContainer(Player player, AbstractContainerMenu container){
         return new ContainerModuleColor(player, container, this);
     }
     
@@ -42,7 +42,7 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     }
     
     @Override
-    public boolean hasTab(PlayerEntity player){
+    public boolean hasTab(Player player){
         return true;
     }
 
@@ -53,7 +53,7 @@ public class ActiveModuleColor extends ActiveRarmorModule{
     }
     
     @Override
-    public boolean doesRenderOnOverlay(Minecraft mc, PlayerEntity player, IRarmorData data) {
+    public boolean doesRenderOnOverlay(Minecraft mc, Player player, IRarmorData data) {
         return false;
     }
 }

@@ -13,6 +13,7 @@ import de.canitzp.rarmor.api.internal.IMethodHandler;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.config.Config;
+import de.canitzp.rarmor.data.RarmorDataCapability;
 import de.canitzp.rarmor.data.WorldData;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.module.color.ActiveModuleColor;
@@ -21,22 +22,23 @@ import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.data.RarmorData;
 import de.canitzp.rarmor.item.ItemRarmor;
 import de.canitzp.rarmor.packet.PacketOpenModule;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
 import java.util.UUID;
@@ -44,12 +46,12 @@ import java.util.UUID;
 public class MethodHandler implements IMethodHandler {
 
     @Override
-    public ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlotType slot){
+    public ItemStack getHasRarmorInSlot(Entity entity, EquipmentSlot slot){
         if(entity instanceof LivingEntity){
-            ItemStack stack = ((LivingEntity)entity).getItemStackFromSlot(slot);
+            ItemStack stack = ((LivingEntity)entity).getItemBySlot(slot);
             if(!stack.isEmpty()){
                 Item item = stack.getItem();
-                if(item instanceof ItemRarmor && ((ItemRarmor)item).getEquipmentSlot() == slot){
+                if(item instanceof ItemRarmor && LivingEntity.getEquipmentSlotForItem(stack) == slot){
                     return stack;
                 }
             }
@@ -58,10 +60,10 @@ public class MethodHandler implements IMethodHandler {
     }
 
     @Override
-    public IRarmorData getDataForChestplate(PlayerEntity player, boolean createIfAbsent){
-        ItemStack stack = this.getHasRarmorInSlot(player, EquipmentSlotType.CHEST);
+    public IRarmorData getDataForChestplate(Player player, boolean createIfAbsent){
+        ItemStack stack = this.getHasRarmorInSlot(player, EquipmentSlot.CHEST);
         if(!stack.isEmpty()){
-            return this.getDataForStack(player.getEntityWorld(), stack, createIfAbsent);
+            return this.getDataForStack(player.getLevel(), stack, createIfAbsent);
         }
         return null;
     }
@@ -71,23 +73,23 @@ public class MethodHandler implements IMethodHandler {
         if(stack.getItem() instanceof ItemRarmor){
             if(!stack.hasTag()){
                 if(createIfAbsent){
-                    stack.setTag(new CompoundNBT());
+                    stack.setTag(new CompoundTag());
                 } else {
                     return null;
                 }
             }
-    
-            CompoundNBT compound = stack.getTag();
-            if(!compound.hasUniqueId("RarmorId")){
+
+            CompoundTag compound = stack.getTag();
+            if(!compound.hasUUID("RarmorId")){
                 if(createIfAbsent){
                     UUID id = UUID.randomUUID();
-                    compound.putUniqueId("RarmorId", id);
+                    compound.putUUID("RarmorId", id);
                     return id;
                 } else {
                     return null;
                 }
             } else {
-                return compound.getUniqueId("RarmorId");
+                return compound.getUUID("RarmorId");
             }
         } else {
             return null;
@@ -95,7 +97,7 @@ public class MethodHandler implements IMethodHandler {
     }
 
     @Override
-    public void openRarmor(PlayerEntity player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
+    public void openRarmor(Player player, int moduleId, boolean alsoSetData, boolean sendRarmorDataToClient){
         IRarmorData data = this.getDataForChestplate(player, true);
         if(data != null){
             if(alsoSetData){
@@ -114,14 +116,14 @@ public class MethodHandler implements IMethodHandler {
             }
 
             if(shouldOpenGui){
-                player.openContainer(new INamedContainerProvider() {
+                player.openMenu(new MenuProvider() {
                     @Override
-                    public ITextComponent getDisplayName(){
-                        return new StringTextComponent("Rarmor");
+                    public TextComponent getDisplayName(){
+                        return new TextComponent("Rarmor");
                     }
     
                     @Override
-                    public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player){
+                    public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player player){
                         return new ContainerRarmor(windowId, player, data.getCurrentModules().get(data.getCurrentModules().size() <= data.getSelectedModule() ? 0 : data.getSelectedModule()));
                     }
                 });
@@ -136,32 +138,26 @@ public class MethodHandler implements IMethodHandler {
     }
 
     @Override
-    public boolean mergeItemStack(Container container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection){
-        return container instanceof ContainerRarmor && ((ContainerRarmor)container).mergeItemStack(stack, startIndexIncl, endIndexExcl, reverseDirection);
+    public boolean mergeItemStack(AbstractContainerMenu container, ItemStack stack, int startIndexIncl, int endIndexExcl, boolean reverseDirection){
+        return container instanceof ContainerRarmor && ((ContainerRarmor)container).moveItemStackTo(stack, startIndexIncl, endIndexExcl, reverseDirection);
     }
 
     @Override
-    public IRarmorData getDataForStack(World world, ItemStack stack, boolean createIfAbsent){
-        UUID stackId = this.checkAndSetRarmorId(stack, !world.isRemote && createIfAbsent);
-        if(stackId != null){
-            if(world instanceof ServerWorld){
-                Map<UUID, IRarmorData> allData = WorldData.getRarmorData((ServerWorld) world);
-                IRarmorData data = allData.get(stackId);
-                if(data == null){
-                    if(createIfAbsent){
-                        data = this.createRarmorData(stack);
-                        allData.put(stackId, createRarmorData(stack));
-                        return data;
-                    }
-                } else {
-                    ItemStack bound = data.getBoundStack();
-                    if(bound != null || bound != stack){
-                        data.setBoundStack(stack);
-                    }
-                    return data;
+    public IRarmorData getDataForStack(Level world, ItemStack stack, boolean createIfAbsent) {
+        UUID stackId = this.checkAndSetRarmorId(stack, !world.isClientSide() && createIfAbsent);
+        if (stackId != null) {
+            Map<UUID, IRarmorData> allData = WorldData.getRarmorData();
+            IRarmorData data = allData.get(stackId);
+            if(data != null){
+                ItemStack bound = data.getBoundStack();
+                if (!bound.isEmpty() || bound != stack) {
+                    data.setBoundStack(stack);
                 }
-            } else if(createIfAbsent) {
-                return this.createRarmorData(stack);
+                return data;
+            } else if(createIfAbsent){
+                data = this.createRarmorData(stack);
+                allData.put(stackId, createRarmorData(stack));
+                return data;
             }
         }
         return null;
@@ -174,9 +170,9 @@ public class MethodHandler implements IMethodHandler {
         mainModule.onInstalled(null);
         data.getCurrentModules().add(mainModule);
         //color module
-        ActiveRarmorModule colorModule = Helper.initiateModuleById(ActiveModuleColor.IDENTIFIER, data);
-        colorModule.onInstalled(null);
-        data.getCurrentModules().add(colorModule);
+        //ActiveRarmorModule colorModule = Helper.initiateModuleById(ActiveModuleColor.IDENTIFIER, data);
+        //colorModule.onInstalled(null);
+        //data.getCurrentModules().add(colorModule);
     
         data.setDirty(false);
     

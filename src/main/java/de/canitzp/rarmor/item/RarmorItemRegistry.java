@@ -24,20 +24,20 @@ import de.canitzp.rarmor.module.solar.ItemModuleSolar;
 import de.canitzp.rarmor.module.speed.ActiveModuleSpeed;
 import de.canitzp.rarmor.module.speed.ItemModuleSpeed;
 import de.canitzp.rarmor.module.storage.ItemModuleStorage;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public final class RarmorItemRegistry {
     
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, RarmorAPI.MOD_ID);
 
-    public static RegistryObject<ItemRarmor> itemRarmorHelmet = REGISTRY.register("item_rarmor_helmet", () -> new ItemRarmor(EquipmentSlotType.HEAD));
+    public static RegistryObject<ItemRarmor> itemRarmorHelmet = REGISTRY.register("item_rarmor_helmet", () -> new ItemRarmor(EquipmentSlot.HEAD));
     public static RegistryObject<ItemRarmorChest> itemRarmorChest = REGISTRY.register("item_rarmor_chest", ItemRarmorChest::new);
-    public static RegistryObject<ItemRarmor> itemRarmorPants = REGISTRY.register("item_rarmor_pants", () -> new ItemRarmor(EquipmentSlotType.LEGS));
-    public static RegistryObject<ItemRarmor> itemRarmorBoots = REGISTRY.register("item_rarmor_boots", () -> new ItemRarmor(EquipmentSlotType.FEET));
+    public static RegistryObject<ItemRarmor> itemRarmorPants = REGISTRY.register("item_rarmor_pants", () -> new ItemRarmor(EquipmentSlot.LEGS));
+    public static RegistryObject<ItemRarmor> itemRarmorBoots = REGISTRY.register("item_rarmor_boots", () -> new ItemRarmor(EquipmentSlot.FEET));
 
     public static RegistryObject<ItemWireCutter> itemWireCutter = REGISTRY.register("item_wire_cutter", ItemWireCutter::new);
     public static RegistryObject<ItemBase> itemControlCircuit = REGISTRY.register("item_control_circuit", ItemBase::new);

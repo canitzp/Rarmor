@@ -9,11 +9,12 @@
 
 package de.canitzp.rarmor.module.generator;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class GuiModuleGenerator extends RarmorModuleGui{
 
@@ -24,8 +25,8 @@ public class GuiModuleGenerator extends RarmorModuleGui{
     }
     
     @Override
-    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
-        this.mc.getTextureManager().bindTexture(RES_LOC);
+    public void drawGuiContainerBackgroundLayer(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY){
+        RenderSystem.setShaderTexture(0, RES_LOC);
         this.blit(matrixStack, this.guiLeft+109, this.guiTop+48, 0, 0, 18, 34);
     
         ActiveModuleGenerator gen = (ActiveModuleGenerator)this.module;

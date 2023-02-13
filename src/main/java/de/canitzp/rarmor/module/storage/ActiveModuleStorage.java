@@ -15,12 +15,13 @@ import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.inventory.RarmorModuleGui;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.gui.BasicInventory;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +30,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     public static final String IDENTIFIER = RarmorAPI.MOD_ID+"Storage";
     private static final ItemStack CHEST = new ItemStack(Blocks.CHEST);
 
-    public final BasicInventory inventory = new BasicInventory("storage", 46, this.data);
+    public final BasicInventory inventory = new BasicInventory(46, this.data);
 
     public ActiveModuleStorage(IRarmorData data){
         super(data);
@@ -41,21 +42,21 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
+    public void readFromNBT(CompoundTag compound, boolean sync){
         if(!sync){
-            this.inventory.loadSlots(compound);
+            this.inventory.deserializeNBT(compound.getCompound("Items"));
         }
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
+    public void writeToNBT(CompoundTag compound, boolean sync){
         if(!sync){
-            this.inventory.saveSlots(compound);
+            compound.put("Items", this.inventory.serializeNBT());
         }
     }
 
     @Override
-    public RarmorModuleContainer createContainer(PlayerEntity player, Container container){
+    public RarmorModuleContainer createContainer(Player player, AbstractContainerMenu container){
         return new ContainerModuleStorage(player, container, this);
     }
 
@@ -71,7 +72,7 @@ public class ActiveModuleStorage extends ActiveRarmorModule{
     }
 
     @Override
-    public boolean hasTab(PlayerEntity player){
+    public boolean hasTab(Player player){
         return true;
     }
 

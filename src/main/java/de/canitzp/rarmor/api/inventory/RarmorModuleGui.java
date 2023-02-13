@@ -9,17 +9,13 @@
 
 package de.canitzp.rarmor.api.inventory;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import de.canitzp.rarmor.inventory.gui.GuiRarmor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -39,14 +35,13 @@ public class RarmorModuleGui extends Screen {
 
     public final IRarmorData currentData;
     public final ActiveRarmorModule module;
-    public List<Widget> buttonList;
     public Minecraft mc;
 
     public int guiLeft;
     public int guiTop;
 
     public RarmorModuleGui(ActiveRarmorModule module){
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
         this.module = module;
         this.currentData = module.data;
     }
@@ -63,7 +58,7 @@ public class RarmorModuleGui extends Screen {
 
     }
 
-    public void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY){
+    public void drawGuiContainerBackgroundLayer(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY){
 
     }
 

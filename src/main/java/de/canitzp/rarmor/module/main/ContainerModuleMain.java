@@ -14,30 +14,29 @@ import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.inventory.ContainerRarmor;
 import de.canitzp.rarmor.inventory.slot.SlotModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerModuleMain extends RarmorModuleContainer {
 
-    private final PlayerEntity player;
+    private final Player player;
 
-    public ContainerModuleMain(PlayerEntity player, Container actualContainer, ActiveRarmorModule module){
+    public ContainerModuleMain(Player player, AbstractContainerMenu actualContainer, ActiveRarmorModule module){
         super(actualContainer, module);
         this.player = player;
     }
 
     @Override
     public List<Slot> getSlots(){
-        List<Slot> slots = new ArrayList<Slot>();
+        List<Slot> slots = new ArrayList<>();
 
         ActiveModuleMain module = (ActiveModuleMain)this.module;
         slots.add(new Slot(module.inventory, 0, 179, 8));
@@ -54,18 +53,18 @@ public class ContainerModuleMain extends RarmorModuleContainer {
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
+    public ItemStack transferStackInSlot(Player player, int slot){
         int inventoryStart = 5+5; //because of armor and offhand slots
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
         int hotbarEnd = hotbarStart+8;
 
-        Slot theSlot = this.actualContainer.inventorySlots.get(slot);
+        Slot theSlot = this.actualContainer.slots.get(slot);
 
-        if(theSlot != null && theSlot.getHasStack()){
-            ItemStack newStack = theSlot.getStack();
+        if(theSlot != null && theSlot.hasItem()){
+            ItemStack newStack = theSlot.getItem();
             ItemStack currentStack = newStack.copy();
-            EquipmentSlotType equip = MobEntity.getSlotForItemStack(newStack);
+            EquipmentSlot equip = Mob.getEquipmentSlotForItem(newStack);
 
             if(slot >= inventoryStart){
                 //Change things here
@@ -74,7 +73,7 @@ public class ContainerModuleMain extends RarmorModuleContainer {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if(equip.getSlotType() == EquipmentSlotType.Group.ARMOR){
+                else if(equip.getType() == EquipmentSlot.Type.ARMOR){
                     int i = 8-equip.getIndex();
 
                     if(!this.mergeItemStack(newStack, i, i+1, false)){
@@ -103,10 +102,10 @@ public class ContainerModuleMain extends RarmorModuleContainer {
             }
 
             if(newStack.getCount() <= 0){
-                theSlot.putStack(ItemStack.EMPTY);
+                theSlot.set(ItemStack.EMPTY);
             }
             else{
-                theSlot.onSlotChanged();
+                theSlot.setChanged();
             }
 
             if(newStack.getCount() == currentStack.getCount()){

@@ -13,29 +13,31 @@ import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import de.canitzp.rarmor.api.module.IRarmorModuleItem;
-import de.canitzp.rarmor.inventory.gui.BasicInventory;
 import de.canitzp.rarmor.item.ItemRarmorChest;
+import de.canitzp.rarmor.module.main.ActiveModuleMain;
 import de.canitzp.rarmor.packet.PacketHandler;
 import de.canitzp.rarmor.packet.PacketSyncRarmorData;
 import de.canitzp.rarmor.misc.Helper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.network.NetworkDirection;
 
 import java.util.*;
 
-public class RarmorData implements IRarmorData {
+public class RarmorData implements IRarmorData, INBTSerializable<CompoundTag> {
 
-    public final BasicInventory modules = new BasicInventory("modules", 3, this);
-    private final List<ActiveRarmorModule> loadedModules = new ArrayList<ActiveRarmorModule>();
+    public final SimpleContainer modules = new SimpleContainer(3);
+    private final List<ActiveRarmorModule> loadedModules = new ArrayList<>();
     private final Map<String, Integer> moduleIdsForSlots = new HashMap<String, Integer>();
     private ItemStack stack;
     private boolean isDirty;
@@ -51,22 +53,31 @@ public class RarmorData implements IRarmorData {
 
     public RarmorData(ItemStack stack){
         this.stack = stack;
+
+        this.readFromNBT(stack.getOrCreateTag(), false);
+
+        // check if this is the creation
+        if(this.loadedModules.isEmpty()){
+            ActiveRarmorModule mainModule = Helper.initiateModuleById(ActiveModuleMain.IDENTIFIER, this);
+            mainModule.onInstalled(null);
+            this.loadedModules.add(mainModule);
+        }
     }
 
     @Override
-    public void readFromNBT(CompoundNBT compound, boolean sync){
-        ListNBT data = compound.getList("ModuleData", Constants.NBT.TAG_COMPOUND);
+    public void readFromNBT(CompoundTag compound, boolean sync){
+        ListTag data = compound.getList("ModuleData", Tag.TAG_COMPOUND);
         for(int i = 0; i < data.size(); i++){
-            CompoundNBT tag = data.getCompound(i);
+            CompoundTag tag = data.getCompound(i);
 
             ActiveRarmorModule module = this.findOrCreateModule(tag.getString("ModuleId"));
             module.readFromNBT(tag, sync);
         }
 
         this.moduleIdsForSlots.clear();
-        ListNBT list = compound.getList("SlotData", Constants.NBT.TAG_COMPOUND);
+        ListTag list = compound.getList("SlotData", Tag.TAG_COMPOUND);
         for(int i = 0; i < list.size(); i++){
-            CompoundNBT tag = list.getCompound(i);
+            CompoundTag tag = list.getCompound(i);
             String s = tag.getString("ID");
             this.moduleIdsForSlots.put(s == null || s.isEmpty() ? null : s, tag.getInt("Slot"));
         }
@@ -78,7 +89,7 @@ public class RarmorData implements IRarmorData {
             this.setEnergy(compound.getInt("EnergyStored"));
         }
         else{
-            this.modules.loadSlots(compound);
+            this.modules.fromTag(compound.getList("Items", Tag.TAG_COMPOUND));
         }
     }
 
@@ -107,20 +118,21 @@ public class RarmorData implements IRarmorData {
     }
 
     @Override
-    public void sendQueuedUpdate(PlayerEntity player){
-        if(this.isUpdateQueued && player instanceof ServerPlayerEntity){
+    public void sendQueuedUpdate(Player player){
+        if(this.isUpdateQueued && player instanceof ServerPlayer){
+            System.out.println("sendQueuedUpdate: Update");
             UUID id = RarmorAPI.methodHandler.checkAndSetRarmorId(this.stack, false);
-            PacketHandler.channel.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), ((ServerPlayerEntity) player).connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+            PacketHandler.channel.sendTo(new PacketSyncRarmorData(id, this, this.queuedUpdateReload, this.queuedUpdateConfirmation), ((ServerPlayer) player).connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 
             this.isUpdateQueued = false;
         }
     }
 
     @Override
-    public void writeToNBT(CompoundNBT compound, boolean sync){
-        ListNBT data = new ListNBT();
+    public void writeToNBT(CompoundTag compound, boolean sync){
+        ListTag data = new ListTag();
         for(ActiveRarmorModule module : this.loadedModules){
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
 
             module.writeToNBT(tag, sync);
             tag.putString("ModuleId", module.getIdentifier());
@@ -129,9 +141,9 @@ public class RarmorData implements IRarmorData {
         }
         compound.put("ModuleData", data);
 
-        ListNBT list = new ListNBT();
+        ListTag list = new ListTag();
         for(String s : this.moduleIdsForSlots.keySet()){
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             tag.putString("ID", s);
             tag.putInt("Slot", this.moduleIdsForSlots.get(s));
             list.add(tag);
@@ -145,8 +157,9 @@ public class RarmorData implements IRarmorData {
             compound.putInt("EnergyStored", this.getEnergyStored());
         }
         else{
-            this.modules.saveSlots(compound);
+            compound.put("Items", this.modules.createTag());
         }
+        System.out.println("Write RarmorData (sync: " + sync + "): " + compound);
     }
 
     @Override
@@ -160,7 +173,7 @@ public class RarmorData implements IRarmorData {
     }
 
     @Override
-    public IInventory getModuleStacks(){
+    public Container getModuleStacks(){
         return this.modules;
     }
 
@@ -212,8 +225,8 @@ public class RarmorData implements IRarmorData {
     }
 
     @Override
-    public void tick(World world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
-        if(!world.isRemote){
+    public void tick(Level world, Entity entity, boolean isWearingHat, boolean isWearingChest, boolean isWearingPants, boolean isWearingShoes){
+        if(!world.isClientSide()){
             if(!this.sentInitialUpdate){
                 this.queueUpdate(true);
                 this.sentInitialUpdate = true;
@@ -338,6 +351,8 @@ public class RarmorData implements IRarmorData {
     @Override
     public void setDirty(boolean yes){
         this.isDirty = yes;
+
+        this.writeToNBT(this.stack.getOrCreateTag(), false);
     }
 
     @Override
@@ -364,12 +379,24 @@ public class RarmorData implements IRarmorData {
             int slot = this.getSlotForActiveModule(module);
             if(slot >= 0){
                 this.moduleIdsForSlots.remove(module.getIdentifier());
-                if(drop && !entity.getEntityWorld().isRemote){
-                    this.modules.dropSingle(entity, slot);
+                if(drop && !entity.getLevel().isClientSide()){
+                    //todo reimplement! this.modules.dropSingle(entity, slot);
                 }
             }
 
             this.setDirty();
         }
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        this.writeToNBT(tag, false);
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        this.readFromNBT(nbt, false);
     }
 }

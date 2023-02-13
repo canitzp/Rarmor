@@ -11,19 +11,23 @@ package de.canitzp.rarmor;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.config.Config;
+import de.canitzp.rarmor.data.RarmorDataCapability;
+import de.canitzp.rarmor.data.RarmorWorldCapability;
 import de.canitzp.rarmor.inventory.RarmorContainerRegistry;
 import de.canitzp.rarmor.inventory.gui.GuiRarmor;
+import de.canitzp.rarmor.item.ItemRarmor;
 import de.canitzp.rarmor.item.RarmorItemRegistry;
 import de.canitzp.rarmor.misc.MethodHandler;
 import de.canitzp.rarmor.module.ModuleRegistry;
 import de.canitzp.rarmor.packet.PacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -51,15 +55,18 @@ public final class Rarmor{
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.FORGE_CONFIG_SPEC);
         
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            modEventBus.addListener(this::clientSetup);
-        });
+
+        modEventBus.addListener(RarmorWorldCapability::registerCapabilityEvent);
+        modEventBus.addListener(RarmorDataCapability::registerCapabilityEvent);
         
         // Registry handler
         RarmorItemRegistry.REGISTRY.register(modEventBus);
-        RarmorContainerRegistry.REGISTRY.register(modEventBus);
-        
+        RarmorContainerRegistry.MENU_TYPES.register(modEventBus);
+
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            modEventBus.addListener(this::clientSetup);
+        });
+
         // Register Network
         PacketHandler.init();
         
@@ -70,12 +77,12 @@ public final class Rarmor{
     
     @OnlyIn(Dist.CLIENT)
     private void clientSetup(FMLClientSetupEvent event){
-        ScreenManager.registerFactory(RarmorContainerRegistry.RARMOR_CONTAINER.get(), GuiRarmor::new);
+        MenuScreens.register(RarmorContainerRegistry.RARMOR_CONTAINER.get(), GuiRarmor::new);
     
-        Minecraft.getInstance().getItemColors().register(new IItemColor() {
+        Minecraft.getInstance().getItemColors().register(new ItemColor() {
             @Override
             public int getColor(ItemStack stack, int tintIndex){
-                return stack.hasTag() && stack.getTag().contains("Color", Constants.NBT.TAG_INT) ? stack.getTag().getInt("Color") : 0xFFFFFFFF;
+                return ItemRarmor.getArmorColor(stack);
             }
         }, RarmorItemRegistry.itemRarmorBoots.get(), RarmorItemRegistry.itemRarmorChest.get(), RarmorItemRegistry.itemRarmorHelmet.get(), RarmorItemRegistry.itemRarmorPants.get());
     }

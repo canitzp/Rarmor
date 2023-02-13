@@ -11,10 +11,10 @@ package de.canitzp.rarmor.misc;
 
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.item.RarmorItemRegistry;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class CreativeTab extends ItemGroup {
+public class CreativeTab extends CreativeModeTab {
 
     public static final CreativeTab INSTANCE = new CreativeTab();
 
@@ -23,7 +23,7 @@ public class CreativeTab extends ItemGroup {
     }
 
     @Override
-    public ItemStack createIcon(){
+    public ItemStack makeIcon(){
         return new ItemStack(RarmorItemRegistry.itemRarmorChest.get());
     }
 }

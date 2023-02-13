@@ -9,18 +9,18 @@
 
 package de.canitzp.rarmor.item;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemWireCutter extends ItemBase{
 
     public ItemWireCutter(){
-        super(new Properties().maxStackSize(1).setNoRepair().maxDamage(127));
+        super(new Properties().stacksTo(1).setNoRepair().durability(127));
     }
 
     @Override
     public ItemStack getContainerItem(ItemStack stack){
         ItemStack copy = stack.copy();
-        copy.setDamage(copy.getDamage()+1);
+        copy.setDamageValue(copy.getDamageValue()+1);
         return copy;
     }
 }

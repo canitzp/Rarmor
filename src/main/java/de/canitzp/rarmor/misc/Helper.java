@@ -9,20 +9,30 @@
 
 package de.canitzp.rarmor.misc;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.canitzp.rarmor.Rarmor;
 import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -67,43 +77,60 @@ public final class Helper{
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static void renderStackToGui(MatrixStack matrixStack, ItemStack stack, float x, float y, float scale){
+    public static void renderStackToGui(PoseStack matrixStack, ItemStack stack, double x, double y, float scale){
         if(!stack.isEmpty()){
-            matrixStack.push();
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            RenderHelper.enableStandardItemLighting();
+            Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            PoseStack posestack = RenderSystem.getModelViewStack();
+            posestack.pushPose();
+            posestack.translate(x, y, 100.0F + Minecraft.getInstance().getItemRenderer().blitOffset);
+            posestack.translate(8.0D, 8.0D, 0.0D);
+            posestack.scale(1.0F, -1.0F, 1.0F);
+            posestack.scale(16.0F, 16.0F, 16.0F);
+            posestack.scale(scale, scale, scale);
+            RenderSystem.applyModelViewMatrix();
+            PoseStack posestack1 = new PoseStack();
+            MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+
+            BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, (Level) null, (LivingEntity) null, 0);
+
+            boolean flag = !model.usesBlockLight();
+            if (flag) {
+                Lighting.setupForFlatItems();
+            }
+
+            Minecraft.getInstance().getItemRenderer().render(stack, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, 15728880, OverlayTexture.NO_OVERLAY, model);
+            multibuffersource$buffersource.endBatch();
             RenderSystem.enableDepthTest();
-            //GlStateManager.enableRescaleNormal();
-            matrixStack.translate(x, y, 0);
-            matrixStack.scale(scale, scale, scale);
+            if (flag) {
+                Lighting.setupFor3DItems();
+            }
 
-            Minecraft mc = Minecraft.getInstance();
-            mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, 0, 0);
-            mc.getItemRenderer().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
-
-            RenderHelper.disableStandardItemLighting();
-            matrixStack.pop();
+            posestack.popPose();
+            RenderSystem.applyModelViewMatrix();
         }
     }
     
     public static boolean canBeStacked(ItemStack stack1, ItemStack stack2){
-        return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+        return ItemStack.isSame(stack1, stack2) && ItemStack.tagMatches(stack1, stack2);
     }
 
     public static void setItemEnergy(ItemStack stack, int energy){
         if(!stack.hasTag()){
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         }
         stack.getTag().putInt("Energy", energy);
     }
 
     @OnlyIn(Dist.CLIENT)
     public static int getRGBDurabilityForDisplay(){
-        PlayerEntity player = Minecraft.getInstance().player;
-        if(player != null && player.world != null){
-            float[] color = getColor(player.world.getGameTime()%256);
-            return MathHelper.rgb(color[0]/255F, color[1]/255F, color[2]/255F);
+        LocalPlayer player = Minecraft.getInstance().player;
+        if(player != null && player.level != null){
+            float[] color = getColor(player.level.getGameTime()%256);
+            return Mth.hsvToRgb(color[0]/255F, color[1]/255F, color[2]/255F);
         }
         return 0;
     }

@@ -9,66 +9,86 @@
 
 package de.canitzp.rarmor.data;
 
+import de.canitzp.rarmor.api.RarmorAPI;
 import de.canitzp.rarmor.api.internal.IRarmorData;
 import de.canitzp.rarmor.Rarmor;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.WorldCapabilityData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WorldData extends WorldSavedData {
+public class WorldData implements ICapabilitySerializable<CompoundTag>{
 
-    private static final String NAME = Rarmor.MOD_NAME+"Data";
+    public static final ResourceLocation KEY = new ResourceLocation(RarmorAPI.MOD_ID, "data");
 
+    public static final WorldData INSTANCE = new WorldData();
+    public static final LazyOptional<WorldData> HOLDER = LazyOptional.of(() -> INSTANCE);
     private final Map<UUID, IRarmorData> rarmorData = new ConcurrentHashMap<UUID, IRarmorData>();
-    private CompoundNBT compoundRead;
+    private CompoundTag compoundRead;
 
-    public WorldData(){
-        super(NAME);
-    }
+    private WorldData(){}
 
-    public static Map<UUID, IRarmorData> getRarmorData(ServerWorld world){
-        WorldData data = getOrLoadData(world);
-        if(data != null){
-            return data.rarmorData;
-        }
-        return null;
-    }
-
-    public static WorldData getOrLoadData(ServerWorld world){
-        if(world != null){
-            DimensionSavedDataManager storage = world.getSavedData();
-            if(storage != null){
-                return storage.getOrCreate(WorldData::new, NAME);
-            }
-        }
-        return null;
+    public static Map<UUID, IRarmorData> getRarmorData(){
+        return INSTANCE.rarmorData;
     }
 
     @Override
-    public void read(CompoundNBT compound){
+    public CompoundTag serializeNBT() {
+        CompoundTag compound = new CompoundTag();
+
+        // removed since the markDirty functionality is removed too
+        //To re-save old data even if it wasn't marked dirty a second time
+        //This is due to the compound being put into another compound by MC
+        //causing all of the data that was previously on there to be lost :v
+        /*if(this.compoundRead != null){
+            compound = this.compoundRead;
+        }*/
+
+        for(UUID id : this.rarmorData.keySet()){
+            IRarmorData data = this.rarmorData.get(id);
+            if(data != null){
+                CompoundTag tag = new CompoundTag();
+                data.writeToNBT(tag, false);
+                compound.put(id.toString(), tag);
+
+                data.setDirty(false);
+            }
+        }
+
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag compound) {
         this.rarmorData.clear();
 
-        Set<String> keys = compound.keySet();
+        Set<String> keys = compound.getAllKeys();
         for(String key : keys){
             UUID id = null;
             try{
                 id = UUID.fromString(key);
             }
             catch(Exception e){
-                Rarmor.LOGGER.error("Found a weird data tag in the world's "+NAME+": "+key+". Ignoring...");
+                Rarmor.LOGGER.error("Found a weird data tag in the world's "+ KEY +": "+key+". Ignoring...");
             }
 
             if(id != null){
-                CompoundNBT tag = compound.getCompound(key);
+                CompoundTag tag = compound.getCompound(key);
 
-                RarmorData data = new RarmorData(null);
+                RarmorData data = new RarmorData(ItemStack.EMPTY);
                 data.readFromNBT(tag, false);
 
                 this.rarmorData.put(id, data);
@@ -78,26 +98,9 @@ public class WorldData extends WorldSavedData {
         this.compoundRead = compound;
     }
 
+    @NotNull
     @Override
-    public CompoundNBT write(CompoundNBT compound){
-        //To re-save old data even if it wasn't marked dirty a second time
-        //This is due to the compound being put into another compound by MC
-        //causing all of the data that was previously on there to be lost :v
-        if(this.compoundRead != null){
-            compound = this.compoundRead;
-        }
-
-        for(UUID id : this.rarmorData.keySet()){
-            IRarmorData data = this.rarmorData.get(id);
-            if(data != null && data.getDirty()){
-                CompoundNBT tag = new CompoundNBT();
-                data.writeToNBT(tag, false);
-                compound.put(id.toString(), tag);
-
-                data.setDirty(false);
-            }
-        }
-
-        return compound;
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        return RarmorWorldCapability.INSTANCE.orEmpty(cap, HOLDER);
     }
 }

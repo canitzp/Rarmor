@@ -10,9 +10,9 @@
 package de.canitzp.rarmor.packet;
 
 import de.canitzp.rarmor.api.RarmorAPI;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -32,7 +32,7 @@ public class PacketOpenModule{
         this.sendRarmorDataToClient = sendRarmorDataToClient;
     }
     
-    public static PacketOpenModule fromBuffer(PacketBuffer buf){
+    public static PacketOpenModule fromBuffer(FriendlyByteBuf buf){
         PacketOpenModule pom = new PacketOpenModule();
         pom.moduleId = buf.readInt();
         pom.alsoSetData = buf.readBoolean();
@@ -40,7 +40,7 @@ public class PacketOpenModule{
         return pom;
     }
 
-    public static void toBuffer(PacketOpenModule packet, PacketBuffer buf){
+    public static void toBuffer(PacketOpenModule packet, FriendlyByteBuf buf){
         buf.writeInt(packet.moduleId);
         buf.writeBoolean(packet.alsoSetData);
         buf.writeBoolean(packet.sendRarmorDataToClient);
@@ -48,7 +48,7 @@ public class PacketOpenModule{
     
     public static void handle(PacketOpenModule packet, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity sender = ctx.get().getSender();
+            ServerPlayer sender = ctx.get().getSender();
             if(sender != null){
                 RarmorAPI.methodHandler.openRarmor(sender, packet.moduleId, packet.alsoSetData, packet.sendRarmorDataToClient);
             }

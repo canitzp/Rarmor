@@ -11,52 +11,53 @@ package de.canitzp.rarmor.module.furnace;
 
 import de.canitzp.rarmor.api.inventory.RarmorModuleContainer;
 import de.canitzp.rarmor.api.module.ActiveRarmorModule;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.FurnaceResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.FurnaceResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerModuleFurnace extends RarmorModuleContainer {
 
-    private final PlayerEntity player;
+    private final Player player;
 
-    public ContainerModuleFurnace(PlayerEntity player, Container container, ActiveRarmorModule module){
+    public ContainerModuleFurnace(Player player, AbstractContainerMenu container, ActiveRarmorModule module){
         super(container, module);
         this.player = player;
     }
 
     @Override
     public List<Slot> getSlots(){
-        List<Slot> slots = new ArrayList<Slot>();
+        List<Slot> slots = new ArrayList<>();
 
         ActiveModuleFurnace module = (ActiveModuleFurnace)this.module;
-        slots.add(new Slot(module.inventory, 0, 82, 58));
-        slots.add(new FurnaceResultSlot(this.player, module.inventory, 1, 132, 58));
+        slots.add(new SlotItemHandler(module.inventory, 0, 82, 58));
+        //slots.add(new FurnaceResultSlot(this.player, module.inventory, 1, 132, 58));
 
         return slots;
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int slot){
+    public ItemStack transferStackInSlot(Player player, int slot){
         int inventoryStart = 2;
         int inventoryEnd = inventoryStart+26;
         int hotbarStart = inventoryEnd+1;
         int hotbarEnd = hotbarStart+8;
 
-        Slot theSlot = this.actualContainer.inventorySlots.get(slot);
+        Slot theSlot = this.actualContainer.slots.get(slot);
 
-        if(theSlot != null && theSlot.getHasStack()){
-            ItemStack newStack = theSlot.getStack();
+        if(theSlot != null && theSlot.hasItem()){
+            ItemStack newStack = theSlot.getItem();
             ItemStack currentStack = newStack.copy();
 
             if(slot >= inventoryStart){
                 //Change things here
-                if(player.world.getRecipeManager().getRecipe(IRecipeType.SMELTING, theSlot.inventory, player.world).isPresent()){
+                if(player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, theSlot.container, player.level).isPresent()){
                     if(!this.mergeItemStack(newStack, 0, 1, false)){
                         return ItemStack.EMPTY;
                     }
@@ -76,10 +77,10 @@ public class ContainerModuleFurnace extends RarmorModuleContainer {
             }
 
             if(newStack.getCount() <= 0){
-                theSlot.putStack(ItemStack.EMPTY);
+                theSlot.set(ItemStack.EMPTY);
             }
             else{
-                theSlot.onSlotChanged();
+                theSlot.setChanged();
             }
 
             if(newStack.getCount() == currentStack.getCount()){
